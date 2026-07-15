@@ -24,12 +24,14 @@ object TirageChiffres {
         nombreJetons: Int = ReservoirChiffres.NOMBRE_JETONS_DEFAUT,
         maxTentativesCible: Int = 200,
         maxTentativesTirage: Int = 20,
+        /** Permet au mode Défi de forcer une solution exacte même sur Monique/Mathieu. */
+        garantieSolution: Boolean = niveau.garantieSolution,
     ): Resultat {
         repeat(maxTentativesTirage) {
             val nombres = ReservoirChiffres.tirerNombres(nombreJetons, random)
             val atteignables = Solveur.valeursAtteignables(nombres, niveau.operations)
 
-            if (!niveau.garantieSolution) {
+            if (!garantieSolution) {
                 val cible = random.nextInt(niveau.cibleMin, niveau.cibleMax + 1)
                 // Pas de solution exacte garantie : à défaut, on retient la valeur atteignable
                 // la plus proche de la cible (retour utilisateur) pour l'affichage en fin de

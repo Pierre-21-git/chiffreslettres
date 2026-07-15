@@ -40,6 +40,8 @@ class ChiffresRoundViewModel(
     private val niveau: Niveau,
     dureeSecondes: Int? = null,
     nombreJetons: Int = ReservoirChiffres.NOMBRE_JETONS_DEFAUT,
+    /** Permet au mode Défi de forcer une solution exacte même sur Monique/Mathieu. */
+    garantieSolution: Boolean = niveau.garantieSolution,
 ) : ViewModel() {
 
     private val historique = mutableListOf<Etape>()
@@ -51,7 +53,7 @@ class ChiffresRoundViewModel(
     val uiState: StateFlow<ChiffresRoundUiState>
 
     init {
-        val tirage = TirageChiffres.tirer(niveau, nombreJetons = nombreJetons)
+        val tirage = TirageChiffres.tirer(niveau, nombreJetons = nombreJetons, garantieSolution = garantieSolution)
         jetonsInitiaux = tirage.nombres.map { valeur -> Jeton(prochainId++, Expression.Valeur(valeur)) }
         _uiState = MutableStateFlow(
             ChiffresRoundUiState(

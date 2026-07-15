@@ -25,6 +25,14 @@ object Routes {
     const val JEU_PARTIE = "partie/jeu"
     const val RECAP_PARTIE = "partie/recap"
 
+    const val DEFI_GRAPH = "defi"
+    const val CHOIX_DEFI = "defi/choixNiveau"
+    const val JEU_DEFI_CHIFFRES_PATTERN = "defi/jeuChiffres/{$ARG_NIVEAU}"
+    const val JEU_DEFI_LETTRES_PATTERN = "defi/jeuLettres/{$ARG_NIVEAU}"
+
+    fun jeuDefiChiffres(niveau: Niveau) = "defi/jeuChiffres/${niveau.name}"
+    fun jeuDefiLettres(niveau: NiveauLettres) = "defi/jeuLettres/${niveau.name}"
+
     const val A_PROPOS = "apropos"
     const val REGLES_DU_JEU = "apropos/reglesDuJeu"
     const val VERSIONS = "apropos/versions"

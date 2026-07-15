@@ -112,6 +112,21 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
 
         HorizontalDivider()
 
+        Text("Mode Défi", style = MaterialTheme.typography.titleMedium)
+        Text(
+            "Choisissez un mode (chiffres ou lettres) et un niveau, puis enchaînez les " +
+                "manches pour aligner le plus de réussites possible d'affilée, avec le même " +
+                "chrono qu'en partie solo pour ce niveau. Une réussite, c'est un compte exact " +
+                "en chiffres, ou un mot valide dépassant une longueur minimale en lettres " +
+                "(plus de 4 lettres sur Émile, 5 sur Nestor, 6 sur Monique, 7 sur Mathieu). En " +
+                "chiffres, une solution exacte est toujours garantie, même sur Monique et " +
+                "Mathieu : le défi ne s'arrête que sur une erreur ou un temps écoulé. La " +
+                "série obtenue est enregistrée dans les statistiques.",
+            style = MaterialTheme.typography.bodyMedium,
+        )
+
+        HorizontalDivider()
+
         Text("Mode 2 joueurs", style = MaterialTheme.typography.titleMedium)
         Text(
             "À venir : jeu en local entre deux appareils, tirage partagé en temps réel.",

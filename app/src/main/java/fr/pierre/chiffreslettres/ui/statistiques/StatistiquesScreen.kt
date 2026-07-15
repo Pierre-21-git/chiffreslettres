@@ -22,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
@@ -38,6 +39,7 @@ fun formatDate(epochMillis: Long): String =
 @Composable
 fun StatistiquesScreen(
     historiqueRepository: HistoriqueRepository,
+    defiRepository: DefiRepository,
     onVoirStatistiquesJoueurs: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
@@ -85,7 +87,10 @@ fun StatistiquesScreen(
             text = { Text("Tout l'historique des parties et scores sera définitivement supprimé, pour tous les joueurs. Continuer ?") },
             confirmButton = {
                 TextButton(onClick = {
-                    scope.launch { historiqueRepository.reinitialiserHistorique() }
+                    scope.launch {
+                        historiqueRepository.reinitialiserHistorique()
+                        defiRepository.reinitialiser()
+                    }
                     confirmationReinitialisation = false
                 }) { Text("Réinitialiser") }
             },

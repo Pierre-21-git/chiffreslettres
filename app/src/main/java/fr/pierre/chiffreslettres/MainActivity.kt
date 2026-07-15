@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import fr.pierre.chiffreslettres.data.AppDatabaseProvider
+import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
@@ -54,6 +55,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val db = remember { AppDatabaseProvider.obtenir(context.applicationContext) }
     val profilRepository = remember { ProfilRepository(db.profilDao()) }
     val historiqueRepository = remember { HistoriqueRepository(db.historiqueDao()) }
+    val defiRepository = remember { DefiRepository(db.defiDao()) }
     val profilActifStore = remember { ProfilActifStore(context.applicationContext) }
 
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
@@ -81,6 +83,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
                 dictionnaire = dictionnaireCharge,
                 profilRepository = profilRepository,
                 historiqueRepository = historiqueRepository,
+                defiRepository = defiRepository,
                 profilActifStore = profilActifStore,
                 modifier = modifier,
             )

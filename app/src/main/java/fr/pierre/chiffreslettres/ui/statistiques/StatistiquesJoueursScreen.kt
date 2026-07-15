@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ProfilRepository
@@ -33,6 +34,7 @@ import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 @Composable
 fun StatistiquesJoueursScreen(
     historiqueRepository: HistoriqueRepository,
+    defiRepository: DefiRepository,
     profilRepository: ProfilRepository,
     onRetour: (() -> Unit)? = null,
 ) {
@@ -61,7 +63,7 @@ fun StatistiquesJoueursScreen(
         } else {
             var uneDonneeAffichee = false
             for (niveau in Niveau.entries) {
-                if (StatistiquesJoueurNiveau(historiqueRepository, profilSelectionne.id, niveau)) {
+                if (StatistiquesJoueurNiveau(historiqueRepository, defiRepository, profilSelectionne.id, niveau)) {
                     uneDonneeAffichee = true
                 }
             }
@@ -74,7 +76,12 @@ fun StatistiquesJoueursScreen(
 
 /** Affiche le bloc de stats du niveau s'il comporte des données, et renvoie s'il a été affiché. */
 @Composable
-private fun StatistiquesJoueurNiveau(historiqueRepository: HistoriqueRepository, profilId: Long, niveau: Niveau): Boolean {
+private fun StatistiquesJoueurNiveau(
+    historiqueRepository: HistoriqueRepository,
+    defiRepository: DefiRepository,
+    profilId: Long,
+    niveau: Niveau,
+): Boolean {
     val entrainementChiffres by remember(profilId, niveau) {
         historiqueRepository.compterManchesEntrainementParNiveau(profilId, ModeJeu.CHIFFRES, niveau.name)
     }.collectAsState(initial = 0)
@@ -87,9 +94,15 @@ private fun StatistiquesJoueurNiveau(historiqueRepository: HistoriqueRepository,
     val meilleuresParties by remember(profilId, niveau) {
         historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name)
     }.collectAsState(initial = emptyList())
+    val meilleursDefisChiffres by remember(profilId, niveau) {
+        defiRepository.meilleursDefisParNiveau(profilId, ModeJeu.CHIFFRES, niveau.name)
+    }.collectAsState(initial = emptyList())
+    val meilleursDefisLettres by remember(profilId, niveau) {
+        defiRepository.meilleursDefisParNiveau(profilId, ModeJeu.LETTRES, niveau.name)
+    }.collectAsState(initial = emptyList())
 
-    val aDesDonnees = entrainementChiffres > 0 || entrainementLettres > 0 ||
-        partiesSolo > 0 || meilleuresParties.isNotEmpty()
+    val aDesDonnees = entrainementChiffres > 0 || entrainementLettres > 0 || partiesSolo > 0 ||
+        meilleuresParties.isNotEmpty() || meilleursDefisChiffres.isNotEmpty() || meilleursDefisLettres.isNotEmpty()
     if (!aDesDonnees) return false
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -101,6 +114,18 @@ private fun StatistiquesJoueurNiveau(historiqueRepository: HistoriqueRepository,
             Text("3 meilleures parties solo", style = MaterialTheme.typography.labelLarge)
             for ((position, partie) in meilleuresParties.withIndex()) {
                 Text("${position + 1}. ${partie.score} points (${formatDate(partie.date)})")
+            }
+        }
+        if (meilleursDefisChiffres.isNotEmpty()) {
+            Text("Défi chiffres — meilleures séries", style = MaterialTheme.typography.labelLarge)
+            for ((position, defi) in meilleursDefisChiffres.withIndex()) {
+                Text("${position + 1}. ${defi.serie} réussite(s) (${formatDate(defi.date)})")
+            }
+        }
+        if (meilleursDefisLettres.isNotEmpty()) {
+            Text("Défi lettres — meilleures séries", style = MaterialTheme.typography.labelLarge)
+            for ((position, defi) in meilleursDefisLettres.withIndex()) {
+                Text("${position + 1}. ${defi.serie} réussite(s) (${formatDate(defi.date)})")
             }
         }
     }

@@ -33,4 +33,16 @@ class TirageChiffresTest {
             assertTrue(resultat.cible in 100..999)
         }
     }
+
+    @Test
+    fun `garantieSolution force une solution exacte meme sur Monique et Mathieu (mode Defi)`() {
+        val random = Random(789)
+        for (niveau in listOf(Niveau.MONIQUE, Niveau.MATHIEU)) {
+            repeat(20) {
+                val resultat = TirageChiffres.tirer(niveau, random, garantieSolution = true)
+                assertNotNull("$niveau avec garantieSolution=true devrait toujours produire une solution", resultat.solution)
+                assertEquals(resultat.cible, resultat.solution!!.resultat)
+            }
+        }
+    }
 }

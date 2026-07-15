@@ -1,7 +1,10 @@
 package fr.pierre.chiffreslettres.ui.navigation
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -19,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ProfilActifStore
@@ -33,6 +38,9 @@ import fr.pierre.chiffreslettres.ui.apropos.ReglesDuJeuScreen
 import fr.pierre.chiffreslettres.ui.apropos.VersionsScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundViewModel
+import fr.pierre.chiffreslettres.ui.defi.ChoixDefiScreen
+import fr.pierre.chiffreslettres.ui.defi.DefiViewModel
+import fr.pierre.chiffreslettres.ui.defi.seuilLongueurDefiLettres
 import fr.pierre.chiffreslettres.ui.entrainement.ChoixNiveauEntrainementScreen
 import fr.pierre.chiffreslettres.ui.entrainement.EntrainementLibreViewModel
 import fr.pierre.chiffreslettres.ui.lettres.LettresRoundScreen
@@ -70,6 +78,7 @@ fun AppNavHost(
     dictionnaire: DictionnaireIndex,
     profilRepository: ProfilRepository,
     historiqueRepository: HistoriqueRepository,
+    defiRepository: DefiRepository,
     profilActifStore: ProfilActifStore,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
@@ -85,6 +94,7 @@ fun AppNavHost(
                 pseudoActif = profilActif?.pseudo ?: "…",
                 onEntrainementLibre = { navController.navigate(Routes.ENTRAINEMENT_GRAPH) },
                 onPartieStructuree = { navController.navigate(Routes.PARTIE_GRAPH) },
+                onDefi = { navController.navigate(Routes.DEFI_GRAPH) },
                 onStatistiques = { navController.navigate(Routes.STATISTIQUES) },
                 onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                 onAPropos = { navController.navigate(Routes.A_PROPOS) },
@@ -130,6 +140,7 @@ fun AppNavHost(
         composable(Routes.STATISTIQUES) {
             StatistiquesScreen(
                 historiqueRepository = historiqueRepository,
+                defiRepository = defiRepository,
                 onVoirStatistiquesJoueurs = { navController.navigate(Routes.STATISTIQUES_JOUEURS) },
                 onRetour = { navController.popBackStack() },
             )
@@ -138,6 +149,7 @@ fun AppNavHost(
         composable(Routes.STATISTIQUES_JOUEURS) {
             StatistiquesJoueursScreen(
                 historiqueRepository = historiqueRepository,
+                defiRepository = defiRepository,
                 profilRepository = profilRepository,
                 onRetour = { navController.popBackStack() },
             )
@@ -308,5 +320,100 @@ fun AppNavHost(
                 )
             }
         }
+
+        navigation(startDestination = Routes.CHOIX_DEFI, route = Routes.DEFI_GRAPH) {
+            composable(Routes.CHOIX_DEFI) {
+                ChoixDefiScreen(
+                    onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChiffres(niveau)) },
+                    onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiLettres(niveau)) },
+                    onRetour = { navController.popBackStack() },
+                )
+            }
+
+            composable(
+                route = Routes.JEU_DEFI_CHIFFRES_PATTERN,
+                arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val niveau = Niveau.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+                val defiVm: DefiViewModel = viewModel(backStackEntry) {
+                    DefiViewModel(defiRepository, profilId, ModeJeu.CHIFFRES, niveau.name)
+                }
+                val index by defiVm.index.collectAsState()
+                val termine by defiVm.termine.collectAsState()
+                // Solution exacte toujours garantie en défi, même sur Monique/Mathieu (retour
+                // utilisateur) : la série ne doit s'arrêter que sur une erreur du joueur. Le
+                // chrono reste celui de la partie solo pour ce niveau (retour utilisateur).
+                val roundVm: ChiffresRoundViewModel =
+                    viewModel(key = "defi-chiffres-$index") {
+                        ChiffresRoundViewModel(niveau, niveau.dureeSecondesPartieStructuree, garantieSolution = true)
+                    }
+                ChiffresRoundScreen(
+                    viewModel = roundVm,
+                    scoreCumule = null,
+                    progressionManche = "Série : $index",
+                    onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.echec() },
+                    onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
+                    actionsFinManche = {
+                        if (termine) {
+                            ActionsFinDefi(
+                                serie = index,
+                                onRecommencer = { defiVm.recommencer() },
+                                onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
+                            )
+                        } else {
+                            Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text("Continuer") }
+                        }
+                    },
+                )
+            }
+
+            composable(
+                route = Routes.JEU_DEFI_LETTRES_PATTERN,
+                arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val niveau = NiveauLettres.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+                val defiVm: DefiViewModel = viewModel(backStackEntry) {
+                    DefiViewModel(defiRepository, profilId, ModeJeu.LETTRES, niveau.name)
+                }
+                val index by defiVm.index.collectAsState()
+                val termine by defiVm.termine.collectAsState()
+                val seuil = seuilLongueurDefiLettres(niveau)
+                val roundVm: LettresRoundViewModel =
+                    viewModel(key = "defi-lettres-$index") {
+                        LettresRoundViewModel(niveau, dictionnaire, niveau.dureeSecondesPartieStructuree)
+                    }
+                LettresRoundScreen(
+                    viewModel = roundVm,
+                    scoreCumule = null,
+                    progressionManche = "Série : $index",
+                    onMancheTerminee = { _, motValide ->
+                        val reussi = motValide != null && motValide.length > seuil
+                        if (!reussi) defiVm.echec()
+                    },
+                    onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
+                    actionsFinManche = {
+                        if (termine) {
+                            ActionsFinDefi(
+                                serie = index,
+                                onRecommencer = { defiVm.recommencer() },
+                                onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
+                            )
+                        } else {
+                            Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text("Continuer") }
+                        }
+                    },
+                )
+            }
+        }
+    }
+}
+
+/** Panneau de fin de défi (échec), commun aux manches chiffres et lettres. */
+@Composable
+private fun ActionsFinDefi(serie: Int, onRecommencer: () -> Unit, onChangerNiveau: () -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text("Série terminée : $serie réussite(s)")
+        Button(onClick = onRecommencer, modifier = Modifier.fillMaxWidth()) { Text("Recommencer") }
+        OutlinedButton(onClick = onChangerNiveau, modifier = Modifier.fillMaxWidth()) { Text("Changer de niveau") }
     }
 }

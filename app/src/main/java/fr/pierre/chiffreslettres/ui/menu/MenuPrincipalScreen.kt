@@ -25,6 +25,7 @@ fun MenuPrincipalScreen(
     pseudoActif: String,
     onEntrainementLibre: () -> Unit,
     onPartieStructuree: () -> Unit,
+    onDefi: () -> Unit,
     onStatistiques: () -> Unit,
     onChangerProfil: () -> Unit,
     onAPropos: () -> Unit,
@@ -40,6 +41,7 @@ fun MenuPrincipalScreen(
 
         TuilePrincipale("Entraînement", onClick = onEntrainementLibre)
         TuilePrincipale("Partie solo", onClick = onPartieStructuree)
+        TuilePrincipale("Défi", onClick = onDefi)
         TuilePrincipale("Statistiques", onClick = onStatistiques)
 
         Row(

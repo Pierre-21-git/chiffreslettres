@@ -17,6 +17,21 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.10",
+        date = "2026-07-15",
+        changements = listOf(
+            "Nouveau mode Défi : enchaînez les manches d'un niveau (chiffres ou lettres) et " +
+                "alignez le plus de réussites possible d'affilée, avec le même chrono qu'en " +
+                "partie solo pour ce niveau",
+            "En défi chiffres, une solution exacte est toujours garantie, même sur Monique " +
+                "et Mathieu, pour que seule une erreur du joueur puisse arrêter la série",
+            "En défi lettres, la longueur minimale d'un mot valide augmente avec le niveau " +
+                "(5, 6, 7 ou 8 lettres)",
+            "Les meilleures séries de défi (chiffres et lettres) apparaissent désormais " +
+                "dans les statistiques par joueur, groupées par niveau comme le reste",
+        ),
+    ),
+    EntreeVersion(
         version = "1.9",
         date = "2026-07-15",
         changements = listOf(
