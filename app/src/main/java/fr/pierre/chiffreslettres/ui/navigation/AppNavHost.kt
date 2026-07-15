@@ -44,6 +44,7 @@ import fr.pierre.chiffreslettres.ui.partie.PartieStructureeViewModel
 import fr.pierre.chiffreslettres.ui.partie.RecapPartieScreen
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
+import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesJoueursScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesScreen
 import kotlinx.coroutines.launch
 
@@ -128,6 +129,14 @@ fun AppNavHost(
 
         composable(Routes.STATISTIQUES) {
             StatistiquesScreen(
+                historiqueRepository = historiqueRepository,
+                onVoirStatistiquesJoueurs = { navController.navigate(Routes.STATISTIQUES_JOUEURS) },
+                onRetour = { navController.popBackStack() },
+            )
+        }
+
+        composable(Routes.STATISTIQUES_JOUEURS) {
+            StatistiquesJoueursScreen(
                 historiqueRepository = historiqueRepository,
                 profilRepository = profilRepository,
                 onRetour = { navController.popBackStack() },

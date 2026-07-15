@@ -33,13 +33,14 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
 
     fun classementParNiveau(niveauCode: String): Flow<List<LigneClassement>> = dao.classementParNiveau(niveauCode)
 
-    fun compterManchesEntrainement(profilId: Long, mode: ModeJeu): Flow<Int> =
-        dao.compterManchesEntrainement(profilId, mode)
+    fun compterManchesEntrainementParNiveau(profilId: Long, mode: ModeJeu, niveauCode: String): Flow<Int> =
+        dao.compterManchesEntrainementParNiveau(profilId, mode, niveauCode)
 
-    fun compterPartiesSolo(profilId: Long): Flow<Int> = dao.compterPartiesSolo(profilId)
+    fun compterPartiesSoloParNiveau(profilId: Long, niveauCode: String): Flow<Int> =
+        dao.compterPartiesSoloParNiveau(profilId, niveauCode)
 
-    fun meilleuresManches(profilId: Long, mode: ModeJeu): Flow<List<MeilleureManche>> =
-        dao.meilleuresManches(profilId, mode)
+    fun meilleuresPartiesSoloParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>> =
+        dao.meilleuresPartiesSoloParNiveau(profilId, niveauCode)
 
     suspend fun reinitialiserHistorique() = dao.reinitialiserHistorique()
 }
