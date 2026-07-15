@@ -9,7 +9,6 @@ import fr.pierre.chiffreslettres.numbers.Operation
 import fr.pierre.chiffreslettres.numbers.ReservoirChiffres
 import fr.pierre.chiffreslettres.numbers.Solveur
 import fr.pierre.chiffreslettres.numbers.TirageChiffres
-import kotlin.math.abs
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -150,8 +149,7 @@ class ChiffresRoundViewModel(
         // liste) : c'est ce résultat qui compte comme proposition, pas le jeton
         // éventuellement sélectionné (retour utilisateur).
         val proposition = etat.jetons.lastOrNull()?.expression?.resultat
-        val ecartMinimalAtteignable = etat.solutionSolveur?.let { abs(etat.cible - it.resultat) } ?: 0
-        val score = Bareme.score(niveau, etat.cible, proposition, ecartMinimalAtteignable)
+        val score = Bareme.score(niveau, etat.cible, proposition)
         _uiState.update { it.copy(termine = true, scoreObtenu = score) }
     }
 

@@ -14,6 +14,6 @@ enum class NiveauLettres(
 ) {
     EMILE("Assez facile, Émile", setOf('X', 'Y', 'Z', 'W', 'K', 'Q', 'H', 'J'), manchesParMode = 2, dureeSecondesPartieStructuree = 110),
     NESTOR("Ça va encore, Nestor", setOf('X', 'Y', 'Z', 'W', 'K', 'Q'), manchesParMode = 3, dureeSecondesPartieStructuree = 90),
-    MONIQUE("Ça se complique, Monique", setOf('X', 'Y', 'Z', 'W'), manchesParMode = 5, dureeSecondesPartieStructuree = 50),
+    MONIQUE("Ça se complique, Monique", setOf('X', 'Y', 'Z', 'W'), manchesParMode = 4, dureeSecondesPartieStructuree = 50),
     MATHIEU("Là c'est sérieux, Mathieu", emptySet(), manchesParMode = 5, dureeSecondesPartieStructuree = 40),
 }

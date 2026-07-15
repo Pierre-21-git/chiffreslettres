@@ -42,7 +42,7 @@ enum class Niveau(
         cibleMax = 200,
         operations = TOUTES_OPERATIONS,
         garantieSolution = false,
-        manchesParMode = 5,
+        manchesParMode = 4,
         dureeSecondesPartieStructuree = 60,
     ),
     MATHIEU(

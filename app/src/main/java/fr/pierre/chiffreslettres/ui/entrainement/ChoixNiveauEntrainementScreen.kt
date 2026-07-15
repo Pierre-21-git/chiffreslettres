@@ -28,7 +28,7 @@ fun ChoixNiveauEntrainementScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        EnTeteEcran("Entraînement libre", onRetour)
+        EnTeteEcran("Entraînement", onRetour)
 
         Text("Chiffres", style = MaterialTheme.typography.titleMedium)
         for (niveau in Niveau.entries) {

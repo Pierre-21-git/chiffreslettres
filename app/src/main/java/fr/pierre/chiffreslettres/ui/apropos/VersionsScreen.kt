@@ -17,6 +17,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.7",
+        date = "2026-07-15",
+        changements = listOf(
+            "Correction du barème chiffres sur Monique/Mathieu : un compte approchant (écart " +
+                "de 1) rapporte désormais 7 points même quand une solution exacte existait pour " +
+                "le tirage et n'a pas été trouvée, au lieu de 0",
+            "Titres \"Entraînement\" et \"Partie\" raccourcis (retrait de \"libre\"/\"structurée\")",
+            "Partie : le niveau Monique passe de 5 à 4 manches par mode",
+        ),
+    ),
+    EntreeVersion(
         version = "1.6",
         date = "2026-07-15",
         changements = listOf(

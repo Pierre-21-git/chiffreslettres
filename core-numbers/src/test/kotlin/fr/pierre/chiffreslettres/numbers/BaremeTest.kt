@@ -12,16 +12,18 @@ class BaremeTest {
     }
 
     @Test
-    fun `niveaux Monique et Mathieu rapportent 7 points si la meilleure approche possible est atteinte`() {
-        assertEquals(7, Bareme.score(Niveau.MONIQUE, cible = 42, propose = 45, ecartMinimalAtteignable = 3))
-        assertEquals(7, Bareme.score(Niveau.MATHIEU, cible = 42, propose = 39, ecartMinimalAtteignable = 3))
+    fun `niveaux Monique et Mathieu rapportent 7 points pour un compte approchant a 1`() {
+        // Même quand le compte exact était atteignable et que le joueur ne l'a pas trouvé
+        // (retour utilisateur : le palier de 7 points n'est pas conditionné à l'absence de
+        // solution exacte pour ce tirage).
+        assertEquals(7, Bareme.score(Niveau.MONIQUE, cible = 42, propose = 43))
+        assertEquals(7, Bareme.score(Niveau.MATHIEU, cible = 355, propose = 356))
     }
 
     @Test
-    fun `niveaux Monique et Mathieu rapportent 0 point si la proposition n'est pas la meilleure approche possible`() {
-        // La meilleure approche pour ce tirage était à 3 du compte, le joueur est à 5 : pas de points.
-        assertEquals(0, Bareme.score(Niveau.MONIQUE, cible = 42, propose = 47, ecartMinimalAtteignable = 3))
-        assertEquals(0, Bareme.score(Niveau.MATHIEU, cible = 42, propose = 100, ecartMinimalAtteignable = 3))
+    fun `niveaux Monique et Mathieu rapportent 0 point au-dela d'un ecart de 1`() {
+        assertEquals(0, Bareme.score(Niveau.MONIQUE, cible = 42, propose = 47))
+        assertEquals(0, Bareme.score(Niveau.MATHIEU, cible = 42, propose = 100))
     }
 
     @Test

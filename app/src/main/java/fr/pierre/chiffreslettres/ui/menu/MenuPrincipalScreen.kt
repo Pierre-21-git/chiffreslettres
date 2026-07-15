@@ -38,8 +38,8 @@ fun MenuPrincipalScreen(
         BandeDoree(modifier = Modifier.padding(horizontal = 16.dp))
         PucePseudo(pseudoActif, modifier = Modifier.align(Alignment.CenterHorizontally))
 
-        TuilePrincipale("Entraînement libre", onClick = onEntrainementLibre)
-        TuilePrincipale("Partie structurée", onClick = onPartieStructuree)
+        TuilePrincipale("Entraînement", onClick = onEntrainementLibre)
+        TuilePrincipale("Partie", onClick = onPartieStructuree)
         TuilePrincipale("Statistiques", onClick = onStatistiques)
 
         Row(

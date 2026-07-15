@@ -38,9 +38,8 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
             "Comptage des points — sur Assez facile (Émile) et Ça va encore (Nestor) : " +
                 "10 points si le compte est exact, 5 points pour toute proposition non " +
                 "exacte. Sur Ça se complique (Monique) et Là c'est sérieux (Mathieu) : 10 " +
-                "points si le compte est exact, 7 points si vous trouvez la meilleure " +
-                "approche possible pour ce tirage (calculée par l'application), 0 point " +
-                "sinon — comme à la télé.",
+                "points si le compte est exact, 7 points pour un compte approchant (écart " +
+                "de 1 avec la cible), 0 point au-delà.",
             style = MaterialTheme.typography.bodyMedium,
         )
 
@@ -79,7 +78,7 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
 
         HorizontalDivider()
 
-        Text("Mode Partie structurée", style = MaterialTheme.typography.titleMedium)
+        Text("Mode Partie", style = MaterialTheme.typography.titleMedium)
         Text(
             "Un seul choix à faire : le niveau, appliqué aux manches chiffres et " +
                 "lettres, jouées en alternance. La durée du chrono et le nombre de " +
@@ -99,7 +98,7 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
             style = MaterialTheme.typography.bodyMedium,
         )
         Text(
-            "• Ça se complique, Monique (5 manches par mode, comme le jeu télé) — " +
+            "• Ça se complique, Monique (4 manches par mode) — " +
                 "Chiffres : cible ≤ 200, les 4 opérations, pas de garantie de solution, " +
                 "60s. Lettres : X, Y, Z, W exclues, 50s.",
             style = MaterialTheme.typography.bodyMedium,
