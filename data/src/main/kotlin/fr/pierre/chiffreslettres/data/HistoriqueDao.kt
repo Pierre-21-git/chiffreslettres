@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.Flow
 
 data class LigneClassement(val profilId: Long, val pseudo: String, val score: Int, val date: Long)
 
+/** Une manche individuelle, pour le classement personnel "meilleurs chiffres/lettres" d'un joueur. */
+data class MeilleureManche(val score: Int, val date: Long)
+
 @Dao
 interface HistoriqueDao {
     @Insert
@@ -46,6 +49,37 @@ interface HistoriqueDao {
         """,
     )
     fun classementParNiveau(niveauCode: String): Flow<List<LigneClassement>>
+
+    /** Nombre de manches jouées en entraînement libre par un joueur, pour un mode donné. */
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type = 'LIBRE' AND m.mode = :mode
+        """,
+    )
+    fun compterManchesEntrainement(profilId: Long, mode: ModeJeu): Flow<Int>
+
+    /** Nombre de parties solo (structurées) jouées par un joueur. */
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE'")
+    fun compterPartiesSolo(profilId: Long): Flow<Int>
+
+    /**
+     * Top 5 des meilleurs scores individuels d'un joueur pour un mode donné (entraînement et
+     * partie solo confondus, retour utilisateur), avec la date de la session correspondante.
+     */
+    @Query(
+        """
+        SELECT m.score AS score, s.date AS date
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND m.mode = :mode
+        ORDER BY m.score DESC, s.date DESC
+        LIMIT 5
+        """,
+    )
+    fun meilleuresManches(profilId: Long, mode: ModeJeu): Flow<List<MeilleureManche>>
 
     /** Vide tout l'historique (sessions + manches, cascade) — bouton "Réinitialiser les statistiques". */
     @Query("DELETE FROM SessionEntity")

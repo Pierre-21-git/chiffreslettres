@@ -78,7 +78,7 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
 
         HorizontalDivider()
 
-        Text("Mode Partie", style = MaterialTheme.typography.titleMedium)
+        Text("Mode Partie solo", style = MaterialTheme.typography.titleMedium)
         Text(
             "Un seul choix à faire : le niveau, appliqué aux manches chiffres et " +
                 "lettres, jouées en alternance. La durée du chrono et le nombre de " +

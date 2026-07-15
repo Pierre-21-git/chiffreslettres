@@ -39,7 +39,7 @@ fun MenuPrincipalScreen(
         PucePseudo(pseudoActif, modifier = Modifier.align(Alignment.CenterHorizontally))
 
         TuilePrincipale("Entraînement", onClick = onEntrainementLibre)
-        TuilePrincipale("Partie", onClick = onPartieStructuree)
+        TuilePrincipale("Partie solo", onClick = onPartieStructuree)
         TuilePrincipale("Statistiques", onClick = onStatistiques)
 
         Row(

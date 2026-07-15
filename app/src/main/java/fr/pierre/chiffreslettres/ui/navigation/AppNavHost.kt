@@ -129,6 +129,7 @@ fun AppNavHost(
         composable(Routes.STATISTIQUES) {
             StatistiquesScreen(
                 historiqueRepository = historiqueRepository,
+                profilRepository = profilRepository,
                 onRetour = { navController.popBackStack() },
             )
         }

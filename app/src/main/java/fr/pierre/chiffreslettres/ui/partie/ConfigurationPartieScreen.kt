@@ -29,7 +29,7 @@ fun ConfigurationPartieScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        EnTeteEcran("Configurer la partie", onRetour)
+        EnTeteEcran("Configurer la partie solo", onRetour)
         Text("Choisir un niveau", style = MaterialTheme.typography.titleMedium)
 
         for (niveau in Niveau.entries) {

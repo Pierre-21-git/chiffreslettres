@@ -23,6 +23,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
+import fr.pierre.chiffreslettres.data.ModeJeu
+import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import java.time.Instant
@@ -38,10 +40,12 @@ private fun formatDate(epochMillis: Long): String =
 @Composable
 fun StatistiquesScreen(
     historiqueRepository: HistoriqueRepository,
+    profilRepository: ProfilRepository,
     onRetour: (() -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
     var confirmationReinitialisation by remember { mutableStateOf(false) }
+    val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
 
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
@@ -50,7 +54,7 @@ fun StatistiquesScreen(
         EnTeteEcran("Statistiques", onRetour)
 
         Text(
-            "Classement par niveau (parties structurées, chiffres et lettres confondus)",
+            "Classement par niveau (parties solo, chiffres et lettres confondus)",
             style = MaterialTheme.typography.titleMedium,
         )
         for (niveau in Niveau.entries) {
@@ -64,6 +68,12 @@ fun StatistiquesScreen(
                     Text("${position + 1}. ${ligne.pseudo} — ${ligne.score} points (${formatDate(ligne.date)})")
                 }
             }
+        }
+
+        HorizontalDivider()
+        Text("Statistiques par joueur", style = MaterialTheme.typography.titleMedium)
+        for (profil in profils) {
+            StatistiquesJoueur(historiqueRepository, profil.id, profil.pseudo)
         }
 
         HorizontalDivider()
@@ -87,5 +97,48 @@ fun StatistiquesScreen(
                 TextButton(onClick = { confirmationReinitialisation = false }) { Text("Annuler") }
             },
         )
+    }
+}
+
+@Composable
+private fun StatistiquesJoueur(historiqueRepository: HistoriqueRepository, profilId: Long, pseudo: String) {
+    val entrainementChiffres by remember(profilId) {
+        historiqueRepository.compterManchesEntrainement(profilId, ModeJeu.CHIFFRES)
+    }.collectAsState(initial = 0)
+    val entrainementLettres by remember(profilId) {
+        historiqueRepository.compterManchesEntrainement(profilId, ModeJeu.LETTRES)
+    }.collectAsState(initial = 0)
+    val partiesSolo by remember(profilId) {
+        historiqueRepository.compterPartiesSolo(profilId)
+    }.collectAsState(initial = 0)
+    val meilleursChiffres by remember(profilId) {
+        historiqueRepository.meilleuresManches(profilId, ModeJeu.CHIFFRES)
+    }.collectAsState(initial = emptyList())
+    val meilleursLettres by remember(profilId) {
+        historiqueRepository.meilleuresManches(profilId, ModeJeu.LETTRES)
+    }.collectAsState(initial = emptyList())
+
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(pseudo, style = MaterialTheme.typography.titleSmall)
+        Text("Entraînement : $entrainementChiffres manche(s) chiffres, $entrainementLettres manche(s) lettres")
+        Text("Parties solo jouées : $partiesSolo")
+
+        Text("5 meilleurs chiffres", style = MaterialTheme.typography.labelLarge)
+        if (meilleursChiffres.isEmpty()) {
+            Text("Aucun score enregistré.")
+        } else {
+            for ((position, manche) in meilleursChiffres.withIndex()) {
+                Text("${position + 1}. ${manche.score} points (${formatDate(manche.date)})")
+            }
+        }
+
+        Text("5 meilleurs lettres", style = MaterialTheme.typography.labelLarge)
+        if (meilleursLettres.isEmpty()) {
+            Text("Aucun score enregistré.")
+        } else {
+            for ((position, manche) in meilleursLettres.withIndex()) {
+                Text("${position + 1}. ${manche.score} points (${formatDate(manche.date)})")
+            }
+        }
     }
 }

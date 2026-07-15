@@ -17,6 +17,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.8",
+        date = "2026-07-15",
+        changements = listOf(
+            "Statistiques par joueur : nombre de manches d'entraînement (chiffres/lettres), " +
+                "nombre de parties solo jouées, et top 5 des meilleurs scores individuels " +
+                "chiffres/lettres avec leur date",
+            "\"Partie\" renommé en \"Partie solo\" partout dans l'application, en prévision " +
+                "d'un futur mode multijoueur",
+        ),
+    ),
+    EntreeVersion(
         version = "1.7",
         date = "2026-07-15",
         changements = listOf(
