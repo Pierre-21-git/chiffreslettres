@@ -6,9 +6,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
-data class LigneClassement(val profilId: Long, val pseudo: String, val meilleurScore: Int)
-
-data class MeilleurMot(val motJoue: String, val score: Int)
+data class LigneClassement(val profilId: Long, val pseudo: String, val score: Int, val date: Long)
 
 @Dao
 interface HistoriqueDao {
@@ -24,34 +22,32 @@ interface HistoriqueDao {
         insererManches(manches.map { it.copy(sessionId = sessionId) })
     }
 
-    /** Classement (meilleur score par profil) pour un mode et un niveau donnés (spec §7.2). */
+    /**
+     * Top 5 scores de partie (pas de regroupement par profil : un même joueur peut
+     * apparaître plusieurs fois, retour utilisateur) pour un niveau donné (spec
+     * §7.2), tous confondus chiffres/lettres (les deux modes partagent désormais
+     * les mêmes noms de niveau), uniquement les parties structurées. Le score
+     * affiché est le score final de la partie (`SessionEntity.scoreTotal`, somme
+     * des manches), pas celui d'une manche individuelle (retour utilisateur) — un
+     * seul niveau s'applique à toutes les manches d'une partie structurée, d'où
+     * le `JOIN` sur `MancheEntity` pour filtrer par niveau malgré le regroupement
+     * par session. À score égal, la partie la plus récente passe devant.
+     */
     @Query(
         """
-        SELECT p.id AS profilId, p.pseudo AS pseudo, MAX(m.score) AS meilleurScore
-        FROM MancheEntity m
-        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        SELECT p.id AS profilId, p.pseudo AS pseudo, s.scoreTotal AS score, s.date AS date
+        FROM SessionEntity s
         INNER JOIN ProfilEntity p ON p.id = s.profilId
-        WHERE m.mode = :mode AND m.niveauCode = :niveauCode
-        GROUP BY p.id
-        ORDER BY meilleurScore DESC
+        INNER JOIN MancheEntity m ON m.sessionId = s.id
+        WHERE s.type = 'STRUCTUREE' AND m.niveauCode = :niveauCode
+        GROUP BY s.id
+        ORDER BY s.scoreTotal DESC, s.date DESC
+        LIMIT 5
         """,
     )
-    fun classementParNiveau(mode: ModeJeu, niveauCode: String): Flow<List<LigneClassement>>
+    fun classementParNiveau(niveauCode: String): Flow<List<LigneClassement>>
 
-    /** Le mot le plus long trouvé par ce profil en mode Lettres (spec §7.2). */
-    @Query(
-        """
-        SELECT m.motJoue AS motJoue, m.score AS score
-        FROM MancheEntity m
-        INNER JOIN SessionEntity s ON s.id = m.sessionId
-        WHERE s.profilId = :profilId AND m.mode = 'LETTRES' AND m.motJoue IS NOT NULL
-        ORDER BY LENGTH(m.motJoue) DESC
-        LIMIT 1
-        """,
-    )
-    fun plusLongMot(profilId: Long): Flow<MeilleurMot?>
-
-    /** Meilleur score total en partie structurée pour ce profil (spec §7.2). */
-    @Query("SELECT MAX(scoreTotal) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE'")
-    fun meilleurScorePartieStructuree(profilId: Long): Flow<Int?>
+    /** Vide tout l'historique (sessions + manches, cascade) — bouton "Réinitialiser les statistiques". */
+    @Query("DELETE FROM SessionEntity")
+    suspend fun reinitialiserHistorique()
 }

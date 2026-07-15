@@ -7,7 +7,6 @@ import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
 import fr.pierre.chiffreslettres.letters.meilleurMot
-import fr.pierre.chiffreslettres.ui.entrainement.DureesParDefaut
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,11 +17,15 @@ import kotlinx.coroutines.launch
 
 data class LettresRoundUiState(
     val niveau: NiveauLettres,
+    val nombreLettres: Int,
     val lettresTirees: List<Char> = emptyList(),
     val consonneAutorisee: Boolean = true,
     val tirageTermine: Boolean = false,
+    /** Indices dans [lettresTirees] des tuiles cliquées, dans l'ordre (spec §4.5, retour utilisateur : mot construit au clic, pas au clavier). */
+    val indicesUtilises: List<Int> = emptyList(),
     val motSaisi: String = "",
-    val tempsRestantSecondes: Int,
+    /** Null = pas de limite de temps (entraînement libre, retour utilisateur). */
+    val tempsRestantSecondes: Int?,
     val termine: Boolean = false,
     val meilleurMot: String? = null,
     val motJoueurValide: Boolean? = null,
@@ -33,7 +36,8 @@ data class LettresRoundUiState(
 class LettresRoundViewModel(
     niveau: NiveauLettres,
     private val dictionnaire: DictionnaireIndex,
-    dureeSecondes: Int = DureesParDefaut.LETTRES_SECONDES,
+    dureeSecondes: Int? = null,
+    private val nombreLettres: Int = TirageLettres.NOMBRE_LETTRES,
 ) : ViewModel() {
 
     private val sac = SacLettres.creer(niveau)
@@ -42,7 +46,8 @@ class LettresRoundViewModel(
     private val _uiState = MutableStateFlow(
         LettresRoundUiState(
             niveau = niveau,
-            consonneAutorisee = TirageLettres.consonneAutorisee(emptyList()),
+            nombreLettres = nombreLettres,
+            consonneAutorisee = TirageLettres.consonneAutorisee(emptyList(), nombreLettres),
             tempsRestantSecondes = dureeSecondes,
         ),
     )
@@ -51,13 +56,13 @@ class LettresRoundViewModel(
     fun tirerLettre(consonneDemandee: Boolean) {
         val etat = _uiState.value
         if (etat.tirageTermine || etat.termine) return
-        val lettre = TirageLettres.tirerProchaineLettre(sac, etat.lettresTirees, consonneDemandee)
+        val lettre = TirageLettres.tirerProchaineLettre(sac, etat.lettresTirees, consonneDemandee, nombreLettres)
         val nouvellesLettres = etat.lettresTirees + lettre
-        val tirageTermine = nouvellesLettres.size >= TirageLettres.NOMBRE_LETTRES
+        val tirageTermine = nouvellesLettres.size >= nombreLettres
         _uiState.update {
             it.copy(
                 lettresTirees = nouvellesLettres,
-                consonneAutorisee = TirageLettres.consonneAutorisee(nouvellesLettres),
+                consonneAutorisee = TirageLettres.consonneAutorisee(nouvellesLettres, nombreLettres),
                 tirageTermine = tirageTermine,
             )
         }
@@ -65,19 +70,39 @@ class LettresRoundViewModel(
     }
 
     private fun demarrerChrono() {
+        if (_uiState.value.tempsRestantSecondes == null) return
         timerJob = viewModelScope.launch {
-            while (_uiState.value.tempsRestantSecondes > 0) {
+            while ((_uiState.value.tempsRestantSecondes ?: 0) > 0) {
                 delay(1000)
                 if (_uiState.value.termine) return@launch
-                _uiState.update { it.copy(tempsRestantSecondes = it.tempsRestantSecondes - 1) }
+                _uiState.update { it.copy(tempsRestantSecondes = it.tempsRestantSecondes?.minus(1)) }
             }
             terminer()
         }
     }
 
-    fun saisirMot(mot: String) {
+    fun cliquerLettre(index: Int) {
+        val etat = _uiState.value
+        if (etat.termine || !etat.tirageTermine) return
+        if (index !in etat.lettresTirees.indices || index in etat.indicesUtilises) return
+        mettreAJourMot(etat.indicesUtilises + index)
+    }
+
+    fun annulerLettre() {
+        val etat = _uiState.value
+        if (etat.termine) return
+        mettreAJourMot(etat.indicesUtilises.dropLast(1))
+    }
+
+    fun effacerMot() {
         if (_uiState.value.termine) return
-        _uiState.update { it.copy(motSaisi = mot) }
+        mettreAJourMot(emptyList())
+    }
+
+    private fun mettreAJourMot(indicesUtilises: List<Int>) {
+        val etat = _uiState.value
+        val mot = indicesUtilises.map { etat.lettresTirees[it] }.joinToString("")
+        _uiState.update { it.copy(indicesUtilises = indicesUtilises, motSaisi = mot) }
     }
 
     fun valider() = terminer()
@@ -86,7 +111,7 @@ class LettresRoundViewModel(
         if (_uiState.value.termine) return
         timerJob?.cancel()
         val etat = _uiState.value
-        val motValide = etat.motSaisi.isNotBlank() && dictionnaire.estJouable(etat.motSaisi, etat.lettresTirees)
+        val motValide = etat.motSaisi.isNotBlank() && dictionnaire.estJouable(etat.motSaisi)
         val meilleur = meilleurMot(etat.lettresTirees, dictionnaire)
         val score = if (motValide) etat.motSaisi.trim().length else 0
         _uiState.update {

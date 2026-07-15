@@ -1,0 +1,40 @@
+package fr.pierre.chiffreslettres.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+/** Palette « plateau télé » (spec design validée avec l'utilisateur — Antenne 2/France 3 rétro). */
+val Navy900 = Color(0xFF101B33)
+val Navy700 = Color(0xFF1E2C4F)
+val PanelDeep = Color(0xFF0A1120)
+
+val Ivory = Color(0xFFF1E6CF)
+val IvoryTileTop = Color(0xFFF6ECD8)
+val IvoryTileBottom = Color(0xFFE9DAB8)
+val InkOnIvory = Color(0xFF1B1408)
+
+val Brass = Color(0xFFC9A227)
+val BrassBright = Color(0xFFE4BE4A)
+val BrassShadow = Color(0xFF8A6A1F)
+val BrassHighlight = Color(0xFFFFD88A)
+
+val Amber = Color(0xFFFFB020)
+
+val Rouge = Color(0xFFA63D38)
+val RougeClair = Color(0xFFC96A5F)
+val RougeOmbre = Color(0xFF7C2A26)
+val RougeEncre = Color(0xFFFBEEE9)
+
+// Paire Consonne/Voyelle (tirage lettres) : sarcelle et terracotta, deux teintes qui
+// s'accordent entre elles sans empiéter sur le doré/ivoire des autres boutons.
+val Sarcelle = Color(0xFF2F7A73)
+val SarcelleClair = Color(0xFF57A79D)
+val SarcelleOmbre = Color(0xFF1D4E49)
+val SarcelleEncre = Color(0xFFEFFAF8)
+
+val Terracotta = Color(0xFFB5623C)
+val TerracottaClair = Color(0xFFD08659)
+val TerracottaOmbre = Color(0xFF7A3F24)
+val TerracottaEncre = Color(0xFFFBEFE7)
+
+val TextMuted = Color(0xFFCBB98A)
+val TextFaint = Color(0xFF8A8267)

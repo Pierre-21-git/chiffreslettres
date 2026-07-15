@@ -22,9 +22,6 @@ class EntrainementLibreViewModel(
     private val historiqueRepository: HistoriqueRepository,
     private val profilId: Long,
 ) : ViewModel() {
-    private val _scoreCumule = MutableStateFlow(0)
-    val scoreCumule: StateFlow<Int> = _scoreCumule.asStateFlow()
-
     private val _manches = MutableStateFlow<List<ResultatManche>>(emptyList())
     val manches: StateFlow<List<ResultatManche>> = _manches.asStateFlow()
 
@@ -38,10 +35,9 @@ class EntrainementLibreViewModel(
 
     private fun enregistrer(resultat: ResultatManche) {
         _manches.value = _manches.value + resultat
-        _scoreCumule.value += resultat.score
     }
 
-    /** Appelé sur "Arrêter" : enregistre la session dans l'historique si au moins une manche a été jouée. */
+    /** Appelé en quittant l'entraînement : enregistre la session dans l'historique si au moins une manche a été jouée. */
     fun terminerEtEnregistrer() {
         val manchesJouees = _manches.value
         if (manchesJouees.isNotEmpty()) {
@@ -49,7 +45,6 @@ class EntrainementLibreViewModel(
                 historiqueRepository.enregistrerSession(profilId, TypePartie.LIBRE, manchesJouees)
             }
         }
-        _scoreCumule.value = 0
         _manches.value = emptyList()
     }
 }

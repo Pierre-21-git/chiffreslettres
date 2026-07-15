@@ -20,4 +20,11 @@ sealed class Expression {
         is Valeur -> resultat.toString()
         is Calcul -> "(${gauche.texte()} ${operation.symbole} ${droite.texte()})"
     }
+
+    /** Décompose le calcul en étapes "x op y = résultat", même format que les opérations du joueur. */
+    fun etapes(): List<String> = when (this) {
+        is Valeur -> emptyList()
+        is Calcul -> gauche.etapes() + droite.etapes() +
+            "${gauche.resultat} ${operation.symbole} ${droite.resultat} = $resultat"
+    }
 }

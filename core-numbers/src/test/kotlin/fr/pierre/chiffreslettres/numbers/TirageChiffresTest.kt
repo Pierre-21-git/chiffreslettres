@@ -28,7 +28,7 @@ class TirageChiffresTest {
         // Pas d'assertion sur la présence d'une solution, juste que le tirage reste cohérent.
         val random = Random(456)
         repeat(20) {
-            val resultat = TirageChiffres.tirer(Niveau.NORMAL_OFFICIEL, random)
+            val resultat = TirageChiffres.tirer(Niveau.MATHIEU, random)
             assertEquals(6, resultat.nombres.size)
             assertTrue(resultat.cible in 100..999)
         }

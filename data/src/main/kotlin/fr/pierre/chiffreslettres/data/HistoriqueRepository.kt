@@ -31,10 +31,7 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
         dao.enregistrerPartie(session, entites)
     }
 
-    fun classementParNiveau(mode: ModeJeu, niveauCode: String): Flow<List<LigneClassement>> =
-        dao.classementParNiveau(mode, niveauCode)
+    fun classementParNiveau(niveauCode: String): Flow<List<LigneClassement>> = dao.classementParNiveau(niveauCode)
 
-    fun plusLongMot(profilId: Long): Flow<MeilleurMot?> = dao.plusLongMot(profilId)
-
-    fun meilleurScorePartieStructuree(profilId: Long): Flow<Int?> = dao.meilleurScorePartieStructuree(profilId)
+    suspend fun reinitialiserHistorique() = dao.reinitialiserHistorique()
 }

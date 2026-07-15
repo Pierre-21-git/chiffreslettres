@@ -59,9 +59,24 @@ class DictionnaireIndexTest {
     }
 
     @Test
-    fun `estJouable verifie un mot precis`() {
+    fun `estJouable accepte un mot present dans le dictionnaire`() {
         val idx = index()
-        assertTrue(idx.estJouable("chat", "TACHEXYZ".toList()))
-        assertFalse(idx.estJouable("chatte", "CHATXYZ".toList()))
+        assertTrue(idx.estJouable("chat"))
+        assertTrue(idx.estJouable("CHATTE"))
+    }
+
+    @Test
+    fun `estJouable refuse un mot absent du dictionnaire meme compose de lettres valides`() {
+        // "avn" n'est pas un mot du dictionnaire, même si A, V, N sont des lettres normales.
+        val idx = index()
+        assertFalse(idx.estJouable("avn"))
+        assertFalse(idx.estJouable("xyz"))
+    }
+
+    @Test
+    fun `estJouable respecte la normalisation des accents`() {
+        val idx = index()
+        assertTrue(idx.estJouable("ecran"))
+        assertTrue(idx.estJouable("écran"))
     }
 }

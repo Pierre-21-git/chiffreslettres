@@ -1,5 +1,6 @@
 package fr.pierre.chiffreslettres.numbers
 
+import kotlin.math.abs
 import kotlin.random.Random
 
 /**
@@ -20,16 +21,21 @@ object TirageChiffres {
     fun tirer(
         niveau: Niveau,
         random: Random = Random,
+        nombreJetons: Int = ReservoirChiffres.NOMBRE_JETONS_DEFAUT,
         maxTentativesCible: Int = 200,
         maxTentativesTirage: Int = 20,
     ): Resultat {
         repeat(maxTentativesTirage) {
-            val nombres = ReservoirChiffres.tirerNombres(random)
+            val nombres = ReservoirChiffres.tirerNombres(nombreJetons, random)
             val atteignables = Solveur.valeursAtteignables(nombres, niveau.operations)
 
             if (!niveau.garantieSolution) {
                 val cible = random.nextInt(niveau.cibleMin, niveau.cibleMax + 1)
-                return Resultat(nombres, cible, atteignables[cible])
+                // Pas de solution exacte garantie : à défaut, on retient la valeur atteignable
+                // la plus proche de la cible (retour utilisateur) pour l'affichage en fin de
+                // manche et pour le calcul du barème (§3.3).
+                val solution = atteignables[cible] ?: atteignables.entries.minByOrNull { abs(it.key - cible) }?.value
+                return Resultat(nombres, cible, solution)
             }
 
             repeat(maxTentativesCible) {

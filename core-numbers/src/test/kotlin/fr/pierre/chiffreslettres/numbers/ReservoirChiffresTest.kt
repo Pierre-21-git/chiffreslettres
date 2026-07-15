@@ -32,7 +32,7 @@ class ReservoirChiffresTest {
     fun `tirage retourne 6 nombres avec au plus 2 grands nombres`() {
         val random = Random(42)
         repeat(500) {
-            val tirage = ReservoirChiffres.tirerNombres(random)
+            val tirage = ReservoirChiffres.tirerNombres(random = random)
             assertEquals(6, tirage.size)
             val nbGrands = tirage.count { it in ReservoirChiffres.GRANDS_NOMBRES }
             assertTrue("nbGrands=$nbGrands devrait être entre 0 et 2", nbGrands in 0..2)
@@ -43,7 +43,7 @@ class ReservoirChiffresTest {
     fun `tirage sans remise ne depasse jamais le stock disponible`() {
         val random = Random(7)
         repeat(500) {
-            val tirage = ReservoirChiffres.tirerNombres(random)
+            val tirage = ReservoirChiffres.tirerNombres(random = random)
             for (v in 1..10) {
                 assertTrue(tirage.count { it == v } <= 2)
             }
@@ -58,7 +58,7 @@ class ReservoirChiffresTest {
         val random = Random(1)
         val comptes = (0..2).associateWith { 0 }.toMutableMap()
         repeat(1000) {
-            val tirage = ReservoirChiffres.tirerNombres(random)
+            val tirage = ReservoirChiffres.tirerNombres(random = random)
             val nbGrands = tirage.count { it in ReservoirChiffres.GRANDS_NOMBRES }
             comptes[nbGrands] = (comptes[nbGrands] ?: 0) + 1
         }

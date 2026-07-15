@@ -2,26 +2,48 @@ package fr.pierre.chiffreslettres.ui.lettres
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import fr.pierre.chiffreslettres.ui.theme.Afficheur
+import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
+import fr.pierre.chiffreslettres.ui.theme.BrassBright
+import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
+import fr.pierre.chiffreslettres.ui.theme.StyleTirage
+import fr.pierre.chiffreslettres.ui.theme.TextMuted
+import fr.pierre.chiffreslettres.ui.theme.TuileJeton
+import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
+import fr.pierre.chiffreslettres.ui.theme.TuileTirage
+import fr.pierre.chiffreslettres.ui.theme.fondPlateau
+
+private const val LETTRES_PAR_LIGNE = 5
 
 @Composable
 fun LettresRoundScreen(
     viewModel: LettresRoundViewModel,
-    scoreCumule: Int,
+    scoreCumule: Int?,
     onMancheTerminee: (score: Int, motValide: String?) -> Unit,
     actionsFinManche: @Composable () -> Unit,
+    onRetourEntrainement: (() -> Unit)? = null,
+    /** "2 / 4" par exemple, uniquement en partie structurée (retour utilisateur). */
+    progressionManche: String? = null,
 ) {
     val etat by viewModel.uiState.collectAsState()
 
@@ -32,38 +54,115 @@ fun LettresRoundScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text("Score cumulé : $scoreCumule", style = MaterialTheme.typography.titleMedium)
-        Text("Lettres : ${etat.lettresTirees.joinToString(" ")}", style = MaterialTheme.typography.headlineSmall)
+    Column(
+        modifier = Modifier.fillMaxSize().fondPlateau().padding(20.dp).verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        EnTeteEcran("Lettres", onRetourEntrainement)
 
-        if (!etat.tirageTermine) {
-            Text("Tirage : ${etat.lettresTirees.size} / 9")
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { viewModel.tirerLettre(true) }, enabled = etat.consonneAutorisee) {
-                    Text("Consonne")
-                }
-                Button(onClick = { viewModel.tirerLettre(false) }) {
-                    Text("Voyelle")
-                }
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            if (scoreCumule != null) {
+                Afficheur("Score", "$scoreCumule", modifier = Modifier.weight(1f), centre = true)
             }
-        } else {
-            Text("Temps restant : ${etat.tempsRestantSecondes}s")
-            OutlinedTextField(
-                value = etat.motSaisi,
-                onValueChange = { viewModel.saisirMot(it) },
-                enabled = !etat.termine,
-                label = { Text("Votre mot") },
+            if (progressionManche != null) {
+                Afficheur("Manche", progressionManche, modifier = Modifier.weight(1f), centre = true)
+            }
+            // Cadre toujours affiché (retour utilisateur), même vide une fois le tirage
+            // terminé sans chrono (entraînement libre) : sa position ne doit pas bouger.
+            Afficheur(
+                label = if (!etat.tirageTermine) "Tirage" else "Temps",
+                valeur = when {
+                    !etat.tirageTermine -> "${etat.lettresTirees.size} / ${etat.nombreLettres}"
+                    etat.tempsRestantSecondes != null -> "${etat.tempsRestantSecondes}s"
+                    else -> ""
+                },
+                modifier = Modifier.weight(1f),
+                centre = true,
             )
-            Button(onClick = { viewModel.valider() }, enabled = !etat.termine) {
-                Text("Valider")
+        }
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            maxItemsInEachRow = LETTRES_PAR_LIGNE,
+        ) {
+            // Emplacements réservés pour les nombreLettres tuiles dès le début de la manche
+            // (retour utilisateur) : la grille garde toujours sa taille finale, qu'il y ait 0
+            // ou 10 lettres tirées, pour que rien en dessous (mot, boutons) ne se déplace au
+            // fil du tirage.
+            for (index in 0 until etat.nombreLettres) {
+                val lettre = etat.lettresTirees.getOrNull(index)
+                if (lettre == null) {
+                    Spacer(Modifier.size(56.dp, 60.dp))
+                } else {
+                    val utilisee = index in etat.indicesUtilises
+                    TuileJeton(
+                        texte = "$lettre",
+                        selectionne = false,
+                        enabled = etat.tirageTermine && !etat.termine && !utilisee,
+                        monospace = false,
+                        grand = true,
+                        onClick = { viewModel.cliquerLettre(index) },
+                    )
+                }
             }
         }
 
+        // Cadre affiché dès le début de la manche (retour utilisateur), pas seulement une
+        // fois le tirage terminé : sa position reste fixe, seul son contenu apparaît une fois
+        // que le joueur compose son mot.
+        Afficheur(
+            "Votre mot",
+            etat.motSaisi.ifEmpty { "…" },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        if (!etat.tirageTermine) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                TuileTirage(
+                    "Consonne",
+                    style = StyleTirage.CONSONNE,
+                    enabled = etat.consonneAutorisee,
+                    onClick = { viewModel.tirerLettre(true) },
+                    modifier = Modifier.weight(1f),
+                )
+                TuileTirage(
+                    "Voyelle",
+                    style = StyleTirage.VOYELLE,
+                    onClick = { viewModel.tirerLettre(false) },
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                BoutonSecondaireContour(
+                    "Annuler",
+                    onClick = { viewModel.annulerLettre() },
+                    enabled = !etat.termine && etat.indicesUtilises.isNotEmpty(),
+                    modifier = Modifier.weight(1f),
+                )
+                BoutonSecondaireContour(
+                    "Effacer",
+                    onClick = { viewModel.effacerMot() },
+                    enabled = !etat.termine && etat.indicesUtilises.isNotEmpty(),
+                    modifier = Modifier.weight(1f),
+                )
+            }
+            TuilePrincipale("Valider", onClick = { viewModel.valider() }, enabled = !etat.termine)
+        }
+
         if (etat.termine) {
-            Text("Score obtenu : ${etat.scoreObtenu}", style = MaterialTheme.typography.titleLarge)
             val validite = if (etat.motJoueurValide == true) "valide" else "invalide ou absent du dictionnaire"
-            Text("Votre mot (\"${etat.motSaisi}\") : $validite")
-            Text("Meilleur mot trouvé : ${etat.meilleurMot ?: "aucun"}")
+            PanneauResultat {
+                Text("Score obtenu : ${etat.scoreObtenu}", color = BrassBright, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text("Votre mot (\"${etat.motSaisi}\") : $validite", color = TextMuted, fontSize = 13.sp)
+                Text(
+                    "Meilleur mot trouvé : ${etat.meilleurMot?.let { "$it (${it.length} lettres)" } ?: "aucun"}",
+                    color = TextMuted,
+                    fontSize = 13.sp,
+                )
+            }
             actionsFinManche()
         }
     }

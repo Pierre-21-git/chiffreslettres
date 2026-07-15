@@ -15,15 +15,18 @@ import java.util.Locale
  */
 class DictionnaireIndex(mots: Sequence<String>) {
 
-    private data class EntreeMot(val mot: String, val vecteur: IntArray)
+    private data class EntreeMot(val mot: String, val normalise: String, val vecteur: IntArray)
 
     private val motsParLongueur: Map<Int, List<EntreeMot>> = buildMap<Int, MutableList<EntreeMot>> {
         for (motBrut in mots) {
             val normalise = normaliser(motBrut) ?: continue
             if (normalise.length !in 2..9) continue
-            getOrPut(normalise.length) { mutableListOf() }.add(EntreeMot(motBrut, vecteurLettres(normalise)))
+            getOrPut(normalise.length) { mutableListOf() }.add(EntreeMot(motBrut, normalise, vecteurLettres(normalise)))
         }
     }
+
+    /** Ensemble des mots (normalisés) reconnus par le dictionnaire, pour la validation d'un mot précis. */
+    private val motsValides: Set<String> = motsParLongueur.values.flatten().mapTo(HashSet()) { it.normalise }
 
     /** Renvoie les mots de longueur maximale jouables avec ce tirage, ou une liste vide. */
     fun rechercher(tirage: List<Char>): List<String> {
@@ -36,11 +39,14 @@ class DictionnaireIndex(mots: Sequence<String>) {
         return emptyList()
     }
 
-    /** Un mot précis est-il jouable avec ce tirage ? */
-    fun estJouable(mot: String, tirage: List<Char>): Boolean {
+    /**
+     * Le mot proposé par le joueur est-il un mot du dictionnaire ? Pas de vérification du
+     * tirage ici : le mot est construit en cliquant sur les tuiles tirées, le sous-ensemble
+     * de lettres est donc déjà garanti par construction (retour utilisateur).
+     */
+    fun estJouable(mot: String): Boolean {
         val normalise = normaliser(mot) ?: return false
-        val vecteurTirage = vecteurLettres(tirage.joinToString("").uppercase(Locale.FRENCH))
-        return estSousEnsemble(vecteurLettres(normalise), vecteurTirage)
+        return normalise in motsValides
     }
 
     companion object {

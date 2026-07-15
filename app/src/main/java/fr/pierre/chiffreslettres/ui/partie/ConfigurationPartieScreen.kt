@@ -1,87 +1,78 @@
 package fr.pierre.chiffreslettres.ui.partie
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
+import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 
-private const val NOMBRE_LETTRES_DEFAUT = 4
-private const val NOMBRE_CHIFFRES_DEFAUT = 3
-
+/**
+ * Un seul choix de niveau, appliqué aux manches chiffres et lettres (retour utilisateur).
+ * Le nombre de manches de chaque mode est fixe par niveau (`manchesParMode`, retour
+ * utilisateur — pas de réglage à faire).
+ */
 @Composable
-fun ConfigurationPartieScreen(onDemarrer: (List<ManchePlanifiee>) -> Unit) {
-    var nombreLettres by remember { mutableIntStateOf(NOMBRE_LETTRES_DEFAUT) }
-    var nombreChiffres by remember { mutableIntStateOf(NOMBRE_CHIFFRES_DEFAUT) }
-    var niveauLettres by remember { mutableStateOf(NiveauLettres.NORMAL) }
-    var niveauChiffres by remember { mutableStateOf(Niveau.NORMAL_OFFICIEL) }
-
+fun ConfigurationPartieScreen(
+    onDemarrer: (List<ManchePlanifiee>) -> Unit,
+    onRetour: (() -> Unit)? = null,
+) {
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Text("Configurer la partie", style = MaterialTheme.typography.headlineSmall)
+        EnTeteEcran("Configurer la partie", onRetour)
+        Text("Choisir un niveau", style = MaterialTheme.typography.titleMedium)
 
-        Text("Manches lettres : $nombreLettres")
-        CompteurManches(valeur = nombreLettres, onChange = { nombreLettres = it })
-        Text("Niveau lettres :")
-        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            for (niveau in NiveauLettres.entries) {
-                if (niveau == niveauLettres) {
-                    Button(onClick = { niveauLettres = niveau }) { Text(niveau.label) }
-                } else {
-                    OutlinedButton(onClick = { niveauLettres = niveau }) { Text(niveau.label) }
-                }
-            }
-        }
-
-        Text("Manches chiffres : $nombreChiffres")
-        CompteurManches(valeur = nombreChiffres, onChange = { nombreChiffres = it })
-        Text("Niveau chiffres :")
-        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            for (niveau in Niveau.entries) {
-                if (niveau == niveauChiffres) {
-                    Button(onClick = { niveauChiffres = niveau }) { Text(niveau.label) }
-                } else {
-                    OutlinedButton(onClick = { niveauChiffres = niveau }) { Text(niveau.label) }
-                }
-            }
-        }
-
-        Button(
-            onClick = {
-                val sequence = List(nombreLettres) { ManchePlanifiee.Lettres(niveauLettres) } +
-                    List(nombreChiffres) { ManchePlanifiee.Chiffres(niveauChiffres) }
-                onDemarrer(sequence)
-            },
-            enabled = nombreLettres + nombreChiffres > 0,
-        ) {
-            Text("Démarrer")
+        for (niveau in Niveau.entries) {
+            Button(
+                onClick = {
+                    val niveauLettres = NiveauLettres.valueOf(niveau.name)
+                    onDemarrer(
+                        sequenceAlternee(niveau.manchesParMode, niveauLettres, niveau.manchesParMode, niveau),
+                    )
+                },
+                modifier = Modifier.fillMaxWidth(),
+            ) { Text(niveau.label) }
         }
     }
 }
 
-@Composable
-private fun CompteurManches(valeur: Int, onChange: (Int) -> Unit, min: Int = 0, max: Int = 10) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedButton(onClick = { if (valeur > min) onChange(valeur - 1) }) { Text("−") }
-        OutlinedButton(onClick = { if (valeur < max) onChange(valeur + 1) }) { Text("+") }
+/**
+ * Répartit les manches lettres et chiffres en alternance (spec §6.2). Quand les deux
+ * comptes sont égaux (ce qui est toujours le cas, un seul niveau étant choisi pour les
+ * deux modes), ça donne une stricte alternance L/C.
+ */
+private fun sequenceAlternee(
+    nombreLettres: Int,
+    niveauLettres: NiveauLettres,
+    nombreChiffres: Int,
+    niveauChiffres: Niveau,
+): List<ManchePlanifiee> {
+    val sequence = mutableListOf<ManchePlanifiee>()
+    var prisesLettres = 0
+    var prisesChiffres = 0
+    repeat(nombreLettres + nombreChiffres) {
+        val prendreLettres = when {
+            prisesLettres >= nombreLettres -> false
+            prisesChiffres >= nombreChiffres -> true
+            else -> prisesLettres.toDouble() / nombreLettres <= prisesChiffres.toDouble() / nombreChiffres
+        }
+        if (prendreLettres) {
+            sequence += ManchePlanifiee.Lettres(niveauLettres)
+            prisesLettres++
+        } else {
+            sequence += ManchePlanifiee.Chiffres(niveauChiffres)
+            prisesChiffres++
+        }
     }
+    return sequence
 }

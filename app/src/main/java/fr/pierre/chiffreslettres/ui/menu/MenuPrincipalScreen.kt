@@ -2,21 +2,24 @@ package fr.pierre.chiffreslettres.ui.menu
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.ui.theme.BandeDoree
+import fr.pierre.chiffreslettres.ui.theme.LienDiscret
+import fr.pierre.chiffreslettres.ui.theme.MarqueJeu
+import fr.pierre.chiffreslettres.ui.theme.PucePseudo
+import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
+import fr.pierre.chiffreslettres.ui.theme.fondPlateau
 
-/**
- * Les autres sections du §9 (Jouer à 2, Réglages, À propos) arriveront en
- * phase 4/5.
- */
 @Composable
 fun MenuPrincipalScreen(
     pseudoActif: String,
@@ -24,20 +27,28 @@ fun MenuPrincipalScreen(
     onPartieStructuree: () -> Unit,
     onStatistiques: () -> Unit,
     onChangerProfil: () -> Unit,
-    onReglages: () -> Unit,
     onAPropos: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+        modifier = Modifier.fillMaxSize().fondPlateau().padding(24.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        Text("Chiffres & Lettres", style = MaterialTheme.typography.headlineMedium)
-        Text("Profil actif : $pseudoActif", style = MaterialTheme.typography.titleMedium)
-        OutlinedButton(onClick = onChangerProfil) { Text("Changer de profil") }
-        Button(onClick = onEntrainementLibre) { Text("Entraînement libre") }
-        Button(onClick = onPartieStructuree) { Text("Partie structurée") }
-        Button(onClick = onStatistiques) { Text("Statistiques") }
-        OutlinedButton(onClick = onReglages) { Text("Réglages") }
-        OutlinedButton(onClick = onAPropos) { Text("À propos") }
+        Spacer(Modifier.height(24.dp))
+        MarqueJeu(modifier = Modifier.fillMaxWidth())
+        BandeDoree(modifier = Modifier.padding(horizontal = 16.dp))
+        PucePseudo(pseudoActif, modifier = Modifier.align(Alignment.CenterHorizontally))
+
+        TuilePrincipale("Entraînement libre", onClick = onEntrainementLibre)
+        TuilePrincipale("Partie structurée", onClick = onPartieStructuree)
+        TuilePrincipale("Statistiques", onClick = onStatistiques)
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            LienDiscret("Profil", onClick = onChangerProfil)
+            Spacer(Modifier.width(18.dp))
+            LienDiscret("À propos", onClick = onAPropos)
+        }
     }
 }

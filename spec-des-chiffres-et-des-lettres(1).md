@@ -37,28 +37,26 @@ Réservoir de 24 plaques, identique au jeu original :
 - Nombres de **1 à 10**, chacun en **double exemplaire**
 - **25, 50, 75, 100**, chacun en **un seul exemplaire**
 
-Le nombre de "grands nombres" (25/50/75/100) parmi les 6 tirés est **déterminé
-automatiquement au hasard entre 0 et 2** (pas de choix du joueur), le reste
-étant complété par des petits nombres (1-10). Tirage sans remise dans le
-réservoir de la manche en cours.
+6 nombres tirés. Le nombre de "grands nombres" (25/50/75/100) parmi eux est
+**déterminé automatiquement au hasard entre 0 et 2** (pas de choix du
+joueur), le reste étant complété par des petits nombres (1-10). Tirage sans
+remise dans le réservoir de la manche en cours.
 
 ### 3.2 Niveaux de difficulté
 
+4 niveaux, avec des noms mnémotechniques partagés avec le mode Lettres (§4.2) —
+même palier de difficulté, même nom, pour permettre un classement combiné
+(§7.2) :
+
 | Niveau | Cible | Opérations autorisées | Garantie de solution |
 |---|---|---|---|
-| 1. Facile ≤ 100 | aléatoire entre 10 et 100 | +, −, ×, ÷ | **Oui**, une solution exacte existe toujours |
-| 2. Aléatoire ≤ 100 | aléatoire entre 10 et 100 | +, −, ×, ÷ | Non, peut ne pas avoir de solution exacte |
-| 3. Facile ≤ 100 (+ / −) | aléatoire entre 10 et 100 | + et − uniquement | **Oui** |
-| 4. Aléatoire ≤ 100 (+ / −) | aléatoire entre 10 et 100 | + et − uniquement | Non |
-| 5. Facile ≤ 200 | aléatoire entre 10 et 200 | +, −, ×, ÷ | **Oui** |
-| 6. Aléatoire ≤ 200 | aléatoire entre 10 et 200 | +, −, ×, ÷ | Non |
-| 7. Normal (officiel) | aléatoire entre 100 et 999 | +, −, ×, ÷ | Non — comme le jeu télévisé |
+| Assez facile, Émile | aléatoire entre 10 et 100 | + et − uniquement | **Oui**, une solution exacte existe toujours |
+| Ça va encore, Nestor | aléatoire entre 10 et 100 | +, −, ×, ÷ | **Oui** |
+| Ça se complique, Monique | aléatoire entre 10 et 200 | +, −, ×, ÷ | Non, peut ne pas avoir de solution exacte |
+| Là c'est sérieux, Mathieu | aléatoire entre 100 et 999 | +, −, ×, ÷ | Non — comme le jeu télévisé (mode officiel) |
 
-Les niveaux 3 et 4 reprennent exactement les règles des niveaux 1 et 2
-(même plage de cible, même mécanisme), mais avec le jeu d'opérations restreint
-à l'addition et la soustraction — ils servent d'échauffement avant les niveaux
-avec multiplication/division. Dans l'interface, cela se traduit simplement par
-la désactivation des boutons × et ÷ sur la calculatrice (voir §3.4).
+Dans l'interface, le jeu d'opérations restreint (Émile) se traduit simplement
+par la désactivation des boutons × et ÷ sur la calculatrice (voir §3.4).
 
 **Mécanisme de garantie** : tirer les 6 nombres et la cible selon les règles du
 niveau, exécuter le solveur (recherche exhaustive avec mémoïsation des
@@ -69,14 +67,17 @@ nombres) et recommencer, jusqu'à obtention d'un tirage solvable. Prévoir un
 garde-fou (nombre max de tentatives) qui retire aussi les nombres en dernier
 recours.
 
-### 3.3 Barème de points (dégressif selon l'écart)
+### 3.3 Barème de points
 
-- Écart = |cible − résultat proposé par le joueur|
-- Score = `max(0, 10 - écart)`, plafonné à 0 en dessous
-- Compte exact (écart = 0) → 10 points
-- Aucune proposition ou écart trop important → 0 point
+Le barème dépend du niveau (retour utilisateur après testing) :
 
-*(Formule simple à ajuster facilement si besoin une fois testée en jeu.)*
+- **Émile, Nestor** (les deux niveaux les plus faciles) : barème simplifié —
+  10 points si le compte est bon (résultat exact), 5 points pour toute
+  proposition non exacte, 0 point si rien n'a été proposé.
+- **Monique, Mathieu** : barème dégressif selon l'écart, comme le jeu
+  télévisé — écart = |cible − résultat proposé|, score = `max(0, 10 - écart)`,
+  compte exact → 10 points, aucune proposition ou écart trop important → 0
+  point.
 
 ### 3.4 Écran de jeu — interface type calculatrice
 
@@ -94,14 +95,18 @@ fois.
   utilisable dans une opération suivante (exactement comme dans le jeu
   original, où chaque plaque n'est utilisée qu'une fois mais un résultat
   intermédiaire peut resservir)
-- Le joueur peut valider son compte à tout moment (dès qu'un résultat
-  intermédiaire correspond à la cible, ou pour proposer sa meilleure
-  approche en fin de temps)
+- Le joueur peut valider à tout moment ; la proposition retenue est le
+  **dernier résultat de la liste des comptes** (le résultat de sa dernière
+  opération, ou l'un des nombres tirés si aucune opération n'a été faite),
+  pas un jeton qu'il faudrait sélectionner explicitement au moment de valider
+  (retour utilisateur)
 - Un bouton "annuler la dernière opération" permet de revenir en arrière si
   le joueur se trompe de chemin
-- Chronomètre configurable (voir §5)
-- À la fin du temps : affichage d'une solution trouvée par le solveur (au cas
-  où le joueur n'a pas trouvé), et du score obtenu
+- Chronomètre en partie structurée uniquement, configurable (voir §5) — pas
+  de limite de temps en entraînement libre
+- À la fin (validation, ou fin du temps en partie structurée) : affichage
+  d'une solution trouvée par le solveur (au cas où le joueur n'a pas trouvé),
+  et du score obtenu
 
 ---
 
@@ -109,10 +114,10 @@ fois.
 
 ### 4.1 Tirage des lettres
 
-9 lettres toujours, choisies une à une par le joueur en cliquant sur
-"Consonne" ou "Voyelle". Tirage sans remise dans un sac dont la répartition
-suit (approximativement) les fréquences du français — base retenue : la
-distribution Scrabble français (100 lettres) :
+10 lettres, choisies une à une par le joueur en cliquant sur "Consonne" ou
+"Voyelle". Tirage sans remise
+dans un sac dont la répartition suit (approximativement) les fréquences du
+français — base retenue : la distribution Scrabble français (100 lettres) :
 
 ```
 A:9 B:2 C:2 D:3 E:15 F:2 G:2 H:2 I:8 J:1 K:1 L:5 M:3 N:6
@@ -121,17 +126,21 @@ O:6 P:2 Q:1 R:6 S:6 T:6 U:6 V:2 W:1 X:1 Y:1 Z:1
 
 **Règle du minimum 2 voyelles** : le Y compte comme voyelle pour cette règle
 (comme dans le jeu original). L'interface doit empêcher un tirage qui
-aboutirait à moins de 2 voyelles sur les 9 lettres : si le nombre de tirages
-"voyelle" restants possibles ne permet plus d'atteindre 2, désactiver le
-bouton "Consonne" pour forcer une voyelle.
+aboutirait à moins de 2 voyelles sur les lettres tirées : si le nombre de
+tirages "voyelle" restants possibles ne permet plus d'atteindre 2, désactiver
+le bouton "Consonne" pour forcer une voyelle.
 
 ### 4.2 Niveaux de difficulté
 
+4 niveaux, mêmes noms que le mode Chiffres (§3.2) pour permettre un
+classement combiné (§7.2) :
+
 | Niveau | Lettres exclues du sac |
 |---|---|
-| Facile | X, Y, Z, W, K, Q |
-| Moyen | X, Y, Z, W |
-| Normal | Aucune exclusion (alphabet complet) |
+| Assez facile, Émile | X, Y, Z, W, K, Q, H, J |
+| Ça va encore, Nestor | X, Y, Z, W, K, Q |
+| Ça se complique, Monique | X, Y, Z, W |
+| Là c'est sérieux, Mathieu | Aucune exclusion (alphabet complet) |
 
 Lorsque des lettres sont exclues, retirer leurs occurrences du sac de 100 et
 conserver les proportions relatives des lettres restantes (pas besoin de
@@ -163,13 +172,21 @@ brutes restantes).
 
 ### 4.4 Barème de points
 
-Score = nombre de lettres du mot proposé et validé par le dictionnaire.
+Le barème dépend du niveau (retour utilisateur après testing) :
+
+- **Émile, Nestor** : 5 points pour un mot de 2 à 4 lettres, 10 points à
+  partir de 5 lettres.
+- **Monique, Mathieu** : score = nombre de lettres du mot proposé et validé
+  par le dictionnaire (comme le jeu télévisé).
 
 ### 4.5 Écran de jeu
 
-- Affichage des 9 lettres tirées (boutons Consonne / Voyelle avant tirage
+- Affichage des lettres tirées (boutons Consonne / Voyelle avant tirage
   complet)
-- Zone de saisie du mot trouvé par le joueur
+- Une fois le tirage terminé, le joueur construit son mot en touchant les
+  lettres tirées dans l'ordre voulu (chaque lettre n'est utilisable qu'une
+  fois) — pas de saisie clavier. Boutons "Annuler" (retire la dernière
+  lettre) et "Effacer" (vide le mot en cours) pour revenir en arrière.
 - Chronomètre configurable
 - À la fin du temps : validation du mot du joueur contre le dictionnaire,
   affichage du meilleur mot trouvé par le moteur de recherche, score
@@ -178,10 +195,26 @@ Score = nombre de lettres du mot proposé et validé par le dictionnaire.
 
 ## 5. Chronomètre
 
-Durée **entièrement configurable** par le joueur dans les réglages, pour le
-mode chiffres et le mode lettres séparément. Valeurs par défaut suggérées :
-45 secondes (chiffres), 40 secondes (lettres), modifiables librement (pas de
-bornes imposées autres qu'un minimum technique raisonnable, ex. 10 secondes).
+**L'entraînement libre est sans limite de temps** (retour utilisateur) : le
+joueur valide quand il veut, et un bouton "Quitter l'entraînement" (affiché
+pendant la manche, pas seulement à la fin) permet d'arrêter la session à tout
+moment — elle est alors enregistrée dans l'historique comme en pressant
+"Arrêter" en fin de manche.
+
+Le chronomètre s'applique uniquement en **partie structurée**, avec une durée
+**fixe par niveau** (pas d'écran Réglages dans l'app — retour utilisateur :
+plus rien à configurer une fois durée et nombre de manches fixés par niveau,
+la page a été supprimée) :
+
+| Niveau | Chiffres | Lettres |
+|---|---|---|
+| Assez facile, Émile | 120s | 110s |
+| Ça va encore, Nestor | 100s | 90s |
+| Ça se complique, Monique | 60s | 50s |
+| Là c'est sérieux, Mathieu | 45s | 40s |
+
+Le nombre de jetons tirés (chiffres, 6) et le nombre de lettres tirées
+(lettres, 10) sont fixes eux aussi, non réglables par le joueur.
 
 ---
 
@@ -191,15 +224,27 @@ Les deux modes suivants doivent être disponibles, sélectionnables par le
 joueur au lancement :
 
 ### 6.1 Entraînement libre
-- Le joueur enchaîne les manches (chiffres ou lettres, niveau au choix) à sa
-  guise
+- Un seul écran liste directement les 4 niveaux Chiffres puis les 4 niveaux
+  Lettres (pas d'étape intermédiaire de choix du mode) ; le joueur enchaîne
+  les manches à sa guise
 - Score cumulé affiché en continu
 - Peut s'arrêter à tout moment, la session est enregistrée dans l'historique
 
 ### 6.2 Partie structurée
-- Séquence de manches configurable avant de démarrer (nombre de manches
-  lettres / chiffres, ordre), avec une structure par défaut proposée
-  (ex. 4 manches lettres + 3 manches chiffres)
+- Un seul choix à faire avant de démarrer : le niveau (parmi les 4), appliqué
+  aux manches chiffres et lettres de la partie
+- Le nombre de manches par mode est **fixe par niveau** (`manchesParMode`,
+  retour utilisateur), pas configuré à chaque partie :
+
+  | Niveau | Manches par mode | Total |
+  |---|---|---|
+  | Assez facile, Émile | 2 | 4 |
+  | Ça va encore, Nestor | 3 | 6 |
+  | Ça se complique, Monique | 5 (comme le jeu télé) | 10 |
+  | Là c'est sérieux, Mathieu | 5 (comme le jeu télé) | 10 |
+
+- Les manches alternent chiffres et lettres (retour utilisateur) plutôt que
+  d'être regroupées par mode
 - Score total calculé en fin de partie
 - Résultat enregistré dans l'historique comme une partie complète
 
@@ -212,7 +257,9 @@ joueur au lancement :
 L'app gère un ou plusieurs **profils joueurs locaux** (pratique pour un usage
 familial où plusieurs personnes jouent sur le même téléphone) :
 - Au premier lancement, création d'un profil par défaut (saisie d'un pseudo)
-- Possibilité d'ajouter/supprimer des profils depuis les réglages
+- Gestion des profils (créer / renommer / supprimer) centralisée sur l'écran
+  "Changer de profil" (retour utilisateur) — il n'y a pas d'écran Réglages
+  séparé (supprimé, plus rien à y configurer, voir §5 et §6.2)
 - Sélection du profil actif en début de session solo (le profil sélectionné
   reste actif jusqu'à changement explicite)
 - Toutes les parties et tous les scores enregistrés sont rattachés au profil
@@ -223,14 +270,16 @@ familial où plusieurs personnes jouent sur le même téléphone) :
 Stockage local via Room :
 - Historique des sessions (date, joueur, mode, niveau joué, score total,
   détail des manches)
-- **Meilleurs scores rattachés à la fois au nom du joueur et au niveau de
-  difficulté joué** — un classement séparé par niveau (les 7 niveaux de
-  chiffres, les 3 niveaux de lettres), et par joueur au sein de chaque niveau
-- Plus long mot trouvé, par joueur
-- Meilleur score en partie structurée, par joueur
-- Écran dédié "Statistiques" accessible depuis le menu principal, avec un
-  sélecteur de joueur et un sélecteur de niveau pour consulter les
-  classements
+- **Classement combiné par niveau** : les 4 niveaux Chiffres et Lettres
+  partagent les mêmes noms (§3.2, §4.2), donc un seul classement par niveau,
+  sans distinction chiffres/lettres — top 5 scores bruts (pas de regroupement
+  par joueur : un même joueur peut apparaître plusieurs fois s'il a les
+  meilleurs scores, retour utilisateur), uniquement sur les parties
+  structurées (l'entraînement libre n'y est pas compté)
+- Écran dédié "Statistiques" accessible depuis le menu principal : les 4
+  classements par niveau sont affichés directement (pas de sélecteur). Pas de
+  section "stats par joueur" (retour utilisateur : supprimée). Un bouton
+  "Réinitialiser les statistiques" (avec confirmation) vide tout l'historique.
 
 ---
 
@@ -273,23 +322,22 @@ sur le tirage (il le génère et l'envoie à l'autre appareil).
 Menu principal (affiche le profil joueur actif, changement rapide possible)
  ├── Jouer en solo
  │    ├── Entraînement libre
- │    │    ├── Choix mode (Chiffres / Lettres)
- │    │    └── Choix niveau de difficulté
+ │    │    └── Choix niveau (liste unique : 4 niveaux Chiffres puis 4 niveaux Lettres)
  │    └── Partie structurée
- │         ├── Configuration des manches
+ │         ├── Choix du niveau (un seul, appliqué aux manches chiffres et lettres)
  │         └── Déroulé de la partie
  ├── Jouer à 2 (Bluetooth / Nearby)
  │    ├── Héberger une partie
  │    └── Rejoindre une partie
  ├── Statistiques
- │    ├── Sélecteur de joueur
- │    └── Sélecteur de niveau (chiffres / lettres)
- ├── Réglages
- │    ├── Gestion des profils joueurs (créer / supprimer / renommer)
- │    ├── Durée du chrono (chiffres / lettres)
- │    └── (autres préférences à définir en cours de dev)
+ │    ├── Classement par niveau (4 niveaux, combiné chiffres/lettres, top 5 scores bruts)
+ │    └── Réinitialiser les statistiques (avec confirmation)
+ ├── Changer de profil (créer / renommer / supprimer les profils)
  └── À propos (licences, dont mention LGPL du dictionnaire)
 ```
+
+Pas d'écran Réglages : durée du chrono et nombre de manches sont fixes par
+niveau (§5, §6.2), rien à configurer côté joueur.
 
 ---
 

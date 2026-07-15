@@ -3,15 +3,12 @@ package fr.pierre.chiffreslettres
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,18 +23,17 @@ import fr.pierre.chiffreslettres.data.AppDatabaseProvider
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
-import fr.pierre.chiffreslettres.data.ReglagesStore
 import fr.pierre.chiffreslettres.data.dictionary.DictionnaireProvider
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.ui.navigation.AppNavHost
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
+import fr.pierre.chiffreslettres.ui.theme.ChiffresLettresTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
-            MaterialTheme(colorScheme = colorScheme) {
+            ChiffresLettresTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     ContenuApplication(Modifier.fillMaxSize().systemBarsPadding())
                 }
@@ -59,7 +55,6 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val profilRepository = remember { ProfilRepository(db.profilDao()) }
     val historiqueRepository = remember { HistoriqueRepository(db.historiqueDao()) }
     val profilActifStore = remember { ProfilActifStore(context.applicationContext) }
-    val reglagesStore = remember { ReglagesStore(context.applicationContext) }
 
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
     val dictionnaireCharge = dictionnaire
@@ -87,7 +82,6 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
                 profilRepository = profilRepository,
                 historiqueRepository = historiqueRepository,
                 profilActifStore = profilActifStore,
-                reglagesStore = reglagesStore,
                 modifier = modifier,
             )
         }
