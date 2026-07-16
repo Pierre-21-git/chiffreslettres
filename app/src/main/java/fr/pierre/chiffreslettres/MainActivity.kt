@@ -24,6 +24,7 @@ import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
+import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.dictionary.DictionnaireProvider
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.ui.navigation.AppNavHost
@@ -56,6 +57,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val profilRepository = remember { ProfilRepository(db.profilDao()) }
     val historiqueRepository = remember { HistoriqueRepository(db.historiqueDao()) }
     val defiRepository = remember { DefiRepository(db.defiDao()) }
+    val tropheeRepository = remember { TropheeRepository(db.tropheeDao(), db.historiqueDao(), db.defiDao()) }
     val profilActifStore = remember { ProfilActifStore(context.applicationContext) }
 
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
@@ -84,6 +86,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
                 profilRepository = profilRepository,
                 historiqueRepository = historiqueRepository,
                 defiRepository = defiRepository,
+                tropheeRepository = tropheeRepository,
                 profilActifStore = profilActifStore,
                 modifier = modifier,
             )

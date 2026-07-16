@@ -17,6 +17,20 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.12",
+        date = "2026-07-16",
+        changements = listOf(
+            "Nouveaux trophées : 36 succès à débloquer en partie solo et en défi (comptes " +
+                "exacts, mots de 10 lettres, parties parfaites, seuils de points, parties et " +
+                "défis terminés, couverture de tous les niveaux)",
+            "Bouton \"Voir mes trophées\" sur la fiche d'un joueur (onglet Joueurs des " +
+                "statistiques), avec la date d'obtention de chaque trophée débloqué",
+            "Bouton \"Trophées\" dans À propos pour consulter la liste complète des trophées " +
+                "possibles",
+            "\"Réinitialiser mes statistiques\" efface désormais aussi les trophées du joueur",
+        ),
+    ),
+    EntreeVersion(
         version = "1.11",
         date = "2026-07-16",
         changements = listOf(

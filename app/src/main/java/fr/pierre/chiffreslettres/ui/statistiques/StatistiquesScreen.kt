@@ -31,6 +31,7 @@ import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ProfilRepository
+import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import java.time.Instant
@@ -56,6 +57,8 @@ fun StatistiquesScreen(
     historiqueRepository: HistoriqueRepository,
     defiRepository: DefiRepository,
     profilRepository: ProfilRepository,
+    tropheeRepository: TropheeRepository,
+    onVoirTrophees: (profilId: Long) -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
     var ongletSelectionne by remember { mutableIntStateOf(0) }
@@ -78,7 +81,7 @@ fun StatistiquesScreen(
 
         when (ongletSelectionne) {
             0 -> OngletGeneral(historiqueRepository)
-            else -> OngletJoueurs(historiqueRepository, defiRepository, profilRepository)
+            else -> OngletJoueurs(historiqueRepository, defiRepository, profilRepository, tropheeRepository, onVoirTrophees)
         }
     }
 }
@@ -119,6 +122,8 @@ private fun OngletJoueurs(
     historiqueRepository: HistoriqueRepository,
     defiRepository: DefiRepository,
     profilRepository: ProfilRepository,
+    tropheeRepository: TropheeRepository,
+    onVoirTrophees: (profilId: Long) -> Unit,
 ) {
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
     var profilSelectionneId by remember { mutableStateOf<Long?>(null) }
@@ -165,6 +170,11 @@ private fun OngletJoueurs(
             }
 
             HorizontalDivider()
+            Button(onClick = { onVoirTrophees(profilSelectionne.id) }, modifier = Modifier.fillMaxWidth()) {
+                Text("Voir mes trophées")
+            }
+
+            HorizontalDivider()
             Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
                 Text("Réinitialiser mes statistiques")
             }
@@ -186,6 +196,7 @@ private fun OngletJoueurs(
                     scope.launch {
                         historiqueRepository.reinitialiserHistoriqueJoueur(profilSelectionne.id)
                         defiRepository.reinitialiserJoueur(profilSelectionne.id)
+                        tropheeRepository.reinitialiserJoueur(profilSelectionne.id)
                     }
                     confirmationReinitialisation = false
                 }) { Text("Réinitialiser") }

@@ -30,4 +30,18 @@ interface DefiDao {
      */
     @Query("DELETE FROM DefiEntity WHERE profilId = :profilId")
     suspend fun reinitialiserJoueur(profilId: Long)
+
+    // --- Agrégats pour l'évaluation des trophées ---
+
+    /** Nombre total de défis terminés (tous modes/niveaux confondus). */
+    @Query("SELECT COUNT(*) FROM DefiEntity WHERE profilId = :profilId")
+    suspend fun compterDefisTotal(profilId: Long): Int
+
+    /** Meilleure série jamais réalisée, tous modes/niveaux confondus (0 si aucun défi joué). */
+    @Query("SELECT COALESCE(MAX(serie), 0) FROM DefiEntity WHERE profilId = :profilId")
+    suspend fun meilleureSerieDefi(profilId: Long): Int
+
+    /** Nombre de combinaisons niveau × mode (sur 8 : 4 niveaux × 2 modes) avec au moins un défi terminé. */
+    @Query("SELECT COUNT(*) FROM (SELECT DISTINCT mode, niveauCode FROM DefiEntity WHERE profilId = :profilId)")
+    suspend fun compterCombinaisonsCouvertes(profilId: Long): Int
 }

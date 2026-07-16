@@ -96,4 +96,84 @@ interface HistoriqueDao {
      */
     @Query("DELETE FROM SessionEntity WHERE profilId = :profilId")
     suspend fun reinitialiserHistoriqueJoueur(profilId: Long)
+
+    // --- Agrégats pour l'évaluation des trophées (parties solo uniquement, jamais l'entraînement libre) ---
+
+    /** Nombre de manches chiffres à compte exact (score 10), en partie solo. */
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE' AND m.mode = 'CHIFFRES' AND m.score = 10
+        """,
+    )
+    suspend fun compterComptesExacts(profilId: Long): Int
+
+    /** Nombre de manches lettres dont le mot joué a exactement [longueur] lettres, en partie solo. */
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE' AND m.mode = 'LETTRES' AND LENGTH(m.motJoue) = :longueur
+        """,
+    )
+    suspend fun compterMotsLongueur(profilId: Long, longueur: Int): Int
+
+    /**
+     * Nombre de parties solo où toutes les manches chiffres ont un compte exact (score 10).
+     * `COUNT(*) = SUM(...)` exige qu'aucune manche chiffres de la partie n'ait un score différent.
+     */
+    @Query(
+        """
+        SELECT COUNT(*) FROM (
+            SELECT s.id
+            FROM SessionEntity s
+            INNER JOIN MancheEntity m ON m.sessionId = s.id AND m.mode = 'CHIFFRES'
+            WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE'
+            GROUP BY s.id
+            HAVING COUNT(*) = SUM(CASE WHEN m.score = 10 THEN 1 ELSE 0 END)
+        )
+        """,
+    )
+    suspend fun compterPartiesTousComptesExacts(profilId: Long): Int
+
+    /**
+     * Nombre de parties solo où toutes les manches lettres ont un mot valide d'au moins
+     * [longueurMin] lettres. `COUNT(*) = COUNT(m.motJoue)` exclut toute manche invalide/vide
+     * (mot null) de la partie, condition nécessaire avant de vérifier la longueur minimale.
+     */
+    @Query(
+        """
+        SELECT COUNT(*) FROM (
+            SELECT s.id
+            FROM SessionEntity s
+            INNER JOIN MancheEntity m ON m.sessionId = s.id AND m.mode = 'LETTRES'
+            WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE'
+            GROUP BY s.id
+            HAVING COUNT(*) = COUNT(m.motJoue) AND MIN(LENGTH(m.motJoue)) >= :longueurMin
+        )
+        """,
+    )
+    suspend fun compterPartiesMotsMin(profilId: Long, longueurMin: Int): Int
+
+    /** Nombre de parties solo dont le score total dépasse [seuil]. */
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE' AND scoreTotal > :seuil")
+    suspend fun compterPartiesScoreSuperieur(profilId: Long, seuil: Int): Int
+
+    /** Nombre total de parties solo terminées, tous niveaux confondus. */
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE'")
+    suspend fun compterPartiesSoloTotal(profilId: Long): Int
+
+    /** Nombre de niveaux distincts avec au moins une partie solo terminée. */
+    @Query(
+        """
+        SELECT COUNT(DISTINCT m.niveauCode)
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE'
+        """,
+    )
+    suspend fun compterNiveauxSoloCouverts(profilId: Long): Int
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
+import fr.pierre.chiffreslettres.data.TropheeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
  */
 class DefiViewModel(
     private val defiRepository: DefiRepository,
+    private val tropheeRepository: TropheeRepository,
     private val profilId: Long,
     private val mode: ModeJeu,
     private val niveauCode: String,
@@ -55,6 +57,7 @@ class DefiViewModel(
         val serieFinale = _index.value
         viewModelScope.launch {
             defiRepository.enregistrer(profilId, mode, niveauCode, serieFinale)
+            tropheeRepository.reevaluer(profilId)
         }
     }
 

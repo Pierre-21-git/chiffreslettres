@@ -29,6 +29,7 @@ import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.data.ResultatManche
+import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TypePartie
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
@@ -53,6 +54,7 @@ import fr.pierre.chiffreslettres.ui.partie.RecapPartieScreen
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesScreen
+import fr.pierre.chiffreslettres.ui.trophees.TropheesScreen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -78,6 +80,7 @@ fun AppNavHost(
     profilRepository: ProfilRepository,
     historiqueRepository: HistoriqueRepository,
     defiRepository: DefiRepository,
+    tropheeRepository: TropheeRepository,
     profilActifStore: ProfilActifStore,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
@@ -104,6 +107,7 @@ fun AppNavHost(
             AProposScreen(
                 onReglesDuJeu = { navController.navigate(Routes.REGLES_DU_JEU) },
                 onVersions = { navController.navigate(Routes.VERSIONS) },
+                onTrophees = { navController.navigate(Routes.TROPHEES_CATALOGUE) },
                 onRetour = { navController.popBackStack() },
             )
         }
@@ -114,6 +118,29 @@ fun AppNavHost(
 
         composable(Routes.VERSIONS) {
             VersionsScreen(onRetour = { navController.popBackStack() })
+        }
+
+        composable(Routes.TROPHEES_CATALOGUE) {
+            TropheesScreen(
+                titre = "Trophées",
+                tropheesDebloques = null,
+                onRetour = { navController.popBackStack() },
+            )
+        }
+
+        composable(
+            route = Routes.TROPHEES_JOUEUR_PATTERN,
+            arguments = listOf(navArgument(Routes.ARG_PROFIL_ID) { type = NavType.LongType }),
+        ) { backStackEntry ->
+            val profilIdArg = backStackEntry.arguments!!.getLong(Routes.ARG_PROFIL_ID)
+            LaunchedEffect(profilIdArg) { tropheeRepository.reevaluer(profilIdArg) }
+            val debloques by tropheeRepository.tropheesDebloques(profilIdArg).collectAsState(initial = null)
+            val tropheesDebloques = debloques?.associate { it.trophyId to it.dateDebloque } ?: emptyMap()
+            TropheesScreen(
+                titre = "Mes trophées",
+                tropheesDebloques = tropheesDebloques,
+                onRetour = { navController.popBackStack() },
+            )
         }
 
         composable(Routes.CHANGER_PROFIL) {
@@ -141,6 +168,8 @@ fun AppNavHost(
                 historiqueRepository = historiqueRepository,
                 defiRepository = defiRepository,
                 profilRepository = profilRepository,
+                tropheeRepository = tropheeRepository,
+                onVoirTrophees = { profilId -> navController.navigate(Routes.tropheesJoueur(profilId)) },
                 onRetour = { navController.popBackStack() },
             )
         }
@@ -307,6 +336,7 @@ fun AppNavHost(
                     onTerminer = {
                         scope.launch {
                             historiqueRepository.enregistrerSession(profilId, TypePartie.STRUCTUREE, resultats)
+                            tropheeRepository.reevaluer(profilId)
                         }
                         navController.popBackStack(Routes.MENU, inclusive = false)
                     },
@@ -330,7 +360,7 @@ fun AppNavHost(
             ) { backStackEntry ->
                 val niveau = Niveau.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
                 val defiVm: DefiViewModel = viewModel(backStackEntry) {
-                    DefiViewModel(defiRepository, profilId, ModeJeu.CHIFFRES, niveau.name)
+                    DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.CHIFFRES, niveau.name)
                 }
                 val index by defiVm.index.collectAsState()
                 val essaiId by defiVm.essaiId.collectAsState()
@@ -372,7 +402,7 @@ fun AppNavHost(
             ) { backStackEntry ->
                 val niveau = NiveauLettres.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
                 val defiVm: DefiViewModel = viewModel(backStackEntry) {
-                    DefiViewModel(defiRepository, profilId, ModeJeu.LETTRES, niveau.name)
+                    DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.LETTRES, niveau.name)
                 }
                 val index by defiVm.index.collectAsState()
                 val essaiId by defiVm.essaiId.collectAsState()

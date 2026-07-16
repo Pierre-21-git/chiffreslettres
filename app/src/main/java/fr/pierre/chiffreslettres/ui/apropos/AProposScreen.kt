@@ -15,7 +15,12 @@ import fr.pierre.chiffreslettres.BuildConfig
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 
 @Composable
-fun AProposScreen(onReglesDuJeu: () -> Unit, onVersions: () -> Unit, onRetour: (() -> Unit)? = null) {
+fun AProposScreen(
+    onReglesDuJeu: () -> Unit,
+    onVersions: () -> Unit,
+    onTrophees: () -> Unit,
+    onRetour: (() -> Unit)? = null,
+) {
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
@@ -40,6 +45,7 @@ fun AProposScreen(onReglesDuJeu: () -> Unit, onVersions: () -> Unit, onRetour: (
 
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Button(onClick = onReglesDuJeu, modifier = Modifier.fillMaxWidth()) { Text("Règles du jeu") }
+            Button(onClick = onTrophees, modifier = Modifier.fillMaxWidth()) { Text("Trophées") }
             Button(onClick = onVersions, modifier = Modifier.fillMaxWidth()) { Text("Versions") }
         }
     }
