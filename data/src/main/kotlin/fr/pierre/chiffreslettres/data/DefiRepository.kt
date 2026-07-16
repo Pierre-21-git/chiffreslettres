@@ -19,5 +19,5 @@ class DefiRepository(private val dao: DefiDao) {
     fun meilleursDefisParNiveau(profilId: Long, mode: ModeJeu, niveauCode: String): Flow<List<MeilleurDefi>> =
         dao.meilleursDefisParNiveau(profilId, mode, niveauCode)
 
-    suspend fun reinitialiser() = dao.reinitialiser()
+    suspend fun reinitialiserJoueur(profilId: Long) = dao.reinitialiserJoueur(profilId)
 }

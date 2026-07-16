@@ -28,6 +28,7 @@ import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
+import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
 import fr.pierre.chiffreslettres.ui.theme.TuileJeton
 import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
@@ -43,8 +44,11 @@ fun ChiffresRoundScreen(
     onMancheTerminee: (score: Int) -> Unit,
     actionsFinManche: @Composable () -> Unit,
     onRetourEntrainement: (() -> Unit)? = null,
-    /** "2 / 4" par exemple, uniquement en partie structurée (retour utilisateur). */
+    pseudo: String? = null,
+    /** "2 / 4" par exemple, uniquement en partie structurée ou en défi (retour utilisateur). */
     progressionManche: String? = null,
+    /** Libellé de la pastille [progressionManche] : "Manche" en partie solo, "Série" en défi. */
+    libelleProgression: String = "Manche",
 ) {
     val etat by viewModel.uiState.collectAsState()
 
@@ -57,13 +61,16 @@ fun ChiffresRoundScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran("Chiffres", onRetourEntrainement)
+        if (pseudo != null) {
+            PucePseudo(pseudo)
+        }
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             if (scoreCumule != null) {
                 Afficheur("Score", "$scoreCumule", modifier = Modifier.weight(1f), centre = true)
             }
             if (progressionManche != null) {
-                Afficheur("Manche", progressionManche, modifier = Modifier.weight(1f), centre = true)
+                Afficheur(libelleProgression, progressionManche, modifier = Modifier.weight(1f), centre = true)
             }
             etat.tempsRestantSecondes?.let {
                 Afficheur("Temps", "${it}s", modifier = Modifier.weight(1f), centre = true)

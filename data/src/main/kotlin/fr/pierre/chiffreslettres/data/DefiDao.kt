@@ -24,7 +24,10 @@ interface DefiDao {
     )
     fun meilleursDefisParNiveau(profilId: Long, mode: ModeJeu, niveauCode: String): Flow<List<MeilleurDefi>>
 
-    /** Vide tout l'historique des défis — bouton "Réinitialiser les statistiques". */
-    @Query("DELETE FROM DefiEntity")
-    suspend fun reinitialiser()
+    /**
+     * Vide l'historique des défis d'un seul joueur — bouton "Réinitialiser mes statistiques"
+     * sur l'onglet Joueurs (ne touche pas les autres profils).
+     */
+    @Query("DELETE FROM DefiEntity WHERE profilId = :profilId")
+    suspend fun reinitialiserJoueur(profilId: Long)
 }

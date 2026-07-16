@@ -42,5 +42,5 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
     fun meilleuresPartiesSoloParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>> =
         dao.meilleuresPartiesSoloParNiveau(profilId, niveauCode)
 
-    suspend fun reinitialiserHistorique() = dao.reinitialiserHistorique()
+    suspend fun reinitialiserHistoriqueJoueur(profilId: Long) = dao.reinitialiserHistoriqueJoueur(profilId)
 }

@@ -18,7 +18,6 @@ object Routes {
     const val CREER_PROFIL = "profil/creer"
 
     const val STATISTIQUES = "statistiques"
-    const val STATISTIQUES_JOUEURS = "statistiques/joueurs"
 
     const val PARTIE_GRAPH = "partie"
     const val CONFIGURATION_PARTIE = "partie/configuration"

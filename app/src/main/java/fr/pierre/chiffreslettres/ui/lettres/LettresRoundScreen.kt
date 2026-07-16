@@ -26,6 +26,7 @@ import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
+import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.StyleTirage
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
 import fr.pierre.chiffreslettres.ui.theme.TuileJeton
@@ -42,8 +43,11 @@ fun LettresRoundScreen(
     onMancheTerminee: (score: Int, motValide: String?) -> Unit,
     actionsFinManche: @Composable () -> Unit,
     onRetourEntrainement: (() -> Unit)? = null,
-    /** "2 / 4" par exemple, uniquement en partie structurée (retour utilisateur). */
+    pseudo: String? = null,
+    /** "2 / 4" par exemple, uniquement en partie structurée ou en défi (retour utilisateur). */
     progressionManche: String? = null,
+    /** Libellé de la pastille [progressionManche] : "Manche" en partie solo, "Série" en défi. */
+    libelleProgression: String = "Manche",
 ) {
     val etat by viewModel.uiState.collectAsState()
 
@@ -59,13 +63,16 @@ fun LettresRoundScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran("Lettres", onRetourEntrainement)
+        if (pseudo != null) {
+            PucePseudo(pseudo)
+        }
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             if (scoreCumule != null) {
                 Afficheur("Score", "$scoreCumule", modifier = Modifier.weight(1f), centre = true)
             }
             if (progressionManche != null) {
-                Afficheur("Manche", progressionManche, modifier = Modifier.weight(1f), centre = true)
+                Afficheur(libelleProgression, progressionManche, modifier = Modifier.weight(1f), centre = true)
             }
             // Cadre toujours affiché (retour utilisateur), même vide une fois le tirage
             // terminé sans chrono (entraînement libre) : sa position ne doit pas bouger.

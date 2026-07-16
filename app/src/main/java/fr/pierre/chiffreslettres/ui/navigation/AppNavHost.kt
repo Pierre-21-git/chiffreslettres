@@ -52,7 +52,6 @@ import fr.pierre.chiffreslettres.ui.partie.PartieStructureeViewModel
 import fr.pierre.chiffreslettres.ui.partie.RecapPartieScreen
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
-import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesJoueursScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesScreen
 import kotlinx.coroutines.launch
 
@@ -141,15 +140,6 @@ fun AppNavHost(
             StatistiquesScreen(
                 historiqueRepository = historiqueRepository,
                 defiRepository = defiRepository,
-                onVoirStatistiquesJoueurs = { navController.navigate(Routes.STATISTIQUES_JOUEURS) },
-                onRetour = { navController.popBackStack() },
-            )
-        }
-
-        composable(Routes.STATISTIQUES_JOUEURS) {
-            StatistiquesJoueursScreen(
-                historiqueRepository = historiqueRepository,
-                defiRepository = defiRepository,
                 profilRepository = profilRepository,
                 onRetour = { navController.popBackStack() },
             )
@@ -184,6 +174,7 @@ fun AppNavHost(
                 ChiffresRoundScreen(
                     viewModel = roundVm,
                     scoreCumule = null,
+                    pseudo = profilActif?.pseudo,
                     onMancheTerminee = { obtenu -> entrainementVm.enregistrerMancheChiffres(niveau, obtenu) },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
@@ -211,6 +202,7 @@ fun AppNavHost(
                 LettresRoundScreen(
                     viewModel = roundVm,
                     scoreCumule = null,
+                    pseudo = profilActif?.pseudo,
                     onMancheTerminee = { obtenu, motValide -> entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide) },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
@@ -270,6 +262,7 @@ fun AppNavHost(
                             ChiffresRoundScreen(
                                 viewModel = roundVm,
                                 scoreCumule = scoreCumule,
+                                pseudo = profilActif?.pseudo,
                                 onMancheTerminee = { obtenu ->
                                     partieVm.enregistrerResultat(ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu))
                                 },
@@ -288,6 +281,7 @@ fun AppNavHost(
                             LettresRoundScreen(
                                 viewModel = roundVm,
                                 scoreCumule = scoreCumule,
+                                pseudo = profilActif?.pseudo,
                                 onMancheTerminee = { obtenu, motValide ->
                                     partieVm.enregistrerResultat(
                                         ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
@@ -339,18 +333,23 @@ fun AppNavHost(
                     DefiViewModel(defiRepository, profilId, ModeJeu.CHIFFRES, niveau.name)
                 }
                 val index by defiVm.index.collectAsState()
+                val essaiId by defiVm.essaiId.collectAsState()
                 val termine by defiVm.termine.collectAsState()
                 // Solution exacte toujours garantie en défi, même sur Monique/Mathieu (retour
                 // utilisateur) : la série ne doit s'arrêter que sur une erreur du joueur. Le
                 // chrono reste celui de la partie solo pour ce niveau (retour utilisateur).
+                // Clé sur essaiId (jamais réutilisé), pas index (qui revient à 0 après
+                // "Recommencer" et renverrait sinon l'ancien ViewModel déjà terminé).
                 val roundVm: ChiffresRoundViewModel =
-                    viewModel(key = "defi-chiffres-$index") {
+                    viewModel(key = "defi-chiffres-$essaiId") {
                         ChiffresRoundViewModel(niveau, niveau.dureeSecondesPartieStructuree, garantieSolution = true)
                     }
                 ChiffresRoundScreen(
                     viewModel = roundVm,
                     scoreCumule = null,
-                    progressionManche = "Série : $index",
+                    pseudo = profilActif?.pseudo,
+                    progressionManche = "$index",
+                    libelleProgression = "Série",
                     onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.echec() },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
                     actionsFinManche = {
@@ -376,16 +375,21 @@ fun AppNavHost(
                     DefiViewModel(defiRepository, profilId, ModeJeu.LETTRES, niveau.name)
                 }
                 val index by defiVm.index.collectAsState()
+                val essaiId by defiVm.essaiId.collectAsState()
                 val termine by defiVm.termine.collectAsState()
                 val seuil = seuilLongueurDefiLettres(niveau)
+                // Clé sur essaiId (jamais réutilisé), pas index : cf. commentaire équivalent
+                // sur le défi chiffres.
                 val roundVm: LettresRoundViewModel =
-                    viewModel(key = "defi-lettres-$index") {
+                    viewModel(key = "defi-lettres-$essaiId") {
                         LettresRoundViewModel(niveau, dictionnaire, niveau.dureeSecondesPartieStructuree)
                     }
                 LettresRoundScreen(
                     viewModel = roundVm,
                     scoreCumule = null,
-                    progressionManche = "Série : $index",
+                    pseudo = profilActif?.pseudo,
+                    progressionManche = "$index",
+                    libelleProgression = "Série",
                     onMancheTerminee = { _, motValide ->
                         val reussi = motValide != null && motValide.length > seuil
                         if (!reussi) defiVm.echec()

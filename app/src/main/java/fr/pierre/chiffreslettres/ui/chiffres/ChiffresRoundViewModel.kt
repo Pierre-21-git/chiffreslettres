@@ -149,8 +149,11 @@ class ChiffresRoundViewModel(
         // Le dernier élément de la liste des comptes est le résultat le plus récent
         // (chaque combinaison remplace ses deux opérandes par le résultat en fin de
         // liste) : c'est ce résultat qui compte comme proposition, pas le jeton
-        // éventuellement sélectionné (retour utilisateur).
-        val proposition = etat.jetons.lastOrNull()?.expression?.resultat
+        // éventuellement sélectionné (retour utilisateur). Si aucune opération n'a été
+        // faite, il n'y a pas de proposition (jetons = tirage initial) : compter alors
+        // un des nombres tirés comme un "compte" donnerait des points sans rien avoir
+        // résolu (bug remonté par l'utilisateur, cf. Bareme "0 si rien n'a été proposé").
+        val proposition = if (historique.isEmpty()) null else etat.jetons.lastOrNull()?.expression?.resultat
         val score = Bareme.score(niveau, etat.cible, proposition)
         _uiState.update { it.copy(termine = true, scoreObtenu = score) }
     }

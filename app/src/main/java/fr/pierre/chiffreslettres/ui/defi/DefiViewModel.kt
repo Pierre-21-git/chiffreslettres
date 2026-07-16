@@ -13,8 +13,9 @@ import kotlinx.coroutines.launch
  * Partagé par le sous-graphe "défi", comme `PartieStructureeViewModel` pour la partie solo :
  * enchaîne les manches d'un même mode/niveau (le chrono reste celui de la partie solo pour ce
  * niveau, retour utilisateur), s'arrête à la première erreur ou au temps écoulé, et enregistre
- * la série. [index] sert de clé pour recréer une nouvelle instance de `ChiffresRoundViewModel`/
- * `LettresRoundViewModel` à chaque manche, exactement comme `PartieStructureeViewModel.index`.
+ * la série. [essaiId] sert de clé pour recréer une nouvelle instance de `ChiffresRoundViewModel`/
+ * `LettresRoundViewModel` à chaque manche (voir sa doc : contrairement à [index], il ne revient
+ * jamais à une valeur déjà utilisée, y compris après [recommencer]).
  */
 class DefiViewModel(
     private val defiRepository: DefiRepository,
@@ -29,9 +30,22 @@ class DefiViewModel(
     private val _termine = MutableStateFlow(false)
     val termine: StateFlow<Boolean> = _termine.asStateFlow()
 
+    /**
+     * Identifiant de manche jamais réutilisé (contrairement à [index], qui repart de 0 à
+     * chaque [recommencer]) : sert de clé pour recréer `ChiffresRoundViewModel`/
+     * `LettresRoundViewModel` à chaque manche. Sans lui, `viewModel(key = "defi-...-0")`
+     * renverrait l'instance déjà terminée de la toute première manche après un
+     * "Recommencer", laissant afficher son ancien panneau de résultat avec un bouton
+     * "Continuer" actif sans qu'aucun mot/compte n'ait été rejoué (bug remonté par
+     * l'utilisateur).
+     */
+    private val _essaiId = MutableStateFlow(0)
+    val essaiId: StateFlow<Int> = _essaiId.asStateFlow()
+
     /** Réussite confirmée par le joueur (bouton "Continuer") : manche suivante. */
     fun mancheSuivante() {
         _index.value += 1
+        _essaiId.value += 1
     }
 
     /** Échec (mauvais compte/mot, ou temps écoulé) : termine le défi et enregistre la série. */
@@ -47,5 +61,6 @@ class DefiViewModel(
     fun recommencer() {
         _index.value = 0
         _termine.value = false
+        _essaiId.value += 1
     }
 }

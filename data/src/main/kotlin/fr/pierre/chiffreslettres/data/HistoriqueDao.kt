@@ -90,7 +90,10 @@ interface HistoriqueDao {
     )
     fun meilleuresPartiesSoloParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>>
 
-    /** Vide tout l'historique (sessions + manches, cascade) — bouton "Réinitialiser les statistiques". */
-    @Query("DELETE FROM SessionEntity")
-    suspend fun reinitialiserHistorique()
+    /**
+     * Vide l'historique (sessions + manches, cascade) d'un seul joueur — bouton
+     * "Réinitialiser mes statistiques" sur l'onglet Joueurs (ne touche pas les autres profils).
+     */
+    @Query("DELETE FROM SessionEntity WHERE profilId = :profilId")
+    suspend fun reinitialiserHistoriqueJoueur(profilId: Long)
 }

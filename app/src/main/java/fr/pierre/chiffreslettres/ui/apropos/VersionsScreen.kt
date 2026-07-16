@@ -17,6 +17,29 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.11",
+        date = "2026-07-16",
+        changements = listOf(
+            "Corrigé : en défi, cliquer sur \"Recommencer\" après un échec rejouait l'ancien " +
+                "tirage déjà terminé au lieu d'un nouveau, ce qui permettait de continuer la " +
+                "série sans rejouer un mot ou un compte valide",
+            "Corrigé : en défi chiffres, valider sans avoir fait aucune opération pouvait " +
+                "rapporter des points comme s'il s'agissait d'une vraie proposition",
+            "Affichage de la série en défi simplifié (pastille \"Série\" au lieu de " +
+                "\"Manche\" / \"Série : X\")",
+            "Le pseudo du profil actif est désormais affiché sur les pages de jeu, pas " +
+                "seulement sur l'accueil",
+            "Statistiques réorganisées en deux onglets \"Général\" et \"Joueurs\", plus " +
+                "lisibles et aérés (séparateurs entre niveaux)",
+            "La réinitialisation des statistiques se fait désormais joueur par joueur, " +
+                "depuis l'onglet Joueurs (le bouton de réinitialisation globale a disparu)",
+            "Accueil réorganisé : Profil et À propos ont le même style que les autres " +
+                "boutons, avec un nouvel ordre et un séparateur",
+            "Retrait de la mention \"Mode 2 joueurs\" des règles du jeu (fonctionnalité non " +
+                "développée pour l'instant)",
+        ),
+    ),
+    EntreeVersion(
         version = "1.10",
         date = "2026-07-15",
         changements = listOf(

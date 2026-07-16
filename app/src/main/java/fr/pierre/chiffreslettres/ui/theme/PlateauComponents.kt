@@ -73,10 +73,12 @@ fun MarqueJeu(modifier: Modifier = Modifier) {
 fun PucePseudo(pseudo: String, modifier: Modifier = Modifier) {
     Box(
         modifier
+            .fillMaxWidth()
             .clip(RoundedCornerShape(50))
             .background(Ivory.copy(alpha = 0.06f))
             .border(1.dp, Ivory.copy(alpha = 0.18f), RoundedCornerShape(50))
             .padding(horizontal = 14.dp, vertical = 6.dp),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             "Profil actif  $pseudo",
@@ -85,21 +87,6 @@ fun PucePseudo(pseudo: String, modifier: Modifier = Modifier) {
             letterSpacing = 0.5.sp,
         )
     }
-}
-
-@Composable
-fun LienDiscret(texte: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
-    Text(
-        texte.uppercase(),
-        modifier = modifier
-            .graphicsLayer(alpha = if (enabled) 1f else 0.4f)
-            .clip(RoundedCornerShape(4.dp))
-            .clickable(enabled = enabled, onClick = onClick)
-            .padding(6.dp),
-        color = TextMuted,
-        fontSize = 11.sp,
-        letterSpacing = 1.sp,
-    )
 }
 
 /** Tuile avec relief (fausse ombre décalée), brique de base des boutons/jetons du plateau. */

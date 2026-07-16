@@ -124,13 +124,5 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
                 "série obtenue est enregistrée dans les statistiques.",
             style = MaterialTheme.typography.bodyMedium,
         )
-
-        HorizontalDivider()
-
-        Text("Mode 2 joueurs", style = MaterialTheme.typography.titleMedium)
-        Text(
-            "À venir : jeu en local entre deux appareils, tirage partagé en temps réel.",
-            style = MaterialTheme.typography.bodyMedium,
-        )
     }
 }
