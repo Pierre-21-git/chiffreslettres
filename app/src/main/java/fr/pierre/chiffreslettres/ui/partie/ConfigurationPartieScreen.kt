@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 
 /**
  * Un seul choix de niveau, appliqué aux manches chiffres et lettres (retour utilisateur).
@@ -22,7 +23,9 @@ import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
  */
 @Composable
 fun ConfigurationPartieScreen(
+    pseudoActif: String,
     onDemarrer: (List<ManchePlanifiee>) -> Unit,
+    onChangerProfil: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
     Column(
@@ -30,6 +33,7 @@ fun ConfigurationPartieScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran("Configurer la partie solo", onRetour)
+        PucePseudo(pseudoActif, onClick = onChangerProfil)
         Text("Choisir un niveau", style = MaterialTheme.typography.titleMedium)
 
         for (niveau in Niveau.entries) {

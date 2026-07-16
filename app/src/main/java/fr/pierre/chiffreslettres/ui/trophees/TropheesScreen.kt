@@ -5,10 +5,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -68,7 +68,7 @@ fun TropheesScreen(
             val tropheesCategorie = CatalogueTrophees.TOUS.filter { it.categorie == categorie }
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(categorie.titre, style = MaterialTheme.typography.titleSmall)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     for (trophee in tropheesCategorie) {
                         val debloque = tropheesDebloques?.containsKey(trophee.id) == true
                         TuileTrophee(trophee, debloque, onClick = { tropheeSelectionne = trophee })
@@ -104,25 +104,24 @@ fun TropheesScreen(
 
 @Composable
 private fun TuileTrophee(trophee: Trophee, debloque: Boolean, onClick: () -> Unit) {
-    Column(
+    Row(
         modifier = Modifier
-            .width(92.dp)
+            .fillMaxWidth()
             .graphicsLayer(alpha = if (debloque) 1f else 0.3f)
             .clip(RoundedCornerShape(8.dp))
             .background(PanelDeep)
             .border(1.dp, Ivory.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text("🏆", fontSize = 28.sp)
         Text(
             trophee.titre,
             color = if (debloque) Ivory else TextMuted,
-            fontSize = 10.sp,
-            textAlign = TextAlign.Center,
-            maxLines = 3,
+            fontSize = 13.sp,
+            textAlign = TextAlign.Start,
         )
     }
 }

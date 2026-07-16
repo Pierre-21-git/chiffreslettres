@@ -178,8 +178,10 @@ fun AppNavHost(
             composable(Routes.CHOIX_NIVEAU_ENTRAINEMENT) { backStackEntry ->
                 val entrainementVm = entrainementViewModel(navController, backStackEntry, historiqueRepository, profilId)
                 ChoixNiveauEntrainementScreen(
+                    pseudoActif = profilActif?.pseudo ?: "…",
                     onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuChiffres(niveau)) },
                     onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuLettres(niveau)) },
+                    onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                     onRetour = {
                         // Sortie complète du mode entraînement : c'est ici (et seulement ici,
                         // pas au retour d'un écran de manche vers cette liste) que la session
@@ -252,10 +254,12 @@ fun AppNavHost(
             composable(Routes.CONFIGURATION_PARTIE) { backStackEntry ->
                 val partieVm = partieViewModel(navController, backStackEntry)
                 ConfigurationPartieScreen(
+                    pseudoActif = profilActif?.pseudo ?: "…",
                     onDemarrer = { sequence ->
                         partieVm.demarrer(sequence)
                         navController.navigate(Routes.JEU_PARTIE)
                     },
+                    onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                     onRetour = { navController.popBackStack() },
                 )
             }
@@ -348,8 +352,10 @@ fun AppNavHost(
         navigation(startDestination = Routes.CHOIX_DEFI, route = Routes.DEFI_GRAPH) {
             composable(Routes.CHOIX_DEFI) {
                 ChoixDefiScreen(
+                    pseudoActif = profilActif?.pseudo ?: "…",
                     onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChiffres(niveau)) },
                     onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiLettres(niveau)) },
+                    onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                     onRetour = { navController.popBackStack() },
                 )
             }

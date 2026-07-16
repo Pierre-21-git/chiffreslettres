@@ -16,12 +16,15 @@ import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 
 /** Remplace l'ancien duo "choix du mode" + "choix du niveau" par une liste unique (retour utilisateur). */
 @Composable
 fun ChoixNiveauEntrainementScreen(
+    pseudoActif: String,
     onNiveauChiffresChoisi: (Niveau) -> Unit,
     onNiveauLettresChoisi: (NiveauLettres) -> Unit,
+    onChangerProfil: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
     Column(
@@ -29,6 +32,7 @@ fun ChoixNiveauEntrainementScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran("Entraînement", onRetour)
+        PucePseudo(pseudoActif, onClick = onChangerProfil)
 
         Text("Chiffres", style = MaterialTheme.typography.titleMedium)
         for (niveau in Niveau.entries) {

@@ -70,13 +70,14 @@ fun MarqueJeu(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PucePseudo(pseudo: String, modifier: Modifier = Modifier) {
+fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
     Box(
         modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(50))
             .background(Ivory.copy(alpha = 0.06f))
             .border(1.dp, Ivory.copy(alpha = 0.18f), RoundedCornerShape(50))
+            .let { if (onClick != null) it.clickable(onClick = onClick) else it }
             .padding(horizontal = 14.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center,
     ) {

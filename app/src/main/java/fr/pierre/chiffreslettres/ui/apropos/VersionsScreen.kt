@@ -17,6 +17,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.13",
+        date = "2026-07-16",
+        changements = listOf(
+            "Le pseudo du profil actif est désormais affiché (et modifiable en un clic) sur " +
+                "les pages Entraînement, Partie solo et Défi, comme sur l'accueil",
+            "Trophées : liste passée en une seule colonne, avec le texte à droite de l'icône " +
+                "au lieu d'une grille",
+        ),
+    ),
+    EntreeVersion(
         version = "1.12",
         date = "2026-07-16",
         changements = listOf(
