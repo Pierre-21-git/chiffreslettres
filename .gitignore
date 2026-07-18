@@ -20,3 +20,7 @@ local.properties
 
 # Fichiers internes de session Claude Code (non liés au projet)
 /.claude
+
+# Keystore de signature release et ses identifiants (secrets, jamais commités)
+/release-keystore.jks
+/keystore.properties
