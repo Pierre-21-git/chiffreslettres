@@ -17,6 +17,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.18",
+        date = "2026-07-18",
+        changements = listOf(
+            "\"Partie solo\" renommé en \"Partie classique\" partout dans l'application",
+            "Nouveaux boutons \"Exporter mes statistiques\" et \"Importer mes statistiques\" sur " +
+                "la fiche d'un profil (statistiques, défis et trophées dans un fichier JSON) ; " +
+                "l'import remplace les statistiques actuelles du profil après confirmation",
+        ),
+    ),
+    EntreeVersion(
         version = "1.17",
         date = "2026-07-18",
         changements = listOf(

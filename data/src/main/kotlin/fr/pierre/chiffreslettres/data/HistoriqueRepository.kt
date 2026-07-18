@@ -43,4 +43,21 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
         dao.meilleuresPartiesSoloParNiveau(profilId, niveauCode)
 
     suspend fun reinitialiserHistoriqueJoueur(profilId: Long) = dao.reinitialiserHistoriqueJoueur(profilId)
+
+    /** Tout l'historique brut d'un joueur — "Exporter mes statistiques". */
+    suspend fun exporterSessions(profilId: Long): List<SessionAvecManches> = dao.sessionsAvecManchesDuJoueur(profilId)
+
+    /**
+     * Réinsère des sessions (avec leurs manches) pour un profil cible — "Importer mes
+     * statistiques". Les id d'origine (session et manches) sont ignorés : de nouveaux id sont
+     * générés, comme pour toute nouvelle partie enregistrée.
+     */
+    suspend fun importerSessions(profilId: Long, sessions: List<SessionAvecManches>) {
+        for (entree in sessions) {
+            dao.enregistrerPartie(
+                entree.session.copy(id = 0, profilId = profilId),
+                entree.manches.map { it.copy(id = 0, sessionId = 0) },
+            )
+        }
+    }
 }

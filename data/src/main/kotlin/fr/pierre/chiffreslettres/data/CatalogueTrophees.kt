@@ -67,7 +67,7 @@ object CatalogueTrophees {
             Trophee(
                 "compte_exact_1",
                 "Premier compte exact",
-                "Obtenir un compte exact en chiffres, en partie solo.",
+                "Obtenir un compte exact en chiffres, en partie classique.",
                 CategorieTrophee.COMPTES_EXACTS,
             ) { it.comptesExacts >= 1 },
         )
@@ -75,7 +75,7 @@ object CatalogueTrophees {
             Trophee(
                 "compte_exact_10",
                 "Dixième compte exact",
-                "Obtenir 10 comptes exacts en chiffres, en partie solo.",
+                "Obtenir 10 comptes exacts en chiffres, en partie classique.",
                 CategorieTrophee.COMPTES_EXACTS,
             ) { it.comptesExacts >= 10 },
         )
@@ -83,7 +83,7 @@ object CatalogueTrophees {
             Trophee(
                 "compte_exact_100",
                 "Centième compte exact",
-                "Obtenir 100 comptes exacts en chiffres, en partie solo.",
+                "Obtenir 100 comptes exacts en chiffres, en partie classique.",
                 CategorieTrophee.COMPTES_EXACTS,
             ) { it.comptesExacts >= 100 },
         )
@@ -92,7 +92,7 @@ object CatalogueTrophees {
             Trophee(
                 "mot_10_1",
                 "Premier mot de 10 lettres",
-                "Trouver un mot de 10 lettres (la longueur maximale du tirage), en partie solo.",
+                "Trouver un mot de 10 lettres (la longueur maximale du tirage), en partie classique.",
                 CategorieTrophee.MOTS,
             ) { it.motsDixLettres >= 1 },
         )
@@ -100,7 +100,7 @@ object CatalogueTrophees {
             Trophee(
                 "mot_10_10",
                 "Dixième mot de 10 lettres",
-                "Trouver 10 mots de 10 lettres, en partie solo.",
+                "Trouver 10 mots de 10 lettres, en partie classique.",
                 CategorieTrophee.MOTS,
             ) { it.motsDixLettres >= 10 },
         )
@@ -109,7 +109,7 @@ object CatalogueTrophees {
             Trophee(
                 "partie_parfaite_chiffres",
                 "Tous les comptes exacts dans une partie",
-                "Terminer une partie solo où toutes les manches chiffres ont un compte exact.",
+                "Terminer une partie classique où toutes les manches chiffres ont un compte exact.",
                 CategorieTrophee.PARTIE_PARFAITE,
             ) { it.partieTousComptesExacts },
         )
@@ -118,7 +118,7 @@ object CatalogueTrophees {
                 Trophee(
                     "partie_mots_min_$seuil",
                     "Que des mots de $seuil lettres ou plus dans une partie",
-                    "Terminer une partie solo où toutes les manches lettres ont un mot valide d'au moins $seuil lettres.",
+                    "Terminer une partie classique où toutes les manches lettres ont un mot valide d'au moins $seuil lettres.",
                     CategorieTrophee.PARTIE_PARFAITE,
                 ) { it.partiesMotsMin[seuil] == true },
             )
@@ -129,7 +129,7 @@ object CatalogueTrophees {
                 Trophee(
                     "score_${seuil}_1",
                     "Première partie à au moins $seuil points",
-                    "Terminer une partie solo avec au moins $seuil points.",
+                    "Terminer une partie classique avec au moins $seuil points.",
                     CategorieTrophee.SCORE_PARTIE,
                 ) { (it.partiesParSeuilScore[seuil] ?: 0) >= 1 },
             )
@@ -137,7 +137,7 @@ object CatalogueTrophees {
                 Trophee(
                     "score_${seuil}_10",
                     "Dixième partie à au moins $seuil points",
-                    "Terminer 10 parties solo avec au moins $seuil points.",
+                    "Terminer 10 parties classiques avec au moins $seuil points.",
                     CategorieTrophee.SCORE_PARTIE,
                 ) { (it.partiesParSeuilScore[seuil] ?: 0) >= 10 },
             )
@@ -147,7 +147,7 @@ object CatalogueTrophees {
             Trophee(
                 "parties_1",
                 "Première partie terminée",
-                "Terminer une partie solo, tous niveaux confondus.",
+                "Terminer une partie classique, tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
             ) { it.partiesSoloTotal >= 1 },
         )
@@ -155,7 +155,7 @@ object CatalogueTrophees {
             Trophee(
                 "parties_10",
                 "Dixième partie terminée",
-                "Terminer 10 parties solo, tous niveaux confondus.",
+                "Terminer 10 parties classiques, tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
             ) { it.partiesSoloTotal >= 10 },
         )
@@ -163,7 +163,7 @@ object CatalogueTrophees {
             Trophee(
                 "parties_100",
                 "Centième partie terminée",
-                "Terminer 100 parties solo, tous niveaux confondus.",
+                "Terminer 100 parties classiques, tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
             ) { it.partiesSoloTotal >= 100 },
         )
@@ -172,7 +172,7 @@ object CatalogueTrophees {
             Trophee(
                 "niveaux_solo_complets",
                 "Un niveau terminé partout",
-                "Terminer au moins une partie solo dans chacun des 4 niveaux (Émile, Nestor, Monique, Mathieu).",
+                "Terminer au moins une partie classique dans chacun des 4 niveaux (Émile, Nestor, Monique, Mathieu).",
                 CategorieTrophee.NIVEAUX_SOLO,
             ) { it.niveauxSoloCouverts >= 4 },
         )

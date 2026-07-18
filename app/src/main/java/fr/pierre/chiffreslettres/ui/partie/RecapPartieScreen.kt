@@ -21,7 +21,7 @@ fun RecapPartieScreen(resultats: List<ResultatManche>, onTerminer: () -> Unit, o
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        EnTeteEcran("Partie solo terminée", onRetour)
+        EnTeteEcran("Partie classique terminée", onRetour)
         Text("Score total : ${resultats.sumOf { it.score }}", style = MaterialTheme.typography.titleLarge)
         for ((index, resultat) in resultats.withIndex()) {
             val libelleMode = if (resultat.mode == ModeJeu.CHIFFRES) "Chiffres" else "Lettres"

@@ -88,7 +88,7 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
             )
         }
 
-        SectionRegle("Mode Partie solo") {
+        SectionRegle("Mode Partie classique") {
             Text(
                 "Un seul choix à faire : le niveau, appliqué aux manches chiffres et " +
                     "lettres, jouées en alternance. La durée du chrono et le nombre de " +
@@ -115,7 +115,7 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
             Text(
                 "Choisissez un mode (chiffres ou lettres) et un niveau, puis enchaînez " +
                     "les manches pour aligner le plus de réussites possible d'affilée, avec " +
-                    "le même chrono qu'en partie solo pour ce niveau. Une réussite, c'est " +
+                    "le même chrono qu'en partie classique pour ce niveau. Une réussite, c'est " +
                     "un compte exact en chiffres, ou un mot valide d'au moins une longueur " +
                     "minimale en lettres :",
                 style = MaterialTheme.typography.bodyMedium,

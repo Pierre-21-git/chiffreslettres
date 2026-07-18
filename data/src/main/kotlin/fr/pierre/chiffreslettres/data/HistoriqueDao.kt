@@ -1,8 +1,10 @@
 package fr.pierre.chiffreslettres.data
 
 import androidx.room.Dao
+import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Relation
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
@@ -10,6 +12,13 @@ data class LigneClassement(val profilId: Long, val pseudo: String, val score: In
 
 /** Une partie solo (score final + date), pour le classement personnel d'un joueur par niveau. */
 data class MeilleurePartieSolo(val score: Int, val date: Long)
+
+/** Une session avec ses manches, pour l'export/import complet de l'historique d'un joueur. */
+data class SessionAvecManches(
+    @Embedded val session: SessionEntity,
+    @Relation(parentColumn = "id", entityColumn = "sessionId")
+    val manches: List<MancheEntity>,
+)
 
 @Dao
 interface HistoriqueDao {
@@ -96,6 +105,11 @@ interface HistoriqueDao {
      */
     @Query("DELETE FROM SessionEntity WHERE profilId = :profilId")
     suspend fun reinitialiserHistoriqueJoueur(profilId: Long)
+
+    /** Tout l'historique (sessions + manches) d'un joueur, pour "Exporter mes statistiques". */
+    @Transaction
+    @Query("SELECT * FROM SessionEntity WHERE profilId = :profilId")
+    suspend fun sessionsAvecManchesDuJoueur(profilId: Long): List<SessionAvecManches>
 
     // --- Agrégats pour l'évaluation des trophées (parties solo uniquement, jamais l'entraînement libre) ---
 

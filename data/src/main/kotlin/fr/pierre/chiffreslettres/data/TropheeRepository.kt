@@ -1,6 +1,7 @@
 package fr.pierre.chiffreslettres.data
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 private val SEUILS_MOTS = listOf(4, 5, 6, 7, 8)
 private val SEUILS_SCORE = listOf(20, 30, 40, 50, 60, 70, 80, 90)
@@ -42,4 +43,18 @@ class TropheeRepository(
     }
 
     suspend fun reinitialiserJoueur(profilId: Long) = tropheeDao.reinitialiserJoueur(profilId)
+
+    /** Tous les trophées débloqués d'un joueur — "Exporter mes statistiques". */
+    suspend fun exporterTrophees(profilId: Long): List<TropheeEntity> = tropheeDao.tropheesDebloques(profilId).first()
+
+    /**
+     * Réinsère des trophées pour un profil cible — "Importer mes statistiques". La date de
+     * déblocage d'origine est conservée (contrairement à [reevaluer], qui daterait un trophée
+     * fraîchement rattrapé au moment de l'évaluation).
+     */
+    suspend fun importerTrophees(profilId: Long, trophees: List<TropheeEntity>) {
+        for (trophee in trophees) {
+            tropheeDao.debloquerSiAbsent(trophee.copy(profilId = profilId))
+        }
+    }
 }

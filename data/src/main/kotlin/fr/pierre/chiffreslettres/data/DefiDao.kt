@@ -45,6 +45,10 @@ interface DefiDao {
     @Query("DELETE FROM DefiEntity WHERE profilId = :profilId")
     suspend fun reinitialiserJoueur(profilId: Long)
 
+    /** Tous les défis d'un joueur, pour "Exporter mes statistiques". */
+    @Query("SELECT * FROM DefiEntity WHERE profilId = :profilId")
+    suspend fun defisDuJoueur(profilId: Long): List<DefiEntity>
+
     // --- Agrégats pour l'évaluation des trophées ---
 
     /** Nombre total de défis terminés (tous types/modes/niveaux confondus). */

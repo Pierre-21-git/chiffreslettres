@@ -26,7 +26,7 @@ import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
 import fr.pierre.chiffreslettres.ui.theme.fondPlateau
 
 /**
- * Avant d'entrer en Entraînement/Partie solo/Défi, demande confirmation du profil actif (retour
+ * Avant d'entrer en Entraînement/Partie classique/Défi, demande confirmation du profil actif (retour
  * utilisateur) : "Oui" enchaîne normalement, "Non" redirige vers l'écran Profil au lieu d'y
  * accéder par erreur avec le mauvais profil actif.
  */
@@ -53,7 +53,7 @@ fun MenuPrincipalScreen(
         PucePseudo(pseudoActif)
 
         TuilePrincipale("Entraînement", onClick = { actionEnAttente = onEntrainementLibre })
-        TuilePrincipale("Partie solo", onClick = { actionEnAttente = onPartieStructuree })
+        TuilePrincipale("Partie classique", onClick = { actionEnAttente = onPartieStructuree })
         TuilePrincipale("Défi série", onClick = { actionEnAttente = onDefiSerie })
         TuilePrincipale("Défi chrono", onClick = { actionEnAttente = onDefiChrono })
 

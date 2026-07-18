@@ -47,7 +47,7 @@ fun ChiffresRoundScreen(
     pseudo: String? = null,
     /** "2 / 4" par exemple, uniquement en partie structurée ou en défi (retour utilisateur). */
     progressionManche: String? = null,
-    /** Libellé de la pastille [progressionManche] : "Manche" en partie solo, "Série" en défi. */
+    /** Libellé de la pastille [progressionManche] : "Manche" en partie classique, "Série" en défi. */
     libelleProgression: String = "Manche",
 ) {
     val etat by viewModel.uiState.collectAsState()

@@ -24,4 +24,14 @@ class DefiRepository(private val dao: DefiDao) {
         dao.meilleuresPerformancesChronoParNiveau(profilId, mode, niveauCode)
 
     suspend fun reinitialiserJoueur(profilId: Long) = dao.reinitialiserJoueur(profilId)
+
+    /** Tous les défis bruts d'un joueur — "Exporter mes statistiques". */
+    suspend fun exporterDefis(profilId: Long): List<DefiEntity> = dao.defisDuJoueur(profilId)
+
+    /** Réinsère des défis pour un profil cible — "Importer mes statistiques" (id d'origine ignorés). */
+    suspend fun importerDefis(profilId: Long, defis: List<DefiEntity>) {
+        for (defi in defis) {
+            dao.enregistrer(defi.copy(id = 0, profilId = profilId))
+        }
+    }
 }
