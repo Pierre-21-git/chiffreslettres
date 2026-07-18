@@ -17,6 +17,23 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.17",
+        date = "2026-07-18",
+        changements = listOf(
+            "Trophées \"Défi chrono\" : paliers plus accessibles — Émile et Nestor passent à " +
+                "2/3/5 réussites (au lieu de 5/10), Monique et Mathieu à 5/10 (au lieu de " +
+                "5/10/20 et 10/20/30/40) — 56 trophées au total",
+            "Règles du jeu : chaque mode est désormais présenté dans un panneau distinct, " +
+                "plus lisible et aéré, dans le même esprit que l'écran Partie solo ; les " +
+                "énumérations par niveau (dont la longueur minimale des mots en défi " +
+                "chrono) sont de vraies listes à pastilles, et les références au jeu télé " +
+                "ont été retirées",
+            "Nouvelle icône de l'application",
+            "Code source placé sous licence GNU GPL-3.0 (fichier LICENSE, mention dans " +
+                "\"À propos\")",
+        ),
+    ),
+    EntreeVersion(
         version = "1.16",
         date = "2026-07-18",
         changements = listOf(

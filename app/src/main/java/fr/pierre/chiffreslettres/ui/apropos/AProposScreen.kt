@@ -33,6 +33,10 @@ fun AProposScreen(
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
+                "Code source sous licence GNU GPL-3.0.",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
                 "Dictionnaire français : Dicollecte (hunspell-fr), licence MPL-2.0.",
                 style = MaterialTheme.typography.bodyMedium,
             )

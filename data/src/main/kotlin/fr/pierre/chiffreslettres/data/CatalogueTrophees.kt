@@ -53,13 +53,13 @@ private val SEUILS_SCORE = listOf(20, 30, 40, 50, 60, 70, 80, 90)
 private data class NiveauDefiChrono(val code: String, val label: String, val minutes: Int, val seuils: List<Int>)
 
 private val NIVEAUX_DEFI_CHRONO = listOf(
-    NiveauDefiChrono("EMILE", "Émile", 2, listOf(5, 10)),
-    NiveauDefiChrono("NESTOR", "Nestor", 3, listOf(5, 10)),
-    NiveauDefiChrono("MONIQUE", "Monique", 4, listOf(5, 10, 20)),
-    NiveauDefiChrono("MATHIEU", "Mathieu", 5, listOf(10, 20, 30, 40)),
+    NiveauDefiChrono("EMILE", "Émile", 2, listOf(2, 3, 5)),
+    NiveauDefiChrono("NESTOR", "Nestor", 3, listOf(2, 3, 5)),
+    NiveauDefiChrono("MONIQUE", "Monique", 4, listOf(5, 10)),
+    NiveauDefiChrono("MATHIEU", "Mathieu", 5, listOf(5, 10)),
 )
 
-/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 58 au total. */
+/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 56 au total. */
 object CatalogueTrophees {
 
     val TOUS: List<Trophee> = buildList {
