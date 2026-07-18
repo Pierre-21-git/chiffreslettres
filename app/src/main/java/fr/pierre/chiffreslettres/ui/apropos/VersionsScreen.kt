@@ -17,6 +17,18 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.16",
+        date = "2026-07-18",
+        changements = listOf(
+            "Statistiques d'un profil : \"Mes statistiques\" (ses stats par niveau) et " +
+                "\"Statistiques générales\" (le classement commun à tous les profils) sont " +
+                "désormais deux boutons vers deux écrans dédiés, au lieu d'une seule page",
+            "Le bouton \"Défi\" de l'accueil est remplacé par deux boutons \"Défi série\" et " +
+                "\"Défi chrono\", menant chacun directement au choix du niveau (plus d'onglets " +
+                "à l'intérieur de l'écran Défi)",
+        ),
+    ),
+    EntreeVersion(
         version = "1.15",
         date = "2026-07-18",
         changements = listOf(

@@ -21,10 +21,13 @@ object Routes {
 
     const val ARG_PROFIL_ID = "profilId"
     const val STATISTIQUES_JOUEUR_PATTERN = "statistiques/joueur/{$ARG_PROFIL_ID}"
+    const val MES_STATISTIQUES_PATTERN = "statistiques/joueur/{$ARG_PROFIL_ID}/mesStatistiques"
+    const val STATISTIQUES_GENERALES = "statistiques/generales"
     const val TROPHEES_JOUEUR_PATTERN = "statistiques/trophees/{$ARG_PROFIL_ID}"
     const val TROPHEES_CATALOGUE = "apropos/trophees"
 
     fun statistiquesJoueur(profilId: Long) = "statistiques/joueur/$profilId"
+    fun mesStatistiques(profilId: Long) = "statistiques/joueur/$profilId/mesStatistiques"
     fun tropheesJoueur(profilId: Long) = "statistiques/trophees/$profilId"
 
     const val PARTIE_GRAPH = "partie"
@@ -32,8 +35,8 @@ object Routes {
     const val JEU_PARTIE = "partie/jeu"
     const val RECAP_PARTIE = "partie/recap"
 
-    const val DEFI_GRAPH = "defi"
-    const val CHOIX_DEFI = "defi/choixNiveau"
+    const val CHOIX_DEFI_SERIE = "defi/choixNiveauSerie"
+    const val CHOIX_DEFI_CHRONO = "defi/choixNiveauChrono"
     const val JEU_DEFI_CHIFFRES_PATTERN = "defi/jeuChiffres/{$ARG_NIVEAU}"
     const val JEU_DEFI_LETTRES_PATTERN = "defi/jeuLettres/{$ARG_NIVEAU}"
     const val JEU_DEFI_CHRONO_CHIFFRES_PATTERN = "defi/chrono/jeuChiffres/{$ARG_NIVEAU}"

@@ -41,7 +41,7 @@ fun formatDate(epochMillis: Long): String =
 
 /**
  * Liste des profils (retour utilisateur : plus d'onglets) : un simple choix de profil, qui mène
- * à sa fiche complète ([StatistiquesJoueurScreen]).
+ * à sa fiche ([StatistiquesJoueurScreen]).
  */
 @Composable
 fun StatistiquesScreen(
@@ -70,9 +70,9 @@ fun StatistiquesScreen(
 }
 
 /**
- * Fiche d'un profil (retour utilisateur : fusion de l'ancien onglet "Joueurs" et de l'ancien
- * onglet "Général", plus d'onglets) : ses propres statistiques par niveau, ses trophées, la
- * réinitialisation, puis le classement général commun à tous les profils.
+ * Fiche d'un profil (retour utilisateur : simple menu, plus d'onglets) : accès à ses propres
+ * statistiques ([MesStatistiquesScreen]), au classement général commun à tous les profils
+ * ([StatistiquesGeneralesScreen]), à ses trophées, et à la réinitialisation.
  */
 @Composable
 fun StatistiquesJoueurScreen(
@@ -81,6 +81,8 @@ fun StatistiquesJoueurScreen(
     defiRepository: DefiRepository,
     profilRepository: ProfilRepository,
     tropheeRepository: TropheeRepository,
+    onMesStatistiques: () -> Unit,
+    onStatistiquesGenerales: () -> Unit,
     onVoirTrophees: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
@@ -95,23 +97,11 @@ fun StatistiquesJoueurScreen(
     ) {
         EnTeteEcran(profil?.pseudo ?: "Statistiques", onRetour)
 
-        var premierBlocAffiche = true
-        var uneDonneeAffichee = false
-        for (niveau in Niveau.entries) {
-            val affiche = StatistiquesJoueurNiveau(
-                historiqueRepository,
-                defiRepository,
-                profilId,
-                niveau,
-                afficherSeparateurAvant = !premierBlocAffiche,
-            )
-            if (affiche) {
-                uneDonneeAffichee = true
-                premierBlocAffiche = false
-            }
+        Button(onClick = onMesStatistiques, modifier = Modifier.fillMaxWidth()) {
+            Text("Mes statistiques")
         }
-        if (!uneDonneeAffichee) {
-            Text("Aucune donnée enregistrée pour ce profil.", style = MaterialTheme.typography.bodyMedium)
+        Button(onClick = onStatistiquesGenerales, modifier = Modifier.fillMaxWidth()) {
+            Text("Statistiques générales")
         }
 
         HorizontalDivider()
@@ -122,30 +112,6 @@ fun StatistiquesJoueurScreen(
         HorizontalDivider()
         Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
             Text("Réinitialiser mes statistiques")
-        }
-
-        HorizontalDivider()
-        Text(
-            "Classement par niveau (parties solo, chiffres et lettres confondus)",
-            style = MaterialTheme.typography.titleMedium,
-        )
-        for ((position, niveauClassement) in Niveau.entries.withIndex()) {
-            val classementFlow = remember(niveauClassement) { historiqueRepository.classementParNiveau(niveauClassement.name) }
-            val classement by classementFlow.collectAsState(initial = emptyList())
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(niveauClassement.label, style = MaterialTheme.typography.titleSmall)
-                if (classement.isEmpty()) {
-                    Text("Aucun score enregistré.", style = MaterialTheme.typography.bodyMedium)
-                } else {
-                    for ((rang, ligne) in classement.withIndex()) {
-                        Text(
-                            "${rang + 1}. ${ligne.pseudo} — ${ligne.score} points (${formatDate(ligne.date)})",
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-                }
-            }
-            if (position != Niveau.entries.lastIndex) HorizontalDivider()
         }
     }
 
@@ -173,6 +139,78 @@ fun StatistiquesJoueurScreen(
                 TextButton(onClick = { confirmationReinitialisation = false }) { Text("Annuler") }
             },
         )
+    }
+}
+
+/** Statistiques propres à un profil, par niveau (retour utilisateur : écran dédié, séparé de la fiche). */
+@Composable
+fun MesStatistiquesScreen(
+    profilId: Long,
+    historiqueRepository: HistoriqueRepository,
+    defiRepository: DefiRepository,
+    onRetour: (() -> Unit)? = null,
+) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(18.dp),
+    ) {
+        EnTeteEcran("Mes statistiques", onRetour)
+
+        var premierBlocAffiche = true
+        var uneDonneeAffichee = false
+        for (niveau in Niveau.entries) {
+            val affiche = StatistiquesJoueurNiveau(
+                historiqueRepository,
+                defiRepository,
+                profilId,
+                niveau,
+                afficherSeparateurAvant = !premierBlocAffiche,
+            )
+            if (affiche) {
+                uneDonneeAffichee = true
+                premierBlocAffiche = false
+            }
+        }
+        if (!uneDonneeAffichee) {
+            Text("Aucune donnée enregistrée pour ce profil.", style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
+
+/** Classement général par niveau, commun à tous les profils (retour utilisateur : écran dédié, séparé de la fiche). */
+@Composable
+fun StatistiquesGeneralesScreen(
+    historiqueRepository: HistoriqueRepository,
+    onRetour: (() -> Unit)? = null,
+) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(18.dp),
+    ) {
+        EnTeteEcran("Statistiques générales", onRetour)
+
+        Text(
+            "Classement par niveau (parties solo, chiffres et lettres confondus)",
+            style = MaterialTheme.typography.titleMedium,
+        )
+        for ((position, niveau) in Niveau.entries.withIndex()) {
+            val classementFlow = remember(niveau) { historiqueRepository.classementParNiveau(niveau.name) }
+            val classement by classementFlow.collectAsState(initial = emptyList())
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(niveau.label, style = MaterialTheme.typography.titleSmall)
+                if (classement.isEmpty()) {
+                    Text("Aucun score enregistré.", style = MaterialTheme.typography.bodyMedium)
+                } else {
+                    for ((rang, ligne) in classement.withIndex()) {
+                        Text(
+                            "${rang + 1}. ${ligne.pseudo} — ${ligne.score} points (${formatDate(ligne.date)})",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+            }
+            if (position != Niveau.entries.lastIndex) HorizontalDivider()
+        }
     }
 }
 
