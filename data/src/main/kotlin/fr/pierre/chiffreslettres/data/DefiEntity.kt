@@ -23,7 +23,11 @@ data class DefiEntity(
     val mode: ModeJeu,
     /** Nom de l'enum `Niveau`/`NiveauLettres` correspondant, comme `MancheEntity.niveauCode`. */
     val niveauCode: String,
-    /** Nombre de réussites d'affilée avant l'échec qui a terminé le défi. */
+    val type: TypeDefi,
+    /**
+     * SERIE : nombre de réussites d'affilée avant l'échec qui a terminé le défi.
+     * CHRONO : nombre total de réussites obtenues avant l'épuisement du budget de temps.
+     */
     val serie: Int,
     val date: Long,
 )

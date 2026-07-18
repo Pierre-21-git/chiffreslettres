@@ -17,6 +17,23 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.14",
+        date = "2026-07-18",
+        changements = listOf(
+            "Nouveau : le défi chrono, en plus du défi série existant — un budget de temps " +
+                "global par niveau (2 min sur Émile, 3 sur Nestor, 4 sur Monique, 5 sur " +
+                "Mathieu) où une erreur ne met plus fin au défi, l'objectif étant d'aligner " +
+                "le plus de réussites possible avant la fin du temps",
+            "22 nouveaux trophées pour le défi chrono (58 au total), à paliers de réussites " +
+                "par niveau et par mode (chiffres et lettres)",
+            "Les meilleures performances en défi chrono apparaissent désormais dans les " +
+                "statistiques par joueur, à côté des meilleures séries du défi série",
+            "Défi (série et chrono) : le seuil de longueur d'un mot réussi en lettres est " +
+                "désormais \"au moins N lettres\" au lieu de \"strictement plus de N lettres\", " +
+                "pour correspondre exactement au niveau choisi",
+        ),
+    ),
+    EntreeVersion(
         version = "1.13",
         date = "2026-07-16",
         changements = listOf(

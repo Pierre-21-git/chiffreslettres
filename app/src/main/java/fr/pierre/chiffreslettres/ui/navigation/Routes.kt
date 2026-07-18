@@ -34,9 +34,13 @@ object Routes {
     const val CHOIX_DEFI = "defi/choixNiveau"
     const val JEU_DEFI_CHIFFRES_PATTERN = "defi/jeuChiffres/{$ARG_NIVEAU}"
     const val JEU_DEFI_LETTRES_PATTERN = "defi/jeuLettres/{$ARG_NIVEAU}"
+    const val JEU_DEFI_CHRONO_CHIFFRES_PATTERN = "defi/chrono/jeuChiffres/{$ARG_NIVEAU}"
+    const val JEU_DEFI_CHRONO_LETTRES_PATTERN = "defi/chrono/jeuLettres/{$ARG_NIVEAU}"
 
     fun jeuDefiChiffres(niveau: Niveau) = "defi/jeuChiffres/${niveau.name}"
     fun jeuDefiLettres(niveau: NiveauLettres) = "defi/jeuLettres/${niveau.name}"
+    fun jeuDefiChronoChiffres(niveau: Niveau) = "defi/chrono/jeuChiffres/${niveau.name}"
+    fun jeuDefiChronoLettres(niveau: NiveauLettres) = "defi/chrono/jeuLettres/${niveau.name}"
 
     const val A_PROPOS = "apropos"
     const val REGLES_DU_JEU = "apropos/reglesDuJeu"

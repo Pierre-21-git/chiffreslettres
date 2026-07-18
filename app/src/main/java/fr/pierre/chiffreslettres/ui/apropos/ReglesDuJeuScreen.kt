@@ -112,16 +112,33 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
 
         HorizontalDivider()
 
-        Text("Mode Défi", style = MaterialTheme.typography.titleMedium)
+        Text("Mode Défi série", style = MaterialTheme.typography.titleMedium)
         Text(
             "Choisissez un mode (chiffres ou lettres) et un niveau, puis enchaînez les " +
                 "manches pour aligner le plus de réussites possible d'affilée, avec le même " +
                 "chrono qu'en partie solo pour ce niveau. Une réussite, c'est un compte exact " +
-                "en chiffres, ou un mot valide dépassant une longueur minimale en lettres " +
-                "(plus de 4 lettres sur Émile, 5 sur Nestor, 6 sur Monique, 7 sur Mathieu). En " +
+                "en chiffres, ou un mot valide d'au moins une longueur minimale en lettres " +
+                "(4 lettres sur Émile, 5 sur Nestor, 6 sur Monique, 7 sur Mathieu). En " +
                 "chiffres, une solution exacte est toujours garantie, même sur Monique et " +
                 "Mathieu : le défi ne s'arrête que sur une erreur ou un temps écoulé. La " +
                 "série obtenue est enregistrée dans les statistiques.",
+            style = MaterialTheme.typography.bodyMedium,
+        )
+
+        HorizontalDivider()
+
+        Text("Mode Défi chrono", style = MaterialTheme.typography.titleMedium)
+        Text(
+            "Même principe que le défi série, mais contre la montre : un budget de temps " +
+                "global est fixé par niveau (2 min sur Émile, 3 sur Nestor, 4 sur Monique, 5 " +
+                "sur Mathieu), et l'objectif est d'aligner le plus de réussites possible avant " +
+                "qu'il ne soit épuisé. Contrairement au défi série, une erreur ne met pas fin " +
+                "au défi : elle compte simplement pour zéro, et la manche suivante démarre " +
+                "aussitôt avec le temps restant. La manche en cours peut être coupée en plein " +
+                "milieu si le temps s'épuise. Les règles du niveau choisi s'appliquent " +
+                "normalement (cible et opérations en chiffres, lettres exclues en lettres, " +
+                "sans garantie de solution forcée sur Monique et Mathieu). Le nombre de " +
+                "réussites obtenu est enregistré dans les statistiques.",
             style = MaterialTheme.typography.bodyMedium,
         )
     }

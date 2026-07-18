@@ -5,16 +5,25 @@ import androidx.lifecycle.viewModelScope
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.TropheeRepository
+import fr.pierre.chiffreslettres.data.TypeDefi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * Partagé par le sous-graphe "défi", comme `PartieStructureeViewModel` pour la partie solo :
- * enchaîne les manches d'un même mode/niveau (le chrono reste celui de la partie solo pour ce
- * niveau, retour utilisateur), s'arrête à la première erreur ou au temps écoulé, et enregistre
- * la série. [essaiId] sert de clé pour recréer une nouvelle instance de `ChiffresRoundViewModel`/
+ * Partagé par le sous-graphe "défi", comme `PartieStructureeViewModel` pour la partie solo.
+ * Couvre les deux types de défi (retour utilisateur : le défi chrono vient s'ajouter au défi
+ * série existant, pas le remplacer) :
+ * - [TypeDefi.SERIE] (comportement historique) : enchaîne les manches d'un même mode/niveau (le
+ *   chrono de chaque manche reste celui de la partie solo pour ce niveau), s'arrête à la
+ *   première erreur ou au temps écoulé, et enregistre la série ([mancheSuivante]/[echec]).
+ * - [TypeDefi.CHRONO] : budget de temps global ([budgetSecondes]), enchaîne les manches tant
+ *   qu'il reste du temps (chaque manche démarre avec le temps restant, cf.
+ *   [dureeProchaineManche]) ; un échec ne met pas fin au défi, seul l'épuisement du budget le
+ *   fait, en enregistrant le nombre de réussites ([mancheChronoTerminee]).
+ *
+ * [essaiId] sert de clé pour recréer une nouvelle instance de `ChiffresRoundViewModel`/
  * `LettresRoundViewModel` à chaque manche (voir sa doc : contrairement à [index], il ne revient
  * jamais à une valeur déjà utilisée, y compris après [recommencer]).
  */
@@ -24,10 +33,15 @@ class DefiViewModel(
     private val profilId: Long,
     private val mode: ModeJeu,
     private val niveauCode: String,
+    private val type: TypeDefi = TypeDefi.SERIE,
+    private val budgetSecondes: Int = 0,
 ) : ViewModel() {
 
     private val _index = MutableStateFlow(0)
     val index: StateFlow<Int> = _index.asStateFlow()
+
+    private val _reussites = MutableStateFlow(0)
+    val reussites: StateFlow<Int> = _reussites.asStateFlow()
 
     private val _termine = MutableStateFlow(false)
     val termine: StateFlow<Boolean> = _termine.asStateFlow()
@@ -44,26 +58,57 @@ class DefiViewModel(
     private val _essaiId = MutableStateFlow(0)
     val essaiId: StateFlow<Int> = _essaiId.asStateFlow()
 
-    /** Réussite confirmée par le joueur (bouton "Continuer") : manche suivante. */
+    private var debutChrono = System.currentTimeMillis()
+
+    /** Défi chrono uniquement : temps restant (s) à donner à la prochaine manche, 0 si le budget est épuisé. */
+    fun dureeProchaineManche(): Int {
+        val ecoulees = ((System.currentTimeMillis() - debutChrono) / 1000).toInt()
+        return (budgetSecondes - ecoulees).coerceAtLeast(0)
+    }
+
+    /** Défi série : réussite confirmée par le joueur (bouton "Continuer") : manche suivante. */
     fun mancheSuivante() {
         _index.value += 1
         _essaiId.value += 1
     }
 
-    /** Échec (mauvais compte/mot, ou temps écoulé) : termine le défi et enregistre la série. */
+    /** Défi série : échec (mauvais compte/mot, ou temps écoulé) : termine le défi et enregistre la série. */
     fun echec() {
         if (_termine.value) return
         _termine.value = true
         val serieFinale = _index.value
         viewModelScope.launch {
-            defiRepository.enregistrer(profilId, mode, niveauCode, serieFinale)
+            defiRepository.enregistrer(profilId, mode, niveauCode, type, serieFinale)
             tropheeRepository.reevaluer(profilId)
+        }
+    }
+
+    /**
+     * Défi chrono : une manche vient de se terminer (réussie ou non). Comptabilise la réussite
+     * éventuelle, puis enchaîne sur une nouvelle manche s'il reste du budget, ou termine le défi
+     * et enregistre le nombre total de réussites sinon.
+     */
+    fun mancheChronoTerminee(reussie: Boolean) {
+        if (_termine.value) return
+        if (reussie) _reussites.value += 1
+        _index.value += 1
+        if (dureeProchaineManche() <= 0) {
+            _termine.value = true
+            val reussitesFinales = _reussites.value
+            viewModelScope.launch {
+                defiRepository.enregistrer(profilId, mode, niveauCode, type, reussitesFinales)
+                tropheeRepository.reevaluer(profilId)
+            }
+        } else {
+            _essaiId.value += 1
         }
     }
 
     fun recommencer() {
         _index.value = 0
+        _reussites.value = 0
         _termine.value = false
         _essaiId.value += 1
+        debutChrono = System.currentTimeMillis()
     }
 }

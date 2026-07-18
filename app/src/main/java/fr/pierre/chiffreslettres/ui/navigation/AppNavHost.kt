@@ -30,6 +30,7 @@ import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.data.ResultatManche
 import fr.pierre.chiffreslettres.data.TropheeRepository
+import fr.pierre.chiffreslettres.data.TypeDefi
 import fr.pierre.chiffreslettres.data.TypePartie
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
@@ -41,6 +42,7 @@ import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundViewModel
 import fr.pierre.chiffreslettres.ui.defi.ChoixDefiScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiViewModel
+import fr.pierre.chiffreslettres.ui.defi.budgetSecondesDefiChrono
 import fr.pierre.chiffreslettres.ui.defi.seuilLongueurDefiLettres
 import fr.pierre.chiffreslettres.ui.entrainement.ChoixNiveauEntrainementScreen
 import fr.pierre.chiffreslettres.ui.entrainement.EntrainementLibreViewModel
@@ -353,8 +355,10 @@ fun AppNavHost(
             composable(Routes.CHOIX_DEFI) {
                 ChoixDefiScreen(
                     pseudoActif = profilActif?.pseudo ?: "…",
-                    onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChiffres(niveau)) },
-                    onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiLettres(niveau)) },
+                    onNiveauChiffresSerieChoisi = { niveau -> navController.navigate(Routes.jeuDefiChiffres(niveau)) },
+                    onNiveauLettresSerieChoisi = { niveau -> navController.navigate(Routes.jeuDefiLettres(niveau)) },
+                    onNiveauChiffresChronoChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoChiffres(niveau)) },
+                    onNiveauLettresChronoChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoLettres(niveau)) },
                     onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                     onRetour = { navController.popBackStack() },
                 )
@@ -366,16 +370,16 @@ fun AppNavHost(
             ) { backStackEntry ->
                 val niveau = Niveau.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
                 val defiVm: DefiViewModel = viewModel(backStackEntry) {
-                    DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.CHIFFRES, niveau.name)
+                    DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.CHIFFRES, niveau.name, TypeDefi.SERIE)
                 }
                 val index by defiVm.index.collectAsState()
                 val essaiId by defiVm.essaiId.collectAsState()
                 val termine by defiVm.termine.collectAsState()
-                // Solution exacte toujours garantie en défi, même sur Monique/Mathieu (retour
-                // utilisateur) : la série ne doit s'arrêter que sur une erreur du joueur. Le
-                // chrono reste celui de la partie solo pour ce niveau (retour utilisateur).
-                // Clé sur essaiId (jamais réutilisé), pas index (qui revient à 0 après
-                // "Recommencer" et renverrait sinon l'ancien ViewModel déjà terminé).
+                // Solution exacte toujours garantie en défi série, même sur Monique/Mathieu
+                // (retour utilisateur) : la série ne doit s'arrêter que sur une erreur du
+                // joueur. Le chrono reste celui de la partie solo pour ce niveau (retour
+                // utilisateur). Clé sur essaiId (jamais réutilisé), pas index (qui revient à 0
+                // après "Recommencer" et renverrait sinon l'ancien ViewModel déjà terminé).
                 val roundVm: ChiffresRoundViewModel =
                     viewModel(key = "defi-chiffres-$essaiId") {
                         ChiffresRoundViewModel(niveau, niveau.dureeSecondesPartieStructuree, garantieSolution = true)
@@ -391,7 +395,7 @@ fun AppNavHost(
                     actionsFinManche = {
                         if (termine) {
                             ActionsFinDefi(
-                                serie = index,
+                                message = "Série terminée : $index réussite(s)",
                                 onRecommencer = { defiVm.recommencer() },
                                 onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
                             )
@@ -408,7 +412,7 @@ fun AppNavHost(
             ) { backStackEntry ->
                 val niveau = NiveauLettres.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
                 val defiVm: DefiViewModel = viewModel(backStackEntry) {
-                    DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.LETTRES, niveau.name)
+                    DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.LETTRES, niveau.name, TypeDefi.SERIE)
                 }
                 val index by defiVm.index.collectAsState()
                 val essaiId by defiVm.essaiId.collectAsState()
@@ -427,14 +431,14 @@ fun AppNavHost(
                     progressionManche = "$index",
                     libelleProgression = "Série",
                     onMancheTerminee = { _, motValide ->
-                        val reussi = motValide != null && motValide.length > seuil
+                        val reussi = motValide != null && motValide.length >= seuil
                         if (!reussi) defiVm.echec()
                     },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
                     actionsFinManche = {
                         if (termine) {
                             ActionsFinDefi(
-                                serie = index,
+                                message = "Série terminée : $index réussite(s)",
                                 onRecommencer = { defiVm.recommencer() },
                                 onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
                             )
@@ -444,15 +448,123 @@ fun AppNavHost(
                     },
                 )
             }
+
+            composable(
+                route = Routes.JEU_DEFI_CHRONO_CHIFFRES_PATTERN,
+                arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val niveau = Niveau.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+                val defiVm: DefiViewModel = viewModel(backStackEntry) {
+                    DefiViewModel(
+                        defiRepository,
+                        tropheeRepository,
+                        profilId,
+                        ModeJeu.CHIFFRES,
+                        niveau.name,
+                        TypeDefi.CHRONO,
+                        budgetSecondesDefiChrono(niveau),
+                    )
+                }
+                val reussites by defiVm.reussites.collectAsState()
+                val essaiId by defiVm.essaiId.collectAsState()
+                val termine by defiVm.termine.collectAsState()
+                // Chaque manche démarre avec le temps restant du budget global (retour
+                // utilisateur : le défi chrono continue même après une erreur, seul
+                // l'épuisement du temps l'arrête) ; les règles du niveau (cible, opérations,
+                // garantie de solution) s'appliquent normalement, sans forçage contrairement au
+                // défi série.
+                val roundVm: ChiffresRoundViewModel =
+                    viewModel(key = "defi-chrono-chiffres-$essaiId") {
+                        ChiffresRoundViewModel(niveau, defiVm.dureeProchaineManche())
+                    }
+                ChiffresRoundScreen(
+                    viewModel = roundVm,
+                    scoreCumule = null,
+                    pseudo = profilActif?.pseudo,
+                    progressionManche = "$reussites",
+                    libelleProgression = "Réussites",
+                    // Comme en défi série : un échec avance seul (pas de confirmation), une
+                    // réussite attend le "Continuer" du joueur avant d'enchaîner (retour
+                    // utilisateur, cohérence avec le défi série existant).
+                    onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.mancheChronoTerminee(false) },
+                    onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
+                    actionsFinManche = {
+                        if (termine) {
+                            ActionsFinDefi(
+                                message = "Défi terminé : $reussites réussite(s)",
+                                onRecommencer = { defiVm.recommencer() },
+                                onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
+                            )
+                        } else {
+                            Button(onClick = { defiVm.mancheChronoTerminee(true) }, modifier = Modifier.fillMaxWidth()) {
+                                Text("Continuer")
+                            }
+                        }
+                    },
+                )
+            }
+
+            composable(
+                route = Routes.JEU_DEFI_CHRONO_LETTRES_PATTERN,
+                arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+            ) { backStackEntry ->
+                val niveau = NiveauLettres.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+                val defiVm: DefiViewModel = viewModel(backStackEntry) {
+                    DefiViewModel(
+                        defiRepository,
+                        tropheeRepository,
+                        profilId,
+                        ModeJeu.LETTRES,
+                        niveau.name,
+                        TypeDefi.CHRONO,
+                        budgetSecondesDefiChrono(niveau),
+                    )
+                }
+                val reussites by defiVm.reussites.collectAsState()
+                val essaiId by defiVm.essaiId.collectAsState()
+                val termine by defiVm.termine.collectAsState()
+                val seuil = seuilLongueurDefiLettres(niveau)
+                val roundVm: LettresRoundViewModel =
+                    viewModel(key = "defi-chrono-lettres-$essaiId") {
+                        LettresRoundViewModel(niveau, dictionnaire, defiVm.dureeProchaineManche())
+                    }
+                LettresRoundScreen(
+                    viewModel = roundVm,
+                    scoreCumule = null,
+                    pseudo = profilActif?.pseudo,
+                    progressionManche = "$reussites",
+                    libelleProgression = "Réussites",
+                    // Comme en défi série : un échec avance seul (pas de confirmation), une
+                    // réussite attend le "Continuer" du joueur avant d'enchaîner.
+                    onMancheTerminee = { _, motValide ->
+                        val reussi = motValide != null && motValide.length >= seuil
+                        if (!reussi) defiVm.mancheChronoTerminee(false)
+                    },
+                    onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
+                    actionsFinManche = {
+                        if (termine) {
+                            ActionsFinDefi(
+                                message = "Défi terminé : $reussites réussite(s)",
+                                onRecommencer = { defiVm.recommencer() },
+                                onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI, inclusive = false) },
+                            )
+                        } else {
+                            Button(onClick = { defiVm.mancheChronoTerminee(true) }, modifier = Modifier.fillMaxWidth()) {
+                                Text("Continuer")
+                            }
+                        }
+                    },
+                )
+            }
         }
     }
 }
 
-/** Panneau de fin de défi (échec), commun aux manches chiffres et lettres. */
+/** Panneau de fin de défi, commun aux quatre types de manches (série/chrono × chiffres/lettres). */
 @Composable
-private fun ActionsFinDefi(serie: Int, onRecommencer: () -> Unit, onChangerNiveau: () -> Unit) {
+private fun ActionsFinDefi(message: String, onRecommencer: () -> Unit, onChangerNiveau: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text("Série terminée : $serie réussite(s)")
+        Text(message)
         Button(onClick = onRecommencer, modifier = Modifier.fillMaxWidth()) { Text("Recommencer") }
         OutlinedButton(onClick = onChangerNiveau, modifier = Modifier.fillMaxWidth()) { Text("Changer de niveau") }
     }

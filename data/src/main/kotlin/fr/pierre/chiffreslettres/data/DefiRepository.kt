@@ -4,12 +4,13 @@ import kotlinx.coroutines.flow.Flow
 
 class DefiRepository(private val dao: DefiDao) {
 
-    suspend fun enregistrer(profilId: Long, mode: ModeJeu, niveauCode: String, serie: Int) {
+    suspend fun enregistrer(profilId: Long, mode: ModeJeu, niveauCode: String, type: TypeDefi, serie: Int) {
         dao.enregistrer(
             DefiEntity(
                 profilId = profilId,
                 mode = mode,
                 niveauCode = niveauCode,
+                type = type,
                 serie = serie,
                 date = System.currentTimeMillis(),
             ),
@@ -18,6 +19,9 @@ class DefiRepository(private val dao: DefiDao) {
 
     fun meilleursDefisParNiveau(profilId: Long, mode: ModeJeu, niveauCode: String): Flow<List<MeilleurDefi>> =
         dao.meilleursDefisParNiveau(profilId, mode, niveauCode)
+
+    fun meilleuresPerformancesChronoParNiveau(profilId: Long, mode: ModeJeu, niveauCode: String): Flow<List<MeilleurDefi>> =
+        dao.meilleuresPerformancesChronoParNiveau(profilId, mode, niveauCode)
 
     suspend fun reinitialiserJoueur(profilId: Long) = dao.reinitialiserJoueur(profilId)
 }

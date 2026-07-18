@@ -235,9 +235,16 @@ private fun StatistiquesJoueurNiveau(
     val meilleursDefisLettres by remember(profilId, niveau) {
         defiRepository.meilleursDefisParNiveau(profilId, ModeJeu.LETTRES, niveau.name)
     }.collectAsState(initial = emptyList())
+    val meilleuresChronoChiffres by remember(profilId, niveau) {
+        defiRepository.meilleuresPerformancesChronoParNiveau(profilId, ModeJeu.CHIFFRES, niveau.name)
+    }.collectAsState(initial = emptyList())
+    val meilleuresChronoLettres by remember(profilId, niveau) {
+        defiRepository.meilleuresPerformancesChronoParNiveau(profilId, ModeJeu.LETTRES, niveau.name)
+    }.collectAsState(initial = emptyList())
 
     val aDesDonnees = entrainementChiffres > 0 || entrainementLettres > 0 || partiesSolo > 0 ||
-        meilleuresParties.isNotEmpty() || meilleursDefisChiffres.isNotEmpty() || meilleursDefisLettres.isNotEmpty()
+        meilleuresParties.isNotEmpty() || meilleursDefisChiffres.isNotEmpty() || meilleursDefisLettres.isNotEmpty() ||
+        meilleuresChronoChiffres.isNotEmpty() || meilleuresChronoLettres.isNotEmpty()
     if (!aDesDonnees) return false
 
     if (afficherSeparateurAvant) HorizontalDivider()
@@ -268,6 +275,24 @@ private fun StatistiquesJoueurNiveau(
         if (meilleursDefisLettres.isNotEmpty()) {
             Text("Défi lettres — meilleures séries", style = MaterialTheme.typography.labelLarge)
             for ((position, defi) in meilleursDefisLettres.withIndex()) {
+                Text(
+                    "${position + 1}. ${defi.serie} réussite(s) (${formatDate(defi.date)})",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
+        if (meilleuresChronoChiffres.isNotEmpty()) {
+            Text("Défi chrono chiffres — meilleures performances", style = MaterialTheme.typography.labelLarge)
+            for ((position, defi) in meilleuresChronoChiffres.withIndex()) {
+                Text(
+                    "${position + 1}. ${defi.serie} réussite(s) (${formatDate(defi.date)})",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
+        if (meilleuresChronoLettres.isNotEmpty()) {
+            Text("Défi chrono lettres — meilleures performances", style = MaterialTheme.typography.labelLarge)
+            for ((position, defi) in meilleuresChronoLettres.withIndex()) {
                 Text(
                     "${position + 1}. ${defi.serie} réussite(s) (${formatDate(defi.date)})",
                     style = MaterialTheme.typography.bodyMedium,
