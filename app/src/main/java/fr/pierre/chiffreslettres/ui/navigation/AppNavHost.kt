@@ -55,6 +55,7 @@ import fr.pierre.chiffreslettres.ui.partie.PartieStructureeViewModel
 import fr.pierre.chiffreslettres.ui.partie.RecapPartieScreen
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
+import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesJoueurScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesScreen
 import fr.pierre.chiffreslettres.ui.trophees.TropheesScreen
 import kotlinx.coroutines.launch
@@ -167,11 +168,24 @@ fun AppNavHost(
 
         composable(Routes.STATISTIQUES) {
             StatistiquesScreen(
+                profilRepository = profilRepository,
+                onProfilChoisi = { profilIdChoisi -> navController.navigate(Routes.statistiquesJoueur(profilIdChoisi)) },
+                onRetour = { navController.popBackStack() },
+            )
+        }
+
+        composable(
+            route = Routes.STATISTIQUES_JOUEUR_PATTERN,
+            arguments = listOf(navArgument(Routes.ARG_PROFIL_ID) { type = NavType.LongType }),
+        ) { backStackEntry ->
+            val profilIdArg = backStackEntry.arguments!!.getLong(Routes.ARG_PROFIL_ID)
+            StatistiquesJoueurScreen(
+                profilId = profilIdArg,
                 historiqueRepository = historiqueRepository,
                 defiRepository = defiRepository,
                 profilRepository = profilRepository,
                 tropheeRepository = tropheeRepository,
-                onVoirTrophees = { profilId -> navController.navigate(Routes.tropheesJoueur(profilId)) },
+                onVoirTrophees = { navController.navigate(Routes.tropheesJoueur(profilIdArg)) },
                 onRetour = { navController.popBackStack() },
             )
         }

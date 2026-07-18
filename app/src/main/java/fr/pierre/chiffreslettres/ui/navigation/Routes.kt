@@ -20,9 +20,11 @@ object Routes {
     const val STATISTIQUES = "statistiques"
 
     const val ARG_PROFIL_ID = "profilId"
+    const val STATISTIQUES_JOUEUR_PATTERN = "statistiques/joueur/{$ARG_PROFIL_ID}"
     const val TROPHEES_JOUEUR_PATTERN = "statistiques/trophees/{$ARG_PROFIL_ID}"
     const val TROPHEES_CATALOGUE = "apropos/trophees"
 
+    fun statistiquesJoueur(profilId: Long) = "statistiques/joueur/$profilId"
     fun tropheesJoueur(profilId: Long) = "statistiques/trophees/$profilId"
 
     const val PARTIE_GRAPH = "partie"

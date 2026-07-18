@@ -158,9 +158,9 @@ interface HistoriqueDao {
     )
     suspend fun compterPartiesMotsMin(profilId: Long, longueurMin: Int): Int
 
-    /** Nombre de parties solo dont le score total dépasse [seuil]. */
-    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE' AND scoreTotal > :seuil")
-    suspend fun compterPartiesScoreSuperieur(profilId: Long, seuil: Int): Int
+    /** Nombre de parties solo dont le score total atteint au moins [seuil]. */
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE' AND scoreTotal >= :seuil")
+    suspend fun compterPartiesScoreAuMoins(profilId: Long, seuil: Int): Int
 
     /** Nombre total de parties solo terminées, tous niveaux confondus. */
     @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE'")

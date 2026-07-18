@@ -17,6 +17,23 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.15",
+        date = "2026-07-18",
+        changements = listOf(
+            "Trophées \"Score de partie\" : le seuil de points passe de \"strictement plus de\" " +
+                "à \"au moins\" (ex. \"Première partie à au moins 20 points\")",
+            "Trophées \"Défi chrono\" : regroupés par niveau (Émile, Nestor, Monique, Mathieu " +
+                "en sous-titre) au lieu d'un seul bloc mélangeant chiffres et lettres",
+            "Statistiques entièrement revues : l'écran n'affiche plus que la liste des " +
+                "profils, cliquer sur un profil ouvre sa fiche complète (ses statistiques par " +
+                "niveau, ses trophées, la réinitialisation, puis le classement général) — plus " +
+                "d'onglets \"Général\"/\"Joueurs\"",
+            "Un dialogue demande désormais de confirmer le profil actif avant d'entrer en " +
+                "Entraînement, Partie solo ou Défi (\"Non\" redirige vers l'écran Profil)",
+            "Le mot \"joueur\" est remplacé par \"profil\" dans les textes de l'application",
+        ),
+    ),
+    EntreeVersion(
         version = "1.14",
         date = "2026-07-18",
         changements = listOf(

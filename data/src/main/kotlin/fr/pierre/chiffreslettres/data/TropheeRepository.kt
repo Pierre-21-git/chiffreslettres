@@ -25,7 +25,7 @@ class TropheeRepository(
             motsDixLettres = historiqueDao.compterMotsLongueur(profilId, LONGUEUR_MOT_MAX),
             partieTousComptesExacts = historiqueDao.compterPartiesTousComptesExacts(profilId) >= 1,
             partiesMotsMin = SEUILS_MOTS.associateWith { historiqueDao.compterPartiesMotsMin(profilId, it) >= 1 },
-            partiesParSeuilScore = SEUILS_SCORE.associateWith { historiqueDao.compterPartiesScoreSuperieur(profilId, it) },
+            partiesParSeuilScore = SEUILS_SCORE.associateWith { historiqueDao.compterPartiesScoreAuMoins(profilId, it) },
             partiesSoloTotal = historiqueDao.compterPartiesSoloTotal(profilId),
             niveauxSoloCouverts = historiqueDao.compterNiveauxSoloCouverts(profilId),
             defisTotal = defiDao.compterDefisTotal(profilId),

@@ -2,7 +2,6 @@ package fr.pierre.chiffreslettres.ui.statistiques
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,15 +11,11 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -44,63 +39,101 @@ val FORMAT_DATE: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 fun formatDate(epochMillis: Long): String =
     Instant.ofEpochMilli(epochMillis).atZone(ZoneId.systemDefault()).format(FORMAT_DATE)
 
-private val ONGLETS_STATISTIQUES = listOf("Général", "Joueurs")
-
 /**
- * Écran unique à deux onglets (retour utilisateur) : "Général" pour le classement commun à tous
- * les joueurs, "Joueurs" pour le détail par profil (fusion de l'ancien écran dédié
- * "Statistiques par joueur"). Le reset est désormais scopé à un seul joueur, depuis l'onglet
- * Joueurs — plus de bouton de réinitialisation globale.
+ * Liste des profils (retour utilisateur : plus d'onglets) : un simple choix de profil, qui mène
+ * à sa fiche complète ([StatistiquesJoueurScreen]).
  */
 @Composable
 fun StatistiquesScreen(
-    historiqueRepository: HistoriqueRepository,
-    defiRepository: DefiRepository,
     profilRepository: ProfilRepository,
-    tropheeRepository: TropheeRepository,
-    onVoirTrophees: (profilId: Long) -> Unit,
+    onProfilChoisi: (profilId: Long) -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
-    var ongletSelectionne by remember { mutableIntStateOf(0) }
+    val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran("Statistiques", onRetour)
 
-        TabRow(selectedTabIndex = ongletSelectionne) {
-            ONGLETS_STATISTIQUES.forEachIndexed { index, titre ->
-                Tab(
-                    selected = ongletSelectionne == index,
-                    onClick = { ongletSelectionne = index },
-                    text = { Text(titre) },
-                )
+        if (profils.isEmpty()) {
+            Text("Aucun profil.", style = MaterialTheme.typography.bodyMedium)
+        } else {
+            for (profil in profils) {
+                Button(onClick = { onProfilChoisi(profil.id) }, modifier = Modifier.fillMaxWidth()) {
+                    Text(profil.pseudo)
+                }
             }
-        }
-
-        when (ongletSelectionne) {
-            0 -> OngletGeneral(historiqueRepository)
-            else -> OngletJoueurs(historiqueRepository, defiRepository, profilRepository, tropheeRepository, onVoirTrophees)
         }
     }
 }
 
+/**
+ * Fiche d'un profil (retour utilisateur : fusion de l'ancien onglet "Joueurs" et de l'ancien
+ * onglet "Général", plus d'onglets) : ses propres statistiques par niveau, ses trophées, la
+ * réinitialisation, puis le classement général commun à tous les profils.
+ */
 @Composable
-private fun OngletGeneral(historiqueRepository: HistoriqueRepository) {
+fun StatistiquesJoueurScreen(
+    profilId: Long,
+    historiqueRepository: HistoriqueRepository,
+    defiRepository: DefiRepository,
+    profilRepository: ProfilRepository,
+    tropheeRepository: TropheeRepository,
+    onVoirTrophees: () -> Unit,
+    onRetour: (() -> Unit)? = null,
+) {
+    val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
+    val profil = profils.find { it.id == profilId }
+    val scope = rememberCoroutineScope()
+    var confirmationReinitialisation by remember { mutableStateOf(false) }
+
     Column(
-        modifier = Modifier.fillMaxSize().padding(top = 16.dp).verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
+        EnTeteEcran(profil?.pseudo ?: "Statistiques", onRetour)
+
+        var premierBlocAffiche = true
+        var uneDonneeAffichee = false
+        for (niveau in Niveau.entries) {
+            val affiche = StatistiquesJoueurNiveau(
+                historiqueRepository,
+                defiRepository,
+                profilId,
+                niveau,
+                afficherSeparateurAvant = !premierBlocAffiche,
+            )
+            if (affiche) {
+                uneDonneeAffichee = true
+                premierBlocAffiche = false
+            }
+        }
+        if (!uneDonneeAffichee) {
+            Text("Aucune donnée enregistrée pour ce profil.", style = MaterialTheme.typography.bodyMedium)
+        }
+
+        HorizontalDivider()
+        Button(onClick = onVoirTrophees, modifier = Modifier.fillMaxWidth()) {
+            Text("Voir mes trophées")
+        }
+
+        HorizontalDivider()
+        Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
+            Text("Réinitialiser mes statistiques")
+        }
+
+        HorizontalDivider()
         Text(
             "Classement par niveau (parties solo, chiffres et lettres confondus)",
             style = MaterialTheme.typography.titleMedium,
         )
-        for ((position, niveau) in Niveau.entries.withIndex()) {
-            val classementFlow = remember(niveau) { historiqueRepository.classementParNiveau(niveau.name) }
+        for ((position, niveauClassement) in Niveau.entries.withIndex()) {
+            val classementFlow = remember(niveauClassement) { historiqueRepository.classementParNiveau(niveauClassement.name) }
             val classement by classementFlow.collectAsState(initial = emptyList())
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(niveau.label, style = MaterialTheme.typography.titleSmall)
+                Text(niveauClassement.label, style = MaterialTheme.typography.titleSmall)
                 if (classement.isEmpty()) {
                     Text("Aucun score enregistré.", style = MaterialTheme.typography.bodyMedium)
                 } else {
@@ -115,88 +148,23 @@ private fun OngletGeneral(historiqueRepository: HistoriqueRepository) {
             if (position != Niveau.entries.lastIndex) HorizontalDivider()
         }
     }
-}
 
-@Composable
-private fun OngletJoueurs(
-    historiqueRepository: HistoriqueRepository,
-    defiRepository: DefiRepository,
-    profilRepository: ProfilRepository,
-    tropheeRepository: TropheeRepository,
-    onVoirTrophees: (profilId: Long) -> Unit,
-) {
-    val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
-    var profilSelectionneId by remember { mutableStateOf<Long?>(null) }
-    val profilSelectionne = profils.find { it.id == profilSelectionneId } ?: profils.firstOrNull()
-    val scope = rememberCoroutineScope()
-    var confirmationReinitialisation by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier.fillMaxSize().padding(top = 16.dp).verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(18.dp),
-    ) {
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            for (profil in profils) {
-                if (profil.id == profilSelectionne?.id) {
-                    Button(onClick = { profilSelectionneId = profil.id }) { Text(profil.pseudo) }
-                } else {
-                    OutlinedButton(onClick = { profilSelectionneId = profil.id }) { Text(profil.pseudo) }
-                }
-            }
-        }
-
-        if (profilSelectionne == null) {
-            Text("Aucun profil.", style = MaterialTheme.typography.bodyMedium)
-        } else {
-            HorizontalDivider()
-
-            var premierBlocAffiche = true
-            var uneDonneeAffichee = false
-            for (niveau in Niveau.entries) {
-                val affiche = StatistiquesJoueurNiveau(
-                    historiqueRepository,
-                    defiRepository,
-                    profilSelectionne.id,
-                    niveau,
-                    afficherSeparateurAvant = !premierBlocAffiche,
-                )
-                if (affiche) {
-                    uneDonneeAffichee = true
-                    premierBlocAffiche = false
-                }
-            }
-            if (!uneDonneeAffichee) {
-                Text("Aucune donnée enregistrée pour ce joueur.", style = MaterialTheme.typography.bodyMedium)
-            }
-
-            HorizontalDivider()
-            Button(onClick = { onVoirTrophees(profilSelectionne.id) }, modifier = Modifier.fillMaxWidth()) {
-                Text("Voir mes trophées")
-            }
-
-            HorizontalDivider()
-            Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
-                Text("Réinitialiser mes statistiques")
-            }
-        }
-    }
-
-    if (confirmationReinitialisation && profilSelectionne != null) {
+    if (confirmationReinitialisation && profil != null) {
         AlertDialog(
             onDismissRequest = { confirmationReinitialisation = false },
             title = { Text("Réinitialiser mes statistiques") },
             text = {
                 Text(
                     "Tout l'historique de parties, scores et défis de " +
-                        "${profilSelectionne.pseudo} sera définitivement supprimé. Continuer ?",
+                        "${profil.pseudo} sera définitivement supprimé. Continuer ?",
                 )
             },
             confirmButton = {
                 TextButton(onClick = {
                     scope.launch {
-                        historiqueRepository.reinitialiserHistoriqueJoueur(profilSelectionne.id)
-                        defiRepository.reinitialiserJoueur(profilSelectionne.id)
-                        tropheeRepository.reinitialiserJoueur(profilSelectionne.id)
+                        historiqueRepository.reinitialiserHistoriqueJoueur(profilId)
+                        defiRepository.reinitialiserJoueur(profilId)
+                        tropheeRepository.reinitialiserJoueur(profilId)
                     }
                     confirmationReinitialisation = false
                 }) { Text("Réinitialiser") }

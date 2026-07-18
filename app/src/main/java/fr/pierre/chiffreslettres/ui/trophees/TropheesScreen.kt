@@ -69,7 +69,17 @@ fun TropheesScreen(
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(categorie.titre, style = MaterialTheme.typography.titleSmall)
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    var sousTitrePrecedent: String? = null
                     for (trophee in tropheesCategorie) {
+                        val sousTitre = trophee.sousTitre
+                        if (sousTitre != null && sousTitre != sousTitrePrecedent) {
+                            sousTitrePrecedent = sousTitre
+                            Text(
+                                sousTitre,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = TextMuted,
+                            )
+                        }
                         val debloque = tropheesDebloques?.containsKey(trophee.id) == true
                         TuileTrophee(trophee, debloque, onClick = { tropheeSelectionne = trophee })
                     }

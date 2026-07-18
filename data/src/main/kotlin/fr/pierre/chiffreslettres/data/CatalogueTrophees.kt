@@ -11,7 +11,7 @@ data class TropheeStats(
     val partieTousComptesExacts: Boolean,
     /** Clé = longueur minimale (4 à 8), valeur = une partie solo a-t-elle uniquement des mots d'au moins cette longueur. */
     val partiesMotsMin: Map<Int, Boolean>,
-    /** Clé = seuil de points (20 à 90), valeur = nombre de parties solo dépassant ce seuil. */
+    /** Clé = seuil de points (20 à 90), valeur = nombre de parties solo atteignant au moins ce seuil. */
     val partiesParSeuilScore: Map<Int, Int>,
     val partiesSoloTotal: Int,
     /** Nombre de niveaux (0 à 4) avec au moins une partie solo terminée. */
@@ -41,6 +41,8 @@ class Trophee(
     val titre: String,
     val description: String,
     val categorie: CategorieTrophee,
+    /** Regroupement visuel au sein d'une catégorie (ex. niveau du défi chrono), null si non applicable. */
+    val sousTitre: String? = null,
     val estDebloque: (TropheeStats) -> Boolean,
 )
 
@@ -126,16 +128,16 @@ object CatalogueTrophees {
             add(
                 Trophee(
                     "score_${seuil}_1",
-                    "Première partie à plus de $seuil points",
-                    "Terminer une partie solo avec plus de $seuil points.",
+                    "Première partie à au moins $seuil points",
+                    "Terminer une partie solo avec au moins $seuil points.",
                     CategorieTrophee.SCORE_PARTIE,
                 ) { (it.partiesParSeuilScore[seuil] ?: 0) >= 1 },
             )
             add(
                 Trophee(
                     "score_${seuil}_10",
-                    "Dixième partie à plus de $seuil points",
-                    "Terminer 10 parties solo avec plus de $seuil points.",
+                    "Dixième partie à au moins $seuil points",
+                    "Terminer 10 parties solo avec au moins $seuil points.",
                     CategorieTrophee.SCORE_PARTIE,
                 ) { (it.partiesParSeuilScore[seuil] ?: 0) >= 10 },
             )
@@ -217,19 +219,20 @@ object CatalogueTrophees {
             ) { it.combinaisonsDefiCouvertes >= 8 },
         )
 
-        for (mode in ModeJeu.entries) {
-            val nature = if (mode == ModeJeu.CHIFFRES) "comptes exacts" else "mots"
-            val modeCode = mode.name.lowercase()
-            for (niveau in NIVEAUX_DEFI_CHRONO) {
+        for (niveau in NIVEAUX_DEFI_CHRONO) {
+            for (mode in ModeJeu.entries) {
+                val nature = if (mode == ModeJeu.CHIFFRES) "comptes exacts" else "mots"
+                val modeCode = mode.name.lowercase()
                 val cle = "${mode.name}_${niveau.code}"
                 for (seuil in niveau.seuils) {
                     add(
                         Trophee(
                             "defi_chrono_${modeCode}_${niveau.code.lowercase()}_$seuil",
-                            "$seuil $nature en moins de ${niveau.minutes} min (${niveau.label})",
+                            "$seuil $nature en moins de ${niveau.minutes} min",
                             "Obtenir $seuil $nature en défi chrono $modeCode, niveau ${niveau.label} " +
                                 "(${niveau.minutes} minute(s)).",
                             CategorieTrophee.DEFI_CHRONO,
+                            sousTitre = niveau.label,
                         ) { (it.meilleuresReussitesDefiChrono[cle] ?: 0) >= seuil },
                     )
                 }
