@@ -17,6 +17,14 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.20",
+        date = "2026-07-22",
+        changements = listOf(
+            "Le bouton \"Versions\" de l'écran À propos n'apparaît plus qu'en build de " +
+                "débogage, l'historique des versions n'étant utile qu'en interne",
+        ),
+    ),
+    EntreeVersion(
         version = "1.19",
         date = "2026-07-20",
         changements = listOf(

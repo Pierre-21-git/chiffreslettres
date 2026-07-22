@@ -50,7 +50,9 @@ fun AProposScreen(
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Button(onClick = onReglesDuJeu, modifier = Modifier.fillMaxWidth()) { Text("Règles du jeu") }
             Button(onClick = onTrophees, modifier = Modifier.fillMaxWidth()) { Text("Trophées") }
-            Button(onClick = onVersions, modifier = Modifier.fillMaxWidth()) { Text("Versions") }
+            if (BuildConfig.DEBUG) {
+                Button(onClick = onVersions, modifier = Modifier.fillMaxWidth()) { Text("Versions") }
+            }
         }
     }
 }
