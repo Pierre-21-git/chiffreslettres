@@ -33,7 +33,8 @@ class TropheeRepository(
             meilleureSerieDefi = defiDao.meilleureSerieDefi(profilId),
             combinaisonsDefiCouvertes = defiDao.compterCombinaisonsCouvertes(profilId),
             meilleuresReussitesDefiChrono = defiDao.meilleuresReussitesChronoParCombinaison(profilId)
-                .associate { "${it.mode.name}_${it.niveauCode}" to it.meilleur },
+                .groupBy { it.mode.name }
+                .mapValues { (_, combinaisons) -> combinaisons.maxOf { it.meilleur } },
         )
         for (trophee in CatalogueTrophees.TOUS) {
             if (trophee.estDebloque(stats)) {

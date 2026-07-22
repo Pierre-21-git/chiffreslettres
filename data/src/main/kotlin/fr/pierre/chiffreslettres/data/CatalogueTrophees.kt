@@ -20,7 +20,7 @@ data class TropheeStats(
     val meilleureSerieDefi: Int,
     /** Nombre de combinaisons niveau × mode (0 à 8) avec au moins un défi série terminé. */
     val combinaisonsDefiCouvertes: Int,
-    /** Clé = "MODE_NIVEAUCODE" (ex. "CHIFFRES_EMILE"), valeur = meilleur nombre de réussites en défi chrono. */
+    /** Clé = nom du [ModeJeu] (ex. "CHIFFRES"), valeur = meilleur nombre de réussites en défi chrono, tous niveaux confondus. */
     val meilleuresReussitesDefiChrono: Map<String, Int>,
 )
 
@@ -48,18 +48,9 @@ class Trophee(
 
 private val SEUILS_MOTS = listOf(4, 5, 6, 7, 8)
 private val SEUILS_SCORE = listOf(20, 30, 40, 50, 60, 70, 80, 90)
+private val SEUILS_DEFI_CHRONO = listOf(2, 3, 5, 10, 12)
 
-/** Un niveau de défi chrono : code d'enum, libellé, durée du budget et paliers de trophées. */
-private data class NiveauDefiChrono(val code: String, val label: String, val minutes: Int, val seuils: List<Int>)
-
-private val NIVEAUX_DEFI_CHRONO = listOf(
-    NiveauDefiChrono("EMILE", "Émile", 2, listOf(2, 3, 5)),
-    NiveauDefiChrono("NESTOR", "Nestor", 3, listOf(2, 3, 5)),
-    NiveauDefiChrono("MONIQUE", "Monique", 4, listOf(5, 10)),
-    NiveauDefiChrono("MATHIEU", "Mathieu", 5, listOf(5, 10)),
-)
-
-/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 56 au total. */
+/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 46 au total. */
 object CatalogueTrophees {
 
     val TOUS: List<Trophee> = buildList {
@@ -219,23 +210,20 @@ object CatalogueTrophees {
             ) { it.combinaisonsDefiCouvertes >= 8 },
         )
 
-        for (niveau in NIVEAUX_DEFI_CHRONO) {
-            for (mode in ModeJeu.entries) {
-                val nature = if (mode == ModeJeu.CHIFFRES) "comptes exacts" else "mots"
-                val modeCode = mode.name.lowercase()
-                val cle = "${mode.name}_${niveau.code}"
-                for (seuil in niveau.seuils) {
-                    add(
-                        Trophee(
-                            "defi_chrono_${modeCode}_${niveau.code.lowercase()}_$seuil",
-                            "$seuil $nature en moins de ${niveau.minutes} min",
-                            "Obtenir $seuil $nature en défi chrono $modeCode, niveau ${niveau.label} " +
-                                "(${niveau.minutes} minute(s)).",
-                            CategorieTrophee.DEFI_CHRONO,
-                            sousTitre = niveau.label,
-                        ) { (it.meilleuresReussitesDefiChrono[cle] ?: 0) >= seuil },
-                    )
-                }
+        for (mode in ModeJeu.entries) {
+            val nature = if (mode == ModeJeu.CHIFFRES) "comptes exacts" else "mots"
+            val modeCode = mode.name.lowercase()
+            val sousTitreMode = if (mode == ModeJeu.CHIFFRES) "Chiffres" else "Lettres"
+            for (seuil in SEUILS_DEFI_CHRONO) {
+                add(
+                    Trophee(
+                        "defi_chrono_${modeCode}_$seuil",
+                        "$seuil $nature en défi chrono",
+                        "Obtenir $seuil $nature en défi chrono $modeCode, tous niveaux confondus.",
+                        CategorieTrophee.DEFI_CHRONO,
+                        sousTitre = sousTitreMode,
+                    ) { (it.meilleuresReussitesDefiChrono[mode.name] ?: 0) >= seuil },
+                )
             }
         }
     }

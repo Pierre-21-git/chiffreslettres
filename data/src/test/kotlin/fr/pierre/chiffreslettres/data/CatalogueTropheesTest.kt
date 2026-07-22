@@ -24,8 +24,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `56 trophees au total`() {
-        assertEquals(56, CatalogueTrophees.TOUS.size)
+    fun `46 trophees au total`() {
+        assertEquals(46, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -73,18 +73,18 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `defi chrono a paliers independants par combinaison`() {
-        val stats = statsVides().copy(meilleuresReussitesDefiChrono = mapOf("CHIFFRES_EMILE" to 4))
-        assertTrue(trophee("defi_chrono_chiffres_emile_3").estDebloque(stats))
-        assertFalse(trophee("defi_chrono_chiffres_emile_5").estDebloque(stats))
-        // Une autre combinaison mode/niveau n'est pas affectée.
-        assertFalse(trophee("defi_chrono_lettres_emile_3").estDebloque(stats))
+    fun `defi chrono a paliers independants par mode, tous niveaux confondus`() {
+        val stats = statsVides().copy(meilleuresReussitesDefiChrono = mapOf("CHIFFRES" to 4))
+        assertTrue(trophee("defi_chrono_chiffres_3").estDebloque(stats))
+        assertFalse(trophee("defi_chrono_chiffres_5").estDebloque(stats))
+        // Un autre mode n'est pas affecté.
+        assertFalse(trophee("defi_chrono_lettres_3").estDebloque(stats))
     }
 
     @Test
-    fun `defi chrono mathieu a 2 paliers`() {
-        val stats = statsVides().copy(meilleuresReussitesDefiChrono = mapOf("LETTRES_MATHIEU" to 7))
-        assertTrue(trophee("defi_chrono_lettres_mathieu_5").estDebloque(stats))
-        assertFalse(trophee("defi_chrono_lettres_mathieu_10").estDebloque(stats))
+    fun `defi chrono a 5 paliers par mode`() {
+        val stats = statsVides().copy(meilleuresReussitesDefiChrono = mapOf("LETTRES" to 11))
+        assertTrue(trophee("defi_chrono_lettres_10").estDebloque(stats))
+        assertFalse(trophee("defi_chrono_lettres_12").estDebloque(stats))
     }
 }

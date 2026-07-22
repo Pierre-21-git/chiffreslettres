@@ -17,6 +17,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.19",
+        date = "2026-07-20",
+        changements = listOf(
+            "Trophées \"Défi chrono\" simplifiés : un seul jeu de paliers (2/3/5/10/12 " +
+                "réussites) par mode chiffres/lettres, tous niveaux confondus, au lieu de " +
+                "paliers distincts par niveau — 46 trophées au total",
+            "Icône badgée d'un bandeau vert \"debug\" en build de débogage, pour la " +
+                "distinguer visuellement de la version release installée en parallèle",
+        ),
+    ),
+    EntreeVersion(
         version = "1.18",
         date = "2026-07-18",
         changements = listOf(

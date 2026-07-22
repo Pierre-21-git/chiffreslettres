@@ -14,6 +14,7 @@ lifecycleViewmodelCompose = "2.9.4"
 room = "2.8.4"
 ksp = "2.3.10"
 datastorePreferences = "1.2.1"
+easylauncher = "6.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,3 +43,4 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+easylauncher = { id = "com.starter.easylauncher", version.ref = "easylauncher" }
