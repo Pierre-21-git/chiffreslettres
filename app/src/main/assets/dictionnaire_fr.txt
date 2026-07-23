@@ -70797,6 +70797,7 @@ aciéreux
 aciéries
 aciériez
 aciérons
+aciérées
 acnéique
 acolytat
 acolytes
@@ -71933,6 +71934,7 @@ altérera
 altériez
 altérite
 altérons
+altérées
 alucites
 aluminai
 aluminas
@@ -79515,6 +79517,7 @@ cogérant
 cogérera
 cogériez
 cogérons
+cogérées
 cohabita
 cohabite
 cohabité
@@ -82102,6 +82105,7 @@ digérant
 digérera
 digériez
 digérons
+digérées
 dikkenek
 dilacère
 dilacéra
@@ -86895,6 +86899,7 @@ espérant
 espérera
 espériez
 espérons
+espérées
 esquarre
 esquicha
 esquiche
@@ -92756,6 +92761,7 @@ inférant
 inférera
 infériez
 inférons
+inférées
 ingambes
 ingrates
 inguinal
@@ -92772,6 +92778,7 @@ ingérant
 ingérera
 ingériez
 ingérons
+ingérées
 inhabile
 inhabité
 inhalais
@@ -92991,6 +92998,7 @@ insérant
 insérera
 insériez
 insérons
+insérées
 intactes
 intailla
 intaille
@@ -93985,6 +93993,7 @@ lacérant
 lacérera
 lacériez
 lacérons
+lacérées
 ladanums
 ladrerie
 laetares
@@ -94451,6 +94460,7 @@ libérien
 libériez
 libérine
 libérons
+libérées
 licences
 licencia
 licencie
@@ -94711,6 +94721,7 @@ lisérant
 lisérera
 lisériez
 lisérons
+lisérées
 litaient
 litanies
 litasses
@@ -95317,6 +95328,7 @@ macérats
 macérera
 macériez
 macérons
+macérées
 madisons
 madrague
 madrasas
@@ -96664,6 +96676,7 @@ modérant
 modérera
 modériez
 modérons
+modérées
 moelleux
 moellons
 mofettes
@@ -105483,6 +105496,7 @@ repérant
 repérera
 repériez
 repérons
+repérées
 repétrie
 repétrir
 repétris
@@ -108323,6 +108337,7 @@ sidériez
 sidérite
 sidérons
 sidérose
+sidérées
 siennois
 siestais
 siestait
@@ -111346,6 +111361,7 @@ tolérant
 tolérera
 tolériez
 tolérons
+tolérées
 tomahawk
 tomaient
 tomaison
@@ -112575,6 +112591,7 @@ ulcérera
 ulcéreux
 ulcériez
 ulcérons
+ulcérées
 ulluques
 ulmacées
 ulmaires

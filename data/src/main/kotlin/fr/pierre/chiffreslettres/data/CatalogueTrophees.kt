@@ -14,12 +14,8 @@ data class TropheeStats(
     /** Clé = seuil de points (20 à 90), valeur = nombre de parties solo atteignant au moins ce seuil. */
     val partiesParSeuilScore: Map<Int, Int>,
     val partiesSoloTotal: Int,
-    /** Nombre de niveaux (0 à 4) avec au moins une partie solo terminée. */
-    val niveauxSoloCouverts: Int,
     val defisTotal: Int,
     val meilleureSerieDefi: Int,
-    /** Nombre de combinaisons niveau × mode (0 à 8) avec au moins un défi série terminé. */
-    val combinaisonsDefiCouvertes: Int,
     /** Clé = nom du [ModeJeu] (ex. "CHIFFRES"), valeur = meilleur nombre de réussites en défi chrono, tous niveaux confondus. */
     val meilleuresReussitesDefiChrono: Map<String, Int>,
 )
@@ -30,9 +26,7 @@ enum class CategorieTrophee(val titre: String) {
     PARTIE_PARFAITE("Partie parfaite"),
     SCORE_PARTIE("Score de partie"),
     PARTIES_TERMINEES("Parties terminées"),
-    NIVEAUX_SOLO("Tous les niveaux"),
     DEFI("Défi"),
-    NIVEAUX_DEFI("Tous les niveaux en défi"),
     DEFI_CHRONO("Défi chrono"),
 }
 
@@ -48,9 +42,10 @@ class Trophee(
 
 private val SEUILS_MOTS = listOf(4, 5, 6, 7, 8)
 private val SEUILS_SCORE = listOf(20, 30, 40, 50, 60, 70, 80, 90)
-private val SEUILS_DEFI_CHRONO = listOf(2, 3, 5, 10, 12)
+private val SEUILS_DEFI_SERIE = listOf(3, 5, 10, 15, 20)
+private val SEUILS_DEFI_CHRONO = listOf(2, 3, 5, 10, 12, 15)
 
-/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 46 au total. */
+/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 48 au total. */
 object CatalogueTrophees {
 
     val TOUS: List<Trophee> = buildList {
@@ -161,54 +156,22 @@ object CatalogueTrophees {
 
         add(
             Trophee(
-                "niveaux_solo_complets",
-                "Un niveau terminé partout",
-                "Terminer au moins une partie classique dans chacun des 4 niveaux (Émile, Nestor, Monique, Mathieu).",
-                CategorieTrophee.NIVEAUX_SOLO,
-            ) { it.niveauxSoloCouverts >= 4 },
-        )
-
-        add(
-            Trophee(
                 "defi_1",
                 "Premier défi terminé",
                 "Aller jusqu'au bout d'un défi (chiffres ou lettres, tout niveau).",
                 CategorieTrophee.DEFI,
             ) { it.defisTotal >= 1 },
         )
-        add(
-            Trophee(
-                "defi_serie_3",
-                "Série de 3 en défi",
-                "Aligner 3 réussites ou plus d'affilée dans un même défi.",
-                CategorieTrophee.DEFI,
-            ) { it.meilleureSerieDefi >= 3 },
-        )
-        add(
-            Trophee(
-                "defi_serie_5",
-                "Série de 5 en défi",
-                "Aligner 5 réussites ou plus d'affilée dans un même défi.",
-                CategorieTrophee.DEFI,
-            ) { it.meilleureSerieDefi >= 5 },
-        )
-        add(
-            Trophee(
-                "defi_serie_10",
-                "Série de 10 en défi",
-                "Aligner 10 réussites ou plus d'affilée dans un même défi.",
-                CategorieTrophee.DEFI,
-            ) { it.meilleureSerieDefi >= 10 },
-        )
-
-        add(
-            Trophee(
-                "defi_niveaux_complets",
-                "Un défi terminé partout",
-                "Terminer un défi chiffres et un défi lettres pour chacun des 4 niveaux (8 défis au total).",
-                CategorieTrophee.NIVEAUX_DEFI,
-            ) { it.combinaisonsDefiCouvertes >= 8 },
-        )
+        for (seuil in SEUILS_DEFI_SERIE) {
+            add(
+                Trophee(
+                    "defi_serie_$seuil",
+                    "Série de $seuil en défi",
+                    "Aligner $seuil réussites ou plus d'affilée dans un même défi.",
+                    CategorieTrophee.DEFI,
+                ) { it.meilleureSerieDefi >= seuil },
+            )
+        }
 
         for (mode in ModeJeu.entries) {
             val nature = if (mode == ModeJeu.CHIFFRES) "comptes exacts" else "mots"

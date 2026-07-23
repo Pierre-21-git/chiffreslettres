@@ -17,6 +17,22 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.21",
+        date = "2026-07-23",
+        changements = listOf(
+            "Lettres : les boutons \"Consonne\"/\"Voyelle\" (tirage lettre par lettre) sont " +
+                "remplacés par un choix unique du nombre de voyelles souhaité (2, 3, 4 ou 5), " +
+                "les 10 lettres étant ensuite tirées d'un coup ; boutons au même style " +
+                "ivoire/doré que ceux de l'accueil",
+            "Corrigé : \"repérées\" et 16 autres participes passés féminins pluriels en " +
+                "\"-érées\" (altérées, digérées, espérées, libérées, tolérées, etc.) manquaient " +
+                "du dictionnaire et étaient refusés à tort",
+            "Trophées \"Un niveau terminé partout\" et \"Un défi terminé partout\" retirés ; " +
+                "nouveau palier de 15 (comptes exacts / mots) pour le défi chrono, et nouveaux " +
+                "paliers de 15 et 20 pour les séries de défi — 48 trophées au total",
+        ),
+    ),
+    EntreeVersion(
         version = "1.20",
         date = "2026-07-22",
         changements = listOf(

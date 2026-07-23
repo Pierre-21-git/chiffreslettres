@@ -59,10 +59,9 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
 
         SectionRegle("Mode Lettres") {
             Text(
-                "10 lettres sont tirées une à une : à chaque tirage, choisissez " +
-                    "\"Consonne\" ou \"Voyelle\" (le Y compte comme une voyelle). " +
-                    "L'application impose toujours au moins 2 voyelles parmi les lettres " +
-                    "tirées. Une fois le tirage terminé, construisez votre mot en touchant " +
+                "Choisissez le nombre de voyelles souhaité (2, 3, 4 ou 5 ; le Y compte " +
+                    "comme une voyelle), puis les 10 lettres sont tirées d'un coup. " +
+                    "Construisez ensuite votre mot en touchant " +
                     "les lettres dans l'ordre voulu (chaque lettre tirée ne peut être " +
                     "utilisée qu'une fois) ; les boutons \"Annuler\" et \"Effacer\" " +
                     "permettent de revenir en arrière. Trouvez le mot le plus long possible " +

@@ -21,17 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.pierre.chiffreslettres.letters.TirageLettres
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
-import fr.pierre.chiffreslettres.ui.theme.StyleTirage
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
 import fr.pierre.chiffreslettres.ui.theme.TuileJeton
 import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
-import fr.pierre.chiffreslettres.ui.theme.TuileTirage
 import fr.pierre.chiffreslettres.ui.theme.fondPlateau
 
 private const val LETTRES_PAR_LIGNE = 5
@@ -126,20 +125,17 @@ fun LettresRoundScreen(
         )
 
         if (!etat.tirageTermine) {
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                TuileTirage(
-                    "Consonne",
-                    style = StyleTirage.CONSONNE,
-                    enabled = etat.consonneAutorisee,
-                    onClick = { viewModel.tirerLettre(true) },
-                    modifier = Modifier.weight(1f),
-                )
-                TuileTirage(
-                    "Voyelle",
-                    style = StyleTirage.VOYELLE,
-                    onClick = { viewModel.tirerLettre(false) },
-                    modifier = Modifier.weight(1f),
-                )
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Nombre de voyelles souhaitées", color = TextMuted, fontSize = 13.sp)
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    for (n in TirageLettres.VOYELLES_MINIMUM..TirageLettres.VOYELLES_MAXIMUM) {
+                        TuilePrincipale(
+                            "$n",
+                            onClick = { viewModel.choisirNombreVoyelles(n) },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
             }
         } else {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {

@@ -114,21 +114,17 @@ fois.
 
 ### 4.1 Tirage des lettres
 
-10 lettres, choisies une à une par le joueur en cliquant sur "Consonne" ou
-"Voyelle". Tirage sans remise
-dans un sac dont la répartition suit (approximativement) les fréquences du
-français — base retenue : la distribution Scrabble français (100 lettres) :
+10 lettres. Le joueur choisit d'abord le nombre de voyelles souhaité (2, 3, 4
+ou 5 ; le Y compte comme voyelle), puis les 10 lettres sont tirées d'un coup
+(le nombre choisi de voyelles + le complément en consonnes, mélangées).
+Tirage sans remise dans un sac dont la répartition suit (approximativement)
+les fréquences du français — base retenue : la distribution Scrabble
+français (100 lettres) :
 
 ```
 A:9 B:2 C:2 D:3 E:15 F:2 G:2 H:2 I:8 J:1 K:1 L:5 M:3 N:6
 O:6 P:2 Q:1 R:6 S:6 T:6 U:6 V:2 W:1 X:1 Y:1 Z:1
 ```
-
-**Règle du minimum 2 voyelles** : le Y compte comme voyelle pour cette règle
-(comme dans le jeu original). L'interface doit empêcher un tirage qui
-aboutirait à moins de 2 voyelles sur les lettres tirées : si le nombre de
-tirages "voyelle" restants possibles ne permet plus d'atteindre 2, désactiver
-le bouton "Consonne" pour forcer une voyelle.
 
 ### 4.2 Niveaux de difficulté
 
@@ -181,8 +177,7 @@ Le barème dépend du niveau (retour utilisateur après testing) :
 
 ### 4.5 Écran de jeu
 
-- Affichage des lettres tirées (boutons Consonne / Voyelle avant tirage
-  complet)
+- Affichage des lettres tirées (choix du nombre de voyelles avant tirage)
 - Une fois le tirage terminé, le joueur construit son mot en touchant les
   lettres tirées dans l'ordre voulu (chaque lettre n'est utilisable qu'une
   fois) — pas de saisie clavier. Boutons "Annuler" (retire la dernière

@@ -245,51 +245,6 @@ fun BoutonOperateur(
     }
 }
 
-enum class StyleTirage { CONSONNE, VOYELLE }
-
-@Composable
-fun TuileTirage(
-    texte: String,
-    style: StyleTirage,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
-    // Sarcelle/terracotta : deux teintes accordées entre elles, distinctes du doré/ivoire
-    // utilisé partout ailleurs pour les boutons (retour utilisateur).
-    val degrade = when (style) {
-        StyleTirage.CONSONNE -> listOf(SarcelleClair, Sarcelle)
-        StyleTirage.VOYELLE -> listOf(TerracottaClair, Terracotta)
-    }
-    val ombre = when (style) {
-        StyleTirage.CONSONNE -> SarcelleOmbre
-        StyleTirage.VOYELLE -> TerracottaOmbre
-    }
-    val encre = when (style) {
-        StyleTirage.CONSONNE -> SarcelleEncre
-        StyleTirage.VOYELLE -> TerracottaEncre
-    }
-    TuileRelief(
-        degrade = degrade,
-        couleurOmbre = ombre,
-        modifier = modifier.fillMaxWidth(),
-        contentModifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
-        onClick = onClick,
-        enabled = enabled,
-    ) {
-        // Padding vertical sur le texte (pas sur contentModifier), même raison que
-        // TuilePrincipale : sinon c'est l'ombre derrière qui grossit, pas la tuile.
-        Text(
-            texte.uppercase(),
-            modifier = Modifier.padding(vertical = 14.dp),
-            color = encre,
-            fontWeight = FontWeight.Bold,
-            fontSize = 13.sp,
-            letterSpacing = 1.sp,
-        )
-    }
-}
-
 @Composable
 fun PanneauResultat(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Column(

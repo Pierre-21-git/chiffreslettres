@@ -19,7 +19,6 @@ data class LettresRoundUiState(
     val niveau: NiveauLettres,
     val nombreLettres: Int,
     val lettresTirees: List<Char> = emptyList(),
-    val consonneAutorisee: Boolean = true,
     val tirageTermine: Boolean = false,
     /** Indices dans [lettresTirees] des tuiles cliquées, dans l'ordre (spec §4.5, retour utilisateur : mot construit au clic, pas au clavier). */
     val indicesUtilises: List<Int> = emptyList(),
@@ -32,7 +31,7 @@ data class LettresRoundUiState(
     val scoreObtenu: Int? = null,
 )
 
-/** Tirage pas-à-pas (§4.1) puis recherche du mot le plus long (§4.5). */
+/** Tirage selon le nombre de voyelles choisi (§4.1) puis recherche du mot le plus long (§4.5). */
 class LettresRoundViewModel(
     niveau: NiveauLettres,
     private val dictionnaire: DictionnaireIndex,
@@ -47,26 +46,17 @@ class LettresRoundViewModel(
         LettresRoundUiState(
             niveau = niveau,
             nombreLettres = nombreLettres,
-            consonneAutorisee = TirageLettres.consonneAutorisee(emptyList(), nombreLettres),
             tempsRestantSecondes = dureeSecondes,
         ),
     )
     val uiState: StateFlow<LettresRoundUiState> = _uiState.asStateFlow()
 
-    fun tirerLettre(consonneDemandee: Boolean) {
+    fun choisirNombreVoyelles(nombreVoyelles: Int) {
         val etat = _uiState.value
         if (etat.tirageTermine || etat.termine) return
-        val lettre = TirageLettres.tirerProchaineLettre(sac, etat.lettresTirees, consonneDemandee, nombreLettres)
-        val nouvellesLettres = etat.lettresTirees + lettre
-        val tirageTermine = nouvellesLettres.size >= nombreLettres
-        _uiState.update {
-            it.copy(
-                lettresTirees = nouvellesLettres,
-                consonneAutorisee = TirageLettres.consonneAutorisee(nouvellesLettres, nombreLettres),
-                tirageTermine = tirageTermine,
-            )
-        }
-        if (tirageTermine) demarrerChrono()
+        val lettres = TirageLettres.tirer(sac, nombreVoyelles, nombreLettres)
+        _uiState.update { it.copy(lettresTirees = lettres, tirageTermine = true) }
+        demarrerChrono()
     }
 
     private fun demarrerChrono() {

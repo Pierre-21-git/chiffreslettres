@@ -179,15 +179,4 @@ interface HistoriqueDao {
     /** Nombre total de parties solo terminées, tous niveaux confondus. */
     @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE'")
     suspend fun compterPartiesSoloTotal(profilId: Long): Int
-
-    /** Nombre de niveaux distincts avec au moins une partie solo terminée. */
-    @Query(
-        """
-        SELECT COUNT(DISTINCT m.niveauCode)
-        FROM MancheEntity m
-        INNER JOIN SessionEntity s ON s.id = m.sessionId
-        WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE'
-        """,
-    )
-    suspend fun compterNiveauxSoloCouverts(profilId: Long): Int
 }

@@ -12,10 +12,8 @@ private fun statsVides() = TropheeStats(
     partiesMotsMin = mapOf(4 to false, 5 to false, 6 to false, 7 to false, 8 to false),
     partiesParSeuilScore = mapOf(20 to 0, 30 to 0, 40 to 0, 50 to 0, 60 to 0, 70 to 0, 80 to 0, 90 to 0),
     partiesSoloTotal = 0,
-    niveauxSoloCouverts = 0,
     defisTotal = 0,
     meilleureSerieDefi = 0,
-    combinaisonsDefiCouvertes = 0,
     meilleuresReussitesDefiChrono = emptyMap(),
 )
 
@@ -24,8 +22,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `46 trophees au total`() {
-        assertEquals(46, CatalogueTrophees.TOUS.size)
+    fun `48 trophees au total`() {
+        assertEquals(48, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -60,16 +58,17 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `defi niveaux complets exige les 8 combinaisons`() {
-        assertFalse(trophee("defi_niveaux_complets").estDebloque(statsVides().copy(combinaisonsDefiCouvertes = 7)))
-        assertTrue(trophee("defi_niveaux_complets").estDebloque(statsVides().copy(combinaisonsDefiCouvertes = 8)))
-    }
-
-    @Test
     fun `series de defi a paliers independants`() {
         val stats = statsVides().copy(meilleureSerieDefi = 4)
         assertTrue(trophee("defi_serie_3").estDebloque(stats))
         assertFalse(trophee("defi_serie_5").estDebloque(stats))
+    }
+
+    @Test
+    fun `series de defi va jusqu'a 20`() {
+        val stats = statsVides().copy(meilleureSerieDefi = 16)
+        assertTrue(trophee("defi_serie_15").estDebloque(stats))
+        assertFalse(trophee("defi_serie_20").estDebloque(stats))
     }
 
     @Test
@@ -82,9 +81,9 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `defi chrono a 5 paliers par mode`() {
-        val stats = statsVides().copy(meilleuresReussitesDefiChrono = mapOf("LETTRES" to 11))
-        assertTrue(trophee("defi_chrono_lettres_10").estDebloque(stats))
-        assertFalse(trophee("defi_chrono_lettres_12").estDebloque(stats))
+    fun `defi chrono a 6 paliers par mode`() {
+        val stats = statsVides().copy(meilleuresReussitesDefiChrono = mapOf("LETTRES" to 14))
+        assertTrue(trophee("defi_chrono_lettres_12").estDebloque(stats))
+        assertFalse(trophee("defi_chrono_lettres_15").estDebloque(stats))
     }
 }

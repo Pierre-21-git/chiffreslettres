@@ -59,12 +59,6 @@ interface DefiDao {
     @Query("SELECT COALESCE(MAX(serie), 0) FROM DefiEntity WHERE profilId = :profilId AND type = 'SERIE'")
     suspend fun meilleureSerieDefi(profilId: Long): Int
 
-    /** Nombre de combinaisons niveau × mode (sur 8 : 4 niveaux × 2 modes) avec au moins un défi série terminé. */
-    @Query(
-        "SELECT COUNT(*) FROM (SELECT DISTINCT mode, niveauCode FROM DefiEntity WHERE profilId = :profilId AND type = 'SERIE')",
-    )
-    suspend fun compterCombinaisonsCouvertes(profilId: Long): Int
-
     /** Meilleure performance (nombre de réussites) en défi chrono, par combinaison mode × niveau. */
     @Query(
         """

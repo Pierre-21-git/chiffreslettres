@@ -24,17 +24,5 @@ val RougeClair = Color(0xFFC96A5F)
 val RougeOmbre = Color(0xFF7C2A26)
 val RougeEncre = Color(0xFFFBEEE9)
 
-// Paire Consonne/Voyelle (tirage lettres) : sarcelle et terracotta, deux teintes qui
-// s'accordent entre elles sans empiéter sur le doré/ivoire des autres boutons.
-val Sarcelle = Color(0xFF2F7A73)
-val SarcelleClair = Color(0xFF57A79D)
-val SarcelleOmbre = Color(0xFF1D4E49)
-val SarcelleEncre = Color(0xFFEFFAF8)
-
-val Terracotta = Color(0xFFB5623C)
-val TerracottaClair = Color(0xFFD08659)
-val TerracottaOmbre = Color(0xFF7A3F24)
-val TerracottaEncre = Color(0xFFFBEFE7)
-
 val TextMuted = Color(0xFFCBB98A)
 val TextFaint = Color(0xFF8A8267)

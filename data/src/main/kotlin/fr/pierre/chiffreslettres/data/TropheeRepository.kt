@@ -28,10 +28,8 @@ class TropheeRepository(
             partiesMotsMin = SEUILS_MOTS.associateWith { historiqueDao.compterPartiesMotsMin(profilId, it) >= 1 },
             partiesParSeuilScore = SEUILS_SCORE.associateWith { historiqueDao.compterPartiesScoreAuMoins(profilId, it) },
             partiesSoloTotal = historiqueDao.compterPartiesSoloTotal(profilId),
-            niveauxSoloCouverts = historiqueDao.compterNiveauxSoloCouverts(profilId),
             defisTotal = defiDao.compterDefisTotal(profilId),
             meilleureSerieDefi = defiDao.meilleureSerieDefi(profilId),
-            combinaisonsDefiCouvertes = defiDao.compterCombinaisonsCouvertes(profilId),
             meilleuresReussitesDefiChrono = defiDao.meilleuresReussitesChronoParCombinaison(profilId)
                 .groupBy { it.mode.name }
                 .mapValues { (_, combinaisons) -> combinaisons.maxOf { it.meilleur } },
