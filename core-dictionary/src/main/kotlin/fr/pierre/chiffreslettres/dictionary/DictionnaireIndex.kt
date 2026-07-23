@@ -7,8 +7,9 @@ import java.util.Locale
  * Structure de recherche pour le mode Lettres (spec §4.3) : chaque mot est
  * représenté par un vecteur de comptage des 26 lettres (accents et casse
  * normalisés), regroupé par longueur. La recherche pour un tirage donné
- * parcourt les longueurs décroissantes (9 → 2) et ne garde que les mots dont
- * le vecteur est un sous-ensemble du tirage.
+ * parcourt les longueurs décroissantes (10 → 2, la longueur maximale du
+ * tirage) et ne garde que les mots dont le vecteur est un sous-ensemble du
+ * tirage.
  *
  * Agnostique de la source des mots : un fichier fixture en test, un asset
  * Android une fois chargé en [Sequence] plus tard.
@@ -20,7 +21,7 @@ class DictionnaireIndex(mots: Sequence<String>) {
     private val motsParLongueur: Map<Int, List<EntreeMot>> = buildMap<Int, MutableList<EntreeMot>> {
         for (motBrut in mots) {
             val normalise = normaliser(motBrut) ?: continue
-            if (normalise.length !in 2..9) continue
+            if (normalise.length !in 2..10) continue
             getOrPut(normalise.length) { mutableListOf() }.add(EntreeMot(motBrut, normalise, vecteurLettres(normalise)))
         }
     }
@@ -31,7 +32,7 @@ class DictionnaireIndex(mots: Sequence<String>) {
     /** Renvoie les mots de longueur maximale jouables avec ce tirage, ou une liste vide. */
     fun rechercher(tirage: List<Char>): List<String> {
         val vecteurTirage = vecteurLettres(tirage.joinToString("").uppercase(Locale.FRENCH))
-        for (longueur in 9 downTo 2) {
+        for (longueur in 10 downTo 2) {
             val candidats = motsParLongueur[longueur].orEmpty()
                 .filter { estSousEnsemble(it.vecteur, vecteurTirage) }
             if (candidats.isNotEmpty()) return candidats.map { it.mot }

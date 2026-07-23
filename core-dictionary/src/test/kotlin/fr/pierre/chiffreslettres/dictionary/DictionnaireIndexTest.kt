@@ -10,6 +10,7 @@ class DictionnaireIndexTest {
     private val motsFixture = listOf(
         "chat", "chatte", "chien", "niche", "rat", "art", "tarte", "carte",
         "écran", "élève", "café", "être", "grand-mère", "aujourd'hui", "a",
+        "chatouille",
     )
 
     private fun index() = DictionnaireIndex(motsFixture.asSequence())
@@ -20,6 +21,13 @@ class DictionnaireIndexTest {
         val tirage = "CHATTEXYZ".toList() // 9 lettres, contient bien C H A T T E + 3 lettres inutiles
         val resultats = index().rechercher(tirage)
         assertTrue("chatte" in resultats)
+    }
+
+    @Test
+    fun `un mot de 10 lettres est jouable, longueur maximale du tirage`() {
+        val tirage = "CHATOUILLE".toList() // 10 lettres, anagramme exacte de "chatouille"
+        val resultats = index().rechercher(tirage)
+        assertTrue("chatouille" in resultats)
     }
 
     @Test

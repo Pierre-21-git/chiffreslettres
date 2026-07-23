@@ -161,7 +161,8 @@ brutes restantes).
   5. Ajouter la mention de licence LGPL dans un écran "À propos"
 - **Structure de recherche runtime** : pour chaque mot du dictionnaire,
   précalculer un vecteur de comptage des 26 lettres. Pour un tirage donné,
-  parcourir les mots par longueur décroissante (9 → 2) et ne garder que ceux
+  parcourir les mots par longueur décroissante (10 → 2, la longueur maximale
+  du tirage) et ne garder que ceux
   dont le vecteur de lettres est un sous-ensemble du tirage (comparaison
   terme à terme, pas de permutation à calculer). S'arrêter dès qu'un mot de
   longueur maximale est trouvé, ou constituer la liste des meilleurs mots.

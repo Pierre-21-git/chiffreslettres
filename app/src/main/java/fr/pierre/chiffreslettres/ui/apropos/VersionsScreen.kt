@@ -17,6 +17,18 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.22",
+        date = "2026-07-23",
+        changements = listOf(
+            "Dictionnaire reconstruit depuis le pipeline Hunspell/spylls complet, sans le " +
+                "filtrage par fréquence appliqué jusqu'ici (origine non documentée) : 152 626 " +
+                "→ 245 576 mots reconnus",
+            "Corrigé : un mot de 10 lettres (la longueur maximale du tirage) ne pouvait " +
+                "jamais être reconnu valide, le dictionnaire s'arrêtant à 9 lettres — ce qui " +
+                "rendait aussi le trophée \"Premier mot de 10 lettres\" impossible à obtenir",
+        ),
+    ),
+    EntreeVersion(
         version = "1.21",
         date = "2026-07-23",
         changements = listOf(
