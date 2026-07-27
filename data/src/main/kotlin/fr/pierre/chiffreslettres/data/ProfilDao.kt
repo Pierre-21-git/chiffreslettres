@@ -22,4 +22,7 @@ interface ProfilDao {
 
     @Query("UPDATE ProfilEntity SET pseudo = :pseudo WHERE id = :id")
     suspend fun renommer(id: Long, pseudo: String)
+
+    @Query("UPDATE ProfilEntity SET avatar = :avatar WHERE id = :id")
+    suspend fun definirAvatar(id: Long, avatar: String)
 }

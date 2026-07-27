@@ -17,6 +17,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.26",
+        date = "2026-07-27",
+        changements = listOf(
+            "Un écran de sélection de profil s'affiche désormais à chaque lancement de " +
+                "l'app, pour éviter de jouer sous le mauvais profil par erreur (retour " +
+                "utilisateur, cloisonnement des profils).",
+            "Ajout d'un avatar (emoji, choisi parmi 16) sur chaque profil, visible sur le " +
+                "pseudo actif et modifiable en le renommant.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.25",
         date = "2026-07-27",
         changements = listOf(

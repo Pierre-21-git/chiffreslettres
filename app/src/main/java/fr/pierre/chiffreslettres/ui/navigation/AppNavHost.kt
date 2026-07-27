@@ -98,7 +98,7 @@ fun AppNavHost(
     NavHost(navController = navController, startDestination = Routes.MENU, modifier = modifier) {
         composable(Routes.MENU) {
             MenuPrincipalScreen(
-                pseudoActif = profilActif?.pseudo ?: "…",
+                pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                 onEntrainementLibre = { navController.navigate(Routes.ENTRAINEMENT_GRAPH) },
                 onPartieStructuree = { navController.navigate(Routes.PARTIE_GRAPH) },
                 onDefiSerie = { navController.navigate(Routes.CHOIX_DEFI_SERIE) },
@@ -219,7 +219,7 @@ fun AppNavHost(
             composable(Routes.CHOIX_NIVEAU_ENTRAINEMENT) { backStackEntry ->
                 val entrainementVm = entrainementViewModel(navController, backStackEntry, historiqueRepository, profilId)
                 ChoixNiveauEntrainementScreen(
-                    pseudoActif = profilActif?.pseudo ?: "…",
+                    pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                     onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuChiffres(niveau)) },
                     onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuLettres(niveau)) },
                     onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
@@ -246,7 +246,7 @@ fun AppNavHost(
                 ChiffresRoundScreen(
                     viewModel = roundVm,
                     scoreCumule = null,
-                    pseudo = profilActif?.pseudo,
+                    pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                     onMancheTerminee = { obtenu -> entrainementVm.enregistrerMancheChiffres(niveau, obtenu) },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
@@ -274,7 +274,7 @@ fun AppNavHost(
                 LettresRoundScreen(
                     viewModel = roundVm,
                     scoreCumule = null,
-                    pseudo = profilActif?.pseudo,
+                    pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                     onMancheTerminee = { obtenu, motValide -> entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide) },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
@@ -295,7 +295,7 @@ fun AppNavHost(
             composable(Routes.CONFIGURATION_PARTIE) { backStackEntry ->
                 val partieVm = partieViewModel(navController, backStackEntry)
                 ConfigurationPartieScreen(
-                    pseudoActif = profilActif?.pseudo ?: "…",
+                    pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                     onDemarrer = { sequence ->
                         partieVm.demarrer(sequence)
                         navController.navigate(Routes.JEU_PARTIE)
@@ -336,7 +336,7 @@ fun AppNavHost(
                             ChiffresRoundScreen(
                                 viewModel = roundVm,
                                 scoreCumule = scoreCumule,
-                                pseudo = profilActif?.pseudo,
+                                pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                                 onMancheTerminee = { obtenu ->
                                     partieVm.enregistrerResultat(ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu))
                                 },
@@ -355,7 +355,7 @@ fun AppNavHost(
                             LettresRoundScreen(
                                 viewModel = roundVm,
                                 scoreCumule = scoreCumule,
-                                pseudo = profilActif?.pseudo,
+                                pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                                 onMancheTerminee = { obtenu, motValide ->
                                     partieVm.enregistrerResultat(
                                         ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
@@ -395,7 +395,7 @@ fun AppNavHost(
         composable(Routes.CHOIX_DEFI_SERIE) {
             ChoixDefiScreen(
                 titre = "Défi série",
-                pseudoActif = profilActif?.pseudo ?: "…",
+                pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                 afficherDuree = false,
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChiffres(niveau)) },
                 onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiLettres(niveau)) },
@@ -407,7 +407,7 @@ fun AppNavHost(
         composable(Routes.CHOIX_DEFI_CHRONO) {
             ChoixDefiScreen(
                 titre = "Défi chrono",
-                pseudoActif = profilActif?.pseudo ?: "…",
+                pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                 afficherDuree = true,
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoChiffres(niveau)) },
                 onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoLettres(niveau)) },
@@ -439,7 +439,7 @@ fun AppNavHost(
             ChiffresRoundScreen(
                 viewModel = roundVm,
                 scoreCumule = null,
-                pseudo = profilActif?.pseudo,
+                pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                 progressionManche = "$index",
                 libelleProgression = "Série",
                 onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.echec() },
@@ -479,7 +479,7 @@ fun AppNavHost(
             LettresRoundScreen(
                 viewModel = roundVm,
                 scoreCumule = null,
-                pseudo = profilActif?.pseudo,
+                pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                 progressionManche = "$index",
                 libelleProgression = "Série",
                 onMancheTerminee = { _, motValide ->
@@ -532,7 +532,7 @@ fun AppNavHost(
             ChiffresRoundScreen(
                 viewModel = roundVm,
                 scoreCumule = null,
-                pseudo = profilActif?.pseudo,
+                pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                 progressionManche = "$reussites",
                 libelleProgression = "Réussites",
                 // Comme en défi série : un échec avance seul (pas de confirmation), une
@@ -583,7 +583,7 @@ fun AppNavHost(
             LettresRoundScreen(
                 viewModel = roundVm,
                 scoreCumule = null,
-                pseudo = profilActif?.pseudo,
+                pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                 progressionManche = "$reussites",
                 libelleProgression = "Réussites",
                 // Comme en défi série : un échec avance seul (pas de confirmation), une

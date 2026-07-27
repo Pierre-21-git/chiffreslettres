@@ -58,6 +58,13 @@ private val MIGRATION_3_4 = object : Migration(3, 4) {
     }
 }
 
+/** v4 → v5 : ajout de la colonne `avatar` sur `ProfilEntity` (retour utilisateur). */
+private val MIGRATION_4_5 = object : Migration(4, 5) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `ProfilEntity` ADD COLUMN `avatar` TEXT NOT NULL DEFAULT '$AVATAR_PAR_DEFAUT'")
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null
@@ -65,7 +72,7 @@ object AppDatabaseProvider {
     fun obtenir(context: Context): AppDatabase =
         instance ?: synchronized(this) {
             instance ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "chiffreslettres.db")
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                 .build()
                 .also { instance = it }
         }

@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.data.AVATAR_PAR_DEFAUT
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
@@ -36,6 +37,7 @@ fun CreerProfilScreen(
     onRetour: (() -> Unit)? = null,
 ) {
     var pseudo by remember { mutableStateOf("") }
+    var avatar by remember { mutableStateOf(AVATAR_PAR_DEFAUT) }
     val scope = rememberCoroutineScope()
 
     Column(
@@ -47,12 +49,14 @@ fun CreerProfilScreen(
             onRetour,
         )
         OutlinedTextField(value = pseudo, onValueChange = { pseudo = it }, label = { Text("Pseudo") })
+        Text("Avatar", style = MaterialTheme.typography.labelLarge)
+        SelecteurAvatar(avatarSelectionne = avatar, onAvatarChoisi = { avatar = it })
         Button(
             onClick = {
                 val nom = pseudo.trim()
                 if (nom.isNotEmpty()) {
                     scope.launch {
-                        val id = profilRepository.creerProfil(nom)
+                        val id = profilRepository.creerProfil(nom, avatar)
                         profilActifStore.definirProfilActif(id)
                         onProfilCree()
                     }

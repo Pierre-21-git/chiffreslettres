@@ -28,6 +28,7 @@ import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.dictionary.DictionnaireProvider
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.ui.navigation.AppNavHost
+import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
 import fr.pierre.chiffreslettres.ui.theme.ChiffresLettresTheme
 
@@ -43,6 +44,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+/** Étapes du "gate" de sélection de profil affiché à chaque lancement de l'app (retour utilisateur, cloisonnement des profils). */
+private enum class EtapeGateProfil { SELECTION, CREATION, CONFIRME }
 
 @Composable
 private fun ContenuApplication(modifier: Modifier = Modifier) {
@@ -62,6 +66,9 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
 
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
     val dictionnaireCharge = dictionnaire
+    // Non persisté : redemande confirmation à chaque lancement de l'app (retour utilisateur,
+    // cloisonnement des profils), mais pas en boucle au sein d'une même session.
+    var etapeGate by remember { mutableStateOf(EtapeGateProfil.SELECTION) }
 
     when {
         dictionnaireCharge == null -> {
@@ -76,8 +83,27 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
                 profilRepository = profilRepository,
                 profilActifStore = profilActifStore,
                 premierLancement = true,
-                onProfilCree = {},
+                onProfilCree = { etapeGate = EtapeGateProfil.CONFIRME },
                 modifier = modifier,
+            )
+        }
+        etapeGate == EtapeGateProfil.CREATION -> {
+            CreerProfilScreen(
+                profilRepository = profilRepository,
+                profilActifStore = profilActifStore,
+                premierLancement = false,
+                onProfilCree = { etapeGate = EtapeGateProfil.CONFIRME },
+                onRetour = { etapeGate = EtapeGateProfil.SELECTION },
+                modifier = modifier,
+            )
+        }
+        etapeGate == EtapeGateProfil.SELECTION -> {
+            ChangerProfilScreen(
+                profilRepository = profilRepository,
+                profilActifStore = profilActifStore,
+                onProfilChoisi = { etapeGate = EtapeGateProfil.CONFIRME },
+                onCreerNouveauProfil = { etapeGate = EtapeGateProfil.CREATION },
+                onRetour = null,
             )
         }
         else -> {

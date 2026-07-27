@@ -66,7 +66,7 @@ fun ChangerProfilScreen(
                         }
                     },
                 ) {
-                    Text(profil.pseudo)
+                    Text("${profil.avatar}  ${profil.pseudo}")
                 }
                 IconButton(onClick = { profilARenommer = profil }) {
                     Icon(Icons.Filled.Edit, contentDescription = "Renommer")
@@ -81,15 +81,24 @@ fun ChangerProfilScreen(
 
     profilARenommer?.let { profil ->
         var nouveauPseudo by remember(profil.id) { mutableStateOf(profil.pseudo) }
+        var nouvelAvatar by remember(profil.id) { mutableStateOf(profil.avatar) }
         AlertDialog(
             onDismissRequest = { profilARenommer = null },
             title = { Text("Renommer le profil") },
-            text = { OutlinedTextField(value = nouveauPseudo, onValueChange = { nouveauPseudo = it }) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(value = nouveauPseudo, onValueChange = { nouveauPseudo = it })
+                    SelecteurAvatar(avatarSelectionne = nouvelAvatar, onAvatarChoisi = { nouvelAvatar = it })
+                }
+            },
             confirmButton = {
                 TextButton(onClick = {
                     val nom = nouveauPseudo.trim()
                     if (nom.isNotEmpty()) {
-                        scope.launch { profilRepository.renommerProfil(profil.id, nom) }
+                        scope.launch {
+                            profilRepository.renommerProfil(profil.id, nom)
+                            profilRepository.definirAvatar(profil.id, nouvelAvatar)
+                        }
                     }
                     profilARenommer = null
                 }) { Text("Valider") }

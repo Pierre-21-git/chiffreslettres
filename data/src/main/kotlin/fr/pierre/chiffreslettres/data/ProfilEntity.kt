@@ -8,4 +8,7 @@ data class ProfilEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val pseudo: String,
     val dateCreation: Long,
+    val avatar: String = AVATAR_PAR_DEFAUT,
 )
+
+const val AVATAR_PAR_DEFAUT = "🙂"
