@@ -192,6 +192,7 @@ fun AppNavHost(
             val profilIdArg = backStackEntry.arguments!!.getLong(Routes.ARG_PROFIL_ID)
             StatistiquesJoueurScreen(
                 profilId = profilIdArg,
+                profilActifId = profilId,
                 historiqueRepository = historiqueRepository,
                 defiRepository = defiRepository,
                 profilRepository = profilRepository,

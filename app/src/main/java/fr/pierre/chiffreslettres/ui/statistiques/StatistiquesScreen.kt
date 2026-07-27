@@ -86,6 +86,7 @@ fun StatistiquesScreen(
 @Composable
 fun StatistiquesJoueurScreen(
     profilId: Long,
+    profilActifId: Long,
     historiqueRepository: HistoriqueRepository,
     defiRepository: DefiRepository,
     profilRepository: ProfilRepository,
@@ -97,6 +98,7 @@ fun StatistiquesJoueurScreen(
 ) {
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
     val profil = profils.find { it.id == profilId }
+    val estProfilActif = profilId == profilActifId
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     var confirmationReinitialisation by remember { mutableStateOf(false) }
@@ -145,17 +147,29 @@ fun StatistiquesJoueurScreen(
             Text("Voir mes trophées")
         }
 
-        HorizontalDivider()
-        Button(
-            onClick = { lanceurExport.launch("statistiques-${nomFichier(profil?.pseudo)}.json") },
-            modifier = Modifier.fillMaxWidth(),
-        ) { Text("Exporter mes statistiques") }
-        Button(
-            onClick = { lanceurImport.launch(arrayOf("application/json")) },
-            modifier = Modifier.fillMaxWidth(),
-        ) { Text("Importer mes statistiques") }
-        Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
-            Text("Réinitialiser mes statistiques")
+        // Export/import/réinitialisation réservés au profil actif (retour utilisateur,
+        // cloisonnement des profils) : éviter qu'on modifie par erreur les données d'un
+        // autre profil juste en consultant sa fiche depuis la liste "Statistiques".
+        if (estProfilActif) {
+            HorizontalDivider()
+            Button(
+                onClick = { lanceurExport.launch("statistiques-${nomFichier(profil?.pseudo)}.json") },
+                modifier = Modifier.fillMaxWidth(),
+            ) { Text("Exporter mes statistiques") }
+            Button(
+                onClick = { lanceurImport.launch(arrayOf("application/json")) },
+                modifier = Modifier.fillMaxWidth(),
+            ) { Text("Importer mes statistiques") }
+            Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
+                Text("Réinitialiser mes statistiques")
+            }
+        } else if (profil != null) {
+            HorizontalDivider()
+            Text(
+                "Change de profil actif pour exporter, importer ou réinitialiser les " +
+                    "statistiques de ${profil.pseudo}.",
+                style = MaterialTheme.typography.bodyMedium,
+            )
         }
     }
 

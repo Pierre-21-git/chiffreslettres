@@ -51,32 +51,37 @@ fun ChangerProfilScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         EnTeteEcran("Choisir un profil", onRetour)
-        for (profil in profils) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                OutlinedButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        scope.launch {
-                            profilActifStore.definirProfilActif(profil.id)
-                            onProfilChoisi()
-                        }
-                    },
+        Column(
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+        ) {
+            for (profil in profils) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    Text("${profil.avatar}  ${profil.pseudo}")
-                }
-                IconButton(onClick = { profilARenommer = profil }) {
-                    Icon(Icons.Filled.Edit, contentDescription = "Renommer")
-                }
-                IconButton(onClick = { profilASupprimer = profil }) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Supprimer")
+                    OutlinedButton(
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            scope.launch {
+                                profilActifStore.definirProfilActif(profil.id)
+                                onProfilChoisi()
+                            }
+                        },
+                    ) {
+                        Text("${profil.avatar}  ${profil.pseudo}")
+                    }
+                    IconButton(onClick = { profilARenommer = profil }) {
+                        Icon(Icons.Filled.Edit, contentDescription = "Renommer")
+                    }
+                    IconButton(onClick = { profilASupprimer = profil }) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Supprimer")
+                    }
                 }
             }
+            Button(onClick = onCreerNouveauProfil, modifier = Modifier.fillMaxWidth()) { Text("Créer un nouveau profil") }
         }
-        Button(onClick = onCreerNouveauProfil, modifier = Modifier.fillMaxWidth()) { Text("Créer un nouveau profil") }
     }
 
     profilARenommer?.let { profil ->

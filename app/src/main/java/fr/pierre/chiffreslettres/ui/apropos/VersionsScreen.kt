@@ -17,6 +17,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.28",
+        date = "2026-07-28",
+        changements = listOf(
+            "Corrigé : sur la fiche d'un joueur (écran Statistiques), exporter, importer ou " +
+                "réinitialiser n'est désormais possible que pour le profil actif — plus de " +
+                "risque de modifier par erreur les données d'un autre profil juste en " +
+                "consultant sa fiche.",
+            "Retiré le dialogue \"Continuer avec le profil actif ?\" sur les tuiles de " +
+                "l'accueil, devenu redondant avec l'écran de sélection de profil affiché à " +
+                "chaque lancement (v1.26).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.27",
         date = "2026-07-27",
         changements = listOf(
