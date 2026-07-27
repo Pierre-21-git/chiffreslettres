@@ -75,6 +75,15 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
                 "Ça se complique (Monique) et Là c'est sérieux (Mathieu) : le score " +
                     "correspond au nombre de lettres du mot validé.",
             )
+            SousTitreRegle("Mots acceptés")
+            Text(
+                "Le dictionnaire embarqué exclut les noms propres, les sigles/" +
+                    "abréviations, et les formes de verbes purement conjuguées : seuls " +
+                    "l'infinitif et les participes présent/passé restent acceptés " +
+                    "(\"aimer\", \"aimant\", \"aimé\" sont valides, pas \"aimerait\" ni " +
+                    "\"aimons\").",
+                style = MaterialTheme.typography.bodyMedium,
+            )
         }
 
         SectionRegle("Mode Entraînement") {

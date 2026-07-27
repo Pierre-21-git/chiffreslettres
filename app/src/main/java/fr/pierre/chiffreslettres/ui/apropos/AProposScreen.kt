@@ -41,6 +41,11 @@ fun AProposScreen(
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
+                "Filtrage grammatical (noms propres, sigles, verbes conjugués) : " +
+                    "Morphalou3 (CNRS/ATILF), licence LGPL-LR.",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
                 "Bibliothèques open source utilisées : AndroidX Jetpack Compose, " +
                     "Room, Navigation (licence Apache 2.0).",
                 style = MaterialTheme.typography.bodyMedium,

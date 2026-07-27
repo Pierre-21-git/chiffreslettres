@@ -17,6 +17,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.23",
+        date = "2026-07-27",
+        changements = listOf(
+            "Dictionnaire : les noms propres, sigles/abréviations et formes de verbes " +
+                "purement conjuguées (indicatif, subjonctif, conditionnel, impératif) sont " +
+                "désormais exclus, conformément à la règle du jeu télévisé ; infinitifs et " +
+                "participes présent/passé restent acceptés — 245 576 → 115 489 mots. " +
+                "Filtrage croisé avec le lexique Morphalou3 (CNRS/ATILF, licence LGPL-LR).",
+            "Écran \"Règles du jeu\" : ajout d'une section \"Mots acceptés\" dans le mode " +
+                "Lettres détaillant ce filtrage.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.22",
         date = "2026-07-23",
         changements = listOf(

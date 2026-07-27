@@ -5,11 +5,13 @@
 # (voir /usr/share/doc/hunspell-fr/copyright). Génère une liste plate de formes fléchies
 # à partir des fichiers .dic/.aff, à embarquer plus tard comme asset Android.
 #
-# Deux étapes : `unmunch` développe grossièrement les formes, puis un script Python
+# Trois étapes : `unmunch` développe grossièrement les formes, puis un script Python
 # (clean_dictionary.py) s'appuyant sur `spylls` (réimplémentation Python fidèle de
 # Hunspell) revérifie chaque candidat, car `unmunch` ne résout pas correctement les
 # classes de continuation imbriquées utilisées par ce dictionnaire pour les
-# conjugaisons (voir commentaire en tête de clean_dictionary.py).
+# conjugaisons (voir commentaire en tête de clean_dictionary.py). Enfin
+# filter_grammar.py retire les noms propres, sigles et formes de verbes purement
+# conjuguées (règle du jeu Lettres), via le lexique Morphalou3 (CNRS/ATILF).
 #
 # Usage: ./scripts/prepare_dictionary.sh [dic_file] [aff_file]
 
@@ -66,7 +68,24 @@ RAW_FILE="$OUTPUT_DIR/dictionnaire_fr.raw.txt"
 "$UNMUNCH" "$DIC_FILE" "$AFF_FILE" > "$RAW_FILE" 2>/dev/null
 
 # --- 4. Nettoyage + vérification avec spylls ---
-FINAL_FILE="$OUTPUT_DIR/dictionnaire_fr.txt"
-PYTHONPATH="$PYLIBS_DIR" python3 "$SCRIPT_DIR/clean_dictionary.py" "$RAW_FILE" "$DIC_BASE" "$FINAL_FILE"
+VERIFIED_FILE="$OUTPUT_DIR/dictionnaire_fr.verified.txt"
+PYTHONPATH="$PYLIBS_DIR" python3 "$SCRIPT_DIR/clean_dictionary.py" "$RAW_FILE" "$DIC_BASE" "$VERIFIED_FILE"
 
 rm -f "$RAW_FILE"
+
+# --- 5. Localiser (ou télécharger sans sudo) le lexique Morphalou3 (CNRS/ATILF, LGPL-LR) ---
+MORPHALOU_DIR="$TOOLS_DIR/morphalou/Morphalou3.1_formatCSV"
+if [ ! -f "$MORPHALOU_DIR/verb_Morphalou3.1_CSV.csv" ]; then
+    echo "Morphalou3 introuvable : téléchargement (sans sudo)..." >&2
+    MORPHALOU_ZIP="$TOOLS_DIR/Morphalou3.1_formatCSV.zip"
+    curl -sL --max-time 300 -o "$MORPHALOU_ZIP" \
+        "https://huggingface.co/datasets/datasets-CNRS/Morphalou/resolve/main/Morphalou3.1_formatCSV.zip"
+    mkdir -p "$TOOLS_DIR/morphalou"
+    unzip -o -q "$MORPHALOU_ZIP" -d "$TOOLS_DIR/morphalou"
+    rm -f "$MORPHALOU_ZIP"
+fi
+
+# --- 6. Filtrage grammatical (noms propres, sigles, verbes conjugués) ---
+FINAL_FILE="$OUTPUT_DIR/dictionnaire_fr.txt"
+python3 "$SCRIPT_DIR/filter_grammar.py" "$VERIFIED_FILE" "$MORPHALOU_DIR" "$FINAL_FILE"
+rm -f "$VERIFIED_FILE"
