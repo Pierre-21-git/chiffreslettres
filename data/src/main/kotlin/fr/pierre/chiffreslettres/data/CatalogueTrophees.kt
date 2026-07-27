@@ -23,11 +23,11 @@ data class TropheeStats(
 )
 
 enum class CategorieTrophee(val titre: String) {
-    COMPTES_EXACTS("Comptes exacts"),
-    MOTS("Mots"),
-    PARTIE_PARFAITE("Partie parfaite"),
-    SCORE_PARTIE("Score de partie"),
     PARTIES_TERMINEES("Parties terminées"),
+    SCORE_PARTIE("Score de partie"),
+    COMPTES_EXACTS("Comptes exacts"),
+    PARTIE_PARFAITE("Partie parfaite"),
+    MOTS("Mots"),
     DEFI("Défi"),
     DEFI_CHRONO("Défi chrono"),
 }

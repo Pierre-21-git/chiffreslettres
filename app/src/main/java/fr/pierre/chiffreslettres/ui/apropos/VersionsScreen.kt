@@ -17,6 +17,14 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.25",
+        date = "2026-07-27",
+        changements = listOf(
+            "Écran Trophées réordonné : \"Parties terminées\" puis \"Score de partie\" en " +
+                "tête de liste, et \"Mots\" déplacé après \"Partie parfaite\".",
+        ),
+    ),
+    EntreeVersion(
         version = "1.24",
         date = "2026-07-27",
         changements = listOf(
