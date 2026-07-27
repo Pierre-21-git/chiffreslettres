@@ -20,6 +20,8 @@ data class TropheeStats(
     val meilleuresSeriesDefi: Map<String, Int>,
     /** Clé = nom du [ModeJeu] (ex. "CHIFFRES"), valeur = meilleur nombre de réussites en défi chrono, tous niveaux confondus. */
     val meilleuresReussitesDefiChrono: Map<String, Int>,
+    /** Plus longue série de jours consécutifs avec le défi quotidien réussi. */
+    val meilleureSerieJoursDefiQuotidien: Int,
 )
 
 enum class CategorieTrophee(val titre: String) {
@@ -30,6 +32,7 @@ enum class CategorieTrophee(val titre: String) {
     MOTS("Mots"),
     DEFI("Défi"),
     DEFI_CHRONO("Défi chrono"),
+    DEFI_QUOTIDIEN("Défi quotidien"),
 }
 
 class Trophee(
@@ -47,8 +50,9 @@ private val SEUILS_SCORE = listOf(20, 30, 40, 50, 60, 70, 80, 90)
 private val SEUILS_DEFI_SERIE = listOf(3, 5, 10, 15, 20, 30, 50)
 private val SEUILS_DEFI_CHRONO = listOf(2, 3, 5, 10, 12, 15)
 private val LONGUEURS_MOTS_TROPHEE = 4..10
+private val SEUILS_DEFI_QUOTIDIEN = listOf(7, 30)
 
-/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 69 au total. */
+/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 71 au total. */
 object CatalogueTrophees {
 
     val TOUS: List<Trophee> = buildList {
@@ -199,6 +203,18 @@ object CatalogueTrophees {
                     ) { (it.meilleuresReussitesDefiChrono[mode.name] ?: 0) >= seuil },
                 )
             }
+        }
+
+        val libellesPaliersQuotidien = mapOf(7 to "Une semaine", 30 to "Un mois")
+        for (seuil in SEUILS_DEFI_QUOTIDIEN) {
+            add(
+                Trophee(
+                    "defi_quotidien_$seuil",
+                    "${libellesPaliersQuotidien.getValue(seuil)} de défi quotidien",
+                    "Réussir le défi quotidien $seuil jours d'affilée.",
+                    CategorieTrophee.DEFI_QUOTIDIEN,
+                ) { it.meilleureSerieJoursDefiQuotidien >= seuil },
+            )
         }
     }
 }

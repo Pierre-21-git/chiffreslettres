@@ -1,5 +1,6 @@
 package fr.pierre.chiffreslettres.data
 
+import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
@@ -17,6 +18,7 @@ class TropheeRepository(
     private val tropheeDao: TropheeDao,
     private val historiqueDao: HistoriqueDao,
     private val defiDao: DefiDao,
+    private val defiQuotidienDao: DefiQuotidienDao,
 ) {
     fun tropheesDebloques(profilId: Long): Flow<List<TropheeEntity>> = tropheeDao.tropheesDebloques(profilId)
 
@@ -34,6 +36,9 @@ class TropheeRepository(
             meilleuresReussitesDefiChrono = defiDao.meilleuresReussitesChronoParCombinaison(profilId)
                 .groupBy { it.mode.name }
                 .mapValues { (_, combinaisons) -> combinaisons.maxOf { it.meilleur } },
+            meilleureSerieJoursDefiQuotidien = plusLongueSerieDeJours(
+                defiQuotidienDao.joursReussis(profilId).mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
+            ),
         )
         for (trophee in CatalogueTrophees.TOUS) {
             if (trophee.estDebloque(stats)) {

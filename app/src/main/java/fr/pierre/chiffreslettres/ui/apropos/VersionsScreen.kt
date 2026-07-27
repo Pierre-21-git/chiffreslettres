@@ -17,6 +17,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.27",
+        date = "2026-07-27",
+        changements = listOf(
+            "Nouveau : Défi quotidien. Un défi (série ou chrono, chiffres ou lettres) est " +
+                "tiré au sort chaque jour avec un objectif à atteindre, à un niveau choisi " +
+                "librement ; une fois réussi, il se verrouille jusqu'au lendemain.",
+            "Deux nouveaux trophées de série de jours consécutifs au défi quotidien (7 et " +
+                "30 jours), affichés avec la progression en cours sur l'écran du défi.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.26",
         date = "2026-07-27",
         changements = listOf(

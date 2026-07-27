@@ -65,6 +65,24 @@ private val MIGRATION_4_5 = object : Migration(4, 5) {
     }
 }
 
+/** v5 → v6 : ajout de la table `DefiQuotidienEntity` (défi quotidien, retour utilisateur). */
+private val MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `DefiQuotidienEntity` (
+                `profilId` INTEGER NOT NULL,
+                `jour` TEXT NOT NULL,
+                `dateReussite` INTEGER NOT NULL,
+                PRIMARY KEY(`profilId`, `jour`),
+                FOREIGN KEY(`profilId`) REFERENCES `ProfilEntity`(`id`) ON DELETE CASCADE
+            )
+            """.trimIndent(),
+        )
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_DefiQuotidienEntity_profilId` ON `DefiQuotidienEntity` (`profilId`)")
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null
@@ -72,7 +90,7 @@ object AppDatabaseProvider {
     fun obtenir(context: Context): AppDatabase =
         instance ?: synchronized(this) {
             instance ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "chiffreslettres.db")
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                 .build()
                 .also { instance = it }
         }

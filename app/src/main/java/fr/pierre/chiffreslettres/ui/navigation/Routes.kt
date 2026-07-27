@@ -37,15 +37,31 @@ object Routes {
 
     const val CHOIX_DEFI_SERIE = "defi/choixNiveauSerie"
     const val CHOIX_DEFI_CHRONO = "defi/choixNiveauChrono"
-    const val JEU_DEFI_CHIFFRES_PATTERN = "defi/jeuChiffres/{$ARG_NIVEAU}"
-    const val JEU_DEFI_LETTRES_PATTERN = "defi/jeuLettres/{$ARG_NIVEAU}"
-    const val JEU_DEFI_CHRONO_CHIFFRES_PATTERN = "defi/chrono/jeuChiffres/{$ARG_NIVEAU}"
-    const val JEU_DEFI_CHRONO_LETTRES_PATTERN = "defi/chrono/jeuLettres/{$ARG_NIVEAU}"
+    const val CHOIX_DEFI_QUOTIDIEN = "defi/quotidien"
 
-    fun jeuDefiChiffres(niveau: Niveau) = "defi/jeuChiffres/${niveau.name}"
-    fun jeuDefiLettres(niveau: NiveauLettres) = "defi/jeuLettres/${niveau.name}"
-    fun jeuDefiChronoChiffres(niveau: Niveau) = "defi/chrono/jeuChiffres/${niveau.name}"
-    fun jeuDefiChronoLettres(niveau: NiveauLettres) = "defi/chrono/jeuLettres/${niveau.name}"
+    // Arguments optionnels portés par les 4 routes de jeu défi ci-dessous, uniquement
+    // renseignés quand on vient du défi quotidien (retour utilisateur) : permettent de
+    // vérifier l'objectif du jour à la fin du défi sans dupliquer les routes/écrans.
+    const val ARG_OBJECTIF_QUOTIDIEN = "objectifQuotidien"
+    const val ARG_JOUR_QUOTIDIEN = "jourQuotidien"
+    private const val SUFFIXE_QUOTIDIEN = "?$ARG_OBJECTIF_QUOTIDIEN={$ARG_OBJECTIF_QUOTIDIEN}&$ARG_JOUR_QUOTIDIEN={$ARG_JOUR_QUOTIDIEN}"
+
+    const val JEU_DEFI_CHIFFRES_PATTERN = "defi/jeuChiffres/{$ARG_NIVEAU}$SUFFIXE_QUOTIDIEN"
+    const val JEU_DEFI_LETTRES_PATTERN = "defi/jeuLettres/{$ARG_NIVEAU}$SUFFIXE_QUOTIDIEN"
+    const val JEU_DEFI_CHRONO_CHIFFRES_PATTERN = "defi/chrono/jeuChiffres/{$ARG_NIVEAU}$SUFFIXE_QUOTIDIEN"
+    const val JEU_DEFI_CHRONO_LETTRES_PATTERN = "defi/chrono/jeuLettres/{$ARG_NIVEAU}$SUFFIXE_QUOTIDIEN"
+
+    private fun suffixeQuotidien(objectifQuotidien: Int?, jourQuotidien: String?): String =
+        if (objectifQuotidien != null && jourQuotidien != null) "?$ARG_OBJECTIF_QUOTIDIEN=$objectifQuotidien&$ARG_JOUR_QUOTIDIEN=$jourQuotidien" else ""
+
+    fun jeuDefiChiffres(niveau: Niveau, objectifQuotidien: Int? = null, jourQuotidien: String? = null) =
+        "defi/jeuChiffres/${niveau.name}${suffixeQuotidien(objectifQuotidien, jourQuotidien)}"
+    fun jeuDefiLettres(niveau: NiveauLettres, objectifQuotidien: Int? = null, jourQuotidien: String? = null) =
+        "defi/jeuLettres/${niveau.name}${suffixeQuotidien(objectifQuotidien, jourQuotidien)}"
+    fun jeuDefiChronoChiffres(niveau: Niveau, objectifQuotidien: Int? = null, jourQuotidien: String? = null) =
+        "defi/chrono/jeuChiffres/${niveau.name}${suffixeQuotidien(objectifQuotidien, jourQuotidien)}"
+    fun jeuDefiChronoLettres(niveau: NiveauLettres, objectifQuotidien: Int? = null, jourQuotidien: String? = null) =
+        "defi/chrono/jeuLettres/${niveau.name}${suffixeQuotidien(objectifQuotidien, jourQuotidien)}"
 
     const val A_PROPOS = "apropos"
     const val REGLES_DU_JEU = "apropos/reglesDuJeu"

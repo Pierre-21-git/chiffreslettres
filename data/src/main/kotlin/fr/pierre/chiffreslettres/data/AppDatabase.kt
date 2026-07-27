@@ -10,8 +10,9 @@ import androidx.room.RoomDatabase
         MancheEntity::class,
         DefiEntity::class,
         TropheeEntity::class,
+        DefiQuotidienEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -19,4 +20,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun historiqueDao(): HistoriqueDao
     abstract fun defiDao(): DefiDao
     abstract fun tropheeDao(): TropheeDao
+    abstract fun defiQuotidienDao(): DefiQuotidienDao
 }

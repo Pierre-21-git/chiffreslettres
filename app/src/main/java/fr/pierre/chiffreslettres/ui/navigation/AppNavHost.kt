@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,6 +25,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import fr.pierre.chiffreslettres.data.DefiQuotidienRepository
+import fr.pierre.chiffreslettres.data.DefiQuotidienTirage
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
@@ -41,6 +45,7 @@ import fr.pierre.chiffreslettres.ui.apropos.VersionsScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundViewModel
 import fr.pierre.chiffreslettres.ui.defi.ChoixDefiScreen
+import fr.pierre.chiffreslettres.ui.defi.DefiQuotidienScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiViewModel
 import fr.pierre.chiffreslettres.ui.defi.budgetSecondesDefiChrono
 import fr.pierre.chiffreslettres.ui.defi.seuilLongueurDefiLettres
@@ -60,6 +65,7 @@ import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesGeneralesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesJoueurScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesScreen
 import fr.pierre.chiffreslettres.ui.trophees.TropheesScreen
+import java.time.LocalDate
 import kotlinx.coroutines.launch
 
 @Composable
@@ -86,6 +92,7 @@ fun AppNavHost(
     historiqueRepository: HistoriqueRepository,
     defiRepository: DefiRepository,
     tropheeRepository: TropheeRepository,
+    defiQuotidienRepository: DefiQuotidienRepository,
     profilActifStore: ProfilActifStore,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
@@ -103,6 +110,7 @@ fun AppNavHost(
                 onPartieStructuree = { navController.navigate(Routes.PARTIE_GRAPH) },
                 onDefiSerie = { navController.navigate(Routes.CHOIX_DEFI_SERIE) },
                 onDefiChrono = { navController.navigate(Routes.CHOIX_DEFI_CHRONO) },
+                onDefiQuotidien = { navController.navigate(Routes.CHOIX_DEFI_QUOTIDIEN) },
                 onStatistiques = { navController.navigate(Routes.STATISTIQUES) },
                 onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                 onAPropos = { navController.navigate(Routes.A_PROPOS) },
@@ -416,17 +424,66 @@ fun AppNavHost(
             )
         }
 
+        composable(Routes.CHOIX_DEFI_QUOTIDIEN) {
+            val jour = remember { LocalDate.now().toString() }
+            val tirage = remember(profilId, jour) { DefiQuotidienTirage.pour(profilId, jour) }
+            var dejaReussi by remember(profilId, jour) { mutableStateOf(false) }
+            var serieActuelle by remember(profilId) { mutableStateOf(0) }
+            LaunchedEffect(profilId, jour) {
+                dejaReussi = defiQuotidienRepository.reussiteDuJour(profilId, jour)
+                serieActuelle = defiQuotidienRepository.serieActuelle(profilId)
+            }
+            DefiQuotidienScreen(
+                pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                tirage = tirage,
+                dejaReussiAujourdhui = dejaReussi,
+                serieActuelle = serieActuelle,
+                onNiveauChiffresChoisi = { niveau ->
+                    val route = if (tirage.type == TypeDefi.SERIE) {
+                        Routes.jeuDefiChiffres(niveau, tirage.objectif, jour)
+                    } else {
+                        Routes.jeuDefiChronoChiffres(niveau, tirage.objectif, jour)
+                    }
+                    navController.navigate(route)
+                },
+                onNiveauLettresChoisi = { niveau ->
+                    val route = if (tirage.type == TypeDefi.SERIE) {
+                        Routes.jeuDefiLettres(niveau, tirage.objectif, jour)
+                    } else {
+                        Routes.jeuDefiChronoLettres(niveau, tirage.objectif, jour)
+                    }
+                    navController.navigate(route)
+                },
+                onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
+                onRetour = { navController.popBackStack() },
+            )
+        }
+
         composable(
             route = Routes.JEU_DEFI_CHIFFRES_PATTERN,
-            arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+            arguments = listOf(
+                navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType },
+                navArgument(Routes.ARG_OBJECTIF_QUOTIDIEN) { type = NavType.IntType; defaultValue = -1 },
+                navArgument(Routes.ARG_JOUR_QUOTIDIEN) { type = NavType.StringType; nullable = true; defaultValue = null },
+            ),
         ) { backStackEntry ->
             val niveau = Niveau.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+            val objectifQuotidien = backStackEntry.arguments!!.getInt(Routes.ARG_OBJECTIF_QUOTIDIEN)
+            val jourQuotidien = backStackEntry.arguments!!.getString(Routes.ARG_JOUR_QUOTIDIEN)
             val defiVm: DefiViewModel = viewModel(backStackEntry) {
                 DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.CHIFFRES, niveau.name, TypeDefi.SERIE)
             }
             val index by defiVm.index.collectAsState()
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
+            if (jourQuotidien != null) {
+                LaunchedEffect(termine) {
+                    if (termine && index >= objectifQuotidien) {
+                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
+                        tropheeRepository.reevaluer(profilId)
+                    }
+                }
+            }
             // Solution exacte toujours garantie en défi série, même sur Monique/Mathieu
             // (retour utilisateur) : la série ne doit s'arrêter que sur une erreur du
             // joueur. Le chrono reste celui de la partie solo pour ce niveau (retour
@@ -443,13 +500,19 @@ fun AppNavHost(
                 progressionManche = "$index",
                 libelleProgression = "Série",
                 onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.echec() },
-                onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI_SERIE, inclusive = false) },
+                onRetourEntrainement = {
+                    val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
+                    navController.popBackStack(cible, inclusive = false)
+                },
                 actionsFinManche = {
                     if (termine) {
                         ActionsFinDefi(
                             message = "Série terminée : $index réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
-                            onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI_SERIE, inclusive = false) },
+                            onChangerNiveau = {
+                                val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
+                                navController.popBackStack(cible, inclusive = false)
+                            },
                         )
                     } else {
                         Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text("Continuer") }
@@ -460,9 +523,15 @@ fun AppNavHost(
 
         composable(
             route = Routes.JEU_DEFI_LETTRES_PATTERN,
-            arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+            arguments = listOf(
+                navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType },
+                navArgument(Routes.ARG_OBJECTIF_QUOTIDIEN) { type = NavType.IntType; defaultValue = -1 },
+                navArgument(Routes.ARG_JOUR_QUOTIDIEN) { type = NavType.StringType; nullable = true; defaultValue = null },
+            ),
         ) { backStackEntry ->
             val niveau = NiveauLettres.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+            val objectifQuotidien = backStackEntry.arguments!!.getInt(Routes.ARG_OBJECTIF_QUOTIDIEN)
+            val jourQuotidien = backStackEntry.arguments!!.getString(Routes.ARG_JOUR_QUOTIDIEN)
             val defiVm: DefiViewModel = viewModel(backStackEntry) {
                 DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.LETTRES, niveau.name, TypeDefi.SERIE)
             }
@@ -470,6 +539,14 @@ fun AppNavHost(
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
             val seuil = seuilLongueurDefiLettres(niveau)
+            if (jourQuotidien != null) {
+                LaunchedEffect(termine) {
+                    if (termine && index >= objectifQuotidien) {
+                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
+                        tropheeRepository.reevaluer(profilId)
+                    }
+                }
+            }
             // Clé sur essaiId (jamais réutilisé), pas index : cf. commentaire équivalent
             // sur le défi chiffres.
             val roundVm: LettresRoundViewModel =
@@ -486,13 +563,19 @@ fun AppNavHost(
                     val reussi = motValide != null && motValide.length >= seuil
                     if (!reussi) defiVm.echec()
                 },
-                onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI_SERIE, inclusive = false) },
+                onRetourEntrainement = {
+                    val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
+                    navController.popBackStack(cible, inclusive = false)
+                },
                 actionsFinManche = {
                     if (termine) {
                         ActionsFinDefi(
                             message = "Série terminée : $index réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
-                            onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI_SERIE, inclusive = false) },
+                            onChangerNiveau = {
+                                val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
+                                navController.popBackStack(cible, inclusive = false)
+                            },
                         )
                     } else {
                         Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text("Continuer") }
@@ -503,9 +586,15 @@ fun AppNavHost(
 
         composable(
             route = Routes.JEU_DEFI_CHRONO_CHIFFRES_PATTERN,
-            arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+            arguments = listOf(
+                navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType },
+                navArgument(Routes.ARG_OBJECTIF_QUOTIDIEN) { type = NavType.IntType; defaultValue = -1 },
+                navArgument(Routes.ARG_JOUR_QUOTIDIEN) { type = NavType.StringType; nullable = true; defaultValue = null },
+            ),
         ) { backStackEntry ->
             val niveau = Niveau.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+            val objectifQuotidien = backStackEntry.arguments!!.getInt(Routes.ARG_OBJECTIF_QUOTIDIEN)
+            val jourQuotidien = backStackEntry.arguments!!.getString(Routes.ARG_JOUR_QUOTIDIEN)
             val defiVm: DefiViewModel = viewModel(backStackEntry) {
                 DefiViewModel(
                     defiRepository,
@@ -520,6 +609,14 @@ fun AppNavHost(
             val reussites by defiVm.reussites.collectAsState()
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
+            if (jourQuotidien != null) {
+                LaunchedEffect(termine) {
+                    if (termine && reussites >= objectifQuotidien) {
+                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
+                        tropheeRepository.reevaluer(profilId)
+                    }
+                }
+            }
             // Chaque manche démarre avec le temps restant du budget global (retour
             // utilisateur : le défi chrono continue même après une erreur, seul
             // l'épuisement du temps l'arrête) ; les règles du niveau (cible, opérations,
@@ -539,13 +636,19 @@ fun AppNavHost(
                 // réussite attend le "Continuer" du joueur avant d'enchaîner (retour
                 // utilisateur, cohérence avec le défi série existant).
                 onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.mancheChronoTerminee(false) },
-                onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI_CHRONO, inclusive = false) },
+                onRetourEntrainement = {
+                    val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
+                    navController.popBackStack(cible, inclusive = false)
+                },
                 actionsFinManche = {
                     if (termine) {
                         ActionsFinDefi(
                             message = "Défi terminé : $reussites réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
-                            onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI_CHRONO, inclusive = false) },
+                            onChangerNiveau = {
+                                val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
+                                navController.popBackStack(cible, inclusive = false)
+                            },
                         )
                     } else {
                         Button(onClick = { defiVm.mancheChronoTerminee(true) }, modifier = Modifier.fillMaxWidth()) {
@@ -558,9 +661,15 @@ fun AppNavHost(
 
         composable(
             route = Routes.JEU_DEFI_CHRONO_LETTRES_PATTERN,
-            arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+            arguments = listOf(
+                navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType },
+                navArgument(Routes.ARG_OBJECTIF_QUOTIDIEN) { type = NavType.IntType; defaultValue = -1 },
+                navArgument(Routes.ARG_JOUR_QUOTIDIEN) { type = NavType.StringType; nullable = true; defaultValue = null },
+            ),
         ) { backStackEntry ->
             val niveau = NiveauLettres.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+            val objectifQuotidien = backStackEntry.arguments!!.getInt(Routes.ARG_OBJECTIF_QUOTIDIEN)
+            val jourQuotidien = backStackEntry.arguments!!.getString(Routes.ARG_JOUR_QUOTIDIEN)
             val defiVm: DefiViewModel = viewModel(backStackEntry) {
                 DefiViewModel(
                     defiRepository,
@@ -576,6 +685,14 @@ fun AppNavHost(
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
             val seuil = seuilLongueurDefiLettres(niveau)
+            if (jourQuotidien != null) {
+                LaunchedEffect(termine) {
+                    if (termine && reussites >= objectifQuotidien) {
+                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
+                        tropheeRepository.reevaluer(profilId)
+                    }
+                }
+            }
             val roundVm: LettresRoundViewModel =
                 viewModel(key = "defi-chrono-lettres-$essaiId") {
                     LettresRoundViewModel(niveau, dictionnaire, defiVm.dureeProchaineManche())
@@ -592,13 +709,19 @@ fun AppNavHost(
                     val reussi = motValide != null && motValide.length >= seuil
                     if (!reussi) defiVm.mancheChronoTerminee(false)
                 },
-                onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI_CHRONO, inclusive = false) },
+                onRetourEntrainement = {
+                    val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
+                    navController.popBackStack(cible, inclusive = false)
+                },
                 actionsFinManche = {
                     if (termine) {
                         ActionsFinDefi(
                             message = "Défi terminé : $reussites réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
-                            onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI_CHRONO, inclusive = false) },
+                            onChangerNiveau = {
+                                val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
+                                navController.popBackStack(cible, inclusive = false)
+                            },
                         )
                     } else {
                         Button(onClick = { defiVm.mancheChronoTerminee(true) }, modifier = Modifier.fillMaxWidth()) {

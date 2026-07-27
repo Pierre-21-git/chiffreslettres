@@ -37,6 +37,7 @@ fun MenuPrincipalScreen(
     onPartieStructuree: () -> Unit,
     onDefiSerie: () -> Unit,
     onDefiChrono: () -> Unit,
+    onDefiQuotidien: () -> Unit,
     onStatistiques: () -> Unit,
     onChangerProfil: () -> Unit,
     onAPropos: () -> Unit,
@@ -56,6 +57,7 @@ fun MenuPrincipalScreen(
         TuilePrincipale("Partie classique", onClick = { actionEnAttente = onPartieStructuree })
         TuilePrincipale("Défi série", onClick = { actionEnAttente = onDefiSerie })
         TuilePrincipale("Défi chrono", onClick = { actionEnAttente = onDefiChrono })
+        TuilePrincipale("Défi quotidien", onClick = { actionEnAttente = onDefiQuotidien })
 
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))
 

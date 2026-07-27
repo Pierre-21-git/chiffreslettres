@@ -178,6 +178,24 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
+
+        SectionRegle("Mode Défi quotidien") {
+            Text(
+                "Un défi série ou chrono, en chiffres ou en lettres, est tiré au sort " +
+                    "chaque jour avec un objectif à atteindre (nombre de réussites, ou de " +
+                    "réussites d'affilée selon le type tiré) ; le tirage est le même toute " +
+                    "la journée, mais différent d'un profil à l'autre. Le niveau reste " +
+                    "libre : lui seul détermine la difficulté pour atteindre l'objectif.",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
+                "Une fois l'objectif du jour atteint, le défi se verrouille jusqu'au " +
+                    "lendemain ; en cas d'échec avant de l'atteindre, il reste retentable " +
+                    "le même jour. Deux trophées récompensent une série de jours " +
+                    "consécutifs réussie (7 et 30 jours).",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
     }
 }
 

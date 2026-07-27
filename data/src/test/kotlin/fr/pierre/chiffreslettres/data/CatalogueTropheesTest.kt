@@ -15,6 +15,7 @@ private fun statsVides() = TropheeStats(
     defisTotal = 0,
     meilleuresSeriesDefi = emptyMap(),
     meilleuresReussitesDefiChrono = emptyMap(),
+    meilleureSerieJoursDefiQuotidien = 0,
 )
 
 class CatalogueTropheesTest {
@@ -22,8 +23,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `69 trophees au total`() {
-        assertEquals(69, CatalogueTrophees.TOUS.size)
+    fun `71 trophees au total`() {
+        assertEquals(71, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -97,5 +98,12 @@ class CatalogueTropheesTest {
         val stats = statsVides().copy(meilleuresReussitesDefiChrono = mapOf("LETTRES" to 14))
         assertTrue(trophee("defi_chrono_lettres_12").estDebloque(stats))
         assertFalse(trophee("defi_chrono_lettres_15").estDebloque(stats))
+    }
+
+    @Test
+    fun `defi quotidien a des paliers a 7 et 30 jours`() {
+        val stats = statsVides().copy(meilleureSerieJoursDefiQuotidien = 10)
+        assertTrue(trophee("defi_quotidien_7").estDebloque(stats))
+        assertFalse(trophee("defi_quotidien_30").estDebloque(stats))
     }
 }
