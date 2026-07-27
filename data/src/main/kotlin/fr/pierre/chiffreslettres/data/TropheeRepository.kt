@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.first
 
 private val SEUILS_MOTS = listOf(4, 5, 6, 7, 8)
 private val SEUILS_SCORE = listOf(20, 30, 40, 50, 60, 70, 80, 90)
-private const val LONGUEUR_MOT_MAX = 10
+private val LONGUEURS_MOTS_TROPHEE = 4..10
 
 /**
  * Évalue et débloque les trophées d'un joueur à partir de son historique (parties solo + défis,
@@ -23,13 +23,14 @@ class TropheeRepository(
     suspend fun reevaluer(profilId: Long) {
         val stats = TropheeStats(
             comptesExacts = historiqueDao.compterComptesExacts(profilId),
-            motsDixLettres = historiqueDao.compterMotsLongueur(profilId, LONGUEUR_MOT_MAX),
+            motsParLongueur = LONGUEURS_MOTS_TROPHEE.associateWith { historiqueDao.compterMotsLongueur(profilId, it) },
             partieTousComptesExacts = historiqueDao.compterPartiesTousComptesExacts(profilId) >= 1,
             partiesMotsMin = SEUILS_MOTS.associateWith { historiqueDao.compterPartiesMotsMin(profilId, it) >= 1 },
             partiesParSeuilScore = SEUILS_SCORE.associateWith { historiqueDao.compterPartiesScoreAuMoins(profilId, it) },
             partiesSoloTotal = historiqueDao.compterPartiesSoloTotal(profilId),
             defisTotal = defiDao.compterDefisTotal(profilId),
-            meilleureSerieDefi = defiDao.meilleureSerieDefi(profilId),
+            meilleuresSeriesDefi = defiDao.meilleuresSeriesDefiParMode(profilId)
+                .associate { it.mode.name to it.meilleur },
             meilleuresReussitesDefiChrono = defiDao.meilleuresReussitesChronoParCombinaison(profilId)
                 .groupBy { it.mode.name }
                 .mapValues { (_, combinaisons) -> combinaisons.maxOf { it.meilleur } },

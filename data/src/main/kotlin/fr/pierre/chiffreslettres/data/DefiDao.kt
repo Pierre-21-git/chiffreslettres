@@ -11,6 +11,9 @@ data class MeilleurDefi(val serie: Int, val date: Long)
 /** Meilleure performance en défi chrono pour une combinaison mode × niveau, pour l'évaluation des trophées. */
 data class MeilleureReussiteChrono(val mode: ModeJeu, val niveauCode: String, val meilleur: Int)
 
+/** Meilleure série en défi série pour un mode, tous niveaux confondus, pour l'évaluation des trophées. */
+data class MeilleureSerieDefi(val mode: ModeJeu, val meilleur: Int)
+
 @Dao
 interface DefiDao {
     @Insert
@@ -55,9 +58,15 @@ interface DefiDao {
     @Query("SELECT COUNT(*) FROM DefiEntity WHERE profilId = :profilId")
     suspend fun compterDefisTotal(profilId: Long): Int
 
-    /** Meilleure série jamais réalisée en défi série, tous modes/niveaux confondus (0 si aucun défi joué). */
-    @Query("SELECT COALESCE(MAX(serie), 0) FROM DefiEntity WHERE profilId = :profilId AND type = 'SERIE'")
-    suspend fun meilleureSerieDefi(profilId: Long): Int
+    /** Meilleure série jamais réalisée en défi série, par mode, tous niveaux confondus. */
+    @Query(
+        """
+        SELECT mode, MAX(serie) as meilleur FROM DefiEntity
+        WHERE profilId = :profilId AND type = 'SERIE'
+        GROUP BY mode
+        """,
+    )
+    suspend fun meilleuresSeriesDefiParMode(profilId: Long): List<MeilleureSerieDefi>
 
     /** Meilleure performance (nombre de réussites) en défi chrono, par combinaison mode × niveau. */
     @Query(

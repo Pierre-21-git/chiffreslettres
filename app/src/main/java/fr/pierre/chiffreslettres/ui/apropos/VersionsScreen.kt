@@ -17,6 +17,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.24",
+        date = "2026-07-27",
+        changements = listOf(
+            "Trophées \"Mots\" étendus : un palier premier/dixième mot existe désormais pour " +
+                "chaque longueur de 4 à 10 lettres (au lieu de 10 lettres seulement).",
+            "Trophées \"Défi\" : les paliers de meilleure série (3/5/10/15/20) sont désormais " +
+                "séparés par mode (Chiffres / Lettres) comme le défi chrono, et deux nouveaux " +
+                "paliers 30 et 50 ont été ajoutés.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.23",
         date = "2026-07-27",
         changements = listOf(

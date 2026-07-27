@@ -7,7 +7,8 @@ package fr.pierre.chiffreslettres.data
  */
 data class TropheeStats(
     val comptesExacts: Int,
-    val motsDixLettres: Int,
+    /** Clé = longueur exacte du mot (4 à 10), valeur = nombre de fois où un mot de cette longueur a été trouvé, en partie classique. */
+    val motsParLongueur: Map<Int, Int>,
     val partieTousComptesExacts: Boolean,
     /** Clé = longueur minimale (4 à 8), valeur = une partie solo a-t-elle uniquement des mots d'au moins cette longueur. */
     val partiesMotsMin: Map<Int, Boolean>,
@@ -15,7 +16,8 @@ data class TropheeStats(
     val partiesParSeuilScore: Map<Int, Int>,
     val partiesSoloTotal: Int,
     val defisTotal: Int,
-    val meilleureSerieDefi: Int,
+    /** Clé = nom du [ModeJeu] (ex. "CHIFFRES"), valeur = meilleure série en défi série, tous niveaux confondus. */
+    val meilleuresSeriesDefi: Map<String, Int>,
     /** Clé = nom du [ModeJeu] (ex. "CHIFFRES"), valeur = meilleur nombre de réussites en défi chrono, tous niveaux confondus. */
     val meilleuresReussitesDefiChrono: Map<String, Int>,
 )
@@ -42,10 +44,11 @@ class Trophee(
 
 private val SEUILS_MOTS = listOf(4, 5, 6, 7, 8)
 private val SEUILS_SCORE = listOf(20, 30, 40, 50, 60, 70, 80, 90)
-private val SEUILS_DEFI_SERIE = listOf(3, 5, 10, 15, 20)
+private val SEUILS_DEFI_SERIE = listOf(3, 5, 10, 15, 20, 30, 50)
 private val SEUILS_DEFI_CHRONO = listOf(2, 3, 5, 10, 12, 15)
+private val LONGUEURS_MOTS_TROPHEE = 4..10
 
-/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 48 au total. */
+/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 69 au total. */
 object CatalogueTrophees {
 
     val TOUS: List<Trophee> = buildList {
@@ -74,22 +77,25 @@ object CatalogueTrophees {
             ) { it.comptesExacts >= 100 },
         )
 
-        add(
-            Trophee(
-                "mot_10_1",
-                "Premier mot de 10 lettres",
-                "Trouver un mot de 10 lettres (la longueur maximale du tirage), en partie classique.",
-                CategorieTrophee.MOTS,
-            ) { it.motsDixLettres >= 1 },
-        )
-        add(
-            Trophee(
-                "mot_10_10",
-                "Dixième mot de 10 lettres",
-                "Trouver 10 mots de 10 lettres, en partie classique.",
-                CategorieTrophee.MOTS,
-            ) { it.motsDixLettres >= 10 },
-        )
+        for (longueur in LONGUEURS_MOTS_TROPHEE) {
+            val precision = if (longueur == 10) " (la longueur maximale du tirage)" else ""
+            add(
+                Trophee(
+                    "mot_${longueur}_1",
+                    "Premier mot de $longueur lettres",
+                    "Trouver un mot de $longueur lettres$precision, en partie classique.",
+                    CategorieTrophee.MOTS,
+                ) { (it.motsParLongueur[longueur] ?: 0) >= 1 },
+            )
+            add(
+                Trophee(
+                    "mot_${longueur}_10",
+                    "Dixième mot de $longueur lettres",
+                    "Trouver 10 mots de $longueur lettres, en partie classique.",
+                    CategorieTrophee.MOTS,
+                ) { (it.motsParLongueur[longueur] ?: 0) >= 10 },
+            )
+        }
 
         add(
             Trophee(
@@ -162,15 +168,20 @@ object CatalogueTrophees {
                 CategorieTrophee.DEFI,
             ) { it.defisTotal >= 1 },
         )
-        for (seuil in SEUILS_DEFI_SERIE) {
-            add(
-                Trophee(
-                    "defi_serie_$seuil",
-                    "Série de $seuil en défi",
-                    "Aligner $seuil réussites ou plus d'affilée dans un même défi.",
-                    CategorieTrophee.DEFI,
-                ) { it.meilleureSerieDefi >= seuil },
-            )
+        for (mode in ModeJeu.entries) {
+            val modeCode = mode.name.lowercase()
+            val sousTitreMode = if (mode == ModeJeu.CHIFFRES) "Chiffres" else "Lettres"
+            for (seuil in SEUILS_DEFI_SERIE) {
+                add(
+                    Trophee(
+                        "defi_serie_${modeCode}_$seuil",
+                        "Série de $seuil en défi $modeCode",
+                        "Aligner $seuil réussites ou plus d'affilée dans un même défi $modeCode.",
+                        CategorieTrophee.DEFI,
+                        sousTitre = sousTitreMode,
+                    ) { (it.meilleuresSeriesDefi[mode.name] ?: 0) >= seuil },
+                )
+            }
         }
 
         for (mode in ModeJeu.entries) {

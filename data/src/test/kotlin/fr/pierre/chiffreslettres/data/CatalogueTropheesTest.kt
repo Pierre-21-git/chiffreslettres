@@ -7,13 +7,13 @@ import org.junit.Test
 
 private fun statsVides() = TropheeStats(
     comptesExacts = 0,
-    motsDixLettres = 0,
+    motsParLongueur = (4..10).associateWith { 0 },
     partieTousComptesExacts = false,
     partiesMotsMin = mapOf(4 to false, 5 to false, 6 to false, 7 to false, 8 to false),
     partiesParSeuilScore = mapOf(20 to 0, 30 to 0, 40 to 0, 50 to 0, 60 to 0, 70 to 0, 80 to 0, 90 to 0),
     partiesSoloTotal = 0,
     defisTotal = 0,
-    meilleureSerieDefi = 0,
+    meilleuresSeriesDefi = emptyMap(),
     meilleuresReussitesDefiChrono = emptyMap(),
 )
 
@@ -22,8 +22,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `48 trophees au total`() {
-        assertEquals(48, CatalogueTrophees.TOUS.size)
+    fun `69 trophees au total`() {
+        assertEquals(69, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -58,17 +58,29 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `series de defi a paliers independants`() {
-        val stats = statsVides().copy(meilleureSerieDefi = 4)
-        assertTrue(trophee("defi_serie_3").estDebloque(stats))
-        assertFalse(trophee("defi_serie_5").estDebloque(stats))
+    fun `series de defi a paliers independants, par mode`() {
+        val stats = statsVides().copy(meilleuresSeriesDefi = mapOf("CHIFFRES" to 4))
+        assertTrue(trophee("defi_serie_chiffres_3").estDebloque(stats))
+        assertFalse(trophee("defi_serie_chiffres_5").estDebloque(stats))
+        // Un autre mode n'est pas affecté.
+        assertFalse(trophee("defi_serie_lettres_3").estDebloque(stats))
     }
 
     @Test
-    fun `series de defi va jusqu'a 20`() {
-        val stats = statsVides().copy(meilleureSerieDefi = 16)
-        assertTrue(trophee("defi_serie_15").estDebloque(stats))
-        assertFalse(trophee("defi_serie_20").estDebloque(stats))
+    fun `series de defi va jusqu'a 50`() {
+        val stats = statsVides().copy(meilleuresSeriesDefi = mapOf("LETTRES" to 32))
+        assertTrue(trophee("defi_serie_lettres_30").estDebloque(stats))
+        assertFalse(trophee("defi_serie_lettres_50").estDebloque(stats))
+    }
+
+    @Test
+    fun `mots par longueur ont des paliers independants, de 4 a 10 lettres`() {
+        val stats = statsVides().copy(motsParLongueur = mapOf(4 to 1, 10 to 12))
+        assertTrue(trophee("mot_4_1").estDebloque(stats))
+        assertFalse(trophee("mot_4_10").estDebloque(stats))
+        assertTrue(trophee("mot_10_1").estDebloque(stats))
+        assertTrue(trophee("mot_10_10").estDebloque(stats))
+        assertFalse(trophee("mot_5_1").estDebloque(stats))
     }
 
     @Test
