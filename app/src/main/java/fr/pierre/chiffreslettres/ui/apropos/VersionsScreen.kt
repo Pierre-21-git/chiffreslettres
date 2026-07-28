@@ -17,6 +17,14 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.38",
+        date = "2026-07-28",
+        changements = listOf(
+            "Trophées : couleurs des pastilles Argent/Platine/Diamant plus marquées et " +
+                "mieux différenciées (retour utilisateur, elles se confondaient trop).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.37",
         date = "2026-07-28",
         changements = listOf(

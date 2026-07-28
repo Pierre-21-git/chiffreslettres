@@ -27,8 +27,13 @@ val RougeEncre = Color(0xFFFBEEE9)
 val TextMuted = Color(0xFFCBB98A)
 val TextFaint = Color(0xFF8A8267)
 
-/** Paliers de trophées (retour utilisateur) : Or réutilise Brass/BrassBright, déjà doré. */
+/**
+ * Paliers de trophées (retour utilisateur) : Or réutilise Brass/BrassBright, déjà doré.
+ * Argent/Platine/Diamant repoussés vers des teintes bien séparées (gris neutre / vert menthe /
+ * cyan vif) — retour utilisateur : les trois se confondaient trop, toutes proches d'un même
+ * bleu-gris pâle.
+ */
 val PalierBronze = Color(0xFFCD7F32)
-val PalierArgent = Color(0xFFB8C0C8)
-val PalierPlatine = Color(0xFFDCEAEA)
-val PalierDiamant = Color(0xFF7FD8F0)
+val PalierArgent = Color(0xFF9AA5B1)
+val PalierPlatine = Color(0xFF7FE3C4)
+val PalierDiamant = Color(0xFF33D2FF)

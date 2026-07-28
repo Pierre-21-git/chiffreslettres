@@ -149,8 +149,8 @@ private fun TuileTrophee(trophee: Trophee, debloque: Boolean, onClick: () -> Uni
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(couleur.copy(alpha = 0.25f))
-                .border(1.5.dp, couleur, CircleShape),
+                .background(couleur.copy(alpha = 0.35f))
+                .border(2.dp, couleur, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
             Text("🏆", fontSize = 18.sp)
