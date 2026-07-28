@@ -36,6 +36,9 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
     fun meilleuresPartiesSoloParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>> =
         dao.meilleuresPartiesSoloParNiveau(profilId, niveauCode)
 
+    fun historiqueScoresParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>> =
+        dao.historiqueScoresParNiveau(profilId, niveauCode)
+
     suspend fun reinitialiserHistoriqueJoueur(profilId: Long) = dao.reinitialiserHistoriqueJoueur(profilId)
 
     /** Tout l'historique brut d'un joueur — "Exporter mes statistiques". */

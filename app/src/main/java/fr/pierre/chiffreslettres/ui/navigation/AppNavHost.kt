@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
@@ -38,6 +39,7 @@ import fr.pierre.chiffreslettres.data.TypeDefi
 import fr.pierre.chiffreslettres.data.TypePartie
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
+import fr.pierre.chiffreslettres.widget.DefiQuotidienWidgetProvider
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.apropos.AProposScreen
 import fr.pierre.chiffreslettres.ui.apropos.ReglesDuJeuScreen
@@ -96,6 +98,7 @@ fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
+    val context = LocalContext.current
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
     val profilActifIdStore by profilActifStore.profilActifId.collectAsState(initial = null)
     val profilActif = profils.find { it.id == profilActifIdStore } ?: profils.firstOrNull()
@@ -479,6 +482,7 @@ fun AppNavHost(
                     if (objectifAtteint) {
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
+                        DefiQuotidienWidgetProvider.demanderMiseAJour(context)
                     }
                 }
             }
@@ -545,6 +549,7 @@ fun AppNavHost(
                     if (objectifAtteint) {
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
+                        DefiQuotidienWidgetProvider.demanderMiseAJour(context)
                     }
                 }
             }
@@ -618,6 +623,7 @@ fun AppNavHost(
                     if (objectifAtteint) {
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
+                        DefiQuotidienWidgetProvider.demanderMiseAJour(context)
                     }
                 }
             }
@@ -697,6 +703,7 @@ fun AppNavHost(
                     if (objectifAtteint) {
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
+                        DefiQuotidienWidgetProvider.demanderMiseAJour(context)
                     }
                 }
             }

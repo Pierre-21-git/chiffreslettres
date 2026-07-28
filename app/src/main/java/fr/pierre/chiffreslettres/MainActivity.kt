@@ -2,7 +2,9 @@ package fr.pierre.chiffreslettres
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -28,6 +30,8 @@ import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.dictionary.DictionnaireProvider
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
+import fr.pierre.chiffreslettres.rappel.creerCanalNotificationRappel
+import fr.pierre.chiffreslettres.rappel.planifierRappelQuotidien
 import fr.pierre.chiffreslettres.ui.navigation.AppNavHost
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
@@ -36,6 +40,8 @@ import fr.pierre.chiffreslettres.ui.theme.ChiffresLettresTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        creerCanalNotificationRappel(this)
+        planifierRappelQuotidien(this)
         setContent {
             ChiffresLettresTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -56,6 +62,14 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
 
     LaunchedEffect(Unit) {
         dictionnaire = DictionnaireProvider.obtenir(context.applicationContext)
+    }
+
+    // Demande la permission de notification une fois au lancement (retour utilisateur : sans
+    // elle, le rappel de défi quotidien planifié ci-dessous ne peut rien afficher).
+    val lanceurPermissionNotification =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {}
+    LaunchedEffect(Unit) {
+        lanceurPermissionNotification.launch(android.Manifest.permission.POST_NOTIFICATIONS)
     }
 
     val db = remember { AppDatabaseProvider.obtenir(context.applicationContext) }

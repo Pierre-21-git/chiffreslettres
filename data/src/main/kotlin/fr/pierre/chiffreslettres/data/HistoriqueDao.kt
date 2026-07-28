@@ -73,6 +73,22 @@ interface HistoriqueDao {
     fun meilleuresPartiesSoloParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>>
 
     /**
+     * Historique chronologique (toutes les parties, pas seulement le podium) des scores d'un
+     * joueur pour un niveau donné — graphique de progression sur l'onglet "Mes statistiques".
+     */
+    @Query(
+        """
+        SELECT s.scoreTotal AS score, s.date AS date
+        FROM SessionEntity s
+        INNER JOIN MancheEntity m ON m.sessionId = s.id
+        WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE' AND m.niveauCode = :niveauCode
+        GROUP BY s.id
+        ORDER BY s.date ASC
+        """,
+    )
+    fun historiqueScoresParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>>
+
+    /**
      * Vide l'historique (sessions + manches, cascade) d'un seul joueur — bouton
      * "Réinitialiser mes statistiques" sur l'onglet Joueurs (ne touche pas les autres profils).
      */

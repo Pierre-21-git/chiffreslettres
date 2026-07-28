@@ -3,6 +3,7 @@ package fr.pierre.chiffreslettres.ui.statistiques
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -250,12 +254,53 @@ fun MesStatistiquesScreen(
         for ((position, niveau) in Niveau.entries.withIndex()) {
             val meilleuresFlow = remember(niveau) { historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name) }
             val meilleures by meilleuresFlow.collectAsState(initial = emptyList())
+            val historiqueFlow = remember(niveau) { historiqueRepository.historiqueScoresParNiveau(profilId, niveau.name) }
+            val historique by historiqueFlow.collectAsState(initial = emptyList())
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(niveau.label, style = MaterialTheme.typography.titleSmall)
                 Podium(meilleures.map { EntreePodium(null, it.score, it.date) })
+                GraphiqueProgression(historique.map { it.score })
             }
             if (position != Niveau.entries.lastIndex) HorizontalDivider()
         }
+    }
+}
+
+/**
+ * Courbe de progression des scores dans l'ordre chronologique des parties (retour utilisateur :
+ * complément du podium, pour voir la tendance plutôt que seulement les 3 meilleurs scores).
+ * Dessinée à la main (Canvas) plutôt qu'avec une dépendance de graphique, l'usage étant limité
+ * à une simple courbe de points reliés.
+ */
+@Composable
+private fun GraphiqueProgression(scores: List<Int>) {
+    if (scores.size < 2) {
+        Text(
+            "Pas encore assez de parties pour un graphique de progression.",
+            style = MaterialTheme.typography.labelSmall,
+            color = TextMuted,
+        )
+        return
+    }
+    val scoreMax = maxOf(scores.max(), 1)
+    Canvas(modifier = Modifier.fillMaxWidth().height(70.dp)) {
+        val pas = if (scores.size > 1) size.width / (scores.size - 1) else 0f
+        fun position(index: Int, score: Int) =
+            Offset(index * pas, size.height - (score.toFloat() / scoreMax) * size.height)
+
+        val chemin = Path()
+        scores.forEachIndexed { index, score ->
+            val point = position(index, score)
+            if (index == 0) chemin.moveTo(point.x, point.y) else chemin.lineTo(point.x, point.y)
+        }
+        drawPath(chemin, color = BrassBright, style = Stroke(width = 3.dp.toPx()))
+        scores.forEachIndexed { index, score ->
+            drawCircle(color = BrassBright, radius = 3.dp.toPx(), center = position(index, score))
+        }
+    }
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text("${scores.size} parties", style = MaterialTheme.typography.labelSmall, color = TextMuted)
+        Text("meilleur : $scoreMax pts", style = MaterialTheme.typography.labelSmall, color = TextMuted)
     }
 }
 

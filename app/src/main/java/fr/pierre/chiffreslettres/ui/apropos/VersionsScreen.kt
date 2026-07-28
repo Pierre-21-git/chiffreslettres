@@ -17,6 +17,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.36",
+        date = "2026-07-28",
+        changements = listOf(
+            "Mes statistiques : graphique de progression des scores dans le temps, par " +
+                "niveau, en plus du podium des meilleurs scores.",
+            "Rappel quotidien (notification) si un ou plusieurs profils n'ont pas encore " +
+                "fait le défi du jour — un seul rappel groupé pour toute la famille, pas " +
+                "un par profil.",
+            "Nouveau widget écran d'accueil : statut du défi quotidien (fait / pas fait, " +
+                "série en cours) pour chaque profil, jusqu'à 6.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.35",
         date = "2026-07-28",
         changements = listOf(
