@@ -17,8 +17,6 @@ object Routes {
     const val CHANGER_PROFIL = "profil/changer"
     const val CREER_PROFIL = "profil/creer"
 
-    const val STATISTIQUES = "statistiques"
-
     const val ARG_PROFIL_ID = "profilId"
     const val STATISTIQUES_JOUEUR_PATTERN = "statistiques/joueur/{$ARG_PROFIL_ID}"
     const val MES_STATISTIQUES_PATTERN = "statistiques/joueur/{$ARG_PROFIL_ID}/mesStatistiques"

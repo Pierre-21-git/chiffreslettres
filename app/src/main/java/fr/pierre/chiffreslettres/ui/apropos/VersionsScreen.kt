@@ -17,6 +17,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.30",
+        date = "2026-07-28",
+        changements = listOf(
+            "Statistiques : la tuile de l'accueil mène désormais directement à sa propre " +
+                "fiche, sans passer par une liste de tous les profils — cloisonnement encore " +
+                "plus strict (retour utilisateur). Le classement général (Statistiques " +
+                "générales), lui, reste commun à tous les profils.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.29",
         date = "2026-07-28",
         changements = listOf(

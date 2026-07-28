@@ -49,44 +49,14 @@ fun formatDate(epochMillis: Long): String =
     Instant.ofEpochMilli(epochMillis).atZone(ZoneId.systemDefault()).format(FORMAT_DATE)
 
 /**
- * Liste des profils (retour utilisateur : plus d'onglets) : un simple choix de profil, qui mène
- * à sa fiche ([StatistiquesJoueurScreen]).
- */
-@Composable
-fun StatistiquesScreen(
-    profilRepository: ProfilRepository,
-    onProfilChoisi: (profilId: Long) -> Unit,
-    onRetour: (() -> Unit)? = null,
-) {
-    val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
-
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        EnTeteEcran("Statistiques", onRetour)
-
-        if (profils.isEmpty()) {
-            Text("Aucun profil.", style = MaterialTheme.typography.bodyMedium)
-        } else {
-            for (profil in profils) {
-                Button(onClick = { onProfilChoisi(profil.id) }, modifier = Modifier.fillMaxWidth()) {
-                    Text(profil.pseudo)
-                }
-            }
-        }
-    }
-}
-
-/**
- * Fiche d'un profil (retour utilisateur : simple menu, plus d'onglets) : accès à ses propres
- * statistiques ([MesStatistiquesScreen]), au classement général commun à tous les profils
- * ([StatistiquesGeneralesScreen]), à ses trophées, et à la réinitialisation.
+ * Fiche du profil actif (retour utilisateur : accès direct, plus de liste de profils à
+ * parcourir — cloisonnement des profils, on ne voit que ses propres données) : accès à ses
+ * propres statistiques ([MesStatistiquesScreen]), au classement général commun à tous les
+ * profils ([StatistiquesGeneralesScreen]), à ses trophées, et à la réinitialisation.
  */
 @Composable
 fun StatistiquesJoueurScreen(
     profilId: Long,
-    profilActifId: Long,
     historiqueRepository: HistoriqueRepository,
     defiRepository: DefiRepository,
     profilRepository: ProfilRepository,
@@ -98,7 +68,6 @@ fun StatistiquesJoueurScreen(
 ) {
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
     val profil = profils.find { it.id == profilId }
-    val estProfilActif = profilId == profilActifId
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     var confirmationReinitialisation by remember { mutableStateOf(false) }
@@ -147,29 +116,17 @@ fun StatistiquesJoueurScreen(
             Text("Voir mes trophées")
         }
 
-        // Export/import/réinitialisation réservés au profil actif (retour utilisateur,
-        // cloisonnement des profils) : éviter qu'on modifie par erreur les données d'un
-        // autre profil juste en consultant sa fiche depuis la liste "Statistiques".
-        if (estProfilActif) {
-            HorizontalDivider()
-            Button(
-                onClick = { lanceurExport.launch("statistiques-${nomFichier(profil?.pseudo)}.json") },
-                modifier = Modifier.fillMaxWidth(),
-            ) { Text("Exporter mes statistiques") }
-            Button(
-                onClick = { lanceurImport.launch(arrayOf("application/json")) },
-                modifier = Modifier.fillMaxWidth(),
-            ) { Text("Importer mes statistiques") }
-            Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
-                Text("Réinitialiser mes statistiques")
-            }
-        } else if (profil != null) {
-            HorizontalDivider()
-            Text(
-                "Change de profil actif pour exporter, importer ou réinitialiser les " +
-                    "statistiques de ${profil.pseudo}.",
-                style = MaterialTheme.typography.bodyMedium,
-            )
+        HorizontalDivider()
+        Button(
+            onClick = { lanceurExport.launch("statistiques-${nomFichier(profil?.pseudo)}.json") },
+            modifier = Modifier.fillMaxWidth(),
+        ) { Text("Exporter mes statistiques") }
+        Button(
+            onClick = { lanceurImport.launch(arrayOf("application/json")) },
+            modifier = Modifier.fillMaxWidth(),
+        ) { Text("Importer mes statistiques") }
+        Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
+            Text("Réinitialiser mes statistiques")
         }
     }
 

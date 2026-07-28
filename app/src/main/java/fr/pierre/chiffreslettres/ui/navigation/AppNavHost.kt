@@ -63,7 +63,6 @@ import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
 import fr.pierre.chiffreslettres.ui.statistiques.MesStatistiquesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesGeneralesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesJoueurScreen
-import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesScreen
 import fr.pierre.chiffreslettres.ui.trophees.TropheesScreen
 import java.time.LocalDate
 import kotlinx.coroutines.launch
@@ -111,7 +110,7 @@ fun AppNavHost(
                 onDefiSerie = { navController.navigate(Routes.CHOIX_DEFI_SERIE) },
                 onDefiChrono = { navController.navigate(Routes.CHOIX_DEFI_CHRONO) },
                 onDefiQuotidien = { navController.navigate(Routes.CHOIX_DEFI_QUOTIDIEN) },
-                onStatistiques = { navController.navigate(Routes.STATISTIQUES) },
+                onStatistiques = { navController.navigate(Routes.statistiquesJoueur(profilId)) },
                 onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                 onAPropos = { navController.navigate(Routes.A_PROPOS) },
             )
@@ -177,14 +176,6 @@ fun AppNavHost(
             )
         }
 
-        composable(Routes.STATISTIQUES) {
-            StatistiquesScreen(
-                profilRepository = profilRepository,
-                onProfilChoisi = { profilIdChoisi -> navController.navigate(Routes.statistiquesJoueur(profilIdChoisi)) },
-                onRetour = { navController.popBackStack() },
-            )
-        }
-
         composable(
             route = Routes.STATISTIQUES_JOUEUR_PATTERN,
             arguments = listOf(navArgument(Routes.ARG_PROFIL_ID) { type = NavType.LongType }),
@@ -192,7 +183,6 @@ fun AppNavHost(
             val profilIdArg = backStackEntry.arguments!!.getLong(Routes.ARG_PROFIL_ID)
             StatistiquesJoueurScreen(
                 profilId = profilIdArg,
-                profilActifId = profilId,
                 historiqueRepository = historiqueRepository,
                 defiRepository = defiRepository,
                 profilRepository = profilRepository,
