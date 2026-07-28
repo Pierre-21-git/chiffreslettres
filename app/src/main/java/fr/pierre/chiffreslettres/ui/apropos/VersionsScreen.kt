@@ -17,6 +17,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.31",
+        date = "2026-07-28",
+        changements = listOf(
+            "Avatar et pseudo nettement mis en avant, selon les propositions choisies : sur " +
+                "l'accueil, grand badge circulaire (72dp, emoji 40sp) et pseudo (24sp) centrés " +
+                "dans leur propre bloc sous le logo ; sur les autres écrans, mini-bandeau " +
+                "avatar (36dp, 28sp) + pseudo (16sp), plus visible que la puce fine d'avant.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.30",
         date = "2026-07-28",
         changements = listOf(

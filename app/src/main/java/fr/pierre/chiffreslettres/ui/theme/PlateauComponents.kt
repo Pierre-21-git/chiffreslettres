@@ -75,58 +75,68 @@ private fun decouperAvatarPseudo(pseudoAvecAvatar: String): Pair<String, String>
     return if (parts.size == 2) parts[0] to parts[1] else "" to pseudoAvecAvatar
 }
 
-/** Puce compacte utilisée sur les écrans secondaires (retour utilisateur : avatar mis en valeur, un peu plus grand que le pseudo). */
+/**
+ * Mini-bandeau profil utilisé sur les écrans secondaires (retour utilisateur : avatar et pseudo
+ * bien plus visibles qu'avant, quitte à prendre un peu plus de hauteur).
+ */
 @Composable
 fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
     val (avatar, nom) = decouperAvatarPseudo(pseudo)
-    Box(
+    Row(
         modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(50))
+            .clip(RoundedCornerShape(16.dp))
             .background(Ivory.copy(alpha = 0.06f))
-            .border(1.dp, Ivory.copy(alpha = 0.18f), RoundedCornerShape(50))
+            .border(1.dp, Ivory.copy(alpha = 0.18f), RoundedCornerShape(16.dp))
             .let { if (onClick != null) it.clickable(onClick = onClick) else it }
-            .padding(horizontal = 14.dp, vertical = 6.dp),
-        contentAlignment = Alignment.Center,
+            .padding(horizontal = 14.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text("Profil actif ", color = TextMuted, fontSize = 11.sp, letterSpacing = 0.5.sp)
-            if (avatar.isNotEmpty()) Text(avatar, fontSize = 16.sp)
-            Text(nom, color = TextMuted, fontSize = 12.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(Ivory.copy(alpha = 0.1f))
+                .border(1.dp, BrassBright.copy(alpha = 0.6f), CircleShape),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (avatar.isNotEmpty()) Text(avatar, fontSize = 28.sp)
         }
+        Text(nom, color = TextMuted, fontSize = 16.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.3.sp)
     }
 }
 
 /**
  * Bandeau profil mis en valeur pour l'accueil (retour utilisateur : avatar bien plus visible
- * qu'ailleurs) — grand badge circulaire + pseudo en gras, plutôt que la puce compacte [PucePseudo]
- * utilisée sur les écrans secondaires.
+ * qu'ailleurs) — grand badge circulaire + pseudo en gras, centrés dans leur propre bloc, plutôt
+ * que la puce compacte [PucePseudo] utilisée sur les écrans secondaires.
  */
 @Composable
 fun BandeauProfilAccueil(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
     val (avatar, nom) = decouperAvatarPseudo(pseudo)
-    Row(
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(50))
+            .clip(RoundedCornerShape(20.dp))
             .background(Ivory.copy(alpha = 0.08f))
-            .border(1.dp, BrassBright.copy(alpha = 0.4f), RoundedCornerShape(50))
+            .border(1.dp, BrassBright.copy(alpha = 0.4f), RoundedCornerShape(20.dp))
             .let { if (onClick != null) it.clickable(onClick = onClick) else it }
-            .padding(horizontal = 14.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+            .padding(vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Box(
             modifier = Modifier
-                .size(48.dp)
+                .size(72.dp)
                 .clip(CircleShape)
                 .background(Ivory.copy(alpha = 0.1f))
-                .border(1.5.dp, BrassBright, CircleShape),
+                .border(2.dp, BrassBright, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            if (avatar.isNotEmpty()) Text(avatar, fontSize = 26.sp)
+            if (avatar.isNotEmpty()) Text(avatar, fontSize = 40.sp)
         }
-        Text(nom, color = Ivory, fontWeight = FontWeight.Bold, fontSize = 18.sp, letterSpacing = 0.3.sp)
+        Text(nom, color = Ivory, fontWeight = FontWeight.Bold, fontSize = 24.sp, letterSpacing = 0.3.sp)
     }
 }
 
