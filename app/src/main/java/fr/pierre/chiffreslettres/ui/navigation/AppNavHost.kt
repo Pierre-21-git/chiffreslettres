@@ -477,9 +477,13 @@ fun AppNavHost(
             val index by defiVm.index.collectAsState()
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
+            // Compte de réussites confirmées, y compris la manche qui vient de se terminer avec
+            // succès mais pas encore validée par "Continuer" (retour utilisateur : le défi
+            // quotidien doit s'arrêter DÈS que l'objectif est atteint, pas à la manche suivante).
+            val objectifAtteint = jourQuotidien != null && (if (termine) index else index + 1) >= objectifQuotidien
             if (jourQuotidien != null) {
-                LaunchedEffect(termine) {
-                    if (termine && index >= objectifQuotidien) {
+                LaunchedEffect(objectifAtteint) {
+                    if (objectifAtteint) {
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
                     }
@@ -506,7 +510,9 @@ fun AppNavHost(
                     navController.popBackStack(cible, inclusive = false)
                 },
                 actionsFinManche = {
-                    if (termine) {
+                    if (objectifAtteint) {
+                        DefiQuotidienGagne(onTerminer = { navController.popBackStack(Routes.CHOIX_DEFI_QUOTIDIEN, inclusive = false) })
+                    } else if (termine) {
                         ActionsFinDefi(
                             message = "Série terminée : $index réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
@@ -540,9 +546,10 @@ fun AppNavHost(
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
             val seuil = seuilLongueurDefiLettres(niveau)
+            val objectifAtteint = jourQuotidien != null && (if (termine) index else index + 1) >= objectifQuotidien
             if (jourQuotidien != null) {
-                LaunchedEffect(termine) {
-                    if (termine && index >= objectifQuotidien) {
+                LaunchedEffect(objectifAtteint) {
+                    if (objectifAtteint) {
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
                     }
@@ -569,7 +576,9 @@ fun AppNavHost(
                     navController.popBackStack(cible, inclusive = false)
                 },
                 actionsFinManche = {
-                    if (termine) {
+                    if (objectifAtteint) {
+                        DefiQuotidienGagne(onTerminer = { navController.popBackStack(Routes.CHOIX_DEFI_QUOTIDIEN, inclusive = false) })
+                    } else if (termine) {
                         ActionsFinDefi(
                             message = "Série terminée : $index réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
@@ -610,9 +619,10 @@ fun AppNavHost(
             val reussites by defiVm.reussites.collectAsState()
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
+            val objectifAtteint = jourQuotidien != null && (if (termine) reussites else reussites + 1) >= objectifQuotidien
             if (jourQuotidien != null) {
-                LaunchedEffect(termine) {
-                    if (termine && reussites >= objectifQuotidien) {
+                LaunchedEffect(objectifAtteint) {
+                    if (objectifAtteint) {
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
                     }
@@ -642,7 +652,9 @@ fun AppNavHost(
                     navController.popBackStack(cible, inclusive = false)
                 },
                 actionsFinManche = {
-                    if (termine) {
+                    if (objectifAtteint) {
+                        DefiQuotidienGagne(onTerminer = { navController.popBackStack(Routes.CHOIX_DEFI_QUOTIDIEN, inclusive = false) })
+                    } else if (termine) {
                         ActionsFinDefi(
                             message = "Défi terminé : $reussites réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
@@ -686,9 +698,10 @@ fun AppNavHost(
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
             val seuil = seuilLongueurDefiLettres(niveau)
+            val objectifAtteint = jourQuotidien != null && (if (termine) reussites else reussites + 1) >= objectifQuotidien
             if (jourQuotidien != null) {
-                LaunchedEffect(termine) {
-                    if (termine && reussites >= objectifQuotidien) {
+                LaunchedEffect(objectifAtteint) {
+                    if (objectifAtteint) {
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
                     }
@@ -715,7 +728,9 @@ fun AppNavHost(
                     navController.popBackStack(cible, inclusive = false)
                 },
                 actionsFinManche = {
-                    if (termine) {
+                    if (objectifAtteint) {
+                        DefiQuotidienGagne(onTerminer = { navController.popBackStack(Routes.CHOIX_DEFI_QUOTIDIEN, inclusive = false) })
+                    } else if (termine) {
                         ActionsFinDefi(
                             message = "Défi terminé : $reussites réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
@@ -742,5 +757,18 @@ private fun ActionsFinDefi(message: String, onRecommencer: () -> Unit, onChanger
         Text(message)
         Button(onClick = onRecommencer, modifier = Modifier.fillMaxWidth()) { Text("Recommencer") }
         OutlinedButton(onClick = onChangerNiveau, modifier = Modifier.fillMaxWidth()) { Text("Changer de niveau") }
+    }
+}
+
+/**
+ * Panneau affiché dès que l'objectif du défi quotidien est atteint (retour utilisateur : il ne
+ * faut pas laisser continuer à jouer après la réussite, contrairement au défi série/chrono
+ * classique qui n'a pas d'objectif).
+ */
+@Composable
+private fun DefiQuotidienGagne(onTerminer: () -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text("Défi quotidien remporté !")
+        Button(onClick = onTerminer, modifier = Modifier.fillMaxWidth()) { Text("Terminer") }
     }
 }

@@ -99,13 +99,15 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
                 modifier = modifier,
             )
         }
-        etapeGate == EtapeGateProfil.SELECTION -> {
+        // Un seul profil : rien à choisir, la sélection n'apporte rien (retour utilisateur).
+        etapeGate == EtapeGateProfil.SELECTION && profils.size > 1 -> {
             ChangerProfilScreen(
                 profilRepository = profilRepository,
                 profilActifStore = profilActifStore,
                 onProfilChoisi = { etapeGate = EtapeGateProfil.CONFIRME },
                 onCreerNouveauProfil = { etapeGate = EtapeGateProfil.CREATION },
                 onRetour = null,
+                modifier = modifier,
             )
         }
         else -> {

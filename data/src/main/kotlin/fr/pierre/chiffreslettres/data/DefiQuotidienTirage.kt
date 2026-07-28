@@ -10,10 +10,11 @@ import kotlin.random.Random
 data class TirageDefiQuotidien(val mode: ModeJeu, val type: TypeDefi, val objectif: Int)
 
 object DefiQuotidienTirage {
-    private const val OBJECTIF_MIN_SERIE = 5
-    private const val OBJECTIF_MAX_SERIE = 10
-    private const val OBJECTIF_MIN_CHRONO = 4
-    private const val OBJECTIF_MAX_CHRONO = 8
+    // Réduit après retour utilisateur (5-10 jugé trop long pour un défi quotidien "rapide").
+    private const val OBJECTIF_MIN_SERIE = 3
+    private const val OBJECTIF_MAX_SERIE = 5
+    private const val OBJECTIF_MIN_CHRONO = 3
+    private const val OBJECTIF_MAX_CHRONO = 5
 
     /** [jour] au format ISO (yyyy-MM-dd, cf. `LocalDate.toString()`). */
     fun pour(profilId: Long, jour: String): TirageDefiQuotidien {

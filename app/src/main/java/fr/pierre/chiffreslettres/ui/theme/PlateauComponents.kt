@@ -69,8 +69,16 @@ fun MarqueJeu(modifier: Modifier = Modifier) {
     }
 }
 
+/** Sépare "🦊 Pierre" (convention utilisée partout où l'avatar est préfixé au pseudo) en (avatar, pseudo). */
+private fun decouperAvatarPseudo(pseudoAvecAvatar: String): Pair<String, String> {
+    val parts = pseudoAvecAvatar.split(" ", limit = 2)
+    return if (parts.size == 2) parts[0] to parts[1] else "" to pseudoAvecAvatar
+}
+
+/** Puce compacte utilisée sur les écrans secondaires (retour utilisateur : avatar mis en valeur, un peu plus grand que le pseudo). */
 @Composable
 fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
+    val (avatar, nom) = decouperAvatarPseudo(pseudo)
     Box(
         modifier
             .fillMaxWidth()
@@ -81,12 +89,44 @@ fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Un
             .padding(horizontal = 14.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            "Profil actif  $pseudo",
-            color = TextMuted,
-            fontSize = 11.sp,
-            letterSpacing = 0.5.sp,
-        )
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text("Profil actif ", color = TextMuted, fontSize = 11.sp, letterSpacing = 0.5.sp)
+            if (avatar.isNotEmpty()) Text(avatar, fontSize = 16.sp)
+            Text(nom, color = TextMuted, fontSize = 12.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
+        }
+    }
+}
+
+/**
+ * Bandeau profil mis en valeur pour l'accueil (retour utilisateur : avatar bien plus visible
+ * qu'ailleurs) — grand badge circulaire + pseudo en gras, plutôt que la puce compacte [PucePseudo]
+ * utilisée sur les écrans secondaires.
+ */
+@Composable
+fun BandeauProfilAccueil(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
+    val (avatar, nom) = decouperAvatarPseudo(pseudo)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(50))
+            .background(Ivory.copy(alpha = 0.08f))
+            .border(1.dp, BrassBright.copy(alpha = 0.4f), RoundedCornerShape(50))
+            .let { if (onClick != null) it.clickable(onClick = onClick) else it }
+            .padding(horizontal = 14.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(Ivory.copy(alpha = 0.1f))
+                .border(1.5.dp, BrassBright, CircleShape),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (avatar.isNotEmpty()) Text(avatar, fontSize = 26.sp)
+        }
+        Text(nom, color = Ivory, fontWeight = FontWeight.Bold, fontSize = 18.sp, letterSpacing = 0.3.sp)
     }
 }
 

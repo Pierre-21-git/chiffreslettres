@@ -26,14 +26,10 @@ class DefiQuotidienTirageTest {
     }
 
     @Test
-    fun `objectif serie dans la plage 5 a 10`() {
+    fun `objectif dans la plage 3 a 5`() {
         for (jour in 1..28) {
             val tirage = DefiQuotidienTirage.pour(profilId = 42, jour = "2026-0${1 + jour % 9}-${"%02d".format(jour)}")
-            if (tirage.type == TypeDefi.SERIE) {
-                assertTrue("objectif=${tirage.objectif}", tirage.objectif in 5..10)
-            } else {
-                assertTrue("objectif=${tirage.objectif}", tirage.objectif in 4..8)
-            }
+            assertTrue("objectif=${tirage.objectif}", tirage.objectif in 3..5)
         }
     }
 }

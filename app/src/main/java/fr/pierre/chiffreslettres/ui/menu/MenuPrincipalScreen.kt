@@ -12,9 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.ui.theme.BandeDoree
+import fr.pierre.chiffreslettres.ui.theme.BandeauProfilAccueil
 import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.MarqueJeu
-import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
 import fr.pierre.chiffreslettres.ui.theme.fondPlateau
 
@@ -41,7 +41,7 @@ fun MenuPrincipalScreen(
         Spacer(Modifier.height(24.dp))
         MarqueJeu(modifier = Modifier.fillMaxWidth())
         BandeDoree(modifier = Modifier.padding(horizontal = 16.dp))
-        PucePseudo(pseudoActif)
+        BandeauProfilAccueil(pseudoActif, onClick = onChangerProfil)
 
         TuilePrincipale("Entraînement", onClick = onEntrainementLibre)
         TuilePrincipale("Partie classique", onClick = onPartieStructuree)

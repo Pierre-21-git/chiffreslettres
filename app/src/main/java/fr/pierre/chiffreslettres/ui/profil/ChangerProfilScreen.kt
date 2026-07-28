@@ -40,6 +40,7 @@ fun ChangerProfilScreen(
     onProfilChoisi: () -> Unit,
     onCreerNouveauProfil: () -> Unit,
     onRetour: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
 ) {
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
     val scope = rememberCoroutineScope()
@@ -47,7 +48,7 @@ fun ChangerProfilScreen(
     var profilASupprimer by remember { mutableStateOf<ProfilEntity?>(null) }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         EnTeteEcran("Choisir un profil", onRetour)

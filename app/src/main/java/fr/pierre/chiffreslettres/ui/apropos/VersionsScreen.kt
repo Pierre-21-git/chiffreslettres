@@ -17,6 +17,23 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.29",
+        date = "2026-07-28",
+        changements = listOf(
+            "Corrigé : le défi quotidien continuait de proposer \"Continuer\" après avoir " +
+                "atteint l'objectif du jour, sans jamais l'annoncer — il s'arrête désormais " +
+                "immédiatement avec un message de victoire dès l'objectif atteint.",
+            "Objectif du défi quotidien réduit (3 à 5, au lieu de 4 à 10) après retour " +
+                "utilisateur : trop long pour un défi pensé pour être rapide.",
+            "L'écran de choix de profil au démarrage est désormais sauté automatiquement " +
+                "s'il n'y a qu'un seul profil (rien à choisir).",
+            "Corrigé : le titre \"Choisir un profil\" passait sous la bande système au tout " +
+                "premier écran affiché par l'app.",
+            "Avatar et pseudo mis en valeur : gros badge circulaire sur l'accueil, avatar " +
+                "légèrement agrandi dans la puce compacte des autres écrans.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.28",
         date = "2026-07-28",
         changements = listOf(
