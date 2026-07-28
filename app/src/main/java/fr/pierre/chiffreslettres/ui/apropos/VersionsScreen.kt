@@ -17,6 +17,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.37",
+        date = "2026-07-28",
+        changements = listOf(
+            "Graphique de progression : quadrillage horizontal tous les 10 ou 20 points, " +
+                "et tirets en abscisse toutes les 10 ou 20 parties, pour une meilleure " +
+                "lisibilité (retour utilisateur).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.36",
         date = "2026-07-28",
         changements = listOf(

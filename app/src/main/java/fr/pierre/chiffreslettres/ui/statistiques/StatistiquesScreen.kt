@@ -35,6 +35,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -270,7 +272,8 @@ fun MesStatistiquesScreen(
  * Courbe de progression des scores dans l'ordre chronologique des parties (retour utilisateur :
  * complément du podium, pour voir la tendance plutôt que seulement les 3 meilleurs scores).
  * Dessinée à la main (Canvas) plutôt qu'avec une dépendance de graphique, l'usage étant limité
- * à une simple courbe de points reliés.
+ * à une simple courbe de points reliés. Quadrillage horizontal tous les 10 ou 20 points et
+ * tirets en abscisse toutes les 10 ou 20 parties (retour utilisateur, pour la lisibilité).
  */
 @Composable
 private fun GraphiqueProgression(scores: List<Int>) {
@@ -283,19 +286,51 @@ private fun GraphiqueProgression(scores: List<Int>) {
         return
     }
     val scoreMax = maxOf(scores.max(), 1)
-    Canvas(modifier = Modifier.fillMaxWidth().height(70.dp)) {
-        val pas = if (scores.size > 1) size.width / (scores.size - 1) else 0f
-        fun position(index: Int, score: Int) =
-            Offset(index * pas, size.height - (score.toFloat() / scoreMax) * size.height)
+    val pasGrille = if (scoreMax > 100) 20 else 10
+    val pasAbscisse = if (scores.size > 100) 20 else 10
+    val couleurGrille = TextMuted.copy(alpha = 0.35f)
+    val couleurGrilleArgb = couleurGrille.toArgb()
+    val decalageLabel = 22.dp
+
+    Canvas(modifier = Modifier.fillMaxWidth().height(90.dp)) {
+        val decalageLabelPx = decalageLabel.toPx()
+        val largeurGraphe = size.width - decalageLabelPx
+        val pasX = if (scores.size > 1) largeurGraphe / (scores.size - 1) else 0f
+        fun x(index: Int) = decalageLabelPx + index * pasX
+        fun y(score: Int) = size.height - (score.toFloat() / scoreMax) * size.height
+
+        val paintLabel = android.graphics.Paint().apply {
+            color = couleurGrilleArgb
+            textSize = 9.dp.toPx()
+        }
+        var valeurGrille = 0
+        while (valeurGrille <= scoreMax) {
+            val yGrille = y(valeurGrille)
+            drawLine(couleurGrille, Offset(decalageLabelPx, yGrille), Offset(size.width, yGrille), strokeWidth = 1.dp.toPx())
+            drawContext.canvas.nativeCanvas.drawText("$valeurGrille", 0f, yGrille + 3.dp.toPx(), paintLabel)
+            valeurGrille += pasGrille
+        }
+
+        var indexTiret = 0
+        while (indexTiret < scores.size) {
+            val xTiret = x(indexTiret)
+            drawLine(
+                couleurGrille,
+                Offset(xTiret, size.height),
+                Offset(xTiret, size.height - 4.dp.toPx()),
+                strokeWidth = 1.dp.toPx(),
+            )
+            indexTiret += pasAbscisse
+        }
 
         val chemin = Path()
         scores.forEachIndexed { index, score ->
-            val point = position(index, score)
+            val point = Offset(x(index), y(score))
             if (index == 0) chemin.moveTo(point.x, point.y) else chemin.lineTo(point.x, point.y)
         }
         drawPath(chemin, color = BrassBright, style = Stroke(width = 3.dp.toPx()))
         scores.forEachIndexed { index, score ->
-            drawCircle(color = BrassBright, radius = 3.dp.toPx(), center = position(index, score))
+            drawCircle(color = BrassBright, radius = 3.dp.toPx(), center = Offset(x(index), y(score)))
         }
     }
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
