@@ -17,6 +17,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.33",
+        date = "2026-07-28",
+        changements = listOf(
+            "Accueil : séparateur ajouté après le bouton \"Entraînement\".",
+            "Défi quotidien : objectif toujours fixé à 3 en lettres (au lieu de 3 à 5), " +
+                "trouver un mot valide étant plus dur qu'un compte exact.",
+            "Avatar des joueurs affiché dans le classement des Statistiques générales.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.32",
         date = "2026-07-28",
         changements = listOf(

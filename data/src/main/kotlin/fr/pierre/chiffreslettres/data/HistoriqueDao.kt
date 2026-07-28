@@ -8,7 +8,7 @@ import androidx.room.Relation
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
-data class LigneClassement(val profilId: Long, val pseudo: String, val score: Int, val date: Long)
+data class LigneClassement(val profilId: Long, val pseudo: String, val avatar: String, val score: Int, val date: Long)
 
 /** Une partie solo (score final + date), pour le classement personnel d'un joueur par niveau. */
 data class MeilleurePartieSolo(val score: Int, val date: Long)
@@ -47,7 +47,7 @@ interface HistoriqueDao {
      */
     @Query(
         """
-        SELECT p.id AS profilId, p.pseudo AS pseudo, s.scoreTotal AS score, s.date AS date
+        SELECT p.id AS profilId, p.pseudo AS pseudo, p.avatar AS avatar, s.scoreTotal AS score, s.date AS date
         FROM SessionEntity s
         INNER JOIN ProfilEntity p ON p.id = s.profilId
         INNER JOIN MancheEntity m ON m.sessionId = s.id

@@ -48,6 +48,9 @@ fun MenuPrincipalScreen(
         PucePseudo(pseudoActif, onClick = onChangerProfil, grand = true)
 
         TuilePrincipale("Entraînement", onClick = onEntrainementLibre)
+
+        HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))
+
         TuilePrincipale("Partie classique", onClick = onPartieStructuree)
         TuilePrincipale("Défi série", onClick = onDefiSerie)
         TuilePrincipale("Défi chrono", onClick = onDefiChrono)

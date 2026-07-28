@@ -274,7 +274,7 @@ fun StatistiquesGeneralesScreen(
                 } else {
                     for ((rang, ligne) in classement.withIndex()) {
                         Text(
-                            "${rang + 1}. ${ligne.pseudo} — ${ligne.score} points (${formatDate(ligne.date)})",
+                            "${rang + 1}. ${ligne.avatar} ${ligne.pseudo} — ${ligne.score} points (${formatDate(ligne.date)})",
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }

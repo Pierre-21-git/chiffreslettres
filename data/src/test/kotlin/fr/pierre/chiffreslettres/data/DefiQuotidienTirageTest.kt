@@ -26,10 +26,14 @@ class DefiQuotidienTirageTest {
     }
 
     @Test
-    fun `objectif dans la plage 3 a 5`() {
+    fun `objectif dans la plage 3 a 5 en chiffres, toujours 3 en lettres`() {
         for (jour in 1..28) {
             val tirage = DefiQuotidienTirage.pour(profilId = 42, jour = "2026-0${1 + jour % 9}-${"%02d".format(jour)}")
-            assertTrue("objectif=${tirage.objectif}", tirage.objectif in 3..5)
+            if (tirage.mode == ModeJeu.LETTRES) {
+                assertEquals(3, tirage.objectif)
+            } else {
+                assertTrue("objectif=${tirage.objectif}", tirage.objectif in 3..5)
+            }
         }
     }
 }
