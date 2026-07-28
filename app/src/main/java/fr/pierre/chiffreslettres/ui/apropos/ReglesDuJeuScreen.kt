@@ -110,7 +110,7 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
                 "Ça va encore, Nestor (3 manches par mode) — Chiffres : cible ≤ 100, les " +
                     "4 opérations, solution garantie, 100s. Lettres : X, Y, Z, W, K, Q " +
                     "exclues, 90s.",
-                "Ça se complique, Monique (4 manches par mode) — Chiffres : cible ≤ 200, " +
+                "Ça se complique, Monique (4 manches par mode) — Chiffres : cible ≤ 500, " +
                     "les 4 opérations, pas de garantie de solution, 60s. Lettres : X, Y, " +
                     "Z, W exclues, 50s.",
                 "Là c'est sérieux, Mathieu (5 manches par mode) — " +

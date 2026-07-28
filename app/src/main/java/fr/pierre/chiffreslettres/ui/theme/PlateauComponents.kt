@@ -76,12 +76,15 @@ private fun decouperAvatarPseudo(pseudoAvecAvatar: String): Pair<String, String>
 }
 
 /**
- * Mini-bandeau profil utilisé sur les écrans secondaires (retour utilisateur : avatar et pseudo
- * bien plus visibles qu'avant, quitte à prendre un peu plus de hauteur).
+ * Mini-bandeau profil (retour utilisateur : même style partout, accueil compris — avatar et
+ * pseudo bien visibles). [grand] agrandit encore le texte pour l'accueil.
  */
 @Composable
-fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
+fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, grand: Boolean = false) {
     val (avatar, nom) = decouperAvatarPseudo(pseudo)
+    val tailleAvatarBox = if (grand) 44.dp else 36.dp
+    val tailleAvatarTexte = if (grand) 34.sp else 28.sp
+    val tailleNom = if (grand) 20.sp else 16.sp
     Row(
         modifier
             .fillMaxWidth()
@@ -95,48 +98,15 @@ fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Un
     ) {
         Box(
             modifier = Modifier
-                .size(36.dp)
+                .size(tailleAvatarBox)
                 .clip(CircleShape)
                 .background(Ivory.copy(alpha = 0.1f))
                 .border(1.dp, BrassBright.copy(alpha = 0.6f), CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            if (avatar.isNotEmpty()) Text(avatar, fontSize = 28.sp)
+            if (avatar.isNotEmpty()) Text(avatar, fontSize = tailleAvatarTexte)
         }
-        Text(nom, color = TextMuted, fontSize = 16.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.3.sp)
-    }
-}
-
-/**
- * Bandeau profil mis en valeur pour l'accueil (retour utilisateur : avatar bien plus visible
- * qu'ailleurs) — grand badge circulaire + pseudo en gras, centrés dans leur propre bloc, plutôt
- * que la puce compacte [PucePseudo] utilisée sur les écrans secondaires.
- */
-@Composable
-fun BandeauProfilAccueil(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
-    val (avatar, nom) = decouperAvatarPseudo(pseudo)
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .background(Ivory.copy(alpha = 0.08f))
-            .border(1.dp, BrassBright.copy(alpha = 0.4f), RoundedCornerShape(20.dp))
-            .let { if (onClick != null) it.clickable(onClick = onClick) else it }
-            .padding(vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        Box(
-            modifier = Modifier
-                .size(72.dp)
-                .clip(CircleShape)
-                .background(Ivory.copy(alpha = 0.1f))
-                .border(2.dp, BrassBright, CircleShape),
-            contentAlignment = Alignment.Center,
-        ) {
-            if (avatar.isNotEmpty()) Text(avatar, fontSize = 40.sp)
-        }
-        Text(nom, color = Ivory, fontWeight = FontWeight.Bold, fontSize = 24.sp, letterSpacing = 0.3.sp)
+        Text(nom, color = TextMuted, fontSize = tailleNom, fontWeight = FontWeight.Bold, letterSpacing = 0.3.sp)
     }
 }
 

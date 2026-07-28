@@ -39,7 +39,7 @@ enum class Niveau(
     MONIQUE(
         label = "Ça se complique, Monique",
         cibleMin = 10,
-        cibleMax = 200,
+        cibleMax = 500,
         operations = TOUTES_OPERATIONS,
         garantieSolution = false,
         manchesParMode = 4,

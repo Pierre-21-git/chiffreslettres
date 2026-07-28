@@ -17,6 +17,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.32",
+        date = "2026-07-28",
+        changements = listOf(
+            "Accueil : le grand badge centré est remplacé par le même mini-bandeau que les " +
+                "autres écrans (avatar + pseudo), avec un texte plus grand (44dp/34sp avatar, " +
+                "20sp pseudo, contre 36dp/28sp/16sp ailleurs) — un seul style dans toute l'app.",
+            "Retiré la tuile \"Profil\" de l'accueil, redondante : le bandeau avatar/pseudo " +
+                "est cliquable pour changer de profil.",
+            "Corrigé : la page d'accueil pouvait dépasser de l'écran sans pouvoir défiler.",
+            "Chiffres, niveau Monique : cible relevée à 500 maximum (au lieu de 200).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.31",
         date = "2026-07-28",
         changements = listOf(
