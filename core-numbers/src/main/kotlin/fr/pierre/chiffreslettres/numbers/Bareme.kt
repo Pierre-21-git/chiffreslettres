@@ -9,10 +9,10 @@ import kotlin.math.abs
  * proposé.
  *
  * Sur Monique et Mathieu : 10 points si le compte est exact, 7 points pour un
- * compte approchant (écart de 1), 0 sinon — retour utilisateur : ce palier de
- * 7 points s'applique dès qu'on est à 1 du compte, qu'une solution exacte ait
- * existé ou non pour ce tirage (pas seulement quand c'est la meilleure
- * approche théoriquement atteignable).
+ * compte approchant (écart inférieur ou égal à 100), 0 sinon — retour
+ * utilisateur : ce palier de 7 points s'applique à tout écart ≤ 100, qu'une
+ * solution exacte ait existé ou non pour ce tirage (pas seulement quand c'est
+ * la meilleure approche théoriquement atteignable).
  */
 object Bareme {
     fun score(niveau: Niveau, cible: Int, propose: Int?): Int {
@@ -20,9 +20,9 @@ object Bareme {
         val ecart = abs(cible - propose)
         return when (niveau) {
             Niveau.EMILE, Niveau.NESTOR -> if (ecart == 0) 10 else 5
-            Niveau.MONIQUE, Niveau.MATHIEU -> when (ecart) {
-                0 -> 10
-                1 -> 7
+            Niveau.MONIQUE, Niveau.MATHIEU -> when {
+                ecart == 0 -> 10
+                ecart <= 100 -> 7
                 else -> 0
             }
         }

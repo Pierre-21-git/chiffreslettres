@@ -52,8 +52,8 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
                 "Assez facile (Émile) et Ça va encore (Nestor) : 10 points si le compte " +
                     "est exact, 5 points pour toute proposition non exacte.",
                 "Ça se complique (Monique) et Là c'est sérieux (Mathieu) : 10 points si " +
-                    "le compte est exact, 7 points pour un compte approchant (écart de 1 " +
-                    "avec la cible), 0 point au-delà.",
+                    "le compte est exact, 7 points pour un compte approchant (écart d'au " +
+                    "plus 100 avec la cible), 0 point au-delà.",
             )
         }
 

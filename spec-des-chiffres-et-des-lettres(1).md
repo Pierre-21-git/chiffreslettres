@@ -74,10 +74,9 @@ Le barème dépend du niveau (retour utilisateur après testing) :
 - **Émile, Nestor** (les deux niveaux les plus faciles) : barème simplifié —
   10 points si le compte est bon (résultat exact), 5 points pour toute
   proposition non exacte, 0 point si rien n'a été proposé.
-- **Monique, Mathieu** : barème dégressif selon l'écart, comme le jeu
-  télévisé — écart = |cible − résultat proposé|, score = `max(0, 10 - écart)`,
-  compte exact → 10 points, aucune proposition ou écart trop important → 0
-  point.
+- **Monique, Mathieu** : écart = |cible − résultat proposé| ; compte exact
+  (écart = 0) → 10 points ; compte approchant (écart ≤ 100) → 7 points ;
+  aucune proposition ou écart supérieur à 100 → 0 point (retour utilisateur).
 
 ### 3.4 Écran de jeu — interface type calculatrice
 

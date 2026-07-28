@@ -377,11 +377,15 @@ fun AppNavHost(
                 RecapPartieScreen(
                     resultats = resultats,
                     onTerminer = {
+                        // Navigation à l'intérieur de la coroutine, après l'enregistrement (et non
+                        // juste après son lancement) : un popBackStack immédiat dispose la
+                        // composition et annule ce rememberCoroutineScope avant que l'écriture en
+                        // base n'ait eu lieu, perdant silencieusement la partie et ses trophées.
                         scope.launch {
                             historiqueRepository.enregistrerSession(profilId, TypePartie.STRUCTUREE, resultats)
                             tropheeRepository.reevaluer(profilId)
+                            navController.popBackStack(Routes.MENU, inclusive = false)
                         }
-                        navController.popBackStack(Routes.MENU, inclusive = false)
                     },
                     onRetour = { navController.popBackStack() },
                 )
@@ -745,7 +749,7 @@ private fun ActionsFinDefi(message: String, onRecommencer: () -> Unit, onChanger
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(message)
         Button(onClick = onRecommencer, modifier = Modifier.fillMaxWidth()) { Text("Recommencer") }
-        OutlinedButton(onClick = onChangerNiveau, modifier = Modifier.fillMaxWidth()) { Text("Changer de niveau") }
+        OutlinedButton(onClick = onChangerNiveau, modifier = Modifier.fillMaxWidth()) { Text("Retour") }
     }
 }
 

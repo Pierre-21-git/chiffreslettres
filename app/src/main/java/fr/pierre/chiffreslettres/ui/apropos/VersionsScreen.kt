@@ -17,6 +17,21 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.35",
+        date = "2026-07-28",
+        changements = listOf(
+            "Compte approchant (Monique/Mathieu) : le palier de 7 points s'applique " +
+                "désormais à tout écart d'au plus 100 avec la cible, et non plus " +
+                "seulement à un écart de 1 (retour utilisateur).",
+            "Correction d'un bug qui pouvait faire perdre silencieusement une partie " +
+                "classique terminée (absente des statistiques et des trophées, même " +
+                "après redémarrage) à cause d'une navigation trop rapide interrompant " +
+                "son enregistrement en base.",
+            "Fin de défi (série/chrono, chiffres/lettres) : le bouton \"Changer de " +
+                "niveau\" est renommé \"Retour\", plus fidèle à ce qu'il fait réellement.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.34",
         date = "2026-07-28",
         changements = listOf(
