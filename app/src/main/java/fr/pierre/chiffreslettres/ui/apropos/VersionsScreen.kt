@@ -17,6 +17,24 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.39",
+        date = "2026-07-28",
+        changements = listOf(
+            "Nouveau mode Partie duo : affrontez un autre profil du foyer, à tour de rôle " +
+                "sur le même tirage à chaque manche (le joueur qui commence change à " +
+                "chaque manche). Deux façons de compter les points au choix : Duo (chacun " +
+                "son score) ou Confrontation (le plus proche/le mot le plus long gagne la " +
+                "manche).",
+            "\"Partie classique\" renommée \"Partie solo\", pour la distinguer du nouveau " +
+                "mode duo.",
+            "Statistiques : un classement séparé par niveau pour le solo, le duo et la " +
+                "confrontation (un score de confrontation peut être écrasé à 0, il ne doit " +
+                "pas se mélanger au meilleur score solo).",
+            "6 nouveaux trophées : première partie duo/confrontation jouée, première " +
+                "gagnée, dixième gagnée.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.38",
         date = "2026-07-28",
         changements = listOf(

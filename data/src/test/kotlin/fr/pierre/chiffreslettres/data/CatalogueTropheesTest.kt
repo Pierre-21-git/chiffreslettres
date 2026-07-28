@@ -12,6 +12,10 @@ private fun statsVides() = TropheeStats(
     partiesMotsMin = mapOf(4 to false, 5 to false, 6 to false, 7 to false, 8 to false),
     partiesParSeuilScore = mapOf(20 to 0, 30 to 0, 40 to 0, 50 to 0, 60 to 0, 70 to 0, 80 to 0, 90 to 0),
     partiesSoloTotal = 0,
+    partiesDuoJouees = 0,
+    partiesDuoGagnees = 0,
+    partiesConfrontationJouees = 0,
+    partiesConfrontationGagnees = 0,
     defisTotal = 0,
     meilleuresSeriesDefi = emptyMap(),
     meilleuresReussitesDefiChrono = emptyMap(),
@@ -23,8 +27,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `71 trophees au total`() {
-        assertEquals(71, CatalogueTrophees.TOUS.size)
+    fun `77 trophees au total`() {
+        assertEquals(77, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -105,5 +109,23 @@ class CatalogueTropheesTest {
         val stats = statsVides().copy(meilleureSerieJoursDefiQuotidien = 10)
         assertTrue(trophee("defi_quotidien_7").estDebloque(stats))
         assertFalse(trophee("defi_quotidien_30").estDebloque(stats))
+    }
+
+    @Test
+    fun `trophees duo independants des trophees confrontation`() {
+        val stats = statsVides().copy(partiesDuoJouees = 1, partiesDuoGagnees = 10)
+        assertTrue(trophee("duo_1").estDebloque(stats))
+        assertTrue(trophee("duo_gagnee_1").estDebloque(stats))
+        assertTrue(trophee("duo_gagnee_10").estDebloque(stats))
+        assertFalse(trophee("confrontation_1").estDebloque(stats))
+        assertFalse(trophee("confrontation_gagnee_1").estDebloque(stats))
+    }
+
+    @Test
+    fun `dixieme partie confrontation gagnee necessite bien 10 victoires`() {
+        val stats = statsVides().copy(partiesConfrontationJouees = 15, partiesConfrontationGagnees = 9)
+        assertTrue(trophee("confrontation_1").estDebloque(stats))
+        assertTrue(trophee("confrontation_gagnee_1").estDebloque(stats))
+        assertFalse(trophee("confrontation_gagnee_10").estDebloque(stats))
     }
 }

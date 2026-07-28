@@ -31,6 +31,7 @@ fun MenuPrincipalScreen(
     pseudoActif: String,
     onEntrainementLibre: () -> Unit,
     onPartieStructuree: () -> Unit,
+    onPartieDuo: () -> Unit,
     onDefiSerie: () -> Unit,
     onDefiChrono: () -> Unit,
     onDefiQuotidien: () -> Unit,
@@ -51,7 +52,8 @@ fun MenuPrincipalScreen(
 
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))
 
-        TuilePrincipale("Partie classique", onClick = onPartieStructuree)
+        TuilePrincipale("Partie solo", onClick = onPartieStructuree)
+        TuilePrincipale("Partie duo", onClick = onPartieDuo)
         TuilePrincipale("Défi série", onClick = onDefiSerie)
         TuilePrincipale("Défi chrono", onClick = onDefiChrono)
         TuilePrincipale("Défi quotidien", onClick = onDefiQuotidien)

@@ -10,4 +10,6 @@ data class SessionEntity(
     val date: Long,
     val type: TypePartie,
     val scoreTotal: Int,
+    /** Uniquement renseigné pour DUO/DUO_CONFRONTATION : score total strictement supérieur à celui de l'adversaire. Null pour les autres types de partie. */
+    val victoireDuel: Boolean? = null,
 )

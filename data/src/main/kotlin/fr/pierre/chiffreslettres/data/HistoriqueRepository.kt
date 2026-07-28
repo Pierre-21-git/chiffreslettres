@@ -11,12 +11,13 @@ data class ResultatManche(
 
 class HistoriqueRepository(private val dao: HistoriqueDao) {
 
-    suspend fun enregistrerSession(profilId: Long, type: TypePartie, manches: List<ResultatManche>) {
+    suspend fun enregistrerSession(profilId: Long, type: TypePartie, manches: List<ResultatManche>, victoireDuel: Boolean? = null) {
         val session = SessionEntity(
             profilId = profilId,
             date = System.currentTimeMillis(),
             type = type,
             scoreTotal = manches.sumOf { it.score },
+            victoireDuel = victoireDuel,
         )
         val entites = manches.mapIndexed { index, resultat ->
             MancheEntity(
@@ -31,13 +32,19 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
         dao.enregistrerPartie(session, entites)
     }
 
-    fun classementParNiveau(niveauCode: String): Flow<List<LigneClassement>> = dao.classementParNiveau(niveauCode)
+    fun classementParNiveau(niveauCode: String, type: TypePartie): Flow<List<LigneClassement>> =
+        dao.classementParNiveau(niveauCode, type.name)
 
-    fun meilleuresPartiesSoloParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>> =
-        dao.meilleuresPartiesSoloParNiveau(profilId, niveauCode)
+    fun meilleuresPartiesSoloParNiveau(profilId: Long, niveauCode: String, type: TypePartie): Flow<List<MeilleurePartieSolo>> =
+        dao.meilleuresPartiesSoloParNiveau(profilId, niveauCode, type.name)
 
-    fun historiqueScoresParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>> =
-        dao.historiqueScoresParNiveau(profilId, niveauCode)
+    fun historiqueScoresParNiveau(profilId: Long, niveauCode: String, type: TypePartie): Flow<List<MeilleurePartieSolo>> =
+        dao.historiqueScoresParNiveau(profilId, niveauCode, type.name)
+
+    suspend fun compterPartiesParType(profilId: Long, type: TypePartie): Int = dao.compterPartiesParType(profilId, type.name)
+
+    suspend fun compterPartiesGagneesParType(profilId: Long, type: TypePartie): Int =
+        dao.compterPartiesGagneesParType(profilId, type.name)
 
     suspend fun reinitialiserHistoriqueJoueur(profilId: Long) = dao.reinitialiserHistoriqueJoueur(profilId)
 

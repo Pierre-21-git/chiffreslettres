@@ -48,6 +48,7 @@ import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.data.StatistiquesExport
 import fr.pierre.chiffreslettres.data.TropheeRepository
+import fr.pierre.chiffreslettres.data.TypePartie
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
@@ -250,23 +251,37 @@ fun MesStatistiquesScreen(
         EnTeteEcran("Mes statistiques", onRetour)
 
         Text(
-            "Mes meilleurs scores par niveau (parties classiques, chiffres et lettres confondus)",
+            "Mes meilleurs scores par niveau (chiffres et lettres confondus)",
             style = MaterialTheme.typography.titleMedium,
         )
         for ((position, niveau) in Niveau.entries.withIndex()) {
-            val meilleuresFlow = remember(niveau) { historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name) }
-            val meilleures by meilleuresFlow.collectAsState(initial = emptyList())
-            val historiqueFlow = remember(niveau) { historiqueRepository.historiqueScoresParNiveau(profilId, niveau.name) }
-            val historique by historiqueFlow.collectAsState(initial = emptyList())
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(niveau.label, style = MaterialTheme.typography.titleSmall)
-                Podium(meilleures.map { EntreePodium(null, it.score, it.date) })
-                GraphiqueProgression(historique.map { it.score })
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                Text(niveau.label, style = MaterialTheme.typography.titleMedium)
+                for ((type, libelle) in TYPES_PARTIE_AFFICHES) {
+                    val meilleuresFlow = remember(niveau, type) { historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name, type) }
+                    val meilleures by meilleuresFlow.collectAsState(initial = emptyList())
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Text(libelle, style = MaterialTheme.typography.titleSmall)
+                        Podium(meilleures.map { EntreePodium(null, it.score, it.date) })
+                        if (type == TypePartie.STRUCTUREE) {
+                            val historiqueFlow = remember(niveau) { historiqueRepository.historiqueScoresParNiveau(profilId, niveau.name, type) }
+                            val historique by historiqueFlow.collectAsState(initial = emptyList())
+                            GraphiqueProgression(historique.map { it.score })
+                        }
+                    }
+                }
             }
             if (position != Niveau.entries.lastIndex) HorizontalDivider()
         }
     }
 }
+
+/** Trois classements distincts par niveau (retour utilisateur) : le score d'une confrontation peut être écrasé à 0 par l'adversaire, il ne doit pas se mélanger au meilleur score solo. */
+private val TYPES_PARTIE_AFFICHES = listOf(
+    TypePartie.STRUCTUREE to "Solo",
+    TypePartie.DUO to "Duo",
+    TypePartie.DUO_CONFRONTATION to "Confrontation",
+)
 
 /**
  * Courbe de progression des scores dans l'ordre chronologique des parties (retour utilisateur :
@@ -352,15 +367,20 @@ fun StatistiquesGeneralesScreen(
         EnTeteEcran("Statistiques générales", onRetour)
 
         Text(
-            "Classement par niveau (parties classiques, chiffres et lettres confondus)",
+            "Classement par niveau (chiffres et lettres confondus)",
             style = MaterialTheme.typography.titleMedium,
         )
         for ((position, niveau) in Niveau.entries.withIndex()) {
-            val classementFlow = remember(niveau) { historiqueRepository.classementParNiveau(niveau.name) }
-            val classement by classementFlow.collectAsState(initial = emptyList())
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(niveau.label, style = MaterialTheme.typography.titleSmall)
-                Podium(classement.map { EntreePodium("${it.avatar} ${it.pseudo}", it.score, it.date) })
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                Text(niveau.label, style = MaterialTheme.typography.titleMedium)
+                for ((type, libelle) in TYPES_PARTIE_AFFICHES) {
+                    val classementFlow = remember(niveau, type) { historiqueRepository.classementParNiveau(niveau.name, type) }
+                    val classement by classementFlow.collectAsState(initial = emptyList())
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Text(libelle, style = MaterialTheme.typography.titleSmall)
+                        Podium(classement.map { EntreePodium("${it.avatar} ${it.pseudo}", it.score, it.date) })
+                    }
+                }
             }
             if (position != Niveau.entries.lastIndex) HorizontalDivider()
         }

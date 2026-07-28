@@ -96,7 +96,7 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
             )
         }
 
-        SectionRegle("Mode Partie classique") {
+        SectionRegle("Mode Partie solo") {
             Text(
                 "Un seul choix à faire : le niveau, appliqué aux manches chiffres et " +
                     "lettres, jouées en alternance. La durée du chrono et le nombre de " +
@@ -119,11 +119,29 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
             )
         }
 
+        SectionRegle("Mode Partie duo") {
+            Text(
+                "Deux joueurs sur le même téléphone, en tour par tour : après avoir choisi " +
+                    "l'adversaire, le niveau (comme en solo) et le mode de calcul des points, " +
+                    "chaque manche est jouée par les deux joueurs sur exactement le même " +
+                    "tirage (mêmes nombres et cible en chiffres, mêmes lettres en lettres). " +
+                    "Le joueur qui commence change à chaque manche, pour que le choix du " +
+                    "nombre de voyelles ne revienne pas toujours au même :",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            ListeAPuces(
+                "Duo : chaque joueur garde son propre score sur chaque manche, comme en solo.",
+                "Confrontation : sur chaque manche, seul le joueur le plus proche de la " +
+                    "cible (ou avec le mot le plus long) marque les points ; à égalité, les " +
+                    "deux les gardent.",
+            )
+        }
+
         SectionRegle("Mode Défi série") {
             Text(
                 "Choisissez un mode (chiffres ou lettres) et un niveau, puis enchaînez " +
                     "les manches pour aligner le plus de réussites possible d'affilée, avec " +
-                    "le même chrono qu'en partie classique pour ce niveau. Une réussite, c'est " +
+                    "le même chrono qu'en partie solo pour ce niveau. Une réussite, c'est " +
                     "un compte exact en chiffres, ou un mot valide d'au moins une longueur " +
                     "minimale en lettres :",
                 style = MaterialTheme.typography.bodyMedium,

@@ -36,13 +36,15 @@ interface HistoriqueDao {
 
     /**
      * Podium (top 3, retour utilisateur) des scores de partie (pas de regroupement par profil :
-     * un même joueur peut apparaître plusieurs fois) pour un niveau donné (spec §7.2), tous
-     * confondus chiffres/lettres (les deux modes partagent désormais les mêmes noms de niveau),
-     * uniquement les parties structurées. Le score affiché est le score final de la partie
-     * (`SessionEntity.scoreTotal`, somme des manches), pas celui d'une manche individuelle
-     * (retour utilisateur) — un seul niveau s'applique à toutes les manches d'une partie
-     * structurée, d'où le `JOIN` sur `MancheEntity` pour filtrer par niveau malgré le
-     * regroupement par session. À score égal, la partie la plus récente passe devant.
+     * un même joueur peut apparaître plusieurs fois) pour un niveau et un type de partie donnés
+     * (spec §7.2 ; [type] = nom d'un [TypePartie] : STRUCTUREE pour le classement solo, DUO ou
+     * DUO_CONFRONTATION pour les classements duel, chacun séparé — retour utilisateur), tous
+     * confondus chiffres/lettres (les deux modes partagent désormais les mêmes noms de niveau).
+     * Le score affiché est le score final de la partie (`SessionEntity.scoreTotal`, somme des
+     * manches), pas celui d'une manche individuelle (retour utilisateur) — un seul niveau
+     * s'applique à toutes les manches d'une partie, d'où le `JOIN` sur `MancheEntity` pour
+     * filtrer par niveau malgré le regroupement par session. À score égal, la partie la plus
+     * récente passe devant.
      */
     @Query(
         """
@@ -50,43 +52,44 @@ interface HistoriqueDao {
         FROM SessionEntity s
         INNER JOIN ProfilEntity p ON p.id = s.profilId
         INNER JOIN MancheEntity m ON m.sessionId = s.id
-        WHERE s.type = 'STRUCTUREE' AND m.niveauCode = :niveauCode
+        WHERE s.type = :type AND m.niveauCode = :niveauCode
         GROUP BY s.id
         ORDER BY s.scoreTotal DESC, s.date DESC
         LIMIT 3
         """,
     )
-    fun classementParNiveau(niveauCode: String): Flow<List<LigneClassement>>
+    fun classementParNiveau(niveauCode: String, type: String): Flow<List<LigneClassement>>
 
-    /** Top 3 des meilleures parties solo (score final de la partie) d'un joueur pour un niveau donné. */
+    /** Top 3 des meilleures parties (score final de la partie) d'un joueur pour un niveau et un type de partie donnés. */
     @Query(
         """
         SELECT s.scoreTotal AS score, s.date AS date
         FROM SessionEntity s
         INNER JOIN MancheEntity m ON m.sessionId = s.id
-        WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE' AND m.niveauCode = :niveauCode
+        WHERE s.profilId = :profilId AND s.type = :type AND m.niveauCode = :niveauCode
         GROUP BY s.id
         ORDER BY s.scoreTotal DESC, s.date DESC
         LIMIT 3
         """,
     )
-    fun meilleuresPartiesSoloParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>>
+    fun meilleuresPartiesSoloParNiveau(profilId: Long, niveauCode: String, type: String): Flow<List<MeilleurePartieSolo>>
 
     /**
      * Historique chronologique (toutes les parties, pas seulement le podium) des scores d'un
-     * joueur pour un niveau donné — graphique de progression sur l'onglet "Mes statistiques".
+     * joueur pour un niveau et un type de partie donnés — graphique de progression sur l'onglet
+     * "Mes statistiques" (solo uniquement pour l'instant).
      */
     @Query(
         """
         SELECT s.scoreTotal AS score, s.date AS date
         FROM SessionEntity s
         INNER JOIN MancheEntity m ON m.sessionId = s.id
-        WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE' AND m.niveauCode = :niveauCode
+        WHERE s.profilId = :profilId AND s.type = :type AND m.niveauCode = :niveauCode
         GROUP BY s.id
         ORDER BY s.date ASC
         """,
     )
-    fun historiqueScoresParNiveau(profilId: Long, niveauCode: String): Flow<List<MeilleurePartieSolo>>
+    fun historiqueScoresParNiveau(profilId: Long, niveauCode: String, type: String): Flow<List<MeilleurePartieSolo>>
 
     /**
      * Vide l'historique (sessions + manches, cascade) d'un seul joueur — bouton
@@ -168,4 +171,12 @@ interface HistoriqueDao {
     /** Nombre total de parties solo terminées, tous niveaux confondus. */
     @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE'")
     suspend fun compterPartiesSoloTotal(profilId: Long): Int
+
+    /** Nombre de parties d'un [type] (DUO ou DUO_CONFRONTATION) jouées par ce profil, tous niveaux confondus. */
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = :type")
+    suspend fun compterPartiesParType(profilId: Long, type: String): Int
+
+    /** Nombre de parties d'un [type] gagnées par ce profil (`victoireDuel = 1`), tous niveaux confondus. */
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = :type AND victoireDuel = 1")
+    suspend fun compterPartiesGagneesParType(profilId: Long, type: String): Int
 }

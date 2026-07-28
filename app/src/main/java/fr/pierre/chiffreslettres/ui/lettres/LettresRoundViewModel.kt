@@ -7,6 +7,7 @@ import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
 import fr.pierre.chiffreslettres.letters.meilleurMot
+import kotlin.random.Random
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +30,8 @@ data class LettresRoundUiState(
     val meilleurMot: String? = null,
     val motJoueurValide: Boolean? = null,
     val scoreObtenu: Int? = null,
+    /** Nombre de voyelles choisi pour ce tirage, null tant qu'il n'a pas été choisi — permet au mode Duo de forcer le même choix pour le second joueur d'une manche (retour utilisateur : mêmes lettres pour les deux). */
+    val nombreVoyellesChoisi: Int? = null,
 )
 
 /** Tirage selon le nombre de voyelles choisi (§4.1) puis recherche du mot le plus long (§4.5). */
@@ -37,6 +40,8 @@ class LettresRoundViewModel(
     private val dictionnaire: DictionnaireIndex,
     dureeSecondes: Int? = null,
     private val nombreLettres: Int = TirageLettres.NOMBRE_LETTRES,
+    /** Permet au mode Duo de rejouer exactement le même tirage pour les deux joueurs (même graine, nouvelle instance de Random par joueur ; combiné au même nombreVoyelles forcé côté second joueur). */
+    private val random: Random = Random,
 ) : ViewModel() {
 
     private val sac = SacLettres.creer(niveau)
@@ -54,8 +59,8 @@ class LettresRoundViewModel(
     fun choisirNombreVoyelles(nombreVoyelles: Int) {
         val etat = _uiState.value
         if (etat.tirageTermine || etat.termine) return
-        val lettres = TirageLettres.tirer(sac, nombreVoyelles, nombreLettres)
-        _uiState.update { it.copy(lettresTirees = lettres, tirageTermine = true) }
+        val lettres = TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
+        _uiState.update { it.copy(lettresTirees = lettres, tirageTermine = true, nombreVoyellesChoisi = nombreVoyelles) }
         demarrerChrono()
     }
 

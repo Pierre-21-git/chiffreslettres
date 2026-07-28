@@ -9,6 +9,8 @@ import fr.pierre.chiffreslettres.numbers.Operation
 import fr.pierre.chiffreslettres.numbers.ReservoirChiffres
 import fr.pierre.chiffreslettres.numbers.Solveur
 import fr.pierre.chiffreslettres.numbers.TirageChiffres
+import kotlin.math.abs
+import kotlin.random.Random
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +32,8 @@ data class ChiffresRoundUiState(
     val tempsRestantSecondes: Int?,
     val termine: Boolean = false,
     val scoreObtenu: Int? = null,
+    /** Écart avec la cible de la proposition finale, null si rien n'a été proposé — utilisé pour comparer deux joueurs en mode duo confrontation (le score seul ne suffit pas : deux écarts différents peuvent tomber dans le même palier de points). */
+    val ecartCible: Int? = null,
     val solutionSolveur: Expression?,
 )
 
@@ -42,6 +46,8 @@ class ChiffresRoundViewModel(
     nombreJetons: Int = ReservoirChiffres.NOMBRE_JETONS_DEFAUT,
     /** Permet au mode Défi de forcer une solution exacte même sur Monique/Mathieu. */
     garantieSolution: Boolean = niveau.garantieSolution,
+    /** Permet au mode Duo de rejouer exactement le même tirage pour les deux joueurs (même graine, nouvelle instance de Random par joueur). */
+    random: Random = Random,
 ) : ViewModel() {
 
     private val historique = mutableListOf<Etape>()
@@ -53,7 +59,7 @@ class ChiffresRoundViewModel(
     val uiState: StateFlow<ChiffresRoundUiState>
 
     init {
-        val tirage = TirageChiffres.tirer(niveau, nombreJetons = nombreJetons, garantieSolution = garantieSolution)
+        val tirage = TirageChiffres.tirer(niveau, random, nombreJetons = nombreJetons, garantieSolution = garantieSolution)
         jetonsInitiaux = tirage.nombres.map { valeur -> Jeton(prochainId++, Expression.Valeur(valeur)) }
         _uiState = MutableStateFlow(
             ChiffresRoundUiState(
@@ -155,7 +161,8 @@ class ChiffresRoundViewModel(
         // résolu (bug remonté par l'utilisateur, cf. Bareme "0 si rien n'a été proposé").
         val proposition = if (historique.isEmpty()) null else etat.jetons.lastOrNull()?.expression?.resultat
         val score = Bareme.score(niveau, etat.cible, proposition)
-        _uiState.update { it.copy(termine = true, scoreObtenu = score) }
+        val ecart = proposition?.let { abs(etat.cible - it) }
+        _uiState.update { it.copy(termine = true, scoreObtenu = score, ecartCible = ecart) }
     }
 
     override fun onCleared() {

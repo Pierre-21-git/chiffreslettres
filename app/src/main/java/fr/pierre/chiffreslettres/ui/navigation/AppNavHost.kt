@@ -60,6 +60,15 @@ import fr.pierre.chiffreslettres.ui.partie.ConfigurationPartieScreen
 import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
 import fr.pierre.chiffreslettres.ui.partie.PartieStructureeViewModel
 import fr.pierre.chiffreslettres.ui.partie.RecapPartieScreen
+import fr.pierre.chiffreslettres.ui.partieduo.ConfigurationPartieDuoScreen
+import fr.pierre.chiffreslettres.ui.partieduo.ModeScoreDuo
+import fr.pierre.chiffreslettres.ui.partieduo.PartieDuoViewModel
+import fr.pierre.chiffreslettres.ui.partieduo.RecapPartieDuoScreen
+import fr.pierre.chiffreslettres.ui.partieduo.ResultatDuoManche
+import fr.pierre.chiffreslettres.ui.partieduo.TourDuo
+import fr.pierre.chiffreslettres.ui.partieduo.TransitionJoueurScreen
+import fr.pierre.chiffreslettres.ui.partieduo.premierJoueurManche
+import fr.pierre.chiffreslettres.ui.partieduo.versTypePartie
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
 import fr.pierre.chiffreslettres.ui.statistiques.MesStatistiquesScreen
@@ -67,6 +76,7 @@ import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesGeneralesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesJoueurScreen
 import fr.pierre.chiffreslettres.ui.trophees.TropheesScreen
 import java.time.LocalDate
+import kotlin.random.Random
 import kotlinx.coroutines.launch
 
 @Composable
@@ -83,6 +93,12 @@ private fun entrainementViewModel(
 @Composable
 private fun partieViewModel(navController: NavHostController, backStackEntry: NavBackStackEntry): PartieStructureeViewModel {
     val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Routes.PARTIE_GRAPH) }
+    return viewModel(parentEntry)
+}
+
+@Composable
+private fun partieDuoViewModel(navController: NavHostController, backStackEntry: NavBackStackEntry): PartieDuoViewModel {
+    val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Routes.PARTIE_DUO_GRAPH) }
     return viewModel(parentEntry)
 }
 
@@ -110,6 +126,7 @@ fun AppNavHost(
                 pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                 onEntrainementLibre = { navController.navigate(Routes.ENTRAINEMENT_GRAPH) },
                 onPartieStructuree = { navController.navigate(Routes.PARTIE_GRAPH) },
+                onPartieDuo = { navController.navigate(Routes.PARTIE_DUO_GRAPH) },
                 onDefiSerie = { navController.navigate(Routes.CHOIX_DEFI_SERIE) },
                 onDefiChrono = { navController.navigate(Routes.CHOIX_DEFI_CHRONO) },
                 onDefiQuotidien = { navController.navigate(Routes.CHOIX_DEFI_QUOTIDIEN) },
@@ -387,6 +404,182 @@ fun AppNavHost(
                         scope.launch {
                             historiqueRepository.enregistrerSession(profilId, TypePartie.STRUCTUREE, resultats)
                             tropheeRepository.reevaluer(profilId)
+                            navController.popBackStack(Routes.MENU, inclusive = false)
+                        }
+                    },
+                    onRetour = { navController.popBackStack() },
+                )
+            }
+        }
+
+        navigation(startDestination = Routes.CONFIGURATION_PARTIE_DUO, route = Routes.PARTIE_DUO_GRAPH) {
+            composable(Routes.CONFIGURATION_PARTIE_DUO) { backStackEntry ->
+                val duoVm = partieDuoViewModel(navController, backStackEntry)
+                ConfigurationPartieDuoScreen(
+                    pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    autresProfils = profils.filter { it.id != profilId },
+                    onDemarrer = { profil2Id, sequence, mode ->
+                        duoVm.demarrer(profil2Id, sequence, mode)
+                        navController.navigate(Routes.JEU_PARTIE_DUO)
+                    },
+                    onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
+                    onRetour = { navController.popBackStack() },
+                )
+            }
+
+            composable(Routes.JEU_PARTIE_DUO) { backStackEntry ->
+                val duoVm = partieDuoViewModel(navController, backStackEntry)
+                val sequence by duoVm.sequence.collectAsState()
+                val seeds by duoVm.seeds.collectAsState()
+                val index by duoVm.index.collectAsState()
+                val tour by duoVm.tour.collectAsState()
+                val resultats1 by duoVm.resultatsJoueur1.collectAsState()
+                val resultats2 by duoVm.resultatsJoueur2.collectAsState()
+                val profil2 = profils.find { it.id == duoVm.profil2Id }
+                val manche = sequence.getOrNull(index)
+
+                if (manche == null) {
+                    LaunchedEffect(Unit) {
+                        navController.navigate(Routes.RECAP_PARTIE_DUO) {
+                            popUpTo(Routes.JEU_PARTIE_DUO) { inclusive = true }
+                        }
+                    }
+                } else {
+                    val premier = premierJoueurManche(index)
+                    val estPremierJoueurManche = tour == premier
+                    val joueurActif = if (tour == TourDuo.JOUEUR1) profilActif else profil2
+                    val autreJoueur = if (tour == TourDuo.JOUEUR1) profil2 else profilActif
+                    // Un seul écran de passation par manche, avant le second joueur (retour
+                    // utilisateur) : le premier garde le téléphone en main depuis la manche
+                    // précédente (il vient d'y être le second) ou depuis la configuration.
+                    var pretSecondJoueur by remember(index) { mutableStateOf(false) }
+                    val seedManche = seeds.getOrNull(index) ?: 0L
+
+                    if (!estPremierJoueurManche && !pretSecondJoueur) {
+                        TransitionJoueurScreen(
+                            pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                            onPret = { pretSecondJoueur = true },
+                        )
+                    } else {
+                        val resultatsActifs = if (tour == TourDuo.JOUEUR1) resultats1 else resultats2
+                        val scoreCumule = resultatsActifs.sumOf { it.resultat.score }
+                        val progressionManche = "${index + 1} / ${sequence.size}"
+                        val estDerniereManche = index == sequence.lastIndex
+                        val actionsFinManche: @Composable () -> Unit = {
+                            Button(onClick = { duoVm.continuer() }, modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    when {
+                                        estPremierJoueurManche -> "Au tour de ${autreJoueur?.pseudo ?: "l'autre joueur"}"
+                                        estDerniereManche -> "Voir les résultats"
+                                        else -> "Manche suivante"
+                                    },
+                                )
+                            }
+                        }
+                        when (manche) {
+                            is ManchePlanifiee.Chiffres -> {
+                                val roundVm: ChiffresRoundViewModel =
+                                    viewModel(key = "duo-chiffres-$index-$tour") {
+                                        ChiffresRoundViewModel(
+                                            manche.niveau,
+                                            manche.niveau.dureeSecondesPartieStructuree,
+                                            random = Random(seedManche),
+                                        )
+                                    }
+                                ChiffresRoundScreen(
+                                    viewModel = roundVm,
+                                    scoreCumule = scoreCumule,
+                                    pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
+                                    onMancheTerminee = { obtenu ->
+                                        duoVm.enregistrerResultat(
+                                            ResultatDuoManche(
+                                                ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu),
+                                                roundVm.uiState.value.ecartCible,
+                                            ),
+                                        )
+                                    },
+                                    onRetourEntrainement = {
+                                        navController.popBackStack(Routes.CONFIGURATION_PARTIE_DUO, inclusive = false)
+                                    },
+                                    progressionManche = progressionManche,
+                                    actionsFinManche = actionsFinManche,
+                                )
+                            }
+                            is ManchePlanifiee.Lettres -> {
+                                val roundVm: LettresRoundViewModel =
+                                    viewModel(key = "duo-lettres-$index-$tour") {
+                                        LettresRoundViewModel(
+                                            manche.niveau,
+                                            dictionnaire,
+                                            manche.niveau.dureeSecondesPartieStructuree,
+                                            random = Random(seedManche),
+                                        )
+                                    }
+                                if (!estPremierJoueurManche) {
+                                    // Force le même nombre de voyelles que le premier joueur de
+                                    // cette manche (retour utilisateur : mêmes lettres pour les
+                                    // deux) — l'instance du premier joueur est retrouvée via la
+                                    // même clé, sans relancer son tirage ni son chrono.
+                                    val roundVmPremier: LettresRoundViewModel =
+                                        viewModel(key = "duo-lettres-$index-$premier") {
+                                            LettresRoundViewModel(
+                                                manche.niveau,
+                                                dictionnaire,
+                                                manche.niveau.dureeSecondesPartieStructuree,
+                                                random = Random(seedManche),
+                                            )
+                                        }
+                                    LaunchedEffect(roundVm) {
+                                        val n = roundVmPremier.uiState.value.nombreVoyellesChoisi
+                                        if (n != null && !roundVm.uiState.value.tirageTermine) {
+                                            roundVm.choisirNombreVoyelles(n)
+                                        }
+                                    }
+                                }
+                                LettresRoundScreen(
+                                    viewModel = roundVm,
+                                    scoreCumule = scoreCumule,
+                                    pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
+                                    onMancheTerminee = { obtenu, motValide ->
+                                        duoVm.enregistrerResultat(
+                                            ResultatDuoManche(
+                                                ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
+                                            ),
+                                        )
+                                    },
+                                    onRetourEntrainement = {
+                                        navController.popBackStack(Routes.CONFIGURATION_PARTIE_DUO, inclusive = false)
+                                    },
+                                    progressionManche = progressionManche,
+                                    actionsFinManche = actionsFinManche,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            composable(Routes.RECAP_PARTIE_DUO) { backStackEntry ->
+                val duoVm = partieDuoViewModel(navController, backStackEntry)
+                val profil2 = profils.find { it.id == duoVm.profil2Id }
+                val scope = rememberCoroutineScope()
+                val (resultats1, resultats2) = duoVm.resultatsFinaux()
+                RecapPartieDuoScreen(
+                    pseudo1 = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "Joueur 1",
+                    pseudo2 = profil2?.let { "${it.avatar} ${it.pseudo}" } ?: "Joueur 2",
+                    resultats1 = resultats1,
+                    resultats2 = resultats2,
+                    onTerminer = {
+                        val total1 = resultats1.sumOf { it.score }
+                        val total2 = resultats2.sumOf { it.score }
+                        val type = duoVm.mode.versTypePartie()
+                        scope.launch {
+                            historiqueRepository.enregistrerSession(profilId, type, resultats1, total1 > total2)
+                            if (profil2 != null) {
+                                historiqueRepository.enregistrerSession(profil2.id, type, resultats2, total2 > total1)
+                            }
+                            tropheeRepository.reevaluer(profilId)
+                            if (profil2 != null) tropheeRepository.reevaluer(profil2.id)
                             navController.popBackStack(Routes.MENU, inclusive = false)
                         }
                     },

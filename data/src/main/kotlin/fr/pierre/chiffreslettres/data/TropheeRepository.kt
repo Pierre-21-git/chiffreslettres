@@ -30,6 +30,10 @@ class TropheeRepository(
             partiesMotsMin = SEUILS_MOTS.associateWith { historiqueDao.compterPartiesMotsMin(profilId, it) >= 1 },
             partiesParSeuilScore = SEUILS_SCORE.associateWith { historiqueDao.compterPartiesScoreAuMoins(profilId, it) },
             partiesSoloTotal = historiqueDao.compterPartiesSoloTotal(profilId),
+            partiesDuoJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO.name),
+            partiesDuoGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO.name),
+            partiesConfrontationJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO_CONFRONTATION.name),
+            partiesConfrontationGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO_CONFRONTATION.name),
             defisTotal = defiDao.compterDefisTotal(profilId),
             meilleuresSeriesDefi = defiDao.meilleuresSeriesDefiParMode(profilId)
                 .associate { it.mode.name to it.meilleur },

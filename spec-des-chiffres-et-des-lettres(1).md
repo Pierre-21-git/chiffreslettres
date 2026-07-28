@@ -278,36 +278,38 @@ Stockage local via Room :
 
 ---
 
-## 8. Mode 2 joueurs (Nearby Connections)
+## 8. Mode 2 joueurs (Partie duo, local)
+
+Remplace la proposition initiale à base de Nearby Connections (deux
+appareils) : un mode duo local sur un seul téléphone, à tour de rôle, plus
+simple à utiliser et à fiabiliser (retour utilisateur).
 
 ### 8.1 Principe
-Tirage unique partagé en temps réel : les deux joueurs voient exactement le
-même tirage au même moment et cherchent chacun de leur côté, comme à la
-télévision. Le premier appareil qui lance/héberge la manche est autoritaire
-sur le tirage (il le génère et l'envoie à l'autre appareil).
+Un profil (le profil actif) affronte un second profil du foyer, choisi sur
+l'écran de configuration avec le niveau (comme en solo §6.2) et le mode de
+calcul des points. Chaque manche est jouée successivement par les deux
+joueurs sur exactement le même tirage (mêmes nombres et cible en chiffres,
+mêmes lettres en lettres, via une graine aléatoire commune générée une fois
+par manche), le second joueur ne voyant le tirage qu'après avoir pris le
+téléphone (écran de passation entre les deux tours). Le joueur qui commence
+une manche alterne à chaque manche (chiffres et lettres confondus) pour que
+le choix du nombre de voyelles ne revienne pas toujours au même joueur.
 
-### 8.2 Flux de connexion
-1. Écran "Jouer à 2" : un joueur choisit "Héberger", l'autre "Rejoindre"
-2. L'hôte lance `startAdvertising`, le second appareil lance `startDiscovery`
-   via Nearby Connections
-3. Une fois la connexion établie et acceptée des deux côtés, l'hôte envoie un
-   signal de démarrage et le tirage de la première manche
-4. Les deux appareils démarrent leur chronomètre de façon synchronisée à la
-   réception du signal
-5. Chaque joueur saisit sa réponse localement ; à la fin du temps, chaque
-   appareil envoie sa réponse à l'autre (ou remonte à l'hôte qui redistribue)
-6. Les scores sont calculés indépendamment sur chaque appareil avec la même
-   logique (même solveur, même dictionnaire) pour éviter toute divergence,
-   puis affichés aux deux joueurs
-7. L'hôte tire la manche suivante et répète jusqu'à la fin de la partie
-   (structure configurée avant le lancement, comme en solo §6.2)
+### 8.2 Barème de points
+Deux modes choisis avant de démarrer la partie :
+- **Duo** : chaque joueur garde son propre score sur chaque manche (barème
+  identique au solo, §3.3/§4.4).
+- **Confrontation** : sur chaque manche, seul le joueur le plus proche de la
+  cible (chiffres) ou avec le mot le plus long (lettres) garde ses points,
+  l'autre passe à 0 ; à égalité, les deux gardent les leurs.
 
-### 8.3 Gestion des erreurs
-- Timeout de connexion avec message clair si aucun appareil trouvé
-- Gestion de la déconnexion en cours de partie (proposer reconnexion ou
-  fin de partie avec sauvegarde du score déjà acquis)
-- Permissions runtime nécessaires (Bluetooth / localisation selon version
-  Android) demandées explicitement avec explication à l'utilisateur
+### 8.3 Enregistrement
+Chaque partie duo enregistre une session par profil (types `DUO` et
+`DUO_CONFRONTATION`, distincts de `STRUCTUREE`), avec le vainqueur du duel
+(score total le plus élevé) marqué sur chaque session — sert aux trophées
+dédiés (première partie jouée/gagnée, dixième gagnée) et à un classement
+séparé du classement solo par niveau, pour ne pas mélanger un score parfois
+écrasé à 0 par la confrontation avec le meilleur score solo réel.
 
 ---
 

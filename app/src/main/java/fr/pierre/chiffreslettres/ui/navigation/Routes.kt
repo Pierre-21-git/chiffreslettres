@@ -33,6 +33,11 @@ object Routes {
     const val JEU_PARTIE = "partie/jeu"
     const val RECAP_PARTIE = "partie/recap"
 
+    const val PARTIE_DUO_GRAPH = "partieDuo"
+    const val CONFIGURATION_PARTIE_DUO = "partieDuo/configuration"
+    const val JEU_PARTIE_DUO = "partieDuo/jeu"
+    const val RECAP_PARTIE_DUO = "partieDuo/recap"
+
     const val CHOIX_DEFI_SERIE = "defi/choixNiveauSerie"
     const val CHOIX_DEFI_CHRONO = "defi/choixNiveauChrono"
     const val CHOIX_DEFI_QUOTIDIEN = "defi/quotidien"

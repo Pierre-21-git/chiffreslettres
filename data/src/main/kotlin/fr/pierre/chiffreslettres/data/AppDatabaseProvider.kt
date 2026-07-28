@@ -83,6 +83,17 @@ private val MIGRATION_5_6 = object : Migration(5, 6) {
     }
 }
 
+/**
+ * v6 → v7 : ajout de `victoireDuel` sur `SessionEntity` (mode duo/confrontation, retour
+ * utilisateur) — nullable, sans défaut, laissé `NULL` pour toutes les sessions déjà en base
+ * (types autres que DUO/DUO_CONFRONTATION, pour qui ce champ n'a pas de sens).
+ */
+private val MIGRATION_6_7 = object : Migration(6, 7) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `SessionEntity` ADD COLUMN `victoireDuel` INTEGER")
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null
@@ -90,7 +101,7 @@ object AppDatabaseProvider {
     fun obtenir(context: Context): AppDatabase =
         instance ?: synchronized(this) {
             instance ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "chiffreslettres.db")
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                 .build()
                 .also { instance = it }
         }

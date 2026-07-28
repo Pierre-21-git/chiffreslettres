@@ -32,7 +32,7 @@ fun ConfigurationPartieScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        EnTeteEcran("Configurer la partie classique", onRetour)
+        EnTeteEcran("Configurer la partie solo", onRetour)
         PucePseudo(pseudoActif, onClick = onChangerProfil)
         Text("Choisir un niveau", style = MaterialTheme.typography.titleMedium)
 
@@ -55,7 +55,7 @@ fun ConfigurationPartieScreen(
  * comptes sont égaux (ce qui est toujours le cas, un seul niveau étant choisi pour les
  * deux modes), ça donne une stricte alternance L/C.
  */
-private fun sequenceAlternee(
+internal fun sequenceAlternee(
     nombreLettres: Int,
     niveauLettres: NiveauLettres,
     nombreChiffres: Int,
