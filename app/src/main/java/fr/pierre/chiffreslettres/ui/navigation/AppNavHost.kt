@@ -202,7 +202,6 @@ fun AppNavHost(
             MesStatistiquesScreen(
                 profilId = profilIdArg,
                 historiqueRepository = historiqueRepository,
-                defiRepository = defiRepository,
                 onRetour = { navController.popBackStack() },
             )
         }

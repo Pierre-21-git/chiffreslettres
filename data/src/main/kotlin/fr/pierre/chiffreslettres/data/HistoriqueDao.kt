@@ -35,15 +35,14 @@ interface HistoriqueDao {
     }
 
     /**
-     * Top 5 scores de partie (pas de regroupement par profil : un même joueur peut
-     * apparaître plusieurs fois, retour utilisateur) pour un niveau donné (spec
-     * §7.2), tous confondus chiffres/lettres (les deux modes partagent désormais
-     * les mêmes noms de niveau), uniquement les parties structurées. Le score
-     * affiché est le score final de la partie (`SessionEntity.scoreTotal`, somme
-     * des manches), pas celui d'une manche individuelle (retour utilisateur) — un
-     * seul niveau s'applique à toutes les manches d'une partie structurée, d'où
-     * le `JOIN` sur `MancheEntity` pour filtrer par niveau malgré le regroupement
-     * par session. À score égal, la partie la plus récente passe devant.
+     * Podium (top 3, retour utilisateur) des scores de partie (pas de regroupement par profil :
+     * un même joueur peut apparaître plusieurs fois) pour un niveau donné (spec §7.2), tous
+     * confondus chiffres/lettres (les deux modes partagent désormais les mêmes noms de niveau),
+     * uniquement les parties structurées. Le score affiché est le score final de la partie
+     * (`SessionEntity.scoreTotal`, somme des manches), pas celui d'une manche individuelle
+     * (retour utilisateur) — un seul niveau s'applique à toutes les manches d'une partie
+     * structurée, d'où le `JOIN` sur `MancheEntity` pour filtrer par niveau malgré le
+     * regroupement par session. À score égal, la partie la plus récente passe devant.
      */
     @Query(
         """
@@ -54,36 +53,10 @@ interface HistoriqueDao {
         WHERE s.type = 'STRUCTUREE' AND m.niveauCode = :niveauCode
         GROUP BY s.id
         ORDER BY s.scoreTotal DESC, s.date DESC
-        LIMIT 5
+        LIMIT 3
         """,
     )
     fun classementParNiveau(niveauCode: String): Flow<List<LigneClassement>>
-
-    /** Nombre de manches jouées en entraînement libre par un joueur, pour un mode et un niveau donnés. */
-    @Query(
-        """
-        SELECT COUNT(*)
-        FROM MancheEntity m
-        INNER JOIN SessionEntity s ON s.id = m.sessionId
-        WHERE s.profilId = :profilId AND s.type = 'LIBRE' AND m.mode = :mode AND m.niveauCode = :niveauCode
-        """,
-    )
-    fun compterManchesEntrainementParNiveau(profilId: Long, mode: ModeJeu, niveauCode: String): Flow<Int>
-
-    /**
-     * Nombre de parties solo (structurées) jouées par un joueur pour un niveau donné. Un seul
-     * niveau s'applique à toutes les manches d'une partie solo, d'où le `JOIN` sur
-     * `MancheEntity` pour filtrer par niveau tout en comptant des sessions distinctes.
-     */
-    @Query(
-        """
-        SELECT COUNT(DISTINCT s.id)
-        FROM SessionEntity s
-        INNER JOIN MancheEntity m ON m.sessionId = s.id
-        WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE' AND m.niveauCode = :niveauCode
-        """,
-    )
-    fun compterPartiesSoloParNiveau(profilId: Long, niveauCode: String): Flow<Int>
 
     /** Top 3 des meilleures parties solo (score final de la partie) d'un joueur pour un niveau donné. */
     @Query(

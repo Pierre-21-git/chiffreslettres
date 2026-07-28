@@ -26,3 +26,9 @@ val RougeEncre = Color(0xFFFBEEE9)
 
 val TextMuted = Color(0xFFCBB98A)
 val TextFaint = Color(0xFF8A8267)
+
+/** Paliers de trophées (retour utilisateur) : Or réutilise Brass/BrassBright, déjà doré. */
+val PalierBronze = Color(0xFFCD7F32)
+val PalierArgent = Color(0xFFB8C0C8)
+val PalierPlatine = Color(0xFFDCEAEA)
+val PalierDiamant = Color(0xFF7FD8F0)

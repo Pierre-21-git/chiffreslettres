@@ -3,12 +3,18 @@ package fr.pierre.chiffreslettres.ui.statistiques
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -23,18 +29,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.ExportStatistiques
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
-import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.data.StatistiquesExport
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.numbers.Niveau
+import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.Ivory
+import fr.pierre.chiffreslettres.ui.theme.PalierArgent
+import fr.pierre.chiffreslettres.ui.theme.PalierBronze
+import fr.pierre.chiffreslettres.ui.theme.TextMuted
 import java.io.IOException
 import java.time.Instant
 import java.time.ZoneId
@@ -213,12 +227,14 @@ fun StatistiquesJoueurScreen(
 private fun nomFichier(pseudo: String?): String =
     (pseudo ?: "profil").map { if (it.isLetterOrDigit()) it else '_' }.joinToString("")
 
-/** Statistiques propres à un profil, par niveau (retour utilisateur : écran dédié, séparé de la fiche). */
+/**
+ * Mêmes podiums que [StatistiquesGeneralesScreen], mais uniquement les meilleurs scores de ce
+ * profil (retour utilisateur : même page, sans le détail entraînement/défi d'avant).
+ */
 @Composable
 fun MesStatistiquesScreen(
     profilId: Long,
     historiqueRepository: HistoriqueRepository,
-    defiRepository: DefiRepository,
     onRetour: (() -> Unit)? = null,
 ) {
     Column(
@@ -227,23 +243,18 @@ fun MesStatistiquesScreen(
     ) {
         EnTeteEcran("Mes statistiques", onRetour)
 
-        var premierBlocAffiche = true
-        var uneDonneeAffichee = false
-        for (niveau in Niveau.entries) {
-            val affiche = StatistiquesJoueurNiveau(
-                historiqueRepository,
-                defiRepository,
-                profilId,
-                niveau,
-                afficherSeparateurAvant = !premierBlocAffiche,
-            )
-            if (affiche) {
-                uneDonneeAffichee = true
-                premierBlocAffiche = false
+        Text(
+            "Mes meilleurs scores par niveau (parties classiques, chiffres et lettres confondus)",
+            style = MaterialTheme.typography.titleMedium,
+        )
+        for ((position, niveau) in Niveau.entries.withIndex()) {
+            val meilleuresFlow = remember(niveau) { historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name) }
+            val meilleures by meilleuresFlow.collectAsState(initial = emptyList())
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(niveau.label, style = MaterialTheme.typography.titleSmall)
+                Podium(meilleures.map { EntreePodium(null, it.score, it.date) })
             }
-        }
-        if (!uneDonneeAffichee) {
-            Text("Aucune donnée enregistrée pour ce profil.", style = MaterialTheme.typography.bodyMedium)
+            if (position != Niveau.entries.lastIndex) HorizontalDivider()
         }
     }
 }
@@ -267,115 +278,57 @@ fun StatistiquesGeneralesScreen(
         for ((position, niveau) in Niveau.entries.withIndex()) {
             val classementFlow = remember(niveau) { historiqueRepository.classementParNiveau(niveau.name) }
             val classement by classementFlow.collectAsState(initial = emptyList())
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(niveau.label, style = MaterialTheme.typography.titleSmall)
-                if (classement.isEmpty()) {
-                    Text("Aucun score enregistré.", style = MaterialTheme.typography.bodyMedium)
-                } else {
-                    for ((rang, ligne) in classement.withIndex()) {
-                        Text(
-                            "${rang + 1}. ${ligne.avatar} ${ligne.pseudo} — ${ligne.score} points (${formatDate(ligne.date)})",
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-                }
+                Podium(classement.map { EntreePodium("${it.avatar} ${it.pseudo}", it.score, it.date) })
             }
             if (position != Niveau.entries.lastIndex) HorizontalDivider()
         }
     }
 }
 
-/** Affiche le bloc de stats du niveau s'il comporte des données, et renvoie s'il a été affiché. */
+/** [label] à null pour "mes statistiques" (toujours le joueur courant, pas besoin de le nommer). */
+private data class EntreePodium(val label: String?, val score: Int, val date: Long)
+
+/** Podium des 3 meilleurs scores (retour utilisateur), remplace l'ancienne liste numérotée. */
 @Composable
-private fun StatistiquesJoueurNiveau(
-    historiqueRepository: HistoriqueRepository,
-    defiRepository: DefiRepository,
-    profilId: Long,
-    niveau: Niveau,
-    afficherSeparateurAvant: Boolean,
-): Boolean {
-    val entrainementChiffres by remember(profilId, niveau) {
-        historiqueRepository.compterManchesEntrainementParNiveau(profilId, ModeJeu.CHIFFRES, niveau.name)
-    }.collectAsState(initial = 0)
-    val entrainementLettres by remember(profilId, niveau) {
-        historiqueRepository.compterManchesEntrainementParNiveau(profilId, ModeJeu.LETTRES, niveau.name)
-    }.collectAsState(initial = 0)
-    val partiesSolo by remember(profilId, niveau) {
-        historiqueRepository.compterPartiesSoloParNiveau(profilId, niveau.name)
-    }.collectAsState(initial = 0)
-    val meilleuresParties by remember(profilId, niveau) {
-        historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name)
-    }.collectAsState(initial = emptyList())
-    val meilleursDefisChiffres by remember(profilId, niveau) {
-        defiRepository.meilleursDefisParNiveau(profilId, ModeJeu.CHIFFRES, niveau.name)
-    }.collectAsState(initial = emptyList())
-    val meilleursDefisLettres by remember(profilId, niveau) {
-        defiRepository.meilleursDefisParNiveau(profilId, ModeJeu.LETTRES, niveau.name)
-    }.collectAsState(initial = emptyList())
-    val meilleuresChronoChiffres by remember(profilId, niveau) {
-        defiRepository.meilleuresPerformancesChronoParNiveau(profilId, ModeJeu.CHIFFRES, niveau.name)
-    }.collectAsState(initial = emptyList())
-    val meilleuresChronoLettres by remember(profilId, niveau) {
-        defiRepository.meilleuresPerformancesChronoParNiveau(profilId, ModeJeu.LETTRES, niveau.name)
-    }.collectAsState(initial = emptyList())
-
-    val aDesDonnees = entrainementChiffres > 0 || entrainementLettres > 0 || partiesSolo > 0 ||
-        meilleuresParties.isNotEmpty() || meilleursDefisChiffres.isNotEmpty() || meilleursDefisLettres.isNotEmpty() ||
-        meilleuresChronoChiffres.isNotEmpty() || meilleuresChronoLettres.isNotEmpty()
-    if (!aDesDonnees) return false
-
-    if (afficherSeparateurAvant) HorizontalDivider()
-
-    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text(niveau.label, style = MaterialTheme.typography.titleSmall)
-        Text("Entraînement chiffres : $entrainementChiffres manche(s)", style = MaterialTheme.typography.bodyMedium)
-        Text("Entraînement lettres : $entrainementLettres manche(s)", style = MaterialTheme.typography.bodyMedium)
-        Text("Parties classiques jouées : $partiesSolo", style = MaterialTheme.typography.bodyMedium)
-        if (meilleuresParties.isNotEmpty()) {
-            Text("3 meilleures parties classiques", style = MaterialTheme.typography.labelLarge)
-            for ((position, partie) in meilleuresParties.withIndex()) {
-                Text(
-                    "${position + 1}. ${partie.score} points (${formatDate(partie.date)})",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-        }
-        if (meilleursDefisChiffres.isNotEmpty()) {
-            Text("Défi chiffres — meilleures séries", style = MaterialTheme.typography.labelLarge)
-            for ((position, defi) in meilleursDefisChiffres.withIndex()) {
-                Text(
-                    "${position + 1}. ${defi.serie} réussite(s) (${formatDate(defi.date)})",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-        }
-        if (meilleursDefisLettres.isNotEmpty()) {
-            Text("Défi lettres — meilleures séries", style = MaterialTheme.typography.labelLarge)
-            for ((position, defi) in meilleursDefisLettres.withIndex()) {
-                Text(
-                    "${position + 1}. ${defi.serie} réussite(s) (${formatDate(defi.date)})",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-        }
-        if (meilleuresChronoChiffres.isNotEmpty()) {
-            Text("Défi chrono chiffres — meilleures performances", style = MaterialTheme.typography.labelLarge)
-            for ((position, defi) in meilleuresChronoChiffres.withIndex()) {
-                Text(
-                    "${position + 1}. ${defi.serie} réussite(s) (${formatDate(defi.date)})",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-        }
-        if (meilleuresChronoLettres.isNotEmpty()) {
-            Text("Défi chrono lettres — meilleures performances", style = MaterialTheme.typography.labelLarge)
-            for ((position, defi) in meilleuresChronoLettres.withIndex()) {
-                Text(
-                    "${position + 1}. ${defi.serie} réussite(s) (${formatDate(defi.date)})",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
+private fun Podium(entrees: List<EntreePodium>) {
+    if (entrees.isEmpty()) {
+        Text("Aucun score enregistré.", style = MaterialTheme.typography.bodyMedium)
+        return
+    }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.Bottom,
+    ) {
+        for (rang in listOf(1, 0, 2)) {
+            val entree = entrees.getOrNull(rang) ?: continue
+            MarchePodium(rang, entree, modifier = Modifier.weight(1f))
         }
     }
-    return true
+}
+
+@Composable
+private fun MarchePodium(rang: Int, entree: EntreePodium, modifier: Modifier = Modifier) {
+    val (medaille, couleur, hauteur) = when (rang) {
+        0 -> Triple("🥇", BrassBright, 88.dp)
+        1 -> Triple("🥈", PalierArgent, 66.dp)
+        else -> Triple("🥉", PalierBronze, 48.dp)
+    }
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Text(medaille, fontSize = 22.sp)
+        if (entree.label != null) {
+            Text(entree.label, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, maxLines = 1)
+        }
+        Text("${entree.score} pts", color = Ivory, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(hauteur)
+                .background(couleur.copy(alpha = 0.3f), RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
+                .border(1.5.dp, couleur, RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
+        )
+        Text(formatDate(entree.date), style = MaterialTheme.typography.labelSmall, color = TextMuted)
+    }
 }

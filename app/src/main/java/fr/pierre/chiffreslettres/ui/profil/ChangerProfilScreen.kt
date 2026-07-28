@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,6 +30,7 @@ import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilEntity
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import kotlinx.coroutines.launch
 
 @Composable
@@ -62,7 +62,8 @@ fun ChangerProfilScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    OutlinedButton(
+                    PucePseudo(
+                        pseudo = "${profil.avatar} ${profil.pseudo}",
                         modifier = Modifier.weight(1f),
                         onClick = {
                             scope.launch {
@@ -70,9 +71,7 @@ fun ChangerProfilScreen(
                                 onProfilChoisi()
                             }
                         },
-                    ) {
-                        Text("${profil.avatar}  ${profil.pseudo}")
-                    }
+                    )
                     IconButton(onClick = { profilARenommer = profil }) {
                         Icon(Icons.Filled.Edit, contentDescription = "Renommer")
                     }

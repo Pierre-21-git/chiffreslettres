@@ -4,12 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -25,18 +28,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.data.CatalogueTrophees
 import fr.pierre.chiffreslettres.data.CategorieTrophee
+import fr.pierre.chiffreslettres.data.Palier
 import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.ui.statistiques.formatDate
+import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.Ivory
+import fr.pierre.chiffreslettres.ui.theme.PalierArgent
+import fr.pierre.chiffreslettres.ui.theme.PalierBronze
+import fr.pierre.chiffreslettres.ui.theme.PalierDiamant
+import fr.pierre.chiffreslettres.ui.theme.PalierPlatine
 import fr.pierre.chiffreslettres.ui.theme.PanelDeep
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
+
+private fun couleurPalier(palier: Palier): Color = when (palier) {
+    Palier.BRONZE -> PalierBronze
+    Palier.ARGENT -> PalierArgent
+    Palier.OR -> BrassBright
+    Palier.PLATINE -> PalierPlatine
+    Palier.DIAMANT -> PalierDiamant
+}
 
 /**
  * Écran unique pour les deux points d'entrée (retour utilisateur) : liste catalogue depuis
@@ -114,6 +132,7 @@ fun TropheesScreen(
 
 @Composable
 private fun TuileTrophee(trophee: Trophee, debloque: Boolean, onClick: () -> Unit) {
+    val couleur = couleurPalier(trophee.palier)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -126,7 +145,16 @@ private fun TuileTrophee(trophee: Trophee, debloque: Boolean, onClick: () -> Uni
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text("🏆", fontSize = 28.sp)
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(couleur.copy(alpha = 0.25f))
+                .border(1.5.dp, couleur, CircleShape),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text("🏆", fontSize = 18.sp)
+        }
         Text(
             trophee.titre,
             color = if (debloque) Ivory else TextMuted,

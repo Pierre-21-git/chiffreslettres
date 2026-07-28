@@ -24,6 +24,9 @@ data class TropheeStats(
     val meilleureSerieJoursDefiQuotidien: Int,
 )
 
+/** Palier de difficulté d'un trophée (retour utilisateur), du plus facile au plus rare. */
+enum class Palier { BRONZE, ARGENT, OR, PLATINE, DIAMANT }
+
 enum class CategorieTrophee(val titre: String) {
     PARTIES_TERMINEES("Parties terminées"),
     SCORE_PARTIE("Score de partie"),
@@ -40,6 +43,7 @@ class Trophee(
     val titre: String,
     val description: String,
     val categorie: CategorieTrophee,
+    val palier: Palier,
     /** Regroupement visuel au sein d'une catégorie (ex. niveau du défi chrono), null si non applicable. */
     val sousTitre: String? = null,
     val estDebloque: (TropheeStats) -> Boolean,
@@ -52,6 +56,34 @@ private val SEUILS_DEFI_CHRONO = listOf(2, 3, 5, 10, 12, 15)
 private val LONGUEURS_MOTS_TROPHEE = 4..10
 private val SEUILS_DEFI_QUOTIDIEN = listOf(7, 30)
 
+// Paliers choisis par l'utilisateur (retour utilisateur, fichier trophees.txt réorganisé à la main).
+private val PALIERS_PARTIE_MOTS_MIN = mapOf(4 to Palier.BRONZE, 5 to Palier.ARGENT, 6 to Palier.ARGENT, 7 to Palier.OR, 8 to Palier.DIAMANT)
+private val PALIERS_MOTS_1 = mapOf(
+    4 to Palier.BRONZE, 5 to Palier.BRONZE, 6 to Palier.ARGENT, 7 to Palier.ARGENT,
+    8 to Palier.OR, 9 to Palier.OR, 10 to Palier.PLATINE,
+)
+private val PALIERS_MOTS_10 = mapOf(
+    4 to Palier.ARGENT, 5 to Palier.ARGENT, 6 to Palier.ARGENT, 7 to Palier.OR,
+    8 to Palier.OR, 9 to Palier.PLATINE, 10 to Palier.DIAMANT,
+)
+private val PALIERS_SCORE_1 = mapOf(
+    20 to Palier.BRONZE, 30 to Palier.ARGENT, 40 to Palier.ARGENT, 50 to Palier.OR,
+    60 to Palier.OR, 70 to Palier.OR, 80 to Palier.OR, 90 to Palier.PLATINE,
+)
+private val PALIERS_SCORE_10 = mapOf(
+    20 to Palier.BRONZE, 30 to Palier.ARGENT, 40 to Palier.ARGENT, 50 to Palier.OR,
+    60 to Palier.OR, 70 to Palier.OR, 80 to Palier.PLATINE, 90 to Palier.DIAMANT,
+)
+private val PALIERS_DEFI_SERIE = mapOf(
+    3 to Palier.BRONZE, 5 to Palier.ARGENT, 10 to Palier.ARGENT, 15 to Palier.OR,
+    20 to Palier.OR, 30 to Palier.PLATINE, 50 to Palier.DIAMANT,
+)
+private val PALIERS_DEFI_CHRONO = mapOf(
+    2 to Palier.BRONZE, 3 to Palier.BRONZE, 5 to Palier.ARGENT, 10 to Palier.OR,
+    12 to Palier.OR, 15 to Palier.PLATINE,
+)
+private val PALIERS_DEFI_QUOTIDIEN = mapOf(7 to Palier.ARGENT, 30 to Palier.OR)
+
 /** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 71 au total. */
 object CatalogueTrophees {
 
@@ -62,6 +94,7 @@ object CatalogueTrophees {
                 "Premier compte exact",
                 "Obtenir un compte exact en chiffres, en partie classique.",
                 CategorieTrophee.COMPTES_EXACTS,
+                palier = Palier.BRONZE,
             ) { it.comptesExacts >= 1 },
         )
         add(
@@ -70,6 +103,7 @@ object CatalogueTrophees {
                 "Dixième compte exact",
                 "Obtenir 10 comptes exacts en chiffres, en partie classique.",
                 CategorieTrophee.COMPTES_EXACTS,
+                palier = Palier.ARGENT,
             ) { it.comptesExacts >= 10 },
         )
         add(
@@ -78,6 +112,7 @@ object CatalogueTrophees {
                 "Centième compte exact",
                 "Obtenir 100 comptes exacts en chiffres, en partie classique.",
                 CategorieTrophee.COMPTES_EXACTS,
+                palier = Palier.OR,
             ) { it.comptesExacts >= 100 },
         )
 
@@ -89,6 +124,7 @@ object CatalogueTrophees {
                     "Premier mot de $longueur lettres",
                     "Trouver un mot de $longueur lettres$precision, en partie classique.",
                     CategorieTrophee.MOTS,
+                    palier = PALIERS_MOTS_1.getValue(longueur),
                 ) { (it.motsParLongueur[longueur] ?: 0) >= 1 },
             )
             add(
@@ -97,6 +133,7 @@ object CatalogueTrophees {
                     "Dixième mot de $longueur lettres",
                     "Trouver 10 mots de $longueur lettres, en partie classique.",
                     CategorieTrophee.MOTS,
+                    palier = PALIERS_MOTS_10.getValue(longueur),
                 ) { (it.motsParLongueur[longueur] ?: 0) >= 10 },
             )
         }
@@ -107,6 +144,7 @@ object CatalogueTrophees {
                 "Tous les comptes exacts dans une partie",
                 "Terminer une partie classique où toutes les manches chiffres ont un compte exact.",
                 CategorieTrophee.PARTIE_PARFAITE,
+                palier = Palier.ARGENT,
             ) { it.partieTousComptesExacts },
         )
         for (seuil in SEUILS_MOTS) {
@@ -116,6 +154,7 @@ object CatalogueTrophees {
                     "Que des mots de $seuil lettres ou plus dans une partie",
                     "Terminer une partie classique où toutes les manches lettres ont un mot valide d'au moins $seuil lettres.",
                     CategorieTrophee.PARTIE_PARFAITE,
+                    palier = PALIERS_PARTIE_MOTS_MIN.getValue(seuil),
                 ) { it.partiesMotsMin[seuil] == true },
             )
         }
@@ -127,6 +166,7 @@ object CatalogueTrophees {
                     "Première partie à au moins $seuil points",
                     "Terminer une partie classique avec au moins $seuil points.",
                     CategorieTrophee.SCORE_PARTIE,
+                    palier = PALIERS_SCORE_1.getValue(seuil),
                 ) { (it.partiesParSeuilScore[seuil] ?: 0) >= 1 },
             )
             add(
@@ -135,6 +175,7 @@ object CatalogueTrophees {
                     "Dixième partie à au moins $seuil points",
                     "Terminer 10 parties classiques avec au moins $seuil points.",
                     CategorieTrophee.SCORE_PARTIE,
+                    palier = PALIERS_SCORE_10.getValue(seuil),
                 ) { (it.partiesParSeuilScore[seuil] ?: 0) >= 10 },
             )
         }
@@ -145,6 +186,7 @@ object CatalogueTrophees {
                 "Première partie terminée",
                 "Terminer une partie classique, tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
+                palier = Palier.BRONZE,
             ) { it.partiesSoloTotal >= 1 },
         )
         add(
@@ -153,6 +195,7 @@ object CatalogueTrophees {
                 "Dixième partie terminée",
                 "Terminer 10 parties classiques, tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
+                palier = Palier.ARGENT,
             ) { it.partiesSoloTotal >= 10 },
         )
         add(
@@ -161,6 +204,7 @@ object CatalogueTrophees {
                 "Centième partie terminée",
                 "Terminer 100 parties classiques, tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
+                palier = Palier.OR,
             ) { it.partiesSoloTotal >= 100 },
         )
 
@@ -170,6 +214,7 @@ object CatalogueTrophees {
                 "Premier défi terminé",
                 "Aller jusqu'au bout d'un défi (chiffres ou lettres, tout niveau).",
                 CategorieTrophee.DEFI,
+                palier = Palier.BRONZE,
             ) { it.defisTotal >= 1 },
         )
         for (mode in ModeJeu.entries) {
@@ -182,6 +227,7 @@ object CatalogueTrophees {
                         "Série de $seuil en défi $modeCode",
                         "Aligner $seuil réussites ou plus d'affilée dans un même défi $modeCode.",
                         CategorieTrophee.DEFI,
+                        palier = PALIERS_DEFI_SERIE.getValue(seuil),
                         sousTitre = sousTitreMode,
                     ) { (it.meilleuresSeriesDefi[mode.name] ?: 0) >= seuil },
                 )
@@ -199,6 +245,7 @@ object CatalogueTrophees {
                         "$seuil $nature en défi chrono",
                         "Obtenir $seuil $nature en défi chrono $modeCode, tous niveaux confondus.",
                         CategorieTrophee.DEFI_CHRONO,
+                        palier = PALIERS_DEFI_CHRONO.getValue(seuil),
                         sousTitre = sousTitreMode,
                     ) { (it.meilleuresReussitesDefiChrono[mode.name] ?: 0) >= seuil },
                 )
@@ -213,6 +260,7 @@ object CatalogueTrophees {
                     "${libellesPaliersQuotidien.getValue(seuil)} de défi quotidien",
                     "Réussir le défi quotidien $seuil jours d'affilée.",
                     CategorieTrophee.DEFI_QUOTIDIEN,
+                    palier = PALIERS_DEFI_QUOTIDIEN.getValue(seuil),
                 ) { it.meilleureSerieJoursDefiQuotidien >= seuil },
             )
         }

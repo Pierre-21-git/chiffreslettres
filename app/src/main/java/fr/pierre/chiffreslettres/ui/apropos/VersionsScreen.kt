@@ -17,6 +17,20 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.34",
+        date = "2026-07-28",
+        changements = listOf(
+            "Trophées : 5 paliers (bronze/argent/or/platine/diamant) choisis à la main, " +
+                "affichés en pastille de couleur autour de chaque trophée.",
+            "Statistiques générales : podium (3 premiers) à la place de la liste des scores.",
+            "Mes statistiques : même page que Statistiques générales, mais avec uniquement " +
+                "les meilleurs scores du profil actif (le détail entraînement/défi par " +
+                "niveau, moins utilisé, a été retiré).",
+            "Page de choix de profil : les boutons de profil reprennent le style des " +
+                "plaquettes avatar/pseudo utilisées ailleurs dans l'app.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.33",
         date = "2026-07-28",
         changements = listOf(
