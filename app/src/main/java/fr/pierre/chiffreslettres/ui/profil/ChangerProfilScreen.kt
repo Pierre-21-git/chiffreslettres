@@ -65,11 +65,14 @@ fun ChangerProfilScreen(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    // Groupe (cartouche + icônes) centré comme un seul bloc, plutôt que le
+                    // cartouche étiré (`weight`) qui poussait les icônes tout à droite et
+                    // désalignait la vignette du titre centré au-dessus (retour utilisateur).
+                    horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
                 ) {
                     PucePseudo(
                         pseudo = "${profil.avatar} ${profil.pseudo}",
-                        modifier = Modifier.weight(1f),
+                        pleineLargeur = false,
                         onClick = {
                             scope.launch {
                                 profilActifStore.definirProfilActif(profil.id)

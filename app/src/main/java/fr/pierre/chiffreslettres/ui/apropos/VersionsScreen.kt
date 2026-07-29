@@ -17,6 +17,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.44",
+        date = "2026-07-29",
+        changements = listOf(
+            "Écran \"Choisir un profil\" : la vignette de chaque joueur (avatar/pseudo + " +
+                "icônes renommer/supprimer) forme désormais un bloc compact centré, aligné " +
+                "avec le titre \"Choisir un profil\" et le bouton \"Créer un nouveau profil\" " +
+                "au-dessus/en dessous — au lieu d'un cartouche étiré qui repoussait les icônes " +
+                "tout à droite. Le titre \"Chiffres & Lettres\" garde sa position.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.43",
         date = "2026-07-29",
         changements = listOf(
