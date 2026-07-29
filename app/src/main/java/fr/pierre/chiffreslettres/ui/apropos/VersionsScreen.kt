@@ -17,6 +17,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.43",
+        date = "2026-07-29",
+        changements = listOf(
+            "Partie duo, mode Duo : le score de la partie en cours affiché sur l'écran de " +
+                "transition n'avance plus dès que le premier joueur a fini une manche — il " +
+                "n'est mis à jour qu'une fois les deux joueurs passés, comme c'était déjà le " +
+                "cas en mode Confrontation.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.42",
         date = "2026-07-29",
         changements = listOf(

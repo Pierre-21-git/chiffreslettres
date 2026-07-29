@@ -110,13 +110,17 @@ class PartieDuoViewModel : ViewModel() {
     /**
      * Résultats finaux prêts à être enregistrés : en mode Confrontation, le score de chaque
      * manche est écrasé à 0 pour le perdant (le gagnant garde le sien ; égalité → chacun garde
-     * le sien). En mode Duo, les scores individuels ne sont jamais modifiés.
+     * le sien). En mode Duo, les scores individuels ne sont jamais modifiés. Dans les deux
+     * modes, une manche n'est comptée qu'une fois les deux joueurs passés (retour utilisateur :
+     * le score affiché en cours de partie ne doit pas avancer dès le premier joueur, comme en
+     * Confrontation où c'est déjà le cas par construction).
      */
     fun resultatsFinaux(): Pair<List<ResultatManche>, List<ResultatManche>> {
         val r1 = _resultatsJoueur1.value
         val r2 = _resultatsJoueur2.value
         if (mode != ModeScoreDuo.CONFRONTATION) {
-            return r1.map { it.resultat } to r2.map { it.resultat }
+            val manchesCompletes = minOf(r1.size, r2.size)
+            return r1.take(manchesCompletes).map { it.resultat } to r2.take(manchesCompletes).map { it.resultat }
         }
         val finaux1 = mutableListOf<ResultatManche>()
         val finaux2 = mutableListOf<ResultatManche>()
