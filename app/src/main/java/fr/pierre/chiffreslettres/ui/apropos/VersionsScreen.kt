@@ -17,6 +17,18 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.47",
+        date = "2026-07-29",
+        changements = listOf(
+            "Nouveau : \"Partie réseau\" (première brique, connexion uniquement) — deux " +
+                "téléphones sur le même réseau Wifi peuvent se découvrir et se connecter " +
+                "(hôte/invité, via NsdManager) et échanger leur pseudo/avatar. La logique de " +
+                "jeu synchronisée (manches, scores, trophées, statistiques) arrivera dans une " +
+                "prochaine version : cet écran ne fait encore que valider la connexion entre " +
+                "les deux appareils.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.46",
         date = "2026-07-29",
         changements = listOf(

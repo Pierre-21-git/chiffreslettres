@@ -30,6 +30,7 @@ fun MenuPrincipalScreen(
     onEntrainementLibre: () -> Unit,
     onPartieStructuree: () -> Unit,
     onPartieDuo: () -> Unit,
+    onPartieReseau: () -> Unit,
     onDefiSerie: () -> Unit,
     onDefiChrono: () -> Unit,
     onDefiQuotidien: () -> Unit,
@@ -51,6 +52,7 @@ fun MenuPrincipalScreen(
 
         TuilePrincipale("Partie solo", onClick = onPartieStructuree)
         TuilePrincipale("Partie duo", onClick = onPartieDuo)
+        TuilePrincipale("Partie réseau", onClick = onPartieReseau)
         TuilePrincipale("Défi série", onClick = onDefiSerie)
         TuilePrincipale("Défi chrono", onClick = onDefiChrono)
         TuilePrincipale("Défi quotidien", onClick = onDefiQuotidien)

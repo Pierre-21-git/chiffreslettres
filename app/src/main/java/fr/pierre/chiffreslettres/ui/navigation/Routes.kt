@@ -38,6 +38,12 @@ object Routes {
     const val JEU_PARTIE_DUO = "partieDuo/jeu"
     const val RECAP_PARTIE_DUO = "partieDuo/recap"
 
+    const val RESEAU_GRAPH = "reseau"
+    const val CHOIX_ROLE_RESEAU = "reseau/choixRole"
+    const val HOTE_ATTENTE_RESEAU = "reseau/hote/attente"
+    const val INVITE_RECHERCHE_RESEAU = "reseau/invite/recherche"
+    const val RESEAU_CONNEXION = "reseau/connexion"
+
     const val CHOIX_DEFI_SERIE = "defi/choixNiveauSerie"
     const val CHOIX_DEFI_CHRONO = "defi/choixNiveauChrono"
     const val CHOIX_DEFI_QUOTIDIEN = "defi/quotidien"

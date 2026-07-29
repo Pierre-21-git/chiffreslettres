@@ -1,5 +1,6 @@
 package fr.pierre.chiffreslettres.ui.navigation
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -57,6 +58,8 @@ import fr.pierre.chiffreslettres.ui.entrainement.ChoixNiveauEntrainementScreen
 import fr.pierre.chiffreslettres.ui.entrainement.EntrainementLibreViewModel
 import fr.pierre.chiffreslettres.ui.lettres.LettresRoundScreen
 import fr.pierre.chiffreslettres.ui.lettres.LettresRoundViewModel
+import fr.pierre.chiffreslettres.network.EtatPartieReseau
+import fr.pierre.chiffreslettres.network.PartieReseauViewModel
 import fr.pierre.chiffreslettres.ui.menu.MenuPrincipalScreen
 import fr.pierre.chiffreslettres.ui.partie.ConfigurationPartieScreen
 import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
@@ -75,6 +78,10 @@ import fr.pierre.chiffreslettres.ui.partieduo.premierJoueurManche
 import fr.pierre.chiffreslettres.ui.partieduo.vainqueurMancheChiffres
 import fr.pierre.chiffreslettres.ui.partieduo.vainqueurMancheLettres
 import fr.pierre.chiffreslettres.ui.partieduo.versTypePartie
+import fr.pierre.chiffreslettres.ui.partiereseau.AttenteHoteScreen
+import fr.pierre.chiffreslettres.ui.partiereseau.ChoixRoleReseauScreen
+import fr.pierre.chiffreslettres.ui.partiereseau.ConfirmationConnexionScreen
+import fr.pierre.chiffreslettres.ui.partiereseau.RechercheInviteScreen
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
 import fr.pierre.chiffreslettres.ui.statistiques.MesStatistiquesScreen
@@ -109,6 +116,18 @@ private fun partieDuoViewModel(navController: NavHostController, backStackEntry:
 }
 
 @Composable
+private fun partieReseauViewModel(
+    navController: NavHostController,
+    backStackEntry: NavBackStackEntry,
+    context: Context,
+    pseudo: String,
+    avatar: String,
+): PartieReseauViewModel {
+    val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Routes.RESEAU_GRAPH) }
+    return viewModel(parentEntry) { PartieReseauViewModel(context, pseudo, avatar) }
+}
+
+@Composable
 fun AppNavHost(
     dictionnaire: DictionnaireIndex,
     profilRepository: ProfilRepository,
@@ -133,6 +152,7 @@ fun AppNavHost(
                 onEntrainementLibre = { navController.navigate(Routes.ENTRAINEMENT_GRAPH) },
                 onPartieStructuree = { navController.navigate(Routes.PARTIE_GRAPH) },
                 onPartieDuo = { navController.navigate(Routes.PARTIE_DUO_GRAPH) },
+                onPartieReseau = { navController.navigate(Routes.RESEAU_GRAPH) },
                 onDefiSerie = { navController.navigate(Routes.CHOIX_DEFI_SERIE) },
                 onDefiChrono = { navController.navigate(Routes.CHOIX_DEFI_CHRONO) },
                 onDefiQuotidien = { navController.navigate(Routes.CHOIX_DEFI_QUOTIDIEN) },
@@ -639,6 +659,108 @@ fun AppNavHost(
                     },
                     onRetour = { navController.popBackStack() },
                 )
+            }
+        }
+
+        navigation(startDestination = Routes.CHOIX_ROLE_RESEAU, route = Routes.RESEAU_GRAPH) {
+            composable(Routes.CHOIX_ROLE_RESEAU) { backStackEntry ->
+                val reseauVm = partieReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                )
+                ChoixRoleReseauScreen(
+                    pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    onHeberger = {
+                        reseauVm.choisirHote()
+                        navController.navigate(Routes.HOTE_ATTENTE_RESEAU)
+                    },
+                    onRejoindre = {
+                        reseauVm.choisirInvite()
+                        navController.navigate(Routes.INVITE_RECHERCHE_RESEAU)
+                    },
+                    onRetour = { navController.popBackStack() },
+                )
+            }
+
+            composable(Routes.HOTE_ATTENTE_RESEAU) { backStackEntry ->
+                val reseauVm = partieReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                )
+                val etat by reseauVm.etat.collectAsState()
+                LaunchedEffect(etat) {
+                    if (etat is EtatPartieReseau.Connecte) {
+                        navController.navigate(Routes.RESEAU_CONNEXION) {
+                            popUpTo(Routes.CHOIX_ROLE_RESEAU) { inclusive = false }
+                        }
+                    }
+                }
+                val etatActuel = etat
+                AttenteHoteScreen(
+                    nomServiceAffiche = (etatActuel as? EtatPartieReseau.AttenteHote)?.nomServiceAffiche,
+                    erreur = (etatActuel as? EtatPartieReseau.Erreur)?.message,
+                    onAnnulerErreur = {
+                        reseauVm.annulerEtRevenirAuChoix()
+                        navController.popBackStack(Routes.CHOIX_ROLE_RESEAU, inclusive = false)
+                    },
+                    onAnnuler = {
+                        reseauVm.annulerEtRevenirAuChoix()
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable(Routes.INVITE_RECHERCHE_RESEAU) { backStackEntry ->
+                val reseauVm = partieReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                )
+                val etat by reseauVm.etat.collectAsState()
+                val parties by reseauVm.partiesTrouvees.collectAsState()
+                LaunchedEffect(etat) {
+                    if (etat is EtatPartieReseau.Connecte) {
+                        navController.navigate(Routes.RESEAU_CONNEXION) {
+                            popUpTo(Routes.CHOIX_ROLE_RESEAU) { inclusive = false }
+                        }
+                    }
+                }
+                val etatActuel = etat
+                RechercheInviteScreen(
+                    parties = parties,
+                    connexionEnCours = etatActuel is EtatPartieReseau.ConnexionEnCours,
+                    erreur = (etatActuel as? EtatPartieReseau.Erreur)?.message,
+                    onSelectionner = { reseauVm.rejoindre(it) },
+                    onAnnulerErreur = {
+                        reseauVm.annulerEtRevenirAuChoix()
+                        navController.popBackStack(Routes.CHOIX_ROLE_RESEAU, inclusive = false)
+                    },
+                    onAnnuler = {
+                        reseauVm.annulerEtRevenirAuChoix()
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable(Routes.RESEAU_CONNEXION) { backStackEntry ->
+                val reseauVm = partieReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                )
+                val etat by reseauVm.etat.collectAsState()
+                val etatConnecte = etat as? EtatPartieReseau.Connecte
+                if (etatConnecte != null) {
+                    ConfirmationConnexionScreen(
+                        profilDistant = etatConnecte.profilDistant,
+                        onTerminer = {
+                            reseauVm.annulerEtRevenirAuChoix()
+                            navController.popBackStack(Routes.MENU, inclusive = false)
+                        },
+                    )
+                }
             }
         }
 
