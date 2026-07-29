@@ -3,9 +3,11 @@ package fr.pierre.chiffreslettres.ui.navigation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -64,6 +66,7 @@ import fr.pierre.chiffreslettres.ui.partieduo.ConfigurationPartieDuoScreen
 import fr.pierre.chiffreslettres.ui.partieduo.ModeScoreDuo
 import fr.pierre.chiffreslettres.ui.partieduo.PartieDuoViewModel
 import fr.pierre.chiffreslettres.ui.partieduo.RecapPartieDuoScreen
+import fr.pierre.chiffreslettres.ui.partieduo.ResultatAffichage
 import fr.pierre.chiffreslettres.ui.partieduo.ResultatDuoManche
 import fr.pierre.chiffreslettres.ui.partieduo.TourDuo
 import fr.pierre.chiffreslettres.ui.partieduo.TransitionJoueurScreen
@@ -433,10 +436,14 @@ fun AppNavHost(
                 val seeds by duoVm.seeds.collectAsState()
                 val index by duoVm.index.collectAsState()
                 val tour by duoVm.tour.collectAsState()
+                val enTransition by duoVm.enTransition.collectAsState()
                 val resultats1 by duoVm.resultatsJoueur1.collectAsState()
                 val resultats2 by duoVm.resultatsJoueur2.collectAsState()
                 val profil2 = profils.find { it.id == duoVm.profil2Id }
                 val manche = sequence.getOrNull(index)
+                var demanderConfirmationRetour by remember { mutableStateOf(false) }
+
+                val onRetourAvecConfirmation = { demanderConfirmationRetour = true }
 
                 if (manche == null) {
                     LaunchedEffect(Unit) {
@@ -444,70 +451,87 @@ fun AppNavHost(
                             popUpTo(Routes.JEU_PARTIE_DUO) { inclusive = true }
                         }
                     }
+                } else if (enTransition) {
+                    val premier = premierJoueurManche(index)
+                    val finDePartie = tour != premier && index == sequence.lastIndex
+                    val prochainTour = when {
+                        finDePartie -> null
+                        tour == premier -> if (premier == TourDuo.JOUEUR1) TourDuo.JOUEUR2 else TourDuo.JOUEUR1
+                        else -> premierJoueurManche(index + 1)
+                    }
+                    val prochainJoueur = when (prochainTour) {
+                        TourDuo.JOUEUR1 -> profilActif
+                        TourDuo.JOUEUR2 -> profil2
+                        null -> null
+                    }
+                    val resultatsAffiches = buildList {
+                        resultats1.getOrNull(index)?.let {
+                            add(ResultatAffichage(profilActif?.pseudo ?: "Joueur 1", it.resultat.score, it.detail))
+                        }
+                        resultats2.getOrNull(index)?.let {
+                            add(ResultatAffichage(profil2?.pseudo ?: "Joueur 2", it.resultat.score, it.detail))
+                        }
+                    }
+                    TransitionJoueurScreen(
+                        prochainPseudo = prochainJoueur?.let { "${it.avatar} ${it.pseudo}" },
+                        resultats = resultatsAffiches,
+                        onPret = { duoVm.confirmerTransition() },
+                    )
                 } else {
+                    val joueurActif = if (tour == TourDuo.JOUEUR1) profilActif else profil2
+                    val seedManche = seeds.getOrNull(index) ?: 0L
                     val premier = premierJoueurManche(index)
                     val estPremierJoueurManche = tour == premier
-                    val joueurActif = if (tour == TourDuo.JOUEUR1) profilActif else profil2
-                    val autreJoueur = if (tour == TourDuo.JOUEUR1) profil2 else profilActif
-                    // Un seul écran de passation par manche, avant le second joueur (retour
-                    // utilisateur) : le premier garde le téléphone en main depuis la manche
-                    // précédente (il vient d'y être le second) ou depuis la configuration.
-                    var pretSecondJoueur by remember(index) { mutableStateOf(false) }
-                    val seedManche = seeds.getOrNull(index) ?: 0L
+                    val progressionManche = "${index + 1} / ${sequence.size}"
 
-                    if (!estPremierJoueurManche && !pretSecondJoueur) {
-                        TransitionJoueurScreen(
-                            pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
-                            onPret = { pretSecondJoueur = true },
-                        )
-                    } else {
-                        val resultatsActifs = if (tour == TourDuo.JOUEUR1) resultats1 else resultats2
-                        val scoreCumule = resultatsActifs.sumOf { it.resultat.score }
-                        val progressionManche = "${index + 1} / ${sequence.size}"
-                        val estDerniereManche = index == sequence.lastIndex
-                        val actionsFinManche: @Composable () -> Unit = {
-                            Button(onClick = { duoVm.continuer() }, modifier = Modifier.fillMaxWidth()) {
-                                Text(
-                                    when {
-                                        estPremierJoueurManche -> "Au tour de ${autreJoueur?.pseudo ?: "l'autre joueur"}"
-                                        estDerniereManche -> "Voir les résultats"
-                                        else -> "Manche suivante"
-                                    },
-                                )
-                            }
+                    when (manche) {
+                        is ManchePlanifiee.Chiffres -> {
+                            val roundVm: ChiffresRoundViewModel =
+                                viewModel(key = "duo-chiffres-$index-$tour") {
+                                    ChiffresRoundViewModel(
+                                        manche.niveau,
+                                        manche.niveau.dureeSecondesPartieStructuree,
+                                        random = Random(seedManche),
+                                    )
+                                }
+                            ChiffresRoundScreen(
+                                viewModel = roundVm,
+                                scoreCumule = null,
+                                pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
+                                afficherResultat = false,
+                                onMancheTerminee = { obtenu ->
+                                    val detail = roundVm.uiState.value.operationsEffectuees
+                                        .joinToString("\n").ifBlank { "Aucune opération" }
+                                    duoVm.enregistrerResultat(
+                                        ResultatDuoManche(
+                                            ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu),
+                                            roundVm.uiState.value.ecartCible,
+                                            detail,
+                                        ),
+                                    )
+                                },
+                                onRetourEntrainement = onRetourAvecConfirmation,
+                                progressionManche = progressionManche,
+                                actionsFinManche = {},
+                            )
                         }
-                        when (manche) {
-                            is ManchePlanifiee.Chiffres -> {
-                                val roundVm: ChiffresRoundViewModel =
-                                    viewModel(key = "duo-chiffres-$index-$tour") {
-                                        ChiffresRoundViewModel(
-                                            manche.niveau,
-                                            manche.niveau.dureeSecondesPartieStructuree,
-                                            random = Random(seedManche),
-                                        )
-                                    }
-                                ChiffresRoundScreen(
-                                    viewModel = roundVm,
-                                    scoreCumule = scoreCumule,
-                                    pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
-                                    onMancheTerminee = { obtenu ->
-                                        duoVm.enregistrerResultat(
-                                            ResultatDuoManche(
-                                                ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu),
-                                                roundVm.uiState.value.ecartCible,
-                                            ),
-                                        )
-                                    },
-                                    onRetourEntrainement = {
-                                        navController.popBackStack(Routes.CONFIGURATION_PARTIE_DUO, inclusive = false)
-                                    },
-                                    progressionManche = progressionManche,
-                                    actionsFinManche = actionsFinManche,
-                                )
-                            }
-                            is ManchePlanifiee.Lettres -> {
-                                val roundVm: LettresRoundViewModel =
-                                    viewModel(key = "duo-lettres-$index-$tour") {
+                        is ManchePlanifiee.Lettres -> {
+                            val roundVm: LettresRoundViewModel =
+                                viewModel(key = "duo-lettres-$index-$tour") {
+                                    LettresRoundViewModel(
+                                        manche.niveau,
+                                        dictionnaire,
+                                        manche.niveau.dureeSecondesPartieStructuree,
+                                        random = Random(seedManche),
+                                    )
+                                }
+                            if (!estPremierJoueurManche) {
+                                // Force le même nombre de voyelles que le premier joueur de
+                                // cette manche (retour utilisateur : mêmes lettres pour les
+                                // deux) — l'instance du premier joueur est retrouvée via la
+                                // même clé, sans relancer son tirage ni son chrono.
+                                val roundVmPremier: LettresRoundViewModel =
+                                    viewModel(key = "duo-lettres-$index-$premier") {
                                         LettresRoundViewModel(
                                             manche.niveau,
                                             dictionnaire,
@@ -515,47 +539,49 @@ fun AppNavHost(
                                             random = Random(seedManche),
                                         )
                                     }
-                                if (!estPremierJoueurManche) {
-                                    // Force le même nombre de voyelles que le premier joueur de
-                                    // cette manche (retour utilisateur : mêmes lettres pour les
-                                    // deux) — l'instance du premier joueur est retrouvée via la
-                                    // même clé, sans relancer son tirage ni son chrono.
-                                    val roundVmPremier: LettresRoundViewModel =
-                                        viewModel(key = "duo-lettres-$index-$premier") {
-                                            LettresRoundViewModel(
-                                                manche.niveau,
-                                                dictionnaire,
-                                                manche.niveau.dureeSecondesPartieStructuree,
-                                                random = Random(seedManche),
-                                            )
-                                        }
-                                    LaunchedEffect(roundVm) {
-                                        val n = roundVmPremier.uiState.value.nombreVoyellesChoisi
-                                        if (n != null && !roundVm.uiState.value.tirageTermine) {
-                                            roundVm.choisirNombreVoyelles(n)
-                                        }
+                                LaunchedEffect(roundVm) {
+                                    val n = roundVmPremier.uiState.value.nombreVoyellesChoisi
+                                    if (n != null && !roundVm.uiState.value.tirageTermine) {
+                                        roundVm.choisirNombreVoyelles(n)
                                     }
                                 }
-                                LettresRoundScreen(
-                                    viewModel = roundVm,
-                                    scoreCumule = scoreCumule,
-                                    pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
-                                    onMancheTerminee = { obtenu, motValide ->
-                                        duoVm.enregistrerResultat(
-                                            ResultatDuoManche(
-                                                ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
-                                            ),
-                                        )
-                                    },
-                                    onRetourEntrainement = {
-                                        navController.popBackStack(Routes.CONFIGURATION_PARTIE_DUO, inclusive = false)
-                                    },
-                                    progressionManche = progressionManche,
-                                    actionsFinManche = actionsFinManche,
-                                )
                             }
+                            LettresRoundScreen(
+                                viewModel = roundVm,
+                                scoreCumule = null,
+                                pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
+                                afficherResultat = false,
+                                onMancheTerminee = { obtenu, motValide ->
+                                    duoVm.enregistrerResultat(
+                                        ResultatDuoManche(
+                                            ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
+                                            detail = motValide ?: "(aucun mot)",
+                                        ),
+                                    )
+                                },
+                                onRetourEntrainement = onRetourAvecConfirmation,
+                                progressionManche = progressionManche,
+                                actionsFinManche = {},
+                            )
                         }
                     }
+                }
+
+                if (demanderConfirmationRetour) {
+                    AlertDialog(
+                        onDismissRequest = { demanderConfirmationRetour = false },
+                        title = { Text("Quitter la partie duo ?") },
+                        text = { Text("La partie en cours sera perdue si vous quittez maintenant. Continuer ?") },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                demanderConfirmationRetour = false
+                                navController.popBackStack(Routes.CONFIGURATION_PARTIE_DUO, inclusive = false)
+                            }) { Text("Quitter") }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { demanderConfirmationRetour = false }) { Text("Annuler") }
+                        },
+                    )
                 }
             }
 

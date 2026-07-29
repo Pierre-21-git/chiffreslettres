@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -29,7 +31,9 @@ import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilEntity
 import fr.pierre.chiffreslettres.data.ProfilRepository
+import fr.pierre.chiffreslettres.ui.theme.BandeDoree
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.MarqueJeu
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import kotlinx.coroutines.launch
 
@@ -48,13 +52,15 @@ fun ChangerProfilScreen(
     var profilASupprimer by remember { mutableStateOf<ProfilEntity?>(null) }
 
     Column(
-        modifier = modifier.fillMaxSize().padding(24.dp),
+        modifier = modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+        MarqueJeu(modifier = Modifier.fillMaxWidth())
+        BandeDoree(modifier = Modifier.padding(horizontal = 16.dp))
         EnTeteEcran("Choisir un profil", onRetour)
         Column(
-            modifier = Modifier.weight(1f).fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             for (profil in profils) {
                 Row(

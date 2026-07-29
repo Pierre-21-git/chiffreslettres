@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ResultatManche
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 
+/** Même présentation que [fr.pierre.chiffreslettres.ui.partie.RecapPartieScreen], dupliquée pour les deux joueurs, avec le vainqueur en plus (retour utilisateur). */
 @Composable
 fun RecapPartieDuoScreen(
     pseudo1: String,
@@ -40,16 +42,23 @@ fun RecapPartieDuoScreen(
     ) {
         EnTeteEcran("Partie duo terminée", onRetour)
         Text(messageVainqueur, style = MaterialTheme.typography.titleLarge)
-        Text("$pseudo1 : $total1 points", style = MaterialTheme.typography.titleMedium)
-        Text("$pseudo2 : $total2 points", style = MaterialTheme.typography.titleMedium)
 
-        for (index in resultats1.indices) {
-            val r1 = resultats1[index]
-            val r2 = resultats2.getOrNull(index) ?: continue
-            val libelleMode = if (r1.mode == ModeJeu.CHIFFRES) "Chiffres" else "Lettres"
-            Text("Manche ${index + 1} ($libelleMode) : $pseudo1 ${r1.score} pts — $pseudo2 ${r2.score} pts")
-        }
+        BlocJoueur(pseudo1, total1, resultats1)
+        HorizontalDivider()
+        BlocJoueur(pseudo2, total2, resultats2)
 
         Button(onClick = onTerminer, modifier = Modifier.fillMaxWidth()) { Text("Terminer") }
+    }
+}
+
+@Composable
+private fun BlocJoueur(pseudo: String, total: Int, resultats: List<ResultatManche>) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text(pseudo, style = MaterialTheme.typography.titleMedium)
+        Text("Score total : $total", style = MaterialTheme.typography.titleLarge)
+        for ((index, resultat) in resultats.withIndex()) {
+            val libelleMode = if (resultat.mode == ModeJeu.CHIFFRES) "Chiffres" else "Lettres"
+            Text("Manche ${index + 1} ($libelleMode) : ${resultat.score} points")
+        }
     }
 }

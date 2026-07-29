@@ -103,32 +103,38 @@ interface HistoriqueDao {
     @Query("SELECT * FROM SessionEntity WHERE profilId = :profilId")
     suspend fun sessionsAvecManchesDuJoueur(profilId: Long): List<SessionAvecManches>
 
-    // --- Agrégats pour l'évaluation des trophées (parties solo uniquement, jamais l'entraînement libre) ---
+    // --- Agrégats pour l'évaluation des trophées (parties solo/duo/confrontation, jamais
+    // l'entraînement libre — retour utilisateur : les trophées "généraux" comptent aussi les
+    // parties duo et confrontation, pas seulement le solo). En confrontation, le score d'une
+    // manche perdue est écrasé à 0 mais motJoue et les manches à écart 0 (compte exact) ne sont
+    // jamais affectés (une proposition exacte gagne toujours ou fait égalité, jamais perdante).
 
-    /** Nombre de manches chiffres à compte exact (score 10), en partie solo. */
+    /** Nombre de manches chiffres à compte exact (score 10). */
     @Query(
         """
         SELECT COUNT(*)
         FROM MancheEntity m
         INNER JOIN SessionEntity s ON s.id = m.sessionId
-        WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE' AND m.mode = 'CHIFFRES' AND m.score = 10
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION')
+            AND m.mode = 'CHIFFRES' AND m.score = 10
         """,
     )
     suspend fun compterComptesExacts(profilId: Long): Int
 
-    /** Nombre de manches lettres dont le mot joué a exactement [longueur] lettres, en partie solo. */
+    /** Nombre de manches lettres dont le mot joué a exactement [longueur] lettres. */
     @Query(
         """
         SELECT COUNT(*)
         FROM MancheEntity m
         INNER JOIN SessionEntity s ON s.id = m.sessionId
-        WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE' AND m.mode = 'LETTRES' AND LENGTH(m.motJoue) = :longueur
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION')
+            AND m.mode = 'LETTRES' AND LENGTH(m.motJoue) = :longueur
         """,
     )
     suspend fun compterMotsLongueur(profilId: Long, longueur: Int): Int
 
     /**
-     * Nombre de parties solo où toutes les manches chiffres ont un compte exact (score 10).
+     * Nombre de parties où toutes les manches chiffres ont un compte exact (score 10).
      * `COUNT(*) = SUM(...)` exige qu'aucune manche chiffres de la partie n'ait un score différent.
      */
     @Query(
@@ -137,7 +143,7 @@ interface HistoriqueDao {
             SELECT s.id
             FROM SessionEntity s
             INNER JOIN MancheEntity m ON m.sessionId = s.id AND m.mode = 'CHIFFRES'
-            WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE'
+            WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION')
             GROUP BY s.id
             HAVING COUNT(*) = SUM(CASE WHEN m.score = 10 THEN 1 ELSE 0 END)
         )
@@ -146,7 +152,7 @@ interface HistoriqueDao {
     suspend fun compterPartiesTousComptesExacts(profilId: Long): Int
 
     /**
-     * Nombre de parties solo où toutes les manches lettres ont un mot valide d'au moins
+     * Nombre de parties où toutes les manches lettres ont un mot valide d'au moins
      * [longueurMin] lettres. `COUNT(*) = COUNT(m.motJoue)` exclut toute manche invalide/vide
      * (mot null) de la partie, condition nécessaire avant de vérifier la longueur minimale.
      */
@@ -156,7 +162,7 @@ interface HistoriqueDao {
             SELECT s.id
             FROM SessionEntity s
             INNER JOIN MancheEntity m ON m.sessionId = s.id AND m.mode = 'LETTRES'
-            WHERE s.profilId = :profilId AND s.type = 'STRUCTUREE'
+            WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION')
             GROUP BY s.id
             HAVING COUNT(*) = COUNT(m.motJoue) AND MIN(LENGTH(m.motJoue)) >= :longueurMin
         )
@@ -164,12 +170,17 @@ interface HistoriqueDao {
     )
     suspend fun compterPartiesMotsMin(profilId: Long, longueurMin: Int): Int
 
-    /** Nombre de parties solo dont le score total atteint au moins [seuil]. */
-    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE' AND scoreTotal >= :seuil")
+    /** Nombre de parties dont le score total atteint au moins [seuil]. */
+    @Query(
+        """
+        SELECT COUNT(*) FROM SessionEntity
+        WHERE profilId = :profilId AND type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION') AND scoreTotal >= :seuil
+        """,
+    )
     suspend fun compterPartiesScoreAuMoins(profilId: Long, seuil: Int): Int
 
-    /** Nombre total de parties solo terminées, tous niveaux confondus. */
-    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE'")
+    /** Nombre total de parties terminées, tous niveaux et tous types confondus (solo, duo, confrontation). */
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION')")
     suspend fun compterPartiesSoloTotal(profilId: Long): Int
 
     /** Nombre de parties d'un [type] (DUO ou DUO_CONFRONTATION) jouées par ce profil, tous niveaux confondus. */

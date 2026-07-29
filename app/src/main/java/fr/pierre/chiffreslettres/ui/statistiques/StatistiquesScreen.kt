@@ -300,9 +300,16 @@ private fun GraphiqueProgression(scores: List<Int>) {
         )
         return
     }
-    val scoreMax = maxOf(scores.max(), 1)
-    val pasGrille = if (scoreMax > 100) 20 else 10
-    val pasAbscisse = if (scores.size > 100) 20 else 10
+    val scoreDataMin = scores.min()
+    val scoreDataMax = scores.max()
+    // Axe resserré sur la plage réelle des scores (retour utilisateur) plutôt que de toujours
+    // partir de 0 : un pas en dessous du minimum, un pas au-dessus du maximum.
+    val pasGrille = if (scoreDataMax - scoreDataMin > 100) 20 else 10
+    val axisMin = (scoreDataMin / pasGrille) * pasGrille
+    val axisMax = (scoreDataMax / pasGrille + 1) * pasGrille
+    // Fixe à 20 (retour utilisateur) ; l'index de la N-ième partie est N-1 (base 0), sinon le
+    // repère "20 parties" tombe visuellement sur la 21e.
+    val pasAbscisse = 20
     val couleurGrille = TextMuted.copy(alpha = 0.35f)
     val couleurGrilleArgb = couleurGrille.toArgb()
     val decalageLabel = 22.dp
@@ -312,30 +319,25 @@ private fun GraphiqueProgression(scores: List<Int>) {
         val largeurGraphe = size.width - decalageLabelPx
         val pasX = if (scores.size > 1) largeurGraphe / (scores.size - 1) else 0f
         fun x(index: Int) = decalageLabelPx + index * pasX
-        fun y(score: Int) = size.height - (score.toFloat() / scoreMax) * size.height
+        fun y(score: Int) = size.height - ((score - axisMin).toFloat() / (axisMax - axisMin)) * size.height
 
         val paintLabel = android.graphics.Paint().apply {
             color = couleurGrilleArgb
             textSize = 9.dp.toPx()
         }
-        var valeurGrille = 0
-        while (valeurGrille <= scoreMax) {
+        var valeurGrille = axisMin
+        while (valeurGrille <= axisMax) {
             val yGrille = y(valeurGrille)
             drawLine(couleurGrille, Offset(decalageLabelPx, yGrille), Offset(size.width, yGrille), strokeWidth = 1.dp.toPx())
             drawContext.canvas.nativeCanvas.drawText("$valeurGrille", 0f, yGrille + 3.dp.toPx(), paintLabel)
             valeurGrille += pasGrille
         }
 
-        var indexTiret = 0
-        while (indexTiret < scores.size) {
-            val xTiret = x(indexTiret)
-            drawLine(
-                couleurGrille,
-                Offset(xTiret, size.height),
-                Offset(xTiret, size.height - 4.dp.toPx()),
-                strokeWidth = 1.dp.toPx(),
-            )
-            indexTiret += pasAbscisse
+        var compte = pasAbscisse
+        while (compte <= scores.size) {
+            val xLigne = x(compte - 1)
+            drawLine(couleurGrille, Offset(xLigne, 0f), Offset(xLigne, size.height), strokeWidth = 1.dp.toPx())
+            compte += pasAbscisse
         }
 
         val chemin = Path()
@@ -350,7 +352,7 @@ private fun GraphiqueProgression(scores: List<Int>) {
     }
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text("${scores.size} parties", style = MaterialTheme.typography.labelSmall, color = TextMuted)
-        Text("meilleur : $scoreMax pts", style = MaterialTheme.typography.labelSmall, color = TextMuted)
+        Text("meilleur : $scoreDataMax pts", style = MaterialTheme.typography.labelSmall, color = TextMuted)
     }
 }
 

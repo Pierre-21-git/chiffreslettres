@@ -47,6 +47,8 @@ fun LettresRoundScreen(
     progressionManche: String? = null,
     /** Libellé de la pastille [progressionManche] : "Manche" en partie solo, "Série" en défi. */
     libelleProgression: String = "Manche",
+    /** Faux en mode duo (retour utilisateur) : le score et le mot sont révélés sur l'écran de transition, pas ici — pour ne pas donner d'indice au second joueur avant qu'il ne joue le même tirage. */
+    afficherResultat: Boolean = true,
 ) {
     val etat by viewModel.uiState.collectAsState()
 
@@ -156,15 +158,17 @@ fun LettresRoundScreen(
         }
 
         if (etat.termine) {
-            val validite = if (etat.motJoueurValide == true) "valide" else "invalide ou absent du dictionnaire"
-            PanneauResultat {
-                Text("Score obtenu : ${etat.scoreObtenu}", color = BrassBright, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text("Votre mot (\"${etat.motSaisi}\") : $validite", color = TextMuted, fontSize = 13.sp)
-                Text(
-                    "Meilleur mot trouvé : ${etat.meilleurMot?.let { "$it (${it.length} lettres)" } ?: "aucun"}",
-                    color = TextMuted,
-                    fontSize = 13.sp,
-                )
+            if (afficherResultat) {
+                val validite = if (etat.motJoueurValide == true) "valide" else "invalide ou absent du dictionnaire"
+                PanneauResultat {
+                    Text("Score obtenu : ${etat.scoreObtenu}", color = BrassBright, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Text("Votre mot (\"${etat.motSaisi}\") : $validite", color = TextMuted, fontSize = 13.sp)
+                    Text(
+                        "Meilleur mot trouvé : ${etat.meilleurMot?.let { "$it (${it.length} lettres)" } ?: "aucun"}",
+                        color = TextMuted,
+                        fontSize = 13.sp,
+                    )
+                }
             }
             actionsFinManche()
         }

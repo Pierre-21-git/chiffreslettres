@@ -1,18 +1,18 @@
 package fr.pierre.chiffreslettres.data
 
 /**
- * Statistiques agrégées d'un joueur (parties solo + défis, jamais l'entraînement libre) : la
+ * Statistiques agrégées d'un joueur (parties (solo, duo ou confrontation) + défis, jamais l'entraînement libre) : la
  * base sur laquelle chaque trophée du catalogue évalue sa condition de déblocage. Un seul aller-
  * retour vers la base (voir `TropheeRepository`) plutôt qu'une requête par trophée.
  */
 data class TropheeStats(
     val comptesExacts: Int,
-    /** Clé = longueur exacte du mot (4 à 10), valeur = nombre de fois où un mot de cette longueur a été trouvé, en partie solo. */
+    /** Clé = longueur exacte du mot (4 à 10), valeur = nombre de fois où un mot de cette longueur a été trouvé, en partie (solo, duo ou confrontation). */
     val motsParLongueur: Map<Int, Int>,
     val partieTousComptesExacts: Boolean,
-    /** Clé = longueur minimale (4 à 8), valeur = une partie solo a-t-elle uniquement des mots d'au moins cette longueur. */
+    /** Clé = longueur minimale (4 à 8), valeur = une partie (solo, duo ou confrontation) a-t-elle uniquement des mots d'au moins cette longueur. */
     val partiesMotsMin: Map<Int, Boolean>,
-    /** Clé = seuil de points (20 à 90), valeur = nombre de parties solo atteignant au moins ce seuil. */
+    /** Clé = seuil de points (20 à 90), valeur = nombre de parties (solo, duo ou confrontation) atteignant au moins ce seuil. */
     val partiesParSeuilScore: Map<Int, Int>,
     val partiesSoloTotal: Int,
     val partiesDuoJouees: Int,
@@ -97,7 +97,7 @@ object CatalogueTrophees {
             Trophee(
                 "compte_exact_1",
                 "Premier compte exact",
-                "Obtenir un compte exact en chiffres, en partie solo.",
+                "Obtenir un compte exact en chiffres, en partie (solo, duo ou confrontation).",
                 CategorieTrophee.COMPTES_EXACTS,
                 palier = Palier.BRONZE,
             ) { it.comptesExacts >= 1 },
@@ -106,7 +106,7 @@ object CatalogueTrophees {
             Trophee(
                 "compte_exact_10",
                 "Dixième compte exact",
-                "Obtenir 10 comptes exacts en chiffres, en partie solo.",
+                "Obtenir 10 comptes exacts en chiffres, en partie (solo, duo ou confrontation).",
                 CategorieTrophee.COMPTES_EXACTS,
                 palier = Palier.ARGENT,
             ) { it.comptesExacts >= 10 },
@@ -115,7 +115,7 @@ object CatalogueTrophees {
             Trophee(
                 "compte_exact_100",
                 "Centième compte exact",
-                "Obtenir 100 comptes exacts en chiffres, en partie solo.",
+                "Obtenir 100 comptes exacts en chiffres, en partie (solo, duo ou confrontation).",
                 CategorieTrophee.COMPTES_EXACTS,
                 palier = Palier.OR,
             ) { it.comptesExacts >= 100 },
@@ -127,7 +127,7 @@ object CatalogueTrophees {
                 Trophee(
                     "mot_${longueur}_1",
                     "Premier mot de $longueur lettres",
-                    "Trouver un mot de $longueur lettres$precision, en partie solo.",
+                    "Trouver un mot de $longueur lettres$precision, en partie (solo, duo ou confrontation).",
                     CategorieTrophee.MOTS,
                     palier = PALIERS_MOTS_1.getValue(longueur),
                 ) { (it.motsParLongueur[longueur] ?: 0) >= 1 },
@@ -136,7 +136,7 @@ object CatalogueTrophees {
                 Trophee(
                     "mot_${longueur}_10",
                     "Dixième mot de $longueur lettres",
-                    "Trouver 10 mots de $longueur lettres, en partie solo.",
+                    "Trouver 10 mots de $longueur lettres, en partie (solo, duo ou confrontation).",
                     CategorieTrophee.MOTS,
                     palier = PALIERS_MOTS_10.getValue(longueur),
                 ) { (it.motsParLongueur[longueur] ?: 0) >= 10 },
@@ -147,7 +147,7 @@ object CatalogueTrophees {
             Trophee(
                 "partie_parfaite_chiffres",
                 "Tous les comptes exacts dans une partie",
-                "Terminer une partie solo où toutes les manches chiffres ont un compte exact.",
+                "Terminer une partie (solo, duo ou confrontation) où toutes les manches chiffres ont un compte exact.",
                 CategorieTrophee.PARTIE_PARFAITE,
                 palier = Palier.ARGENT,
             ) { it.partieTousComptesExacts },
@@ -157,7 +157,7 @@ object CatalogueTrophees {
                 Trophee(
                     "partie_mots_min_$seuil",
                     "Que des mots de $seuil lettres ou plus dans une partie",
-                    "Terminer une partie solo où toutes les manches lettres ont un mot valide d'au moins $seuil lettres.",
+                    "Terminer une partie (solo, duo ou confrontation) où toutes les manches lettres ont un mot valide d'au moins $seuil lettres.",
                     CategorieTrophee.PARTIE_PARFAITE,
                     palier = PALIERS_PARTIE_MOTS_MIN.getValue(seuil),
                 ) { it.partiesMotsMin[seuil] == true },
@@ -169,7 +169,7 @@ object CatalogueTrophees {
                 Trophee(
                     "score_${seuil}_1",
                     "Première partie à au moins $seuil points",
-                    "Terminer une partie solo avec au moins $seuil points.",
+                    "Terminer une partie (solo, duo ou confrontation) avec au moins $seuil points.",
                     CategorieTrophee.SCORE_PARTIE,
                     palier = PALIERS_SCORE_1.getValue(seuil),
                 ) { (it.partiesParSeuilScore[seuil] ?: 0) >= 1 },
@@ -178,7 +178,7 @@ object CatalogueTrophees {
                 Trophee(
                     "score_${seuil}_10",
                     "Dixième partie à au moins $seuil points",
-                    "Terminer 10 parties solo avec au moins $seuil points.",
+                    "Terminer 10 parties (solo, duo ou confrontation) avec au moins $seuil points.",
                     CategorieTrophee.SCORE_PARTIE,
                     palier = PALIERS_SCORE_10.getValue(seuil),
                 ) { (it.partiesParSeuilScore[seuil] ?: 0) >= 10 },
@@ -189,7 +189,7 @@ object CatalogueTrophees {
             Trophee(
                 "parties_1",
                 "Première partie terminée",
-                "Terminer une partie solo, tous niveaux confondus.",
+                "Terminer une partie (solo, duo ou confrontation), tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
                 palier = Palier.BRONZE,
             ) { it.partiesSoloTotal >= 1 },
@@ -198,7 +198,7 @@ object CatalogueTrophees {
             Trophee(
                 "parties_10",
                 "Dixième partie terminée",
-                "Terminer 10 parties solo, tous niveaux confondus.",
+                "Terminer 10 parties (solo, duo ou confrontation), tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
                 palier = Palier.ARGENT,
             ) { it.partiesSoloTotal >= 10 },
@@ -207,7 +207,7 @@ object CatalogueTrophees {
             Trophee(
                 "parties_100",
                 "Centième partie terminée",
-                "Terminer 100 parties solo, tous niveaux confondus.",
+                "Terminer 100 parties (solo, duo ou confrontation), tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
                 palier = Palier.OR,
             ) { it.partiesSoloTotal >= 100 },

@@ -36,12 +36,14 @@ import fr.pierre.chiffreslettres.ui.navigation.AppNavHost
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
 import fr.pierre.chiffreslettres.ui.theme.ChiffresLettresTheme
+import fr.pierre.chiffreslettres.widget.planifierRafraichissementWidgetMinuit
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         creerCanalNotificationRappel(this)
         planifierRappelQuotidien(this)
+        planifierRafraichissementWidgetMinuit(this)
         setContent {
             ChiffresLettresTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {

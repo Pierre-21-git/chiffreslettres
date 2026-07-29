@@ -49,6 +49,8 @@ fun ChiffresRoundScreen(
     progressionManche: String? = null,
     /** Libellé de la pastille [progressionManche] : "Manche" en partie solo, "Série" en défi. */
     libelleProgression: String = "Manche",
+    /** Faux en mode duo (retour utilisateur) : le score et la solution sont révélés sur l'écran de transition, pas ici — pour ne pas donner d'indice au second joueur avant qu'il ne joue le même tirage. */
+    afficherResultat: Boolean = true,
 ) {
     val etat by viewModel.uiState.collectAsState()
 
@@ -142,19 +144,21 @@ fun ChiffresRoundScreen(
         TuilePrincipale("Valider", onClick = { viewModel.valider() }, enabled = !etat.termine)
 
         if (etat.termine) {
-            PanneauResultat {
-                Text("Score obtenu : ${etat.scoreObtenu}", color = BrassBright, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                val etapesSolution = etat.solutionSolveur?.etapes().orEmpty()
-                if (etapesSolution.isEmpty()) {
-                    Text(
-                        "Une solution possible : ${etat.solutionSolveur?.texte() ?: "aucune"}",
-                        color = TextMuted,
-                        fontSize = 13.sp,
-                    )
-                } else {
-                    Text("Une solution possible", color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
-                    for (ligne in etapesSolution) {
-                        Text(ligne, color = Ivory, fontFamily = FontFamily.Monospace, fontSize = 15.sp)
+            if (afficherResultat) {
+                PanneauResultat {
+                    Text("Score obtenu : ${etat.scoreObtenu}", color = BrassBright, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    val etapesSolution = etat.solutionSolveur?.etapes().orEmpty()
+                    if (etapesSolution.isEmpty()) {
+                        Text(
+                            "Une solution possible : ${etat.solutionSolveur?.texte() ?: "aucune"}",
+                            color = TextMuted,
+                            fontSize = 13.sp,
+                        )
+                    } else {
+                        Text("Une solution possible", color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
+                        for (ligne in etapesSolution) {
+                            Text(ligne, color = Ivory, fontFamily = FontFamily.Monospace, fontSize = 15.sp)
+                        }
                     }
                 }
             }

@@ -17,6 +17,33 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.40",
+        date = "2026-07-29",
+        changements = listOf(
+            "Partie duo : écran de transition toujours affiché entre deux tours (même " +
+                "quand le joueur ne change pas), avec le score et le calcul/mot de chaque " +
+                "joueur déjà joué sur la manche — le cadre \"score obtenu\" n'apparaît plus " +
+                "sur l'écran de jeu lui-même.",
+            "Partie duo : récap final présenté comme le récap solo (un bloc par joueur), " +
+                "avec le vainqueur en plus.",
+            "Partie duo : confirmation demandée avant de quitter une partie en cours " +
+                "depuis la flèche de retour.",
+            "Trophées généraux (parties terminées, score, comptes exacts, mots, partie " +
+                "parfaite) : comptent désormais aussi les parties duo et confrontation, pas " +
+                "seulement le solo.",
+            "Écran \"Choisir un profil\" : titre Chiffres & Lettres ajouté comme sur " +
+                "l'accueil, mise en page revue pour que le titre reste bien au-dessus de la " +
+                "liste des profils.",
+            "Widget : rafraîchissement programmé à minuit en plus des déclenchements " +
+                "existants, pour ne pas afficher le statut de la veille après le changement " +
+                "de jour.",
+            "Graphique de progression : correction du décalage d'un cran sur les repères " +
+                "de l'axe des abscisses, repère fixé à toutes les 20 parties (ligne pleine " +
+                "hauteur plutôt qu'un tiret), axe des scores resserré sur la plage réelle " +
+                "des résultats plutôt que de toujours partir de 0.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.39",
         date = "2026-07-28",
         changements = listOf(
