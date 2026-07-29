@@ -1,6 +1,7 @@
 package fr.pierre.chiffreslettres.ui.profil
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,47 +51,48 @@ fun ChangerProfilScreen(
     var profilARenommer by remember { mutableStateOf<ProfilEntity?>(null) }
     var profilASupprimer by remember { mutableStateOf<ProfilEntity?>(null) }
 
-    Column(
-        modifier = modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        MarqueJeu(modifier = Modifier.fillMaxWidth())
-        BandeDoree(modifier = Modifier.padding(horizontal = 16.dp))
-        // Bloc profil (titre + vignettes + bouton) centré verticalement dans l'espace restant
-        // sous le titre du jeu (retour utilisateur), plutôt que collé juste en dessous ; pleine
-        // largeur, avec son propre scroll si la liste de profils dépasse l'espace disponible.
+    Box(modifier = modifier.fillMaxSize().padding(24.dp)) {
         Column(
-            modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.align(Alignment.TopCenter).fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                EnTeteEcran("Choisir un profil", centre = true)
-                for (profil in profils) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        PucePseudo(
-                            pseudo = "${profil.avatar} ${profil.pseudo}",
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                scope.launch {
-                                    profilActifStore.definirProfilActif(profil.id)
-                                    onProfilChoisi()
-                                }
-                            },
-                        )
-                        IconButton(onClick = { profilARenommer = profil }) {
-                            Icon(Icons.Filled.Edit, contentDescription = "Renommer")
-                        }
-                        IconButton(onClick = { profilASupprimer = profil }) {
-                            Icon(Icons.Filled.Delete, contentDescription = "Supprimer")
-                        }
+            MarqueJeu(modifier = Modifier.fillMaxWidth())
+            BandeDoree(modifier = Modifier.padding(horizontal = 16.dp))
+        }
+        // Bloc profil (titre + vignettes + bouton) centré par rapport à toute la hauteur de
+        // l'écran (retour utilisateur : pas seulement dans l'espace restant sous le titre du
+        // jeu, qui le poussait trop bas) ; pleine largeur, avec son propre scroll si la liste
+        // de profils dépasse l'espace disponible.
+        Column(
+            modifier = Modifier.align(Alignment.Center).fillMaxWidth().verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            EnTeteEcran("Choisir un profil", centre = true)
+            for (profil in profils) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    PucePseudo(
+                        pseudo = "${profil.avatar} ${profil.pseudo}",
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            scope.launch {
+                                profilActifStore.definirProfilActif(profil.id)
+                                onProfilChoisi()
+                            }
+                        },
+                    )
+                    IconButton(onClick = { profilARenommer = profil }) {
+                        Icon(Icons.Filled.Edit, contentDescription = "Renommer")
+                    }
+                    IconButton(onClick = { profilASupprimer = profil }) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Supprimer")
                     }
                 }
-                Button(onClick = onCreerNouveauProfil, modifier = Modifier.fillMaxWidth()) { Text("Créer un nouveau profil") }
             }
+            Button(onClick = onCreerNouveauProfil, modifier = Modifier.fillMaxWidth()) { Text("Créer un nouveau profil") }
         }
     }
 
