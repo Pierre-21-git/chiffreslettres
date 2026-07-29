@@ -17,6 +17,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.45",
+        date = "2026-07-29",
+        changements = listOf(
+            "Écran \"Choisir un profil\" (correction 1.44, retour utilisateur \"verticalement\" " +
+                "et non \"horizontalement\") : le bloc titre + vignettes + bouton reprend toute " +
+                "la largeur de l'écran, mais est maintenant centré verticalement dans l'espace " +
+                "restant sous le titre \"Chiffres & Lettres\" (qui, lui, ne bouge pas) — il " +
+                "descend donc légèrement par rapport à avant.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.44",
         date = "2026-07-29",
         changements = listOf(

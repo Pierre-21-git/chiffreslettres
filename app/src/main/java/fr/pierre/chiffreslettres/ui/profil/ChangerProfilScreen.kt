@@ -51,44 +51,46 @@ fun ChangerProfilScreen(
     var profilASupprimer by remember { mutableStateOf<ProfilEntity?>(null) }
 
     Column(
-        modifier = modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
+        modifier = modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         MarqueJeu(modifier = Modifier.fillMaxWidth())
         BandeDoree(modifier = Modifier.padding(horizontal = 16.dp))
-        EnTeteEcran("Choisir un profil", centre = true)
+        // Bloc profil (titre + vignettes + bouton) centré verticalement dans l'espace restant
+        // sous le titre du jeu (retour utilisateur), plutôt que collé juste en dessous ; pleine
+        // largeur, avec son propre scroll si la liste de profils dépasse l'espace disponible.
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Center,
         ) {
-            for (profil in profils) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    // Groupe (cartouche + icônes) centré comme un seul bloc, plutôt que le
-                    // cartouche étiré (`weight`) qui poussait les icônes tout à droite et
-                    // désalignait la vignette du titre centré au-dessus (retour utilisateur).
-                    horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
-                ) {
-                    PucePseudo(
-                        pseudo = "${profil.avatar} ${profil.pseudo}",
-                        pleineLargeur = false,
-                        onClick = {
-                            scope.launch {
-                                profilActifStore.definirProfilActif(profil.id)
-                                onProfilChoisi()
-                            }
-                        },
-                    )
-                    IconButton(onClick = { profilARenommer = profil }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "Renommer")
-                    }
-                    IconButton(onClick = { profilASupprimer = profil }) {
-                        Icon(Icons.Filled.Delete, contentDescription = "Supprimer")
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                EnTeteEcran("Choisir un profil", centre = true)
+                for (profil in profils) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        PucePseudo(
+                            pseudo = "${profil.avatar} ${profil.pseudo}",
+                            modifier = Modifier.weight(1f),
+                            onClick = {
+                                scope.launch {
+                                    profilActifStore.definirProfilActif(profil.id)
+                                    onProfilChoisi()
+                                }
+                            },
+                        )
+                        IconButton(onClick = { profilARenommer = profil }) {
+                            Icon(Icons.Filled.Edit, contentDescription = "Renommer")
+                        }
+                        IconButton(onClick = { profilASupprimer = profil }) {
+                            Icon(Icons.Filled.Delete, contentDescription = "Supprimer")
+                        }
                     }
                 }
+                Button(onClick = onCreerNouveauProfil, modifier = Modifier.fillMaxWidth()) { Text("Créer un nouveau profil") }
             }
-            Button(onClick = onCreerNouveauProfil, modifier = Modifier.fillMaxWidth()) { Text("Créer un nouveau profil") }
         }
     }
 

@@ -77,26 +77,17 @@ private fun decouperAvatarPseudo(pseudoAvecAvatar: String): Pair<String, String>
 
 /**
  * Mini-bandeau profil (retour utilisateur : même style partout, accueil compris — avatar et
- * pseudo bien visibles). [grand] agrandit encore le texte pour l'accueil. [pleineLargeur] à
- * false (écran "Choisir un profil", retour utilisateur) laisse le cartouche à sa largeur
- * intrinsèque pour qu'il forme, avec les icônes voisines, un bloc compact centrable — plutôt
- * que de s'étirer et les repousser tout à droite.
+ * pseudo bien visibles). [grand] agrandit encore le texte pour l'accueil.
  */
 @Composable
-fun PucePseudo(
-    pseudo: String,
-    modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
-    grand: Boolean = false,
-    pleineLargeur: Boolean = true,
-) {
+fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, grand: Boolean = false) {
     val (avatar, nom) = decouperAvatarPseudo(pseudo)
     val tailleAvatarBox = if (grand) 44.dp else 36.dp
     val tailleAvatarTexte = if (grand) 34.sp else 28.sp
     val tailleNom = if (grand) 20.sp else 16.sp
     Row(
         modifier
-            .let { if (pleineLargeur) it.fillMaxWidth() else it }
+            .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(Ivory.copy(alpha = 0.06f))
             .border(1.dp, Ivory.copy(alpha = 0.18f), RoundedCornerShape(16.dp))
