@@ -33,7 +33,6 @@ fun DefiQuotidienScreen(
     serieActuelle: Int,
     onNiveauChiffresChoisi: (Niveau) -> Unit,
     onNiveauLettresChoisi: (NiveauLettres) -> Unit,
-    onChangerProfil: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
     val nomMode = if (tirage.mode == ModeJeu.CHIFFRES) "Chiffres" else "Lettres"
@@ -51,7 +50,7 @@ fun DefiQuotidienScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran("Défi quotidien", onRetour)
-        PucePseudo(pseudoActif, onClick = onChangerProfil)
+        PucePseudo(pseudoActif)
 
         Text("Aujourd'hui : $nomType $nomMode", style = MaterialTheme.typography.titleMedium)
         Text("Objectif : $natureObjectif", style = MaterialTheme.typography.bodyMedium)

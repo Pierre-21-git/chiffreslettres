@@ -188,7 +188,6 @@ fun AppNavHost(
                 profilActifStore = profilActifStore,
                 onProfilChoisi = { navController.popBackStack() },
                 onCreerNouveauProfil = { navController.navigate(Routes.CREER_PROFIL) },
-                onRetour = { navController.popBackStack() },
             )
         }
 
@@ -246,7 +245,6 @@ fun AppNavHost(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                     onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuChiffres(niveau)) },
                     onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuLettres(niveau)) },
-                    onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                     onRetour = {
                         // Sortie complète du mode entraînement : c'est ici (et seulement ici,
                         // pas au retour d'un écran de manche vers cette liste) que la session
@@ -324,7 +322,6 @@ fun AppNavHost(
                         partieVm.demarrer(sequence)
                         navController.navigate(Routes.JEU_PARTIE)
                     },
-                    onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                     onRetour = { navController.popBackStack() },
                 )
             }
@@ -428,7 +425,6 @@ fun AppNavHost(
                         duoVm.demarrer(profil2Id, sequence, mode)
                         navController.navigate(Routes.JEU_PARTIE_DUO)
                     },
-                    onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                     onRetour = { navController.popBackStack() },
                 )
             }
@@ -655,7 +651,6 @@ fun AppNavHost(
                 afficherDuree = false,
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChiffres(niveau)) },
                 onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiLettres(niveau)) },
-                onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                 onRetour = { navController.popBackStack() },
             )
         }
@@ -667,7 +662,6 @@ fun AppNavHost(
                 afficherDuree = true,
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoChiffres(niveau)) },
                 onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoLettres(niveau)) },
-                onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                 onRetour = { navController.popBackStack() },
             )
         }
@@ -702,7 +696,6 @@ fun AppNavHost(
                     }
                     navController.navigate(route)
                 },
-                onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                 onRetour = { navController.popBackStack() },
             )
         }

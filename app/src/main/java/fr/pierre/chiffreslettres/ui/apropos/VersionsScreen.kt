@@ -17,6 +17,21 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.42",
+        date = "2026-07-29",
+        changements = listOf(
+            "Cartouche avatar/pseudo cliquable pour changer de profil uniquement sur la page " +
+                "d'accueil (retiré des écrans de configuration entraînement/partie/duo/défi, " +
+                "où il n'est plus qu'informatif) ; avatar et pseudo désormais centrés à " +
+                "l'intérieur du cartouche, sur tous les écrans.",
+            "Titre \"Chiffres & Lettres\" remonté sur la page d'accueil pour être à la même " +
+                "hauteur que sur l'écran \"Choisir un profil\".",
+            "Écran \"Choisir un profil\" : titre centré (aligné avec le bloc des profils en " +
+                "dessous), et la flèche de retour n'apparaît plus jamais sur cet écran, même " +
+                "en y arrivant depuis le cartouche de l'accueil.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.41",
         date = "2026-07-29",
         changements = listOf(

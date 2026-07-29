@@ -94,7 +94,7 @@ fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Un
             .let { if (onClick != null) it.clickable(onClick = onClick) else it }
             .padding(horizontal = 14.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
     ) {
         Box(
             modifier = Modifier
@@ -281,16 +281,18 @@ fun PanneauResultat(modifier: Modifier = Modifier, content: @Composable ColumnSc
 /**
  * En-tête de titre avec flèche de retour, pour les écrans secondaires atteints par
  * navigation (pas l'accueil). [onRetour] à null (premier lancement, pas d'écran
- * précédent) masque la flèche tout en gardant le titre aligné.
+ * précédent) masque la flèche tout en gardant le titre aligné. [centre] (retour
+ * utilisateur, écran "Choisir un profil") centre le titre sur toute la largeur, sans
+ * réserver de place pour une flèche (jamais affichée dans ce cas).
  */
 @Composable
-fun EnTeteEcran(titre: String, onRetour: (() -> Unit)? = null, modifier: Modifier = Modifier) {
+fun EnTeteEcran(titre: String, onRetour: (() -> Unit)? = null, modifier: Modifier = Modifier, centre: Boolean = false) {
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = if (centre) Arrangement.Center else Arrangement.spacedBy(4.dp),
     ) {
-        if (onRetour != null) {
+        if (!centre && onRetour != null) {
             IconButton(onClick = onRetour) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -298,7 +300,7 @@ fun EnTeteEcran(titre: String, onRetour: (() -> Unit)? = null, modifier: Modifie
                     tint = BrassBright,
                 )
             }
-        } else {
+        } else if (!centre) {
             Spacer(Modifier.width(48.dp))
         }
         Text(

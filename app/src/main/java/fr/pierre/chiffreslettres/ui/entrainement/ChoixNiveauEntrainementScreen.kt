@@ -24,7 +24,6 @@ fun ChoixNiveauEntrainementScreen(
     pseudoActif: String,
     onNiveauChiffresChoisi: (Niveau) -> Unit,
     onNiveauLettresChoisi: (NiveauLettres) -> Unit,
-    onChangerProfil: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
     Column(
@@ -32,7 +31,7 @@ fun ChoixNiveauEntrainementScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran("Entraînement", onRetour)
-        PucePseudo(pseudoActif, onClick = onChangerProfil)
+        PucePseudo(pseudoActif)
 
         Text("Chiffres", style = MaterialTheme.typography.titleMedium)
         for (niveau in Niveau.entries) {

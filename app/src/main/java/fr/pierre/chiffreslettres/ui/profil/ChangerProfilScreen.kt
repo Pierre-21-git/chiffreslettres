@@ -43,7 +43,6 @@ fun ChangerProfilScreen(
     profilActifStore: ProfilActifStore,
     onProfilChoisi: () -> Unit,
     onCreerNouveauProfil: () -> Unit,
-    onRetour: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
@@ -57,7 +56,7 @@ fun ChangerProfilScreen(
     ) {
         MarqueJeu(modifier = Modifier.fillMaxWidth())
         BandeDoree(modifier = Modifier.padding(horizontal = 16.dp))
-        EnTeteEcran("Choisir un profil", onRetour)
+        EnTeteEcran("Choisir un profil", centre = true)
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp),

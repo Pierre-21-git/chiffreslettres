@@ -122,7 +122,6 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
                 profilActifStore = profilActifStore,
                 onProfilChoisi = { etapeGate = EtapeGateProfil.CONFIRME },
                 onCreerNouveauProfil = { etapeGate = EtapeGateProfil.CREATION },
-                onRetour = null,
                 modifier = modifier,
             )
         }

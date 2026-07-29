@@ -25,7 +25,6 @@ import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 fun ConfigurationPartieScreen(
     pseudoActif: String,
     onDemarrer: (List<ManchePlanifiee>) -> Unit,
-    onChangerProfil: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
     Column(
@@ -33,7 +32,7 @@ fun ConfigurationPartieScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran("Configurer la partie solo", onRetour)
-        PucePseudo(pseudoActif, onClick = onChangerProfil)
+        PucePseudo(pseudoActif)
         Text("Choisir un niveau", style = MaterialTheme.typography.titleMedium)
 
         for (niveau in Niveau.entries) {

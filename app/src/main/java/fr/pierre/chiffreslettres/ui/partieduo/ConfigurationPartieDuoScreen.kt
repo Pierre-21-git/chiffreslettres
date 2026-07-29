@@ -36,7 +36,6 @@ fun ConfigurationPartieDuoScreen(
     pseudoActif: String,
     autresProfils: List<ProfilEntity>,
     onDemarrer: (profil2Id: Long, sequence: List<ManchePlanifiee>, mode: ModeScoreDuo) -> Unit,
-    onChangerProfil: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
     var profil2 by remember { mutableStateOf<ProfilEntity?>(null) }
@@ -48,7 +47,7 @@ fun ConfigurationPartieDuoScreen(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         EnTeteEcran("Configurer la partie duo", onRetour)
-        PucePseudo(pseudoActif, onClick = onChangerProfil)
+        PucePseudo(pseudoActif)
 
         if (autresProfils.isEmpty()) {
             Text(

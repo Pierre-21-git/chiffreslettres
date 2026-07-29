@@ -31,7 +31,6 @@ fun ChoixDefiScreen(
     afficherDuree: Boolean,
     onNiveauChiffresChoisi: (Niveau) -> Unit,
     onNiveauLettresChoisi: (NiveauLettres) -> Unit,
-    onChangerProfil: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
     Column(
@@ -39,7 +38,7 @@ fun ChoixDefiScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran(titre, onRetour)
-        PucePseudo(pseudoActif, onClick = onChangerProfil)
+        PucePseudo(pseudoActif)
 
         Text("Chiffres", style = MaterialTheme.typography.titleMedium)
         for (niveau in Niveau.entries) {
