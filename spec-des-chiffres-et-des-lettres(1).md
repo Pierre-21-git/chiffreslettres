@@ -291,9 +291,12 @@ calcul des points. Chaque manche est jouée successivement par les deux
 joueurs sur exactement le même tirage (mêmes nombres et cible en chiffres,
 mêmes lettres en lettres, via une graine aléatoire commune générée une fois
 par manche), le second joueur ne voyant le tirage qu'après avoir pris le
-téléphone (écran de passation entre les deux tours). Le joueur qui commence
-une manche alterne à chaque manche (chiffres et lettres confondus) pour que
-le choix du nombre de voyelles ne revienne pas toujours au même joueur.
+téléphone (écran de passation entre les deux tours, qui annonce aussi le
+premier joueur avant la toute première manche). Le joueur qui commence une
+manche suit un cycle A,B,B,A répété (et non une simple alternance A,B,A,B),
+chiffres et lettres confondus, pour équilibrer l'avantage du premier joueur
+par paires de manches et éviter que le choix du nombre de voyelles revienne
+toujours au même joueur.
 
 ### 8.2 Barème de points
 Deux modes choisis avant de démarrer la partie :

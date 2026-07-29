@@ -19,8 +19,14 @@ enum class TourDuo { JOUEUR1, JOUEUR2 }
  */
 data class ResultatDuoManche(val resultat: ResultatManche, val ecartCible: Int? = null, val detail: String = "")
 
-/** Qui commence une manche donnée (retour utilisateur : alterne à chaque manche, chiffres et lettres confondus, pour que le choix du nombre de voyelles ne revienne pas toujours au même joueur). */
-fun premierJoueurManche(index: Int): TourDuo = if (index % 2 == 0) TourDuo.JOUEUR1 else TourDuo.JOUEUR2
+/**
+ * Qui commence une manche donnée (retour utilisateur : cycle A,B,B,A répété — pas une simple
+ * alternance A,B,A,B — chiffres et lettres confondus, pour que le choix du nombre de voyelles ne
+ * revienne pas toujours au même joueur et que l'avantage du premier joueur s'équilibre par paires
+ * de manches).
+ */
+fun premierJoueurManche(index: Int): TourDuo =
+    if (index % 4 == 0 || index % 4 == 3) TourDuo.JOUEUR1 else TourDuo.JOUEUR2
 
 /**
  * Partagé par le sous-graphe "partieDuo", même principe que [fr.pierre.chiffreslettres.ui.partie.PartieStructureeViewModel]
@@ -67,7 +73,9 @@ class PartieDuoViewModel : ViewModel() {
         _tour.value = premierJoueurManche(0)
         _resultatsJoueur1.value = emptyList()
         _resultatsJoueur2.value = emptyList()
-        _enTransition.value = false
+        // Écran de transition affiché avant même la 1ère manche, pour annoncer le premier joueur
+        // (retour utilisateur) — voir le cas particulier dans confirmerTransition().
+        _enTransition.value = true
     }
 
     /** Appelé dès qu'un joueur termine sa manche : enregistre son résultat et bascule sur l'écran de transition/révélation. */
@@ -83,6 +91,11 @@ class PartieDuoViewModel : ViewModel() {
     /** Clic sur "Prêt" de l'écran de transition : passe au second joueur de la manche, ou à la manche suivante si les deux ont fini. */
     fun confirmerTransition() {
         _enTransition.value = false
+        if (_resultatsJoueur1.value.isEmpty() && _resultatsJoueur2.value.isEmpty()) {
+            // Écran d'annonce initial (personne n'a encore joué) : le tour est déjà positionné
+            // sur le premier joueur par demarrer(), rien à faire de plus.
+            return
+        }
         val idx = _index.value
         val premier = premierJoueurManche(idx)
         if (_tour.value == premier) {

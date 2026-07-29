@@ -17,6 +17,23 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.41",
+        date = "2026-07-29",
+        changements = listOf(
+            "Partie duo : un écran de transition annonce désormais aussi le premier joueur " +
+                "juste après avoir démarré le duel, avant la toute première manche.",
+            "Partie duo : le résultat d'une manche (score, calcul ou mot joué) ne s'affiche " +
+                "plus dès que le premier joueur a fini — il reste caché jusqu'à ce que le " +
+                "second joueur ait joué à son tour, pour ne pas lui donner un avantage.",
+            "Partie duo : l'écran de transition indique clairement qui remporte chaque " +
+                "manche, affiche désormais le score de la partie en cours en permanence, et " +
+                "range le détail de la manche sous le bouton \"Prêt\" plutôt qu'au-dessus.",
+            "Partie duo : correction de l'alternance du premier joueur, qui suit désormais " +
+                "un cycle A,B,B,A répété (au lieu d'une simple alternance A,B,A,B) pour mieux " +
+                "équilibrer l'avantage du premier joueur.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.40",
         date = "2026-07-29",
         changements = listOf(

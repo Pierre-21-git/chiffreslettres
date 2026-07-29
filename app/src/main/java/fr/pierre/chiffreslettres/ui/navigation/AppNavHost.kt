@@ -70,7 +70,10 @@ import fr.pierre.chiffreslettres.ui.partieduo.ResultatAffichage
 import fr.pierre.chiffreslettres.ui.partieduo.ResultatDuoManche
 import fr.pierre.chiffreslettres.ui.partieduo.TourDuo
 import fr.pierre.chiffreslettres.ui.partieduo.TransitionJoueurScreen
+import fr.pierre.chiffreslettres.ui.partieduo.VainqueurManche
 import fr.pierre.chiffreslettres.ui.partieduo.premierJoueurManche
+import fr.pierre.chiffreslettres.ui.partieduo.vainqueurMancheChiffres
+import fr.pierre.chiffreslettres.ui.partieduo.vainqueurMancheLettres
 import fr.pierre.chiffreslettres.ui.partieduo.versTypePartie
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
@@ -452,9 +455,15 @@ fun AppNavHost(
                         }
                     }
                 } else if (enTransition) {
+                    val r1Manche = resultats1.getOrNull(index)
+                    val r2Manche = resultats2.getOrNull(index)
+                    // Personne n'a encore joué cette manche : c'est l'écran d'annonce initial du
+                    // premier joueur (démarrage de la partie), pas une passation après un tour.
+                    val personnePasEncoreJoue = r1Manche == null && r2Manche == null
                     val premier = premierJoueurManche(index)
-                    val finDePartie = tour != premier && index == sequence.lastIndex
+                    val finDePartie = !personnePasEncoreJoue && tour != premier && index == sequence.lastIndex
                     val prochainTour = when {
+                        personnePasEncoreJoue -> tour
                         finDePartie -> null
                         tour == premier -> if (premier == TourDuo.JOUEUR1) TourDuo.JOUEUR2 else TourDuo.JOUEUR1
                         else -> premierJoueurManche(index + 1)
@@ -464,17 +473,40 @@ fun AppNavHost(
                         TourDuo.JOUEUR2 -> profil2
                         null -> null
                     }
-                    val resultatsAffiches = buildList {
-                        resultats1.getOrNull(index)?.let {
-                            add(ResultatAffichage(profilActif?.pseudo ?: "Joueur 1", it.resultat.score, it.detail))
+                    // Le résultat de la manche ne se révèle que quand les deux joueurs ont joué
+                    // (retour utilisateur : pas de résultat du 1er joueur avant le 2e).
+                    val resultatsAffiches = if (r1Manche != null && r2Manche != null) {
+                        val vainqueur = when (manche) {
+                            is ManchePlanifiee.Chiffres -> vainqueurMancheChiffres(r1Manche.ecartCible, r2Manche.ecartCible)
+                            is ManchePlanifiee.Lettres -> vainqueurMancheLettres(r1Manche.resultat.motJoue, r2Manche.resultat.motJoue)
                         }
-                        resultats2.getOrNull(index)?.let {
-                            add(ResultatAffichage(profil2?.pseudo ?: "Joueur 2", it.resultat.score, it.detail))
-                        }
+                        fun scoreAffiche(brut: Int, perdant: Boolean) =
+                            if (duoVm.mode == ModeScoreDuo.CONFRONTATION && perdant) 0 else brut
+                        listOf(
+                            ResultatAffichage(
+                                profilActif?.pseudo ?: "Joueur 1",
+                                scoreAffiche(r1Manche.resultat.score, vainqueur == VainqueurManche.JOUEUR2),
+                                r1Manche.detail,
+                                vainqueur == VainqueurManche.JOUEUR1,
+                            ),
+                            ResultatAffichage(
+                                profil2?.pseudo ?: "Joueur 2",
+                                scoreAffiche(r2Manche.resultat.score, vainqueur == VainqueurManche.JOUEUR1),
+                                r2Manche.detail,
+                                vainqueur == VainqueurManche.JOUEUR2,
+                            ),
+                        )
+                    } else {
+                        emptyList()
                     }
+                    val (scoreFinal1, scoreFinal2) = duoVm.resultatsFinaux()
                     TransitionJoueurScreen(
                         prochainPseudo = prochainJoueur?.let { "${it.avatar} ${it.pseudo}" },
                         resultats = resultatsAffiches,
+                        pseudo1 = profilActif?.pseudo ?: "Joueur 1",
+                        pseudo2 = profil2?.pseudo ?: "Joueur 2",
+                        scorePartie1 = scoreFinal1.sumOf { it.score },
+                        scorePartie2 = scoreFinal2.sumOf { it.score },
                         onPret = { duoVm.confirmerTransition() },
                     )
                 } else {
