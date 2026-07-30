@@ -17,6 +17,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.48",
+        date = "2026-07-30",
+        changements = listOf(
+            "\"Partie réseau\" : ajout du Bluetooth comme second mode de connexion, au choix " +
+                "en plus du Wifi local (le Wifi peut être bloqué par une isolation des clients " +
+                "sur certaines box domestiques). L'écran de choix du rôle permet maintenant de " +
+                "sélectionner le transport avant d'héberger ou de rejoindre une partie.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.47",
         date = "2026-07-29",
         changements = listOf(

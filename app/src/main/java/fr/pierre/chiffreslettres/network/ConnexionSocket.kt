@@ -2,9 +2,10 @@ package fr.pierre.chiffreslettres.network
 
 import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.OutputStream
 import java.io.OutputStreamWriter
-import java.net.Socket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -19,18 +20,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Enveloppe un Socket TCP déjà connecté (hôte ou invité). Lecture/écriture ligne par ligne, un
- * message JSON par ligne, toujours sur Dispatchers.IO. Possède sa propre CoroutineScope interne
- * (indépendante du ViewModel appelant) : fermer() en est le seul point d'arrêt.
+ * Enveloppe une connexion déjà établie (socket TCP ou Bluetooth RFCOMM, hôte ou invité) via ses
+ * flux bruts : indépendant du transport sous-jacent, seule la fermeture ([fermeture]) diffère
+ * entre les deux. Lecture/écriture ligne par ligne, un message JSON par ligne, toujours sur
+ * Dispatchers.IO. Possède sa propre CoroutineScope interne (indépendante du ViewModel appelant) :
+ * fermer() en est le seul point d'arrêt.
  *
  * Channel non borné plutôt qu'un SharedFlow : évite toute ambiguïté sur la rétention des
  * messages émis avant le premier collecteur (un SharedFlow à replay=0 peut perdre un message
  * émis avant l'abonnement). Un seul lecteur à la fois est attendu pour cette sous-version
  * (le handshake).
  */
-class ConnexionSocket(private val socket: Socket) {
-    private val lecteur = BufferedReader(InputStreamReader(socket.getInputStream(), Charsets.UTF_8))
-    private val ecrivain = BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
+class ConnexionSocket(entree: InputStream, sortie: OutputStream, private val fermeture: () -> Unit) {
+    private val lecteur = BufferedReader(InputStreamReader(entree, Charsets.UTF_8))
+    private val ecrivain = BufferedWriter(OutputStreamWriter(sortie, Charsets.UTF_8))
     private val portee = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val canalEntrant = Channel<MessageReseau>(Channel.UNLIMITED)
@@ -62,11 +65,12 @@ class ConnexionSocket(private val socket: Socket) {
     }
 
     /**
-     * Ferme la socket : c'est ce qui débloque un readLine() en attente (annuler la coroutine
-     * seule ne suffit pas, un appel bloquant Java n'est pas interrompu par Job.cancel()).
+     * Ferme la connexion sous-jacente : c'est ce qui débloque un readLine() en attente (annuler
+     * la coroutine seule ne suffit pas, un appel bloquant Java n'est pas interrompu par
+     * Job.cancel()).
      */
     fun fermer() {
-        runCatching { socket.close() }
+        runCatching { fermeture() }
         portee.cancel()
         _estOuverte.value = false
     }

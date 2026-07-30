@@ -88,6 +88,7 @@ class InviteReseau(private val context: Context) {
         withContext(Dispatchers.IO) {
             val socket = Socket()
             socket.connect(InetSocketAddress(partie.hote, partie.port), TIMEOUT_CONNEXION_MS)
-            ConnexionSocket(socket).also { it.envoyer(MessageReseau.Bonjour(ProfilReseau(pseudo, avatar))) }
+            ConnexionSocket(socket.getInputStream(), socket.getOutputStream()) { socket.close() }
+                .also { it.envoyer(MessageReseau.Bonjour(ProfilReseau(pseudo, avatar))) }
         }
 }

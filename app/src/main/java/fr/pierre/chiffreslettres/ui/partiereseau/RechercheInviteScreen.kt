@@ -15,17 +15,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import fr.pierre.chiffreslettres.network.PartieDecouverte
+import fr.pierre.chiffreslettres.network.CibleDecouverte
 import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 
-/** Écran invité : liste des parties découvertes sur le réseau Wifi local, à choisir pour rejoindre. */
+/** Écran invité : liste des cibles découvertes (Wifi ou Bluetooth selon le transport choisi), à sélectionner pour rejoindre. */
 @Composable
 fun RechercheInviteScreen(
-    parties: List<PartieDecouverte>,
+    parties: List<CibleDecouverte>,
     connexionEnCours: Boolean,
     erreur: String?,
-    onSelectionner: (PartieDecouverte) -> Unit,
+    onSelectionner: (CibleDecouverte) -> Unit,
     onAnnulerErreur: () -> Unit,
     onAnnuler: () -> Unit,
 ) {
@@ -53,7 +53,7 @@ fun RechercheInviteScreen(
                 CircularProgressIndicator()
                 Text("Recherche en cours…", style = MaterialTheme.typography.titleMedium)
                 Text(
-                    "Vérifiez que l'hôte a bien lancé « Héberger une partie » sur le même réseau Wifi.",
+                    "Vérifiez que l'hôte a bien lancé « Héberger une partie » avec le même transport.",
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -62,7 +62,7 @@ fun RechercheInviteScreen(
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 for (partie in parties) {
                     OutlinedButton(onClick = { onSelectionner(partie) }, modifier = Modifier.fillMaxWidth()) {
-                        Text(partie.nomService)
+                        Text(partie.libelle)
                     }
                 }
             }

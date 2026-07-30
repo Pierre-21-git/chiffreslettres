@@ -69,7 +69,9 @@ class HoteReseau(private val context: Context) {
                 val socketClient = socketServeur.accept()
                 runCatching { nsdManager.unregisterService(listener) }
                 runCatching { socketServeur.close() } // un seul invité voulu (jeu à 2)
-                val connexion = ConnexionSocket(socketClient)
+                val connexion = ConnexionSocket(socketClient.getInputStream(), socketClient.getOutputStream()) {
+                    socketClient.close()
+                }
                 connexion.envoyer(MessageReseau.Bonjour(ProfilReseau(pseudo, avatar)))
                 trySend(EtatHote.ClientConnecte(connexion))
             } catch (e: Exception) {

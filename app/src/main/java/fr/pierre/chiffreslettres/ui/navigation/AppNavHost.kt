@@ -671,12 +671,12 @@ fun AppNavHost(
                 )
                 ChoixRoleReseauScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
-                    onHeberger = {
-                        reseauVm.choisirHote()
+                    onHeberger = { transport ->
+                        reseauVm.choisirHote(transport)
                         navController.navigate(Routes.HOTE_ATTENTE_RESEAU)
                     },
-                    onRejoindre = {
-                        reseauVm.choisirInvite()
+                    onRejoindre = { transport ->
+                        reseauVm.choisirInvite(transport)
                         navController.navigate(Routes.INVITE_RECHERCHE_RESEAU)
                     },
                     onRetour = { navController.popBackStack() },
