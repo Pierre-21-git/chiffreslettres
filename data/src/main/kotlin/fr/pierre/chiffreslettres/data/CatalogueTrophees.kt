@@ -19,6 +19,10 @@ data class TropheeStats(
     val partiesDuoGagnees: Int,
     val partiesConfrontationJouees: Int,
     val partiesConfrontationGagnees: Int,
+    val partiesDuoReseauJouees: Int,
+    val partiesDuoReseauGagnees: Int,
+    val partiesConfrontationReseauJouees: Int,
+    val partiesConfrontationReseauGagnees: Int,
     val defisTotal: Int,
     /** Clé = nom du [ModeJeu] (ex. "CHIFFRES"), valeur = meilleure série en défi série, tous niveaux confondus. */
     val meilleuresSeriesDefi: Map<String, Int>,
@@ -272,6 +276,67 @@ object CatalogueTrophees {
                 palier = Palier.OR,
                 sousTitre = "Confrontation",
             ) { it.partiesConfrontationGagnees >= 10 },
+        )
+
+        add(
+            Trophee(
+                "duo_reseau_1",
+                "Première partie duo à distance jouée",
+                "Terminer une partie en mode Duo à distance, tous niveaux confondus.",
+                CategorieTrophee.DUO,
+                palier = Palier.OR,
+                sousTitre = "Duo à distance",
+            ) { it.partiesDuoReseauJouees >= 1 },
+        )
+        add(
+            Trophee(
+                "duo_reseau_gagnee_1",
+                "Première partie duo à distance gagnée",
+                "Gagner une partie en mode Duo à distance.",
+                CategorieTrophee.DUO,
+                palier = Palier.OR,
+                sousTitre = "Duo à distance",
+            ) { it.partiesDuoReseauGagnees >= 1 },
+        )
+        add(
+            Trophee(
+                "duo_reseau_gagnee_10",
+                "Dixième partie duo à distance gagnée",
+                "Gagner 10 parties en mode Duo à distance.",
+                CategorieTrophee.DUO,
+                palier = Palier.OR,
+                sousTitre = "Duo à distance",
+            ) { it.partiesDuoReseauGagnees >= 10 },
+        )
+        add(
+            Trophee(
+                "confrontation_reseau_1",
+                "Première confrontation à distance jouée",
+                "Terminer une partie en mode Confrontation à distance, tous niveaux confondus.",
+                CategorieTrophee.DUO,
+                palier = Palier.OR,
+                sousTitre = "Confrontation à distance",
+            ) { it.partiesConfrontationReseauJouees >= 1 },
+        )
+        add(
+            Trophee(
+                "confrontation_reseau_gagnee_1",
+                "Première confrontation à distance gagnée",
+                "Gagner une partie en mode Confrontation à distance.",
+                CategorieTrophee.DUO,
+                palier = Palier.OR,
+                sousTitre = "Confrontation à distance",
+            ) { it.partiesConfrontationReseauGagnees >= 1 },
+        )
+        add(
+            Trophee(
+                "confrontation_reseau_gagnee_10",
+                "Dixième confrontation à distance gagnée",
+                "Gagner 10 parties en mode Confrontation à distance.",
+                CategorieTrophee.DUO,
+                palier = Palier.OR,
+                sousTitre = "Confrontation à distance",
+            ) { it.partiesConfrontationReseauGagnees >= 10 },
         )
 
         add(

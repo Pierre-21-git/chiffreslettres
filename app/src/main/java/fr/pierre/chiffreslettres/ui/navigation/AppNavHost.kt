@@ -3,9 +3,12 @@ package fr.pierre.chiffreslettres.ui.navigation
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -17,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -58,8 +62,10 @@ import fr.pierre.chiffreslettres.ui.entrainement.ChoixNiveauEntrainementScreen
 import fr.pierre.chiffreslettres.ui.entrainement.EntrainementLibreViewModel
 import fr.pierre.chiffreslettres.ui.lettres.LettresRoundScreen
 import fr.pierre.chiffreslettres.ui.lettres.LettresRoundViewModel
+import fr.pierre.chiffreslettres.network.EtatManche
 import fr.pierre.chiffreslettres.network.EtatPartieReseau
 import fr.pierre.chiffreslettres.network.PartieReseauViewModel
+import fr.pierre.chiffreslettres.network.RoleReseau
 import fr.pierre.chiffreslettres.ui.menu.MenuPrincipalScreen
 import fr.pierre.chiffreslettres.ui.partie.ConfigurationPartieScreen
 import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
@@ -78,10 +84,15 @@ import fr.pierre.chiffreslettres.ui.partieduo.premierJoueurManche
 import fr.pierre.chiffreslettres.ui.partieduo.vainqueurMancheChiffres
 import fr.pierre.chiffreslettres.ui.partieduo.vainqueurMancheLettres
 import fr.pierre.chiffreslettres.ui.partieduo.versTypePartie
+import fr.pierre.chiffreslettres.ui.partieduo.versTypePartieReseau
 import fr.pierre.chiffreslettres.ui.partiereseau.AttenteHoteScreen
+import fr.pierre.chiffreslettres.ui.partiereseau.AttenteReseauScreen
 import fr.pierre.chiffreslettres.ui.partiereseau.ChoixRoleReseauScreen
+import fr.pierre.chiffreslettres.ui.partiereseau.ConfigurationPartieReseauScreen
 import fr.pierre.chiffreslettres.ui.partiereseau.ConfirmationConnexionScreen
+import fr.pierre.chiffreslettres.ui.partiereseau.DeclencherMancheChiffresScreen
 import fr.pierre.chiffreslettres.ui.partiereseau.RechercheInviteScreen
+import fr.pierre.chiffreslettres.ui.partiereseau.RevelationMancheReseauScreen
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
 import fr.pierre.chiffreslettres.ui.statistiques.MesStatistiquesScreen
@@ -755,12 +766,271 @@ fun AppNavHost(
                 if (etatConnecte != null) {
                     ConfirmationConnexionScreen(
                         profilDistant = etatConnecte.profilDistant,
-                        onTerminer = {
-                            reseauVm.annulerEtRevenirAuChoix()
-                            navController.popBackStack(Routes.MENU, inclusive = false)
+                        onContinuer = {
+                            if (etatConnecte.role == RoleReseau.HOTE) {
+                                navController.navigate(Routes.CONFIGURATION_PARTIE_RESEAU)
+                            } else {
+                                navController.navigate(Routes.JEU_PARTIE_RESEAU)
+                            }
                         },
                     )
                 }
+            }
+
+            composable(Routes.CONFIGURATION_PARTIE_RESEAU) { backStackEntry ->
+                val reseauVm = partieReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                )
+                ConfigurationPartieReseauScreen(
+                    pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    onDemarrer = { niveau, mode ->
+                        reseauVm.demarrerCommeHote(niveau, mode)
+                        navController.navigate(Routes.JEU_PARTIE_RESEAU)
+                    },
+                )
+            }
+
+            composable(Routes.JEU_PARTIE_RESEAU) { backStackEntry ->
+                val reseauVm = partieReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                )
+                val etatConnexion by reseauVm.etat.collectAsState()
+                val profilDistant = (etatConnexion as? EtatPartieReseau.Connecte)?.profilDistant
+                val pseudoAdversaire = profilDistant?.let { "${it.avatar} ${it.pseudo}" } ?: "l'adversaire"
+                val pseudoMoi = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "Moi"
+                val sequence by reseauVm.sequence.collectAsState()
+                val seeds by reseauVm.seeds.collectAsState()
+                val index by reseauVm.index.collectAsState()
+                val tour by reseauVm.tour.collectAsState()
+                val etatManche by reseauVm.etatManche.collectAsState()
+                val resultats1 by reseauVm.resultatsJoueur1.collectAsState()
+                val resultats2 by reseauVm.resultatsJoueur2.collectAsState()
+                val choixVoyellesRecu by reseauVm.choixVoyellesRecu.collectAsState()
+                val adversairePretPourManche by reseauVm.adversairePretPourManche.collectAsState()
+                val erreurJeu by reseauVm.erreurJeu.collectAsState()
+                val manche = sequence.getOrNull(index)
+                var demanderConfirmationRetour by remember { mutableStateOf(false) }
+                val onRetourAvecConfirmation = { demanderConfirmationRetour = true }
+                val jeSuisDeclencheur = tour == reseauVm.monTourDuo
+
+                if (erreurJeu != null) {
+                    Column(
+                        modifier = Modifier.fillMaxSize().padding(24.dp),
+                        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(erreurJeu ?: "", style = MaterialTheme.typography.titleMedium)
+                        Button(onClick = { navController.popBackStack(Routes.MENU, inclusive = false) }) {
+                            Text("Retour au menu")
+                        }
+                    }
+                } else if (sequence.isEmpty()) {
+                    AttenteReseauScreen("En attente de la configuration de la partie…")
+                } else if (manche == null) {
+                    LaunchedEffect(Unit) {
+                        navController.navigate(Routes.RECAP_PARTIE_RESEAU) {
+                            popUpTo(Routes.JEU_PARTIE_RESEAU) { inclusive = true }
+                        }
+                    }
+                } else if (etatManche is EtatManche.Revelation) {
+                    val r1 = resultats1[index]
+                    val r2 = resultats2[index]
+                    if (r1 != null && r2 != null) {
+                        val vainqueur = when (manche) {
+                            is ManchePlanifiee.Chiffres -> vainqueurMancheChiffres(r1.ecartCible, r2.ecartCible)
+                            is ManchePlanifiee.Lettres -> vainqueurMancheLettres(r1.resultat.motJoue, r2.resultat.motJoue)
+                        }
+                        fun scoreAffiche(brut: Int, perdant: Boolean) =
+                            if (reseauVm.mode == ModeScoreDuo.CONFRONTATION && perdant) 0 else brut
+                        val (pseudoJ1, pseudoJ2) = if (reseauVm.monTourDuo == TourDuo.JOUEUR1) {
+                            pseudoMoi to pseudoAdversaire
+                        } else {
+                            pseudoAdversaire to pseudoMoi
+                        }
+                        val resultatsAffiches = listOf(
+                            ResultatAffichage(
+                                pseudoJ1,
+                                scoreAffiche(r1.resultat.score, vainqueur == VainqueurManche.JOUEUR2),
+                                r1.detail,
+                                vainqueur == VainqueurManche.JOUEUR1,
+                            ),
+                            ResultatAffichage(
+                                pseudoJ2,
+                                scoreAffiche(r2.resultat.score, vainqueur == VainqueurManche.JOUEUR1),
+                                r2.detail,
+                                vainqueur == VainqueurManche.JOUEUR2,
+                            ),
+                        )
+                        val (scoreFinal1, scoreFinal2) = reseauVm.resultatsFinaux()
+                        val (scoreMoi, scoreAdv) = if (reseauVm.monTourDuo == TourDuo.JOUEUR1) {
+                            scoreFinal1.sumOf { it.score } to scoreFinal2.sumOf { it.score }
+                        } else {
+                            scoreFinal2.sumOf { it.score } to scoreFinal1.sumOf { it.score }
+                        }
+                        RevelationMancheReseauScreen(
+                            resultats = resultatsAffiches,
+                            pseudoMoi = pseudoMoi,
+                            pseudoAdversaire = pseudoAdversaire,
+                            scoreMoi = scoreMoi,
+                            scoreAdversaire = scoreAdv,
+                            dernierManche = index == sequence.lastIndex,
+                            onSuivant = { reseauVm.mancheSuivante() },
+                        )
+                    }
+                } else if (etatManche is EtatManche.AttenteDeclenchement && !jeSuisDeclencheur) {
+                    LaunchedEffect(index) { reseauVm.signalerPret() }
+                    val quoi = if (manche is ManchePlanifiee.Lettres) "choisisse le nombre de voyelles" else "lance la manche"
+                    AttenteReseauScreen("En attente que $pseudoAdversaire $quoi…")
+                } else if (etatManche is EtatManche.AttenteDeclenchement && index !in adversairePretPourManche) {
+                    // Je suis le déclencheur, mais l'adversaire n'a pas encore confirmé être
+                    // arrivé sur l'écran d'attente : éviter de déclencher la manche trop tôt.
+                    AttenteReseauScreen("En attente que $pseudoAdversaire soit prêt…")
+                } else {
+                    val seedManche = seeds.getOrNull(index) ?: 0L
+                    val progressionManche = "${index + 1} / ${sequence.size}"
+
+                    when (manche) {
+                        is ManchePlanifiee.Chiffres -> {
+                            if (etatManche is EtatManche.AttenteDeclenchement) {
+                                DeclencherMancheChiffresScreen(
+                                    progressionManche = progressionManche,
+                                    onCommencer = { reseauVm.declencherManche() },
+                                )
+                            } else {
+                                val roundVm: ChiffresRoundViewModel =
+                                    viewModel(key = "reseau-chiffres-$index") {
+                                        ChiffresRoundViewModel(
+                                            manche.niveau,
+                                            manche.niveau.dureeSecondesPartieStructuree,
+                                            random = Random(seedManche),
+                                        )
+                                    }
+                                ChiffresRoundScreen(
+                                    viewModel = roundVm,
+                                    scoreCumule = null,
+                                    pseudo = null,
+                                    afficherResultat = false,
+                                    onMancheTerminee = { obtenu ->
+                                        val detail = roundVm.uiState.value.operationsEffectuees
+                                            .joinToString("\n").ifBlank { "Aucune opération" }
+                                        reseauVm.enregistrerMonResultat(
+                                            ResultatDuoManche(
+                                                ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu),
+                                                roundVm.uiState.value.ecartCible,
+                                                detail,
+                                            ),
+                                        )
+                                    },
+                                    onRetourEntrainement = onRetourAvecConfirmation,
+                                    progressionManche = progressionManche,
+                                    actionsFinManche = {},
+                                )
+                            }
+                        }
+                        is ManchePlanifiee.Lettres -> {
+                            val roundVm: LettresRoundViewModel =
+                                viewModel(key = "reseau-lettres-$index") {
+                                    LettresRoundViewModel(
+                                        manche.niveau,
+                                        dictionnaire,
+                                        manche.niveau.dureeSecondesPartieStructuree,
+                                        random = Random(seedManche),
+                                    )
+                                }
+                            if (jeSuisDeclencheur) {
+                                val uiState by roundVm.uiState.collectAsState()
+                                LaunchedEffect(uiState.nombreVoyellesChoisi) {
+                                    val n = uiState.nombreVoyellesChoisi
+                                    if (n != null && etatManche is EtatManche.AttenteDeclenchement) {
+                                        reseauVm.envoyerChoixVoyelles(n)
+                                    }
+                                }
+                            } else {
+                                // etatManche == EnCours ici (sinon on serait dans la branche d'attente
+                                // ci-dessus) : le choix de l'adversaire est donc déjà reçu.
+                                LaunchedEffect(roundVm) {
+                                    val n = choixVoyellesRecu[index]
+                                    if (n != null && !roundVm.uiState.value.tirageTermine) {
+                                        roundVm.choisirNombreVoyelles(n)
+                                    }
+                                }
+                            }
+                            LettresRoundScreen(
+                                viewModel = roundVm,
+                                scoreCumule = null,
+                                pseudo = null,
+                                afficherResultat = false,
+                                onMancheTerminee = { obtenu, motValide ->
+                                    reseauVm.enregistrerMonResultat(
+                                        ResultatDuoManche(
+                                            ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
+                                            detail = motValide ?: "(aucun mot)",
+                                        ),
+                                    )
+                                },
+                                onRetourEntrainement = onRetourAvecConfirmation,
+                                progressionManche = progressionManche,
+                                actionsFinManche = {},
+                            )
+                        }
+                    }
+                }
+
+                if (demanderConfirmationRetour) {
+                    AlertDialog(
+                        onDismissRequest = { demanderConfirmationRetour = false },
+                        title = { Text("Quitter la partie réseau ?") },
+                        text = { Text("La partie en cours sera perdue si vous quittez maintenant. Continuer ?") },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                demanderConfirmationRetour = false
+                                reseauVm.annulerEtRevenirAuChoix()
+                                navController.popBackStack(Routes.MENU, inclusive = false)
+                            }) { Text("Quitter") }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { demanderConfirmationRetour = false }) { Text("Annuler") }
+                        },
+                    )
+                }
+            }
+
+            composable(Routes.RECAP_PARTIE_RESEAU) { backStackEntry ->
+                val reseauVm = partieReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                )
+                val etatConnexion by reseauVm.etat.collectAsState()
+                val profilDistant = (etatConnexion as? EtatPartieReseau.Connecte)?.profilDistant
+                val scope = rememberCoroutineScope()
+                val (finaux1, finaux2) = reseauVm.resultatsFinaux()
+                val (mesResultats, resultatsAdversaire) = if (reseauVm.monTourDuo == TourDuo.JOUEUR1) {
+                    finaux1 to finaux2
+                } else {
+                    finaux2 to finaux1
+                }
+                RecapPartieDuoScreen(
+                    pseudo1 = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "Moi",
+                    pseudo2 = profilDistant?.let { "${it.avatar} ${it.pseudo}" } ?: "Adversaire",
+                    resultats1 = mesResultats,
+                    resultats2 = resultatsAdversaire,
+                    onTerminer = {
+                        val monTotal = mesResultats.sumOf { it.score }
+                        val sonTotal = resultatsAdversaire.sumOf { it.score }
+                        val type = reseauVm.mode.versTypePartieReseau()
+                        scope.launch {
+                            historiqueRepository.enregistrerSession(profilId, type, mesResultats, monTotal > sonTotal)
+                            tropheeRepository.reevaluer(profilId)
+                            reseauVm.annulerEtRevenirAuChoix()
+                            navController.popBackStack(Routes.MENU, inclusive = false)
+                        }
+                    },
+                )
             }
         }
 

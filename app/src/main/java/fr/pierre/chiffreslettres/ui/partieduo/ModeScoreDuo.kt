@@ -16,3 +16,9 @@ fun ModeScoreDuo.versTypePartie(): TypePartie = when (this) {
     ModeScoreDuo.DUO -> TypePartie.DUO
     ModeScoreDuo.CONFRONTATION -> TypePartie.DUO_CONFRONTATION
 }
+
+/** Variante réseau (2 téléphones séparés) de [versTypePartie]. */
+fun ModeScoreDuo.versTypePartieReseau(): TypePartie = when (this) {
+    ModeScoreDuo.DUO -> TypePartie.DUO_RESEAU
+    ModeScoreDuo.CONFRONTATION -> TypePartie.DUO_CONFRONTATION_RESEAU
+}

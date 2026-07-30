@@ -34,6 +34,10 @@ class TropheeRepository(
             partiesDuoGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO.name),
             partiesConfrontationJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO_CONFRONTATION.name),
             partiesConfrontationGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO_CONFRONTATION.name),
+            partiesDuoReseauJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO_RESEAU.name),
+            partiesDuoReseauGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO_RESEAU.name),
+            partiesConfrontationReseauJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO_CONFRONTATION_RESEAU.name),
+            partiesConfrontationReseauGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO_CONFRONTATION_RESEAU.name),
             defisTotal = defiDao.compterDefisTotal(profilId),
             meilleuresSeriesDefi = defiDao.meilleuresSeriesDefiParMode(profilId)
                 .associate { it.mode.name to it.meilleur },

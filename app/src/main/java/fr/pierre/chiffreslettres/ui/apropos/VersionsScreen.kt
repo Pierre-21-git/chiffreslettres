@@ -17,6 +17,20 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.49",
+        date = "2026-07-30",
+        changements = listOf(
+            "\"Partie réseau\" jouable de bout en bout : les manches se jouent simultanément sur " +
+                "les 2 téléphones, avec le même ordre A,B,B,A que la partie duo pour désigner qui " +
+                "lance chaque manche (choix du nombre de voyelles en lettres, bouton \"Commencer " +
+                "la manche\" en chiffres) ; révélation commune une fois les 2 résultats reçus, " +
+                "récap final, historique et trophées enregistrés pour chaque joueur.",
+            "6 nouveaux trophées (Duo à distance / Confrontation à distance, sur le modèle des " +
+                "trophées Duo/Confrontation existants), et 2 nouvelles sections dans les " +
+                "statistiques (perso et générales).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.48",
         date = "2026-07-30",
         changements = listOf(

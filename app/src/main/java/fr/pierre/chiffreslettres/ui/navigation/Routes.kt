@@ -43,6 +43,9 @@ object Routes {
     const val HOTE_ATTENTE_RESEAU = "reseau/hote/attente"
     const val INVITE_RECHERCHE_RESEAU = "reseau/invite/recherche"
     const val RESEAU_CONNEXION = "reseau/connexion"
+    const val CONFIGURATION_PARTIE_RESEAU = "reseau/configuration"
+    const val JEU_PARTIE_RESEAU = "reseau/jeu"
+    const val RECAP_PARTIE_RESEAU = "reseau/recap"
 
     const val CHOIX_DEFI_SERIE = "defi/choixNiveauSerie"
     const val CHOIX_DEFI_CHRONO = "defi/choixNiveauChrono"

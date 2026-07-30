@@ -276,11 +276,13 @@ fun MesStatistiquesScreen(
     }
 }
 
-/** Trois classements distincts par niveau (retour utilisateur) : le score d'une confrontation peut être écrasé à 0 par l'adversaire, il ne doit pas se mélanger au meilleur score solo. */
+/** Classements distincts par niveau (retour utilisateur) : le score d'une confrontation peut être écrasé à 0 par l'adversaire, il ne doit pas se mélanger au meilleur score solo. */
 private val TYPES_PARTIE_AFFICHES = listOf(
     TypePartie.STRUCTUREE to "Solo",
     TypePartie.DUO to "Duo",
     TypePartie.DUO_CONFRONTATION to "Confrontation",
+    TypePartie.DUO_RESEAU to "Duo à distance",
+    TypePartie.DUO_CONFRONTATION_RESEAU to "Confrontation à distance",
 )
 
 /**

@@ -115,7 +115,7 @@ interface HistoriqueDao {
         SELECT COUNT(*)
         FROM MancheEntity m
         INNER JOIN SessionEntity s ON s.id = m.sessionId
-        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION')
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
             AND m.mode = 'CHIFFRES' AND m.score = 10
         """,
     )
@@ -127,7 +127,7 @@ interface HistoriqueDao {
         SELECT COUNT(*)
         FROM MancheEntity m
         INNER JOIN SessionEntity s ON s.id = m.sessionId
-        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION')
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
             AND m.mode = 'LETTRES' AND LENGTH(m.motJoue) = :longueur
         """,
     )
@@ -143,7 +143,7 @@ interface HistoriqueDao {
             SELECT s.id
             FROM SessionEntity s
             INNER JOIN MancheEntity m ON m.sessionId = s.id AND m.mode = 'CHIFFRES'
-            WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION')
+            WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
             GROUP BY s.id
             HAVING COUNT(*) = SUM(CASE WHEN m.score = 10 THEN 1 ELSE 0 END)
         )
@@ -162,7 +162,7 @@ interface HistoriqueDao {
             SELECT s.id
             FROM SessionEntity s
             INNER JOIN MancheEntity m ON m.sessionId = s.id AND m.mode = 'LETTRES'
-            WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION')
+            WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
             GROUP BY s.id
             HAVING COUNT(*) = COUNT(m.motJoue) AND MIN(LENGTH(m.motJoue)) >= :longueurMin
         )
@@ -174,13 +174,13 @@ interface HistoriqueDao {
     @Query(
         """
         SELECT COUNT(*) FROM SessionEntity
-        WHERE profilId = :profilId AND type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION') AND scoreTotal >= :seuil
+        WHERE profilId = :profilId AND type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU') AND scoreTotal >= :seuil
         """,
     )
     suspend fun compterPartiesScoreAuMoins(profilId: Long, seuil: Int): Int
 
     /** Nombre total de parties terminées, tous niveaux et tous types confondus (solo, duo, confrontation). */
-    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION')")
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')")
     suspend fun compterPartiesSoloTotal(profilId: Long): Int
 
     /** Nombre de parties d'un [type] (DUO ou DUO_CONFRONTATION) jouées par ce profil, tous niveaux confondus. */
