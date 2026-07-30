@@ -165,6 +165,8 @@ fun AppNavHost(
         composable(Routes.MENU) {
             MenuPrincipalScreen(
                 pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                profilId = profilId,
+                tropheeRepository = tropheeRepository,
                 onEntrainementLibre = { navController.navigate(Routes.ENTRAINEMENT_GRAPH) },
                 onPartieStructuree = { navController.navigate(Routes.PARTIE_GRAPH) },
                 onPartieDuo = { navController.navigate(Routes.PARTIE_DUO_GRAPH) },
@@ -222,6 +224,7 @@ fun AppNavHost(
             ChangerProfilScreen(
                 profilRepository = profilRepository,
                 profilActifStore = profilActifStore,
+                tropheeRepository = tropheeRepository,
                 onProfilChoisi = { navController.popBackStack() },
                 onCreerNouveauProfil = { navController.navigate(Routes.CREER_PROFIL) },
             )

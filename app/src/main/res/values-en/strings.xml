@@ -1,0 +1,271 @@
+<resources>
+    <string name="app_name">Numbers &amp; Letters</string>
+
+    <!-- Level labels (French wordplay kept as-is for now, cf. memory: pun names not translated yet). -->
+    <string name="niveau_emile">Assez facile, Émile</string>
+    <string name="niveau_nestor">Ça va encore, Nestor</string>
+    <string name="niveau_monique">Ça se complique, Monique</string>
+    <string name="niveau_mathieu">Là c\'est sérieux, Mathieu</string>
+
+    <!-- Letters mode alphabet: English Scrabble distribution (98 tiles, no blanks, same
+         convention as the French default). No letters excluded per level for now (retour
+         utilisateur : à redemander plus tard). -->
+    <string-array name="alphabet_lettres">
+        <item>A</item><item>B</item><item>C</item><item>D</item><item>E</item>
+        <item>F</item><item>G</item><item>H</item><item>I</item><item>J</item>
+        <item>K</item><item>L</item><item>M</item><item>N</item><item>O</item>
+        <item>P</item><item>Q</item><item>R</item><item>S</item><item>T</item>
+        <item>U</item><item>V</item><item>W</item><item>X</item><item>Y</item>
+        <item>Z</item>
+    </string-array>
+    <integer-array name="alphabet_comptes">
+        <item>9</item><item>2</item><item>2</item><item>4</item><item>12</item>
+        <item>2</item><item>3</item><item>2</item><item>9</item><item>1</item>
+        <item>1</item><item>4</item><item>2</item><item>6</item><item>8</item>
+        <item>2</item><item>1</item><item>6</item><item>4</item><item>6</item>
+        <item>4</item><item>2</item><item>2</item><item>1</item><item>2</item>
+        <item>1</item>
+    </integer-array>
+    <string name="alphabet_voyelles">AEIOU</string>
+
+    <string name="lettres_exclues_emile"></string>
+    <string name="lettres_exclues_nestor"></string>
+    <string name="lettres_exclues_monique"></string>
+    <string name="lettres_exclues_mathieu"></string>
+
+    <string name="mode_chiffres">Numbers</string>
+    <string name="mode_lettres">Letters</string>
+
+    <string name="action_continuer">Continue</string>
+    <string name="action_terminer">Finish</string>
+    <string name="action_annuler">Cancel</string>
+    <string name="action_quitter">Quit</string>
+    <string name="action_retour">Back</string>
+    <string name="action_recommencer">Restart</string>
+    <string name="action_rejouer">Play again</string>
+    <string name="action_effacer">Clear</string>
+    <string name="action_fermer">Close</string>
+    <string name="libelle_manche">Round</string>
+    <string name="action_ok">OK</string>
+    <string name="action_valider">Submit</string>
+    <string name="action_supprimer">Delete</string>
+    <string name="action_renommer">Rename</string>
+
+    <string name="entrainement_titre">Training</string>
+
+    <string name="attente_hote_titre">Host a game</string>
+    <string name="attente_hote_en_attente">Waiting for an opponent…</string>
+    <string name="attente_hote_partie_publiee">Published game</string>
+    <string name="attente_hote_valeur_provisoire">…</string>
+    <string name="attente_hote_instructions">The other phone must be on the same Wifi network and choose \"Join a game\".</string>
+    <string name="attente_hote_connexion_impossible">Connection failed</string>
+
+    <string name="defi_niveau_duree">%1$s — %2$d min</string>
+
+    <string name="apropos_titre">About</string>
+    <string name="apropos_version">Numbers &amp; Letters — version %1$s (%2$d)</string>
+    <string name="apropos_licence_code">Source code under the GNU GPL-3.0 license.</string>
+    <string name="apropos_licence_dictionnaire">French dictionary: Dicollecte (hunspell-fr), MPL-2.0 license.</string>
+    <string name="apropos_licence_filtrage">Grammatical filtering (proper nouns, acronyms, conjugated verb forms): Morphalou3 (CNRS/ATILF), LGPL-LR license.</string>
+    <string name="apropos_licence_bibliotheques">Open source libraries used: AndroidX Jetpack Compose, Room, Navigation (Apache 2.0 license).</string>
+    <string name="apropos_bouton_regles_du_jeu">Game rules</string>
+    <string name="apropos_bouton_trophees">Trophies</string>
+    <string name="apropos_bouton_versions">Versions</string>
+
+    <string name="creer_profil_bienvenue">Welcome! Choose a nickname to get started.</string>
+    <string name="creer_profil_titre">Create a new profile</string>
+    <string name="creer_profil_pseudo_label">Nickname</string>
+    <string name="creer_profil_avatar_label">Avatar</string>
+    <string name="creer_profil_bouton_creer">Create</string>
+
+    <string name="recap_duo_titre">Duo game over</string>
+    <string name="recap_duo_vainqueur">%1$s wins the duel!</string>
+    <string name="recap_duo_match_nul">Draw!</string>
+
+    <string name="revelation_manche_titre">Round result</string>
+    <string name="revelation_manche_vainqueur">🏆 %1$s wins the round</string>
+    <string name="revelation_manche_egalite">Tie on this round</string>
+    <string name="revelation_manche_suivante">Next round</string>
+    <string name="revelation_voir_resultats">See results</string>
+    <string name="revelation_score_vainqueur">🏆 %1$d pts</string>
+    <string name="revelation_score">%1$d pts</string>
+
+    <string name="configuration_partie_solo_titre">Set up solo game</string>
+    <string name="configuration_choisir_niveau">Choose a level</string>
+
+    <string name="recherche_invite_titre">Join a game</string>
+    <string name="recherche_invite_connexion_en_cours">Connecting…</string>
+    <string name="recherche_invite_recherche_en_cours">Searching…</string>
+    <string name="recherche_invite_instructions">Check that the host has started \"Host a game\" with the same transport.</string>
+    <string name="recherche_invite_parties_trouvees">Games found</string>
+    <string name="recherche_invite_connexion_impossible">Connection failed</string>
+
+    <string name="mode_duo_libelle">Duo</string>
+    <string name="mode_confrontation_libelle">Head-to-head</string>
+    <string name="mode_duo_description">Each player keeps their own score on every round, just like solo.</string>
+    <string name="mode_confrontation_description">On every round, only the player closest to the target (or with the longest word) scores points; in case of a tie, both keep them.</string>
+    <string name="configuration_partie_titre">Set up the game</string>
+    <string name="configuration_quel_niveau">Which level?</string>
+    <string name="configuration_quel_mode">Which mode?</string>
+    <string name="configuration_partie_reseau_demarrer">Start the game</string>
+
+    <string name="configuration_duo_titre">Set up duo game</string>
+    <string name="configuration_duo_pas_de_second_profil">You need at least a second profile to play duo — create one from the change profile screen.</string>
+    <string name="configuration_duo_contre_qui">Against whom?</string>
+    <string name="configuration_duo_demarrer">Start the duel</string>
+
+    <string name="defi_quotidien_titre">Daily challenge</string>
+    <string name="defi_quotidien_aujourdhui">Today: %1$s %2$s</string>
+    <string name="defi_type_serie">Streak challenge</string>
+    <string name="defi_type_chrono">Timed challenge</string>
+    <string name="defi_objectif">Goal: %1$s</string>
+    <string name="defi_objectif_comptes_serie">%1$d exact counts in a row</string>
+    <string name="defi_objectif_comptes">%1$d exact counts</string>
+    <string name="defi_objectif_mots_serie">%1$d valid words in a row</string>
+    <string name="defi_objectif_mots">%1$d valid words</string>
+    <string name="defi_quotidien_aucune_serie">No streak in progress</string>
+    <string name="defi_quotidien_serie_en_cours">Current streak: %1$d day(s) in a row</string>
+    <string name="defi_quotidien_prochain_palier">%1$d more day(s) for the \"%2$s\" trophy</string>
+    <string name="defi_quotidien_tous_paliers">All streak milestones unlocked!</string>
+    <string name="defi_quotidien_deja_reussi">Today\'s challenge already completed, well done! Come back tomorrow for the next one.</string>
+    <string name="defi_quotidien_choisis_niveau">Choose your level</string>
+    <string name="trophee_semaine_defi_quotidien">A week of daily challenges</string>
+    <string name="trophee_mois_defi_quotidien">A month of daily challenges</string>
+
+    <string name="declencher_manche_progression">Round %1$s</string>
+    <string name="declencher_manche_commencer">Start the round</string>
+
+    <string name="recap_partie_titre">Solo game over</string>
+    <string name="recap_partie_score_total">Total score: %1$d</string>
+    <string name="recap_partie_manche_detail">Round %1$d (%2$s): %3$d points</string>
+
+    <string name="confirmation_connexion_titre">Connection established</string>
+    <string name="confirmation_connexion_connecte">Connected!</string>
+
+    <string name="transition_passez_telephone">Pass the phone to</string>
+    <string name="transition_pret">Ready</string>
+
+    <string name="chargement">Loading...</string>
+
+    <string name="changer_profil_titre">Choose a profile</string>
+    <string name="changer_profil_creer_nouveau">Create a new profile</string>
+    <string name="changer_profil_renommer_titre">Rename profile</string>
+    <string name="changer_profil_supprimer_titre">Delete profile</string>
+    <string name="changer_profil_supprimer_message">Profile \"%1$s\" and all its history will be permanently deleted. Continue?</string>
+
+    <string name="role_reseau_titre">Play online</string>
+    <string name="role_reseau_intro">Connect two phones to play duo or head-to-head, each on their own device.</string>
+    <string name="role_reseau_comment_connecter">How to connect?</string>
+    <string name="transport_wifi">Local Wifi</string>
+    <string name="transport_bluetooth">Bluetooth</string>
+    <string name="transport_wifi_instructions">Both phones must be on the same Wifi network.</string>
+    <string name="transport_bluetooth_instructions">The host device will need to accept being visible; pairing may be requested on first connection.</string>
+
+    <string name="afficheur_score">Score</string>
+    <string name="afficheur_temps">Time</string>
+    <string name="afficheur_temps_valeur">%1$ds</string>
+    <string name="chiffres_compte_a_trouver">Target number</string>
+    <string name="chiffres_vos_operations">Your operations</string>
+    <string name="score_obtenu">Score: %1$d</string>
+    <string name="chiffres_solution_possible_ligne">A possible solution: %1$s</string>
+    <string name="chiffres_solution_aucune">none</string>
+    <string name="chiffres_solution_possible_titre">A possible solution</string>
+
+    <string name="trophees_debloques_compteur">%1$d / %2$d unlocked</string>
+    <string name="trophees_obtenu_le">Unlocked on %1$s</string>
+    <string name="trophees_pas_encore_obtenu">Not yet unlocked</string>
+
+    <string name="lettres_tirage_label">Draw</string>
+    <string name="lettres_tirage_valeur">%1$d / %2$d</string>
+    <string name="lettres_votre_mot">Your word</string>
+    <string name="lettres_nombre_voyelles">Number of vowels wanted</string>
+    <string name="lettres_mot_valide">valid</string>
+    <string name="lettres_mot_invalide">invalid or not in the dictionary</string>
+    <string name="lettres_votre_mot_validite">Your word (\"%1$s\"): %2$s</string>
+    <string name="lettres_meilleur_mot_trouve">Best word found: %1$s</string>
+    <string name="lettres_meilleur_mot_detail">%1$s (%2$d letters)</string>
+    <string name="lettres_meilleur_mot_aucun">none</string>
+
+    <string name="statistiques_titre_defaut">Statistics</string>
+    <string name="statistiques_bouton_mes_stats">My statistics</string>
+    <string name="statistiques_bouton_generales">Overall statistics</string>
+    <string name="statistiques_bouton_voir_trophees">See my trophies</string>
+    <string name="statistiques_bouton_exporter">Export my statistics</string>
+    <string name="statistiques_bouton_importer">Import my statistics</string>
+    <string name="statistiques_bouton_reinitialiser">Reset my statistics</string>
+    <string name="statistiques_confirm_reinit_message">All game history, scores and challenges for %1$s will be permanently deleted. Continue?</string>
+    <string name="action_reinitialiser">Reset</string>
+    <string name="statistiques_importer_message">Your current statistics (games, scores, challenges and trophies) will be permanently replaced by those from the imported file. Continue?</string>
+    <string name="action_remplacer">Replace</string>
+    <string name="statistiques_operation_impossible">Operation not possible</string>
+    <string name="statistiques_fichier_invalide">Invalid file.</string>
+    <string name="statistiques_export_echec">Export failed: %1$s</string>
+    <string name="statistiques_import_echec">Import failed: %1$s</string>
+    <string name="statistiques_erreur_ecriture">Could not write the file.</string>
+    <string name="statistiques_erreur_lecture">Could not read the file.</string>
+    <string name="statistiques_mes_meilleurs_scores">My best scores by level (numbers and letters combined)</string>
+    <string name="statistiques_classement_par_niveau">Rankings by level (numbers and letters combined)</string>
+    <string name="statistiques_pas_assez_de_parties">Not enough games yet for a progression chart.</string>
+    <string name="statistiques_nb_parties">%1$d games</string>
+    <string name="statistiques_meilleur_score">best: %1$d pts</string>
+    <string name="statistiques_aucun_score">No score recorded.</string>
+    <string name="type_partie_solo">Solo</string>
+    <string name="type_partie_duo_distance">Remote duo</string>
+    <string name="type_partie_confrontation_distance">Remote head-to-head</string>
+
+    <string name="regles_titre">Game rules</string>
+    <string name="regles_mode_chiffres_titre">Numbers mode</string>
+    <string name="regles_mode_chiffres_texte">6 numbers are drawn (from 1 to 10 in double copies, and 25/50/75/100 in single copies), along with a target to reach. Build your calculation step by step, calculator-style: touch a first number, an operator, then a second number — the result replaces the two numbers used and can be reused. The \"Undo\" and \"Clear\" buttons let you go back. The last result obtained is your proposal: submit as soon as you\'re ready, or let the clock run out if there is one.</string>
+    <string name="regles_comptage_points_titre">Scoring</string>
+    <string name="regles_chiffres_points_emile_nestor">Assez facile, Émile and Ça va encore, Nestor: 10 points if the count is exact, 5 points for any non-exact proposal.</string>
+    <string name="regles_chiffres_points_monique_mathieu">Ça se complique, Monique and Là c\'est sérieux, Mathieu: 10 points if the count is exact, 7 points for a close count (gap of at most 100 from the target), 0 points beyond that.</string>
+    <string name="regles_mode_lettres_titre">Letters mode</string>
+    <string name="regles_mode_lettres_texte">Choose the number of vowels you want (2, 3, 4 or 5), then all 10 letters are drawn at once. Build your word by touching the letters in the order you want (each drawn letter can only be used once); the \"Undo\" and \"Clear\" buttons let you go back. Find the longest word possible with these letters, before the clock runs out if there is one.</string>
+    <string name="regles_lettres_points_emile_nestor">Assez facile, Émile and Ça va encore, Nestor: 5 points for a word of 2 to 4 letters, 10 points from 5 letters up.</string>
+    <string name="regles_lettres_points_monique_mathieu">Ça se complique, Monique and Là c\'est sérieux, Mathieu: the score equals the number of letters in the validated word.</string>
+    <string name="regles_mots_acceptes_titre">Accepted words</string>
+    <string name="regles_mots_acceptes_texte">The built-in dictionary excludes proper nouns, acronyms/abbreviations, and purely conjugated verb forms: only the infinitive and present/past participles remain accepted.</string>
+    <string name="regles_mode_entrainement_titre">Training mode</string>
+    <string name="regles_mode_entrainement_texte">No time limit or round limit: choose a level (numbers or letters) and play as many rounds as you want, at your own pace. To stop, use the back arrow at the top of the screen; the session is then saved to your statistics.</string>
+    <string name="regles_mode_partie_solo_titre">Solo game mode</string>
+    <string name="regles_partie_solo_intro">Only one choice to make: the level, applied to numbers and letters rounds, played alternately. The clock duration and number of rounds are fixed per level:</string>
+    <string name="regles_partie_solo_emile">Assez facile, Émile (2 rounds per mode) — Numbers: target ≤ 100, addition and subtraction only, solution guaranteed, 120s. Letters: no letters excluded, 110s.</string>
+    <string name="regles_partie_solo_nestor">Ça va encore, Nestor (3 rounds per mode) — Numbers: target ≤ 100, all 4 operations, solution guaranteed, 100s. Letters: no letters excluded, 90s.</string>
+    <string name="regles_partie_solo_monique">Ça se complique, Monique (4 rounds per mode) — Numbers: target ≤ 500, all 4 operations, no solution guarantee, 60s. Letters: no letters excluded, 50s.</string>
+    <string name="regles_partie_solo_mathieu">Là c\'est sérieux, Mathieu (5 rounds per mode) — Numbers: target between 100 and 999, no solution guarantee, 45s. Letters: no letters excluded, 40s.</string>
+    <string name="regles_mode_partie_duo_titre">Duo game mode</string>
+    <string name="regles_partie_duo_intro">Two players on the same phone, taking turns: after choosing the opponent, the level (as in solo) and the scoring mode, each round is played by both players on exactly the same draw (same numbers and target in numbers mode, same letters in letters mode). The starting player changes every round, so the choice of number of vowels doesn\'t always fall to the same person:</string>
+    <string name="regles_partie_duo_mode_duo">Duo: each player keeps their own score on every round, just like solo.</string>
+    <string name="regles_partie_duo_mode_confrontation">Head-to-head: on every round, only the player closest to the target (or with the longest word) scores points; in case of a tie, both keep them.</string>
+    <string name="regles_mode_defi_serie_titre">Streak challenge mode</string>
+    <string name="regles_defi_serie_intro">Choose a mode (numbers or letters) and a level, then chain rounds to line up as many successes in a row as possible, with the same clock as in a solo game for that level. A success is an exact count in numbers, or a valid word of at least a minimum length in letters:</string>
+    <string name="regles_seuil_emile">Émile: 4 letters</string>
+    <string name="regles_seuil_nestor">Nestor: 5 letters</string>
+    <string name="regles_seuil_monique">Monique: 6 letters</string>
+    <string name="regles_seuil_mathieu">Mathieu: 7 letters</string>
+    <string name="regles_defi_serie_chiffres_note">In numbers, an exact solution is always guaranteed, even on Monique and Mathieu: the challenge only stops on a mistake or when time runs out. The streak obtained is saved to your statistics.</string>
+    <string name="regles_mode_defi_chrono_titre">Timed challenge mode</string>
+    <string name="regles_defi_chrono_intro">Same principle as the streak challenge, but against the clock: an overall time budget is set per level:</string>
+    <string name="regles_defi_chrono_budget_emile">Émile: 2 minutes</string>
+    <string name="regles_defi_chrono_budget_nestor">Nestor: 3 minutes</string>
+    <string name="regles_defi_chrono_budget_monique">Monique: 4 minutes</string>
+    <string name="regles_defi_chrono_budget_mathieu">Mathieu: 5 minutes</string>
+    <string name="regles_defi_chrono_seuil_intro">A success is an exact count in numbers, or a valid word of at least a minimum length in letters (the same as in the streak challenge):</string>
+    <string name="regles_defi_chrono_detail">The goal is to line up as many successes as possible before time runs out. Unlike the streak challenge, a mistake doesn\'t end the challenge: it simply counts as zero, and the next round starts right away with the remaining time. The current round can be cut off partway through if time runs out. The rules of the chosen level apply normally (target and operations in numbers, excluded letters in letters mode, with no forced solution guarantee on Monique and Mathieu). The number of successes obtained is saved to your statistics.</string>
+    <string name="regles_mode_defi_quotidien_titre">Daily challenge mode</string>
+    <string name="regles_defi_quotidien_texte1">A streak or timed challenge, in numbers or letters, is drawn at random each day with a goal to reach (number of successes, or successes in a row depending on the type drawn); the draw is the same all day, but different from one profile to another. The level remains free: it alone determines the difficulty of reaching the goal.</string>
+    <string name="regles_defi_quotidien_texte2">Once the day\'s goal is reached, the challenge locks until the next day; if you fail before reaching it, you can retry the same day. Two trophies reward a streak of consecutive successful days (7 and 30 days).</string>
+
+    <string name="versions_titre">Versions</string>
+
+    <string name="quitter_partie_duo_titre">Quit the duo game?</string>
+    <string name="quitter_partie_reseau_titre">Quit the online game?</string>
+    <string name="quitter_partie_message">The current game will be lost if you quit now. Continue?</string>
+    <string name="retour_au_menu">Back to menu</string>
+    <string name="defi_quotidien_remporte">Daily challenge won!</string>
+    <string name="mes_trophees_titre">My trophies</string>
+
+    <string name="menu_partie_solo">Solo game</string>
+    <string name="menu_partie_duo">Duo game</string>
+    <string name="menu_partie_reseau">Online game</string>
+</resources>

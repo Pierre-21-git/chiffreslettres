@@ -10,12 +10,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.R
+import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.ui.theme.BandeDoree
 import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.MarqueJeu
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
+import fr.pierre.chiffreslettres.ui.theme.couleurRangJoueur
 import fr.pierre.chiffreslettres.ui.theme.fondPlateau
 
 /**
@@ -27,6 +31,8 @@ import fr.pierre.chiffreslettres.ui.theme.fondPlateau
 @Composable
 fun MenuPrincipalScreen(
     pseudoActif: String,
+    profilId: Long,
+    tropheeRepository: TropheeRepository,
     onEntrainementLibre: () -> Unit,
     onPartieStructuree: () -> Unit,
     onPartieDuo: () -> Unit,
@@ -44,22 +50,27 @@ fun MenuPrincipalScreen(
     ) {
         MarqueJeu(modifier = Modifier.fillMaxWidth())
         BandeDoree(modifier = Modifier.padding(horizontal = 16.dp))
-        PucePseudo(pseudoActif, onClick = onChangerProfil, grand = true)
+        PucePseudo(
+            pseudoActif,
+            onClick = onChangerProfil,
+            grand = true,
+            couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+        )
 
-        TuilePrincipale("Entraînement", onClick = onEntrainementLibre)
-
-        HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))
-
-        TuilePrincipale("Partie solo", onClick = onPartieStructuree)
-        TuilePrincipale("Partie duo", onClick = onPartieDuo)
-        TuilePrincipale("Partie réseau", onClick = onPartieReseau)
-        TuilePrincipale("Défi série", onClick = onDefiSerie)
-        TuilePrincipale("Défi chrono", onClick = onDefiChrono)
-        TuilePrincipale("Défi quotidien", onClick = onDefiQuotidien)
+        TuilePrincipale(stringResource(R.string.entrainement_titre), onClick = onEntrainementLibre)
 
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))
 
-        TuilePrincipale("Statistiques", onClick = onStatistiques)
-        TuilePrincipale("À propos", onClick = onAPropos)
+        TuilePrincipale(stringResource(R.string.menu_partie_solo), onClick = onPartieStructuree)
+        TuilePrincipale(stringResource(R.string.menu_partie_duo), onClick = onPartieDuo)
+        TuilePrincipale(stringResource(R.string.menu_partie_reseau), onClick = onPartieReseau)
+        TuilePrincipale(stringResource(R.string.defi_type_serie), onClick = onDefiSerie)
+        TuilePrincipale(stringResource(R.string.defi_type_chrono), onClick = onDefiChrono)
+        TuilePrincipale(stringResource(R.string.defi_quotidien_titre), onClick = onDefiQuotidien)
+
+        HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))
+
+        TuilePrincipale(stringResource(R.string.statistiques_titre_defaut), onClick = onStatistiques)
+        TuilePrincipale(stringResource(R.string.apropos_titre), onClick = onAPropos)
     }
 }

@@ -77,10 +77,18 @@ private fun decouperAvatarPseudo(pseudoAvecAvatar: String): Pair<String, String>
 
 /**
  * Mini-bandeau profil (retour utilisateur : même style partout, accueil compris — avatar et
- * pseudo bien visibles). [grand] agrandit encore le texte pour l'accueil.
+ * pseudo bien visibles). [grand] agrandit encore le texte pour l'accueil. [couleurRang] (retour
+ * utilisateur) entoure le cadre de la couleur du rang joueur (bronze/argent/or/platine/diamant)
+ * quand elle est connue ; sinon la bordure neutre habituelle est utilisée.
  */
 @Composable
-fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, grand: Boolean = false) {
+fun PucePseudo(
+    pseudo: String,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    grand: Boolean = false,
+    couleurRang: Color? = null,
+) {
     val (avatar, nom) = decouperAvatarPseudo(pseudo)
     val tailleAvatarBox = if (grand) 44.dp else 36.dp
     val tailleAvatarTexte = if (grand) 34.sp else 28.sp
@@ -90,7 +98,7 @@ fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Un
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(Ivory.copy(alpha = 0.06f))
-            .border(1.dp, Ivory.copy(alpha = 0.18f), RoundedCornerShape(16.dp))
+            .border(if (couleurRang != null) 2.dp else 1.dp, couleurRang ?: Ivory.copy(alpha = 0.18f), RoundedCornerShape(16.dp))
             .let { if (onClick != null) it.clickable(onClick = onClick) else it }
             .padding(horizontal = 14.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -101,7 +109,7 @@ fun PucePseudo(pseudo: String, modifier: Modifier = Modifier, onClick: (() -> Un
                 .size(tailleAvatarBox)
                 .clip(CircleShape)
                 .background(Ivory.copy(alpha = 0.1f))
-                .border(1.dp, BrassBright.copy(alpha = 0.6f), CircleShape),
+                .border(1.dp, couleurRang?.copy(alpha = 0.8f) ?: BrassBright.copy(alpha = 0.6f), CircleShape),
             contentAlignment = Alignment.Center,
         ) {
             if (avatar.isNotEmpty()) Text(avatar, fontSize = tailleAvatarTexte)

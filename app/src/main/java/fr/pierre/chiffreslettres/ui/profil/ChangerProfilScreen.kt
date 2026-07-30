@@ -34,16 +34,19 @@ import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilEntity
 import fr.pierre.chiffreslettres.data.ProfilRepository
+import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.ui.theme.BandeDoree
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.MarqueJeu
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
+import fr.pierre.chiffreslettres.ui.theme.couleurRangJoueur
 import kotlinx.coroutines.launch
 
 @Composable
 fun ChangerProfilScreen(
     profilRepository: ProfilRepository,
     profilActifStore: ProfilActifStore,
+    tropheeRepository: TropheeRepository,
     onProfilChoisi: () -> Unit,
     onCreerNouveauProfil: () -> Unit,
     modifier: Modifier = Modifier,
@@ -85,6 +88,7 @@ fun ChangerProfilScreen(
                                 onProfilChoisi()
                             }
                         },
+                        couleurRang = couleurRangJoueur(profil.id, tropheeRepository),
                     )
                     IconButton(onClick = { profilARenommer = profil }) {
                         Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.action_renommer))

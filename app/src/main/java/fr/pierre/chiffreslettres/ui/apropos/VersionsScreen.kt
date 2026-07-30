@@ -19,6 +19,28 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.54",
+        date = "2026-07-31",
+        changements = listOf(
+            "Traduction complète des 214 chaînes de l'interface en anglais, allemand et " +
+                "espagnol (values-en/de/es) — l'appli suit désormais la langue du téléphone. " +
+                "Les noms de niveaux (jeux de mots rimés) restent volontairement en français " +
+                "dans les 3 langues pour le moment.",
+            "Alphabet du mode Lettres en anglais : distribution Scrabble anglaise officielle, " +
+                "aucune lettre exclue par niveau pour l'instant (à ajuster plus tard). " +
+                "Allemand et espagnol n'ont pas encore leur propre alphabet.",
+            "Nouveau dictionnaire anglais (115 261 mots, dictionnaire_en.txt) construit avec " +
+                "le même pipeline que le français (Hunspell + vérification), sans filtrage des " +
+                "verbes conjugués faute d'équivalent Morphalou en anglais. Pas encore utilisé " +
+                "en jeu (en attente du choix de langue sur le profil).",
+            "Le cadre du profil (cartouche pseudo, écran \"Choisir un profil\") est maintenant " +
+                "entouré de la couleur du rang joueur (bronze/argent/or/platine/diamant) quand " +
+                "il en a un.",
+            "Correction : les boutons du menu principal (\"Partie solo\", \"Défi série\"...) " +
+                "n'étaient pas encore passés par strings.xml lors du lot précédent.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.53",
         date = "2026-07-30",
         changements = listOf(

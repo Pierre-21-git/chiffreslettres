@@ -28,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -37,27 +36,14 @@ import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.CatalogueTrophees
 import fr.pierre.chiffreslettres.data.CategorieTrophee
-import fr.pierre.chiffreslettres.data.Palier
 import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.libelleJoueur
 import fr.pierre.chiffreslettres.ui.statistiques.formatDate
-import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.Ivory
-import fr.pierre.chiffreslettres.ui.theme.PalierArgent
-import fr.pierre.chiffreslettres.ui.theme.PalierBronze
-import fr.pierre.chiffreslettres.ui.theme.PalierDiamant
-import fr.pierre.chiffreslettres.ui.theme.PalierPlatine
 import fr.pierre.chiffreslettres.ui.theme.PanelDeep
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
-
-private fun couleurPalier(palier: Palier): Color = when (palier) {
-    Palier.BRONZE -> PalierBronze
-    Palier.ARGENT -> PalierArgent
-    Palier.OR -> BrassBright
-    Palier.PLATINE -> PalierPlatine
-    Palier.DIAMANT -> PalierDiamant
-}
+import fr.pierre.chiffreslettres.ui.theme.couleurPalier
 
 /**
  * Écran unique pour les deux points d'entrée (retour utilisateur) : liste catalogue depuis

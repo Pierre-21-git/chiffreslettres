@@ -297,4 +297,9 @@
     <string name="retour_au_menu">Retour au menu</string>
     <string name="defi_quotidien_remporte">Défi quotidien remporté !</string>
     <string name="mes_trophees_titre">Mes trophées</string>
+
+    <!-- ui/menu/MenuPrincipalScreen -->
+    <string name="menu_partie_solo">Partie solo</string>
+    <string name="menu_partie_duo">Partie duo</string>
+    <string name="menu_partie_reseau">Partie réseau</string>
 </resources>

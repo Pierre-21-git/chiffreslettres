@@ -123,6 +123,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
             ChangerProfilScreen(
                 profilRepository = profilRepository,
                 profilActifStore = profilActifStore,
+                tropheeRepository = tropheeRepository,
                 onProfilChoisi = { etapeGate = EtapeGateProfil.CONFIRME },
                 onCreerNouveauProfil = { etapeGate = EtapeGateProfil.CREATION },
                 modifier = modifier,
