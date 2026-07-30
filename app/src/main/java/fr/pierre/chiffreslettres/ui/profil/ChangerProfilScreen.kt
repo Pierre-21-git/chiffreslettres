@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -105,6 +106,7 @@ fun ChangerProfilScreen(
     profilARenommer?.let { profil ->
         var nouveauPseudo by remember(profil.id) { mutableStateOf(profil.pseudo) }
         var nouvelAvatar by remember(profil.id) { mutableStateOf(profil.avatar) }
+        var nouvelleLangue by remember(profil.id) { mutableStateOf(profil.langue) }
         AlertDialog(
             onDismissRequest = { profilARenommer = null },
             title = { Text(stringResource(R.string.changer_profil_renommer_titre)) },
@@ -112,6 +114,8 @@ fun ChangerProfilScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(value = nouveauPseudo, onValueChange = { nouveauPseudo = it })
                     SelecteurAvatar(avatarSelectionne = nouvelAvatar, onAvatarChoisi = { nouvelAvatar = it })
+                    Text(stringResource(R.string.selecteur_langue_label), style = MaterialTheme.typography.labelLarge)
+                    SelecteurLangue(langueSelectionnee = nouvelleLangue, onLangueChoisie = { nouvelleLangue = it })
                 }
             },
             confirmButton = {
@@ -121,6 +125,7 @@ fun ChangerProfilScreen(
                         scope.launch {
                             profilRepository.renommerProfil(profil.id, nom)
                             profilRepository.definirAvatar(profil.id, nouvelAvatar)
+                            profilRepository.definirLangue(profil.id, nouvelleLangue)
                         }
                     }
                     profilARenommer = null

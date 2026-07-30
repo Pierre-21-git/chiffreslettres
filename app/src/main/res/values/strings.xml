@@ -302,4 +302,7 @@
     <string name="menu_partie_solo">Partie solo</string>
     <string name="menu_partie_duo">Partie duo</string>
     <string name="menu_partie_reseau">Partie réseau</string>
+
+    <!-- ui/profil/ChangerProfilScreen (sélecteur de langue) -->
+    <string name="selecteur_langue_label">Langue</string>
 </resources>

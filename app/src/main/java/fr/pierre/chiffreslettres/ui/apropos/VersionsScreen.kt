@@ -19,6 +19,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.55",
+        date = "2026-07-31",
+        changements = listOf(
+            "Choix de la langue par profil (retour utilisateur), avec des drapeaux 🇫🇷🇬🇧🇩🇪🇪🇸 " +
+                "sur l'écran \"Renommer le profil\" : toute l'application (menus, écrans de jeu, " +
+                "règles...) s'affiche désormais dans la langue du profil actif, indépendamment " +
+                "de la langue du téléphone.",
+            "Chaque profil garde sa langue en base (nouvelle colonne, migration automatique, " +
+                "français par défaut pour les profils existants) ; le changement s'applique dès " +
+                "qu'un profil redevient actif.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.54",
         date = "2026-07-31",
         changements = listOf(

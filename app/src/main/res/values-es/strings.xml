@@ -242,4 +242,6 @@
     <string name="menu_partie_solo">Partida individual</string>
     <string name="menu_partie_duo">Partida a dúo</string>
     <string name="menu_partie_reseau">Partida en red</string>
+
+    <string name="selecteur_langue_label">Idioma</string>
 </resources>

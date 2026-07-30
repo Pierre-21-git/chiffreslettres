@@ -1,6 +1,8 @@
 package fr.pierre.chiffreslettres.ui.navigation
 
+import android.app.LocaleManager
 import android.content.Context
+import android.os.LocaleList
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -160,6 +162,16 @@ fun AppNavHost(
     val profilActifIdStore by profilActifStore.profilActifId.collectAsState(initial = null)
     val profilActif = profils.find { it.id == profilActifIdStore } ?: profils.firstOrNull()
     val profilId = profilActif?.id ?: -1L
+
+    // Langue par profil (retour utilisateur) : la langue d'affichage de toute l'app suit le
+    // profil actif, via l'API per-app language d'Android 13+ (LocaleManager, pas besoin
+    // d'AppCompat, minSdk = 33). Provoque une recréation automatique de l'activité par le
+    // système si la langue change réellement.
+    LaunchedEffect(profilActif?.langue) {
+        val langue = profilActif?.langue ?: return@LaunchedEffect
+        val localeManager = context.getSystemService(LocaleManager::class.java)
+        localeManager.applicationLocales = LocaleList.forLanguageTags(langue)
+    }
 
     NavHost(navController = navController, startDestination = Routes.MENU, modifier = modifier) {
         composable(Routes.MENU) {

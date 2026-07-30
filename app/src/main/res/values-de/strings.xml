@@ -242,4 +242,6 @@
     <string name="menu_partie_solo">Solospiel</string>
     <string name="menu_partie_duo">Duo-Spiel</string>
     <string name="menu_partie_reseau">Online-Spiel</string>
+
+    <string name="selecteur_langue_label">Sprache</string>
 </resources>

@@ -94,6 +94,17 @@ private val MIGRATION_6_7 = object : Migration(6, 7) {
     }
 }
 
+/**
+ * v7 → v8 : ajout de la colonne `langue` sur `ProfilEntity` (retour utilisateur : choix de
+ * langue par profil). `DEFAULT '$LANGUE_PAR_DEFAUT'` pour que les profils déjà en base restent
+ * en français, comme avant cette fonctionnalité.
+ */
+private val MIGRATION_7_8 = object : Migration(7, 8) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `ProfilEntity` ADD COLUMN `langue` TEXT NOT NULL DEFAULT '$LANGUE_PAR_DEFAUT'")
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null
@@ -101,7 +112,7 @@ object AppDatabaseProvider {
     fun obtenir(context: Context): AppDatabase =
         instance ?: synchronized(this) {
             instance ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "chiffreslettres.db")
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
                 .build()
                 .also { instance = it }
         }

@@ -15,4 +15,6 @@ class ProfilRepository(private val dao: ProfilDao) {
     suspend fun renommerProfil(id: Long, pseudo: String) = dao.renommer(id, pseudo)
 
     suspend fun definirAvatar(id: Long, avatar: String) = dao.definirAvatar(id, avatar)
+
+    suspend fun definirLangue(id: Long, langue: String) = dao.definirLangue(id, langue)
 }

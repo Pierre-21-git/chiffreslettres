@@ -25,4 +25,7 @@ interface ProfilDao {
 
     @Query("UPDATE ProfilEntity SET avatar = :avatar WHERE id = :id")
     suspend fun definirAvatar(id: Long, avatar: String)
+
+    @Query("UPDATE ProfilEntity SET langue = :langue WHERE id = :id")
+    suspend fun definirLangue(id: Long, langue: String)
 }
