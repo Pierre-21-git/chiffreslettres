@@ -35,6 +35,16 @@ data class TropheeStats(
 /** Palier de difficulté d'un trophée (retour utilisateur), du plus facile au plus rare. */
 enum class Palier { BRONZE, ARGENT, OR, PLATINE, DIAMANT }
 
+/** Libellé du rang joueur associé à un palier (retour utilisateur, ex. "Joueur Bronze"). */
+val Palier.libelleJoueur: String
+    get() = when (this) {
+        Palier.BRONZE -> "Joueur Bronze"
+        Palier.ARGENT -> "Joueur Argent"
+        Palier.OR -> "Joueur Or"
+        Palier.PLATINE -> "Joueur Platine"
+        Palier.DIAMANT -> "Joueur Diamant"
+    }
+
 enum class CategorieTrophee(val titre: String) {
     PARTIES_TERMINEES("Parties terminées"),
     SCORE_PARTIE("Score de partie"),
@@ -66,32 +76,32 @@ private val LONGUEURS_MOTS_TROPHEE = 4..10
 private val SEUILS_DEFI_QUOTIDIEN = listOf(7, 30)
 
 // Paliers choisis par l'utilisateur (retour utilisateur, fichier trophees.txt réorganisé à la main).
-private val PALIERS_PARTIE_MOTS_MIN = mapOf(4 to Palier.BRONZE, 5 to Palier.ARGENT, 6 to Palier.ARGENT, 7 to Palier.OR, 8 to Palier.DIAMANT)
+private val PALIERS_PARTIE_MOTS_MIN = mapOf(4 to Palier.BRONZE, 5 to Palier.ARGENT, 6 to Palier.OR, 7 to Palier.PLATINE, 8 to Palier.DIAMANT)
 private val PALIERS_MOTS_1 = mapOf(
     4 to Palier.BRONZE, 5 to Palier.BRONZE, 6 to Palier.ARGENT, 7 to Palier.ARGENT,
-    8 to Palier.OR, 9 to Palier.OR, 10 to Palier.PLATINE,
+    8 to Palier.OR, 9 to Palier.PLATINE, 10 to Palier.PLATINE,
 )
 private val PALIERS_MOTS_10 = mapOf(
     4 to Palier.ARGENT, 5 to Palier.ARGENT, 6 to Palier.ARGENT, 7 to Palier.OR,
-    8 to Palier.OR, 9 to Palier.PLATINE, 10 to Palier.DIAMANT,
+    8 to Palier.PLATINE, 9 to Palier.PLATINE, 10 to Palier.DIAMANT,
 )
 private val PALIERS_SCORE_1 = mapOf(
     20 to Palier.BRONZE, 30 to Palier.ARGENT, 40 to Palier.ARGENT, 50 to Palier.OR,
-    60 to Palier.OR, 70 to Palier.OR, 80 to Palier.OR, 90 to Palier.PLATINE,
+    60 to Palier.OR, 70 to Palier.OR, 80 to Palier.PLATINE, 90 to Palier.PLATINE,
 )
 private val PALIERS_SCORE_10 = mapOf(
     20 to Palier.BRONZE, 30 to Palier.ARGENT, 40 to Palier.ARGENT, 50 to Palier.OR,
-    60 to Palier.OR, 70 to Palier.OR, 80 to Palier.PLATINE, 90 to Palier.DIAMANT,
+    60 to Palier.OR, 70 to Palier.PLATINE, 80 to Palier.PLATINE, 90 to Palier.DIAMANT,
 )
 private val PALIERS_DEFI_SERIE = mapOf(
     3 to Palier.BRONZE, 5 to Palier.ARGENT, 10 to Palier.ARGENT, 15 to Palier.OR,
-    20 to Palier.OR, 30 to Palier.PLATINE, 50 to Palier.DIAMANT,
+    20 to Palier.PLATINE, 30 to Palier.PLATINE, 50 to Palier.DIAMANT,
 )
 private val PALIERS_DEFI_CHRONO = mapOf(
     2 to Palier.BRONZE, 3 to Palier.BRONZE, 5 to Palier.ARGENT, 10 to Palier.OR,
-    12 to Palier.OR, 15 to Palier.PLATINE,
+    12 to Palier.PLATINE, 15 to Palier.DIAMANT,
 )
-private val PALIERS_DEFI_QUOTIDIEN = mapOf(7 to Palier.ARGENT, 30 to Palier.OR)
+private val PALIERS_DEFI_QUOTIDIEN = mapOf(7 to Palier.OR, 30 to Palier.PLATINE)
 
 /** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 71 au total. */
 object CatalogueTrophees {
@@ -121,7 +131,7 @@ object CatalogueTrophees {
                 "Centième compte exact",
                 "Obtenir 100 comptes exacts en chiffres, en partie (solo, duo ou confrontation).",
                 CategorieTrophee.COMPTES_EXACTS,
-                palier = Palier.OR,
+                palier = Palier.PLATINE,
             ) { it.comptesExacts >= 100 },
         )
 
@@ -153,7 +163,7 @@ object CatalogueTrophees {
                 "Tous les comptes exacts dans une partie",
                 "Terminer une partie (solo, duo ou confrontation) où toutes les manches chiffres ont un compte exact.",
                 CategorieTrophee.PARTIE_PARFAITE,
-                palier = Palier.ARGENT,
+                palier = Palier.BRONZE,
             ) { it.partieTousComptesExacts },
         )
         for (seuil in SEUILS_MOTS) {
@@ -213,7 +223,7 @@ object CatalogueTrophees {
                 "Centième partie terminée",
                 "Terminer 100 parties (solo, duo ou confrontation), tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
-                palier = Palier.OR,
+                palier = Palier.PLATINE,
             ) { it.partiesSoloTotal >= 100 },
         )
 
@@ -395,5 +405,20 @@ object CatalogueTrophees {
                 ) { it.meilleureSerieJoursDefiQuotidien >= seuil },
             )
         }
+    }
+
+    /**
+     * Rang global d'un joueur (retour utilisateur) : le palier le plus haut dont TOUS les
+     * trophées de ce palier ET des paliers inférieurs sont débloqués — cumulatif, pas juste le
+     * palier isolé. Null si même le bronze n'est pas complet.
+     */
+    fun rangJoueur(idsDebloques: Set<String>): Palier? {
+        var rang: Palier? = null
+        for (palier in Palier.entries) {
+            val complet = TOUS.filter { it.palier.ordinal <= palier.ordinal }.all { it.id in idsDebloques }
+            if (!complet) break
+            rang = palier
+        }
+        return rang
     }
 }

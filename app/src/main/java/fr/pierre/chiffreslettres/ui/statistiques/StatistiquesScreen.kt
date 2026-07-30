@@ -255,11 +255,19 @@ fun MesStatistiquesScreen(
             style = MaterialTheme.typography.titleMedium,
         )
         for ((position, niveau) in Niveau.entries.withIndex()) {
+            val donneesParType = mutableListOf<Triple<TypePartie, String, List<fr.pierre.chiffreslettres.data.MeilleurePartieSolo>>>()
+            for ((type, libelle) in TYPES_PARTIE_AFFICHES) {
+                val meilleuresFlow = remember(niveau, type) { historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name, type) }
+                val meilleures by meilleuresFlow.collectAsState(initial = emptyList())
+                donneesParType.add(Triple(type, libelle, meilleures))
+            }
+            // Retour utilisateur : un niveau qu'aucun type de partie n'a encore alimenté (ex.
+            // Mathieu jamais joué, ou mode réseau tout juste ajouté) ne doit pas polluer l'écran.
+            if (donneesParType.all { it.third.isEmpty() }) continue
+
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 Text(niveau.label, style = MaterialTheme.typography.titleMedium)
-                for ((type, libelle) in TYPES_PARTIE_AFFICHES) {
-                    val meilleuresFlow = remember(niveau, type) { historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name, type) }
-                    val meilleures by meilleuresFlow.collectAsState(initial = emptyList())
+                for ((type, libelle, meilleures) in donneesParType) {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(libelle, style = MaterialTheme.typography.titleSmall)
                         Podium(meilleures.map { EntreePodium(null, it.score, it.date) })
@@ -375,11 +383,19 @@ fun StatistiquesGeneralesScreen(
             style = MaterialTheme.typography.titleMedium,
         )
         for ((position, niveau) in Niveau.entries.withIndex()) {
+            val donneesParType = mutableListOf<Triple<TypePartie, String, List<fr.pierre.chiffreslettres.data.LigneClassement>>>()
+            for ((type, libelle) in TYPES_PARTIE_AFFICHES) {
+                val classementFlow = remember(niveau, type) { historiqueRepository.classementParNiveau(niveau.name, type) }
+                val classement by classementFlow.collectAsState(initial = emptyList())
+                donneesParType.add(Triple(type, libelle, classement))
+            }
+            // Retour utilisateur : un niveau sans aucune donnée, tous types confondus, ne doit
+            // pas s'afficher.
+            if (donneesParType.all { it.third.isEmpty() }) continue
+
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 Text(niveau.label, style = MaterialTheme.typography.titleMedium)
-                for ((type, libelle) in TYPES_PARTIE_AFFICHES) {
-                    val classementFlow = remember(niveau, type) { historiqueRepository.classementParNiveau(niveau.name, type) }
-                    val classement by classementFlow.collectAsState(initial = emptyList())
+                for ((_, libelle, classement) in donneesParType) {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(libelle, style = MaterialTheme.typography.titleSmall)
                         Podium(classement.map { EntreePodium("${it.avatar} ${it.pseudo}", it.score, it.date) })

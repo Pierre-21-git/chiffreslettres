@@ -16,6 +16,10 @@ private fun statsVides() = TropheeStats(
     partiesDuoGagnees = 0,
     partiesConfrontationJouees = 0,
     partiesConfrontationGagnees = 0,
+    partiesDuoReseauJouees = 0,
+    partiesDuoReseauGagnees = 0,
+    partiesConfrontationReseauJouees = 0,
+    partiesConfrontationReseauGagnees = 0,
     defisTotal = 0,
     meilleuresSeriesDefi = emptyMap(),
     meilleuresReussitesDefiChrono = emptyMap(),
@@ -27,8 +31,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `77 trophees au total`() {
-        assertEquals(77, CatalogueTrophees.TOUS.size)
+    fun `83 trophees au total`() {
+        assertEquals(83, CatalogueTrophees.TOUS.size)
     }
 
     @Test

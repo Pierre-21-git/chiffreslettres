@@ -1,0 +1,94 @@
+Catalogue des trophées — Chiffres & Lettres (71 trophées)
+============================================================
+Format : - Titre — description [id]
+L'[id] entre crochets est juste pour moi (Claude), ne le change pas si tu le gardes.
+Réorganise librement : ordre des catégories, ordre à l'intérieur, regroupements
+or/argent/bronze (par exemple en ajoutant une ligne "=== OR ===" / "=== ARGENT ==="
+/ "=== BRONZE ===" à l'endroit qui te convient, ou en annotant chaque ligne).
+
+=== Parties terminées ===
+- Première partie terminée — Terminer une partie classique, tous niveaux confondus. [parties_1] {BRONZE}
+- Dixième partie terminée — Terminer 10 parties classiques, tous niveaux confondus. [parties_10] {ARGENT}
+- Centième partie terminée — Terminer 100 parties classiques, tous niveaux confondus. [parties_100] {OR} ===PLATINE===
+
+=== Score de partie ===
+- Première partie à au moins 20 points [score_20_1] {BRONZE}
+- Dixième partie à au moins 20 points [score_20_10] {BRONZE}
+- Première partie à au moins 30 points [score_30_1] {ARGENT}
+- Dixième partie à au moins 30 points [score_30_10] {ARGENT}
+- Première partie à au moins 40 points [score_40_1] {ARGENT}
+- Dixième partie à au moins 40 points [score_40_10] {ARGENT}
+- Première partie à au moins 50 points [score_50_1] {OR}
+- Dixième partie à au moins 50 points [score_50_10] {OR}
+- Première partie à au moins 60 points [score_60_1] {OR}
+- Dixième partie à au moins 60 points [score_60_10] {OR}
+- Première partie à au moins 70 points [score_70_1] {OR}
+- Dixième partie à au moins 70 points [score_70_10] {OR} ===PLATINE===
+- Première partie à au moins 80 points [score_80_1] {OR} ===PLATINE===
+- Dixième partie à au moins 80 points [score_80_10] {PLATINE}
+- Première partie à au moins 90 points [score_90_1] {PLATINE}
+- Dixième partie à au moins 90 points [score_90_10] {DIAMANT}
+
+=== Comptes exacts ===
+- Premier compte exact — Obtenir un compte exact en chiffres, en partie classique. [compte_exact_1] {BRONZE}
+- Dixième compte exact — Obtenir 10 comptes exacts en chiffres, en partie classique. [compte_exact_10] {ARGENT}
+- Centième compte exact — Obtenir 100 comptes exacts en chiffres, en partie classique. [compte_exact_100] {OR} ===PLATINE===
+
+=== Partie parfaite ===
+- Tous les comptes exacts dans une partie — Toutes les manches chiffres d'une partie ont un compte exact. [partie_parfaite_chiffres] ===BRONZE===
+- Que des mots de 4 lettres ou plus dans une partie [partie_mots_min_4] {BRONZE}
+- Que des mots de 5 lettres ou plus dans une partie [partie_mots_min_5] {ARGENT}
+- Que des mots de 6 lettres ou plus dans une partie [partie_mots_min_6] {ARGENT} ===OR===
+- Que des mots de 7 lettres ou plus dans une partie [partie_mots_min_7] {OR} ===PLATINE===
+- Que des mots de 8 lettres ou plus dans une partie [partie_mots_min_8] {DIAMANT}
+
+=== Mots ===
+- Premier mot de 4 lettres [mot_4_1] {BRONZE}
+- Dixième mot de 4 lettres [mot_4_10] {ARGENT}
+- Premier mot de 5 lettres [mot_5_1] {BRONZE}
+- Dixième mot de 5 lettres [mot_5_10] {ARGENT}
+- Premier mot de 6 lettres [mot_6_1] {ARGENT}
+- Dixième mot de 6 lettres [mot_6_10] {ARGENT}
+- Premier mot de 7 lettres [mot_7_1] {ARGENT}
+- Dixième mot de 7 lettres [mot_7_10] {OR}
+- Premier mot de 8 lettres [mot_8_1] {OR}
+- Dixième mot de 8 lettres [mot_8_10] {OR} ===PLATINE===
+- Premier mot de 9 lettres [mot_9_1] {OR} ===PLATINE===
+- Dixième mot de 9 lettres [mot_9_10] {PLATINE}
+- Premier mot de 10 lettres (la longueur maximale du tirage) [mot_10_1] {PLATINE}
+- Dixième mot de 10 lettres [mot_10_10] {DIAMANT}
+
+=== Défi ===
+- Premier défi terminé — Aller jusqu'au bout d'un défi (chiffres ou lettres, tout niveau). [defi_1] {BRONZE}
+- Série de 3 en défi chiffres [defi_serie_chiffres_3] {BRONZE}
+- Série de 5 en défi chiffres [defi_serie_chiffres_5] {ARGENT}
+- Série de 10 en défi chiffres [defi_serie_chiffres_10] {ARGENT}
+- Série de 15 en défi chiffres [defi_serie_chiffres_15] {OR}
+- Série de 20 en défi chiffres [defi_serie_chiffres_20] {OR} ===PLATINE===
+- Série de 30 en défi chiffres [defi_serie_chiffres_30] {PLATINE}
+- Série de 50 en défi chiffres [defi_serie_chiffres_50] ===DIAMANT===
+- Série de 3 en défi lettres [defi_serie_lettres_3] {BRONZE}
+- Série de 5 en défi lettres [defi_serie_lettres_5] {ARGENT}
+- Série de 10 en défi lettres [defi_serie_lettres_10] {ARGENT}
+- Série de 15 en défi lettres [defi_serie_lettres_15] {OR}
+- Série de 20 en défi lettres [defi_serie_lettres_20] {OR} ===PLATINE===
+- Série de 30 en défi lettres [defi_serie_lettres_30] {PLATINE}
+- Série de 50 en défi lettres [defi_serie_lettres_50] {DIAMANT}
+
+=== Défi chrono ===
+- 2 comptes exacts en défi chrono chiffres [defi_chrono_chiffres_2] {BRONZE}
+- 3 comptes exacts en défi chrono chiffres [defi_chrono_chiffres_3] {BRONZE}
+- 5 comptes exacts en défi chrono chiffres [defi_chrono_chiffres_5] {ARGENT}
+- 10 comptes exacts en défi chrono chiffres [defi_chrono_chiffres_10] {OR}
+- 12 comptes exacts en défi chrono chiffres [defi_chrono_chiffres_12] {OR} ===PLATINE===
+- 15 comptes exacts en défi chrono chiffres [defi_chrono_chiffres_15] {PLATINE} ===DIAMANT===
+- 2 mots en défi chrono lettres [defi_chrono_lettres_2] {BRONZE}
+- 3 mots en défi chrono lettres [defi_chrono_lettres_3] {BRONZE}
+- 5 mots en défi chrono lettres [defi_chrono_lettres_5] {ARGENT}
+- 10 mots en défi chrono lettres [defi_chrono_lettres_10] {OR}
+- 12 mots en défi chrono lettres [defi_chrono_lettres_12] {OR} ===PLATINE===
+- 15 mots en défi chrono lettres [defi_chrono_lettres_15] {PLATINE} ===DIAMANT===
+
+=== Défi quotidien ===
+- Une semaine de défi quotidien — Réussir le défi quotidien 7 jours d'affilée. [defi_quotidien_7] {ARGENT}  ===OR===
+- Un mois de défi quotidien — Réussir le défi quotidien 30 jours d'affilée. [defi_quotidien_30] {OR}  ===PLATINE===

@@ -17,6 +17,22 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.50",
+        date = "2026-07-30",
+        changements = listOf(
+            "Refonte des paliers de trophées (bronze/argent/or/platine/diamant) selon le retour " +
+                "utilisateur : plusieurs trophées remontés d'un ou deux paliers (ex. \"tous les " +
+                "comptes exacts dans une partie\" repasse en bronze, \"centième compte exact\" et " +
+                "\"centième partie terminée\" passent en platine).",
+            "Nouveau rang joueur cumulatif (\"Joueur Bronze\", \"Joueur Argent\"...) affiché sur la " +
+                "fiche trophées : obtenu quand TOUS les trophées de ce palier et des paliers " +
+                "inférieurs sont débloqués.",
+            "Mes statistiques / statistiques générales : un niveau (Emile, Nestor, Monique, " +
+                "Mathieu) n'apparaît plus du tout si aucun type de partie (solo, duo, " +
+                "confrontation, à distance) n'a encore de données pour ce niveau.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.49",
         date = "2026-07-30",
         changements = listOf(

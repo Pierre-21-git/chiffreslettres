@@ -37,6 +37,7 @@ import fr.pierre.chiffreslettres.data.CatalogueTrophees
 import fr.pierre.chiffreslettres.data.CategorieTrophee
 import fr.pierre.chiffreslettres.data.Palier
 import fr.pierre.chiffreslettres.data.Trophee
+import fr.pierre.chiffreslettres.data.libelleJoueur
 import fr.pierre.chiffreslettres.ui.statistiques.formatDate
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
@@ -80,6 +81,14 @@ fun TropheesScreen(
                 "${tropheesDebloques.size} / ${CatalogueTrophees.TOUS.size} débloqués",
                 style = MaterialTheme.typography.titleMedium,
             )
+            val rang = CatalogueTrophees.rangJoueur(tropheesDebloques.keys)
+            if (rang != null) {
+                Text(
+                    rang.libelleJoueur,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = couleurPalier(rang),
+                )
+            }
         }
 
         for ((position, categorie) in CategorieTrophee.entries.withIndex()) {
