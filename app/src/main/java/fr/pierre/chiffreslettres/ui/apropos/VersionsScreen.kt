@@ -17,6 +17,23 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.51",
+        date = "2026-07-30",
+        changements = listOf(
+            "Chiffres, niveaux Monique et Mathieu : quand le tirage n'a pas de solution exacte, " +
+                "atteindre la meilleure approche théoriquement possible rapporte maintenant 10 " +
+                "points, comme un compte exact (au lieu de 7 points).",
+            "Lettres, niveaux Monique et Mathieu, en défi série et défi chrono : si aucun mot du " +
+                "tirage n'atteint la longueur minimale imposée, trouver le mot le plus long " +
+                "possible pour ce tirage valide quand même la manche.",
+            "Partie duo (locale et à distance) : une égalité en score compte maintenant comme " +
+                "gagnée pour les deux joueurs, au lieu de n'être une victoire pour personne.",
+            "Paliers des trophées \"Partie duo\" ajustés selon le retour utilisateur (ex. " +
+                "\"première partie duo jouée\" repasse en argent, plusieurs trophées \"dixième... " +
+                "gagnée\" montent en platine ou diamant).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.50",
         date = "2026-07-30",
         changements = listOf(

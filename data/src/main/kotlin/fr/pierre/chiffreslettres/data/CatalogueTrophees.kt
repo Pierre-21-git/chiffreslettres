@@ -233,7 +233,7 @@ object CatalogueTrophees {
                 "Première partie duo jouée",
                 "Terminer une partie en mode Duo, tous niveaux confondus.",
                 CategorieTrophee.DUO,
-                palier = Palier.OR,
+                palier = Palier.ARGENT,
                 sousTitre = "Duo",
             ) { it.partiesDuoJouees >= 1 },
         )
@@ -253,7 +253,7 @@ object CatalogueTrophees {
                 "Dixième partie duo gagnée",
                 "Gagner 10 parties en mode Duo.",
                 CategorieTrophee.DUO,
-                palier = Palier.OR,
+                palier = Palier.PLATINE,
                 sousTitre = "Duo",
             ) { it.partiesDuoGagnees >= 10 },
         )
@@ -263,7 +263,7 @@ object CatalogueTrophees {
                 "Première confrontation jouée",
                 "Terminer une partie en mode Confrontation, tous niveaux confondus.",
                 CategorieTrophee.DUO,
-                palier = Palier.OR,
+                palier = Palier.ARGENT,
                 sousTitre = "Confrontation",
             ) { it.partiesConfrontationJouees >= 1 },
         )
@@ -283,7 +283,7 @@ object CatalogueTrophees {
                 "Dixième confrontation gagnée",
                 "Gagner 10 parties en mode Confrontation.",
                 CategorieTrophee.DUO,
-                palier = Palier.OR,
+                palier = Palier.DIAMANT,
                 sousTitre = "Confrontation",
             ) { it.partiesConfrontationGagnees >= 10 },
         )
@@ -294,7 +294,7 @@ object CatalogueTrophees {
                 "Première partie duo à distance jouée",
                 "Terminer une partie en mode Duo à distance, tous niveaux confondus.",
                 CategorieTrophee.DUO,
-                palier = Palier.OR,
+                palier = Palier.ARGENT,
                 sousTitre = "Duo à distance",
             ) { it.partiesDuoReseauJouees >= 1 },
         )
@@ -314,7 +314,7 @@ object CatalogueTrophees {
                 "Dixième partie duo à distance gagnée",
                 "Gagner 10 parties en mode Duo à distance.",
                 CategorieTrophee.DUO,
-                palier = Palier.OR,
+                palier = Palier.PLATINE,
                 sousTitre = "Duo à distance",
             ) { it.partiesDuoReseauGagnees >= 10 },
         )
@@ -324,7 +324,7 @@ object CatalogueTrophees {
                 "Première confrontation à distance jouée",
                 "Terminer une partie en mode Confrontation à distance, tous niveaux confondus.",
                 CategorieTrophee.DUO,
-                palier = Palier.OR,
+                palier = Palier.ARGENT,
                 sousTitre = "Confrontation à distance",
             ) { it.partiesConfrontationReseauJouees >= 1 },
         )
@@ -344,7 +344,7 @@ object CatalogueTrophees {
                 "Dixième confrontation à distance gagnée",
                 "Gagner 10 parties en mode Confrontation à distance.",
                 CategorieTrophee.DUO,
-                palier = Palier.OR,
+                palier = Palier.DIAMANT,
                 sousTitre = "Confrontation à distance",
             ) { it.partiesConfrontationReseauGagnees >= 10 },
         )

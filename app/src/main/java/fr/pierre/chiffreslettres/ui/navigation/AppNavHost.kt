@@ -57,6 +57,7 @@ import fr.pierre.chiffreslettres.ui.defi.ChoixDefiScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiQuotidienScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiViewModel
 import fr.pierre.chiffreslettres.ui.defi.budgetSecondesDefiChrono
+import fr.pierre.chiffreslettres.ui.defi.motEstReussiDefiLettres
 import fr.pierre.chiffreslettres.ui.defi.seuilLongueurDefiLettres
 import fr.pierre.chiffreslettres.ui.entrainement.ChoixNiveauEntrainementScreen
 import fr.pierre.chiffreslettres.ui.entrainement.EntrainementLibreViewModel
@@ -328,7 +329,7 @@ fun AppNavHost(
                     viewModel = roundVm,
                     scoreCumule = null,
                     pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
-                    onMancheTerminee = { obtenu, motValide -> entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide) },
+                    onMancheTerminee = { obtenu, motValide, _ -> entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide) },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
                         Button(
@@ -408,7 +409,7 @@ fun AppNavHost(
                                 viewModel = roundVm,
                                 scoreCumule = scoreCumule,
                                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
-                                onMancheTerminee = { obtenu, motValide ->
+                                onMancheTerminee = { obtenu, motValide, _ ->
                                     partieVm.enregistrerResultat(
                                         ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
                                     )
@@ -610,7 +611,7 @@ fun AppNavHost(
                                 scoreCumule = null,
                                 pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu, motValide ->
+                                onMancheTerminee = { obtenu, motValide, _ ->
                                     duoVm.enregistrerResultat(
                                         ResultatDuoManche(
                                             ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
@@ -658,10 +659,12 @@ fun AppNavHost(
                         val total1 = resultats1.sumOf { it.score }
                         val total2 = resultats2.sumOf { it.score }
                         val type = duoVm.mode.versTypePartie()
+                        // Une égalité compte comme gagnée pour les deux joueurs, pas comme une
+                        // défaite mutuelle (retour utilisateur).
                         scope.launch {
-                            historiqueRepository.enregistrerSession(profilId, type, resultats1, total1 > total2)
+                            historiqueRepository.enregistrerSession(profilId, type, resultats1, total1 >= total2)
                             if (profil2 != null) {
-                                historiqueRepository.enregistrerSession(profil2.id, type, resultats2, total2 > total1)
+                                historiqueRepository.enregistrerSession(profil2.id, type, resultats2, total2 >= total1)
                             }
                             tropheeRepository.reevaluer(profilId)
                             if (profil2 != null) tropheeRepository.reevaluer(profil2.id)
@@ -964,7 +967,7 @@ fun AppNavHost(
                                 scoreCumule = null,
                                 pseudo = null,
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu, motValide ->
+                                onMancheTerminee = { obtenu, motValide, _ ->
                                     reseauVm.enregistrerMonResultat(
                                         ResultatDuoManche(
                                             ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
@@ -1023,8 +1026,9 @@ fun AppNavHost(
                         val monTotal = mesResultats.sumOf { it.score }
                         val sonTotal = resultatsAdversaire.sumOf { it.score }
                         val type = reseauVm.mode.versTypePartieReseau()
+                        // Une égalité compte comme gagnée (retour utilisateur, même règle que le duo local).
                         scope.launch {
-                            historiqueRepository.enregistrerSession(profilId, type, mesResultats, monTotal > sonTotal)
+                            historiqueRepository.enregistrerSession(profilId, type, mesResultats, monTotal >= sonTotal)
                             tropheeRepository.reevaluer(profilId)
                             reseauVm.annulerEtRevenirAuChoix()
                             navController.popBackStack(Routes.MENU, inclusive = false)
@@ -1201,8 +1205,8 @@ fun AppNavHost(
                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                 progressionManche = "$index",
                 libelleProgression = "Série",
-                onMancheTerminee = { _, motValide ->
-                    val reussi = motValide != null && motValide.length >= seuil
+                onMancheTerminee = { _, motValide, meilleurMot ->
+                    val reussi = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
                     if (!reussi) defiVm.echec()
                 },
                 onRetourEntrainement = {
@@ -1355,8 +1359,8 @@ fun AppNavHost(
                 libelleProgression = "Réussites",
                 // Comme en défi série : un échec avance seul (pas de confirmation), une
                 // réussite attend le "Continuer" du joueur avant d'enchaîner.
-                onMancheTerminee = { _, motValide ->
-                    val reussi = motValide != null && motValide.length >= seuil
+                onMancheTerminee = { _, motValide, meilleurMot ->
+                    val reussi = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
                     if (!reussi) defiVm.mancheChronoTerminee(false)
                 },
                 onRetourEntrainement = {

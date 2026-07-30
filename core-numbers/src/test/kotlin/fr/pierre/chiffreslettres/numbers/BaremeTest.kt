@@ -42,4 +42,30 @@ class BaremeTest {
             assertEquals(0, Bareme.score(niveau, cible = 42, propose = null))
         }
     }
+
+    @Test
+    fun `sans solution exacte, atteindre la meilleure approche rapporte 10 points comme un compte exact`() {
+        // Tirage sans solution exacte : la meilleure valeur atteignable est à 12 de la cible.
+        // Le joueur qui l'atteint exactement mérite 10 points, pas seulement 7 (retour utilisateur).
+        assertEquals(10, Bareme.score(Niveau.MONIQUE, cible = 42, propose = 54, meilleurEcartAtteignable = 12))
+        assertEquals(10, Bareme.score(Niveau.MATHIEU, cible = 355, propose = 343, meilleurEcartAtteignable = 12))
+    }
+
+    @Test
+    fun `sans solution exacte, une approche moins bonne que le maximum reste au palier de 7 points`() {
+        assertEquals(7, Bareme.score(Niveau.MONIQUE, cible = 42, propose = 92, meilleurEcartAtteignable = 12))
+    }
+
+    @Test
+    fun `sans solution exacte, atteindre la meilleure approche rapporte 10 points meme au-dela d'un ecart de 100`() {
+        // La meilleure approche possible pour ce tirage est à 150 de la cible (rare, mais
+        // possible sur des tirages très défavorables) : elle doit quand même valoir 10 points.
+        assertEquals(10, Bareme.score(Niveau.MONIQUE, cible = 42, propose = 192, meilleurEcartAtteignable = 150))
+    }
+
+    @Test
+    fun `le palier meilleure approche ne s'applique pas sur Emile et Nestor`() {
+        assertEquals(5, Bareme.score(Niveau.EMILE, cible = 42, propose = 54, meilleurEcartAtteignable = 12))
+        assertEquals(5, Bareme.score(Niveau.NESTOR, cible = 42, propose = 54, meilleurEcartAtteignable = 12))
+    }
 }

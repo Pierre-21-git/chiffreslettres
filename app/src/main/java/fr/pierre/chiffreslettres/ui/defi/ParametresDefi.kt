@@ -15,6 +15,20 @@ fun seuilLongueurDefiLettres(niveau: NiveauLettres): Int = when (niveau) {
     NiveauLettres.MATHIEU -> 7
 }
 
+/**
+ * Une manche de défi lettres est réussie si le mot proposé atteint le seuil du niveau, ou
+ * (retour utilisateur, Monique/Mathieu uniquement) si aucun mot du tirage n'atteint ce seuil et
+ * que le joueur a trouvé le mot le plus long possible pour ce tirage — comme le palier "au plus
+ * près" du défi chiffres, appliqué au seul cas où le tirage ne permet objectivement pas d'atteindre
+ * le seuil.
+ */
+fun motEstReussiDefiLettres(niveau: NiveauLettres, motPropose: String, seuil: Int, meilleurMot: String?): Boolean {
+    if (motPropose.length >= seuil) return true
+    val toleranceMeilleureApproche = niveau == NiveauLettres.MONIQUE || niveau == NiveauLettres.MATHIEU
+    val meilleurLongueur = meilleurMot?.length ?: 0
+    return toleranceMeilleureApproche && meilleurLongueur < seuil && motPropose.length == meilleurLongueur
+}
+
 /** Budget de temps global (en secondes) d'un défi chrono chiffres, selon le niveau (retour utilisateur : 2/3/4/5 min). */
 fun budgetSecondesDefiChrono(niveau: Niveau): Int = when (niveau) {
     Niveau.EMILE -> 120

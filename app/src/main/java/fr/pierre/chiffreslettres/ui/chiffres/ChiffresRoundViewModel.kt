@@ -160,7 +160,12 @@ class ChiffresRoundViewModel(
         // un des nombres tirés comme un "compte" donnerait des points sans rien avoir
         // résolu (bug remonté par l'utilisateur, cf. Bareme "0 si rien n'a été proposé").
         val proposition = if (historique.isEmpty()) null else etat.jetons.lastOrNull()?.expression?.resultat
-        val score = Bareme.score(niveau, etat.cible, proposition)
+        // Écart entre la cible et la meilleure valeur atteignable pour ce tirage (0 si une
+        // solution exacte existait) — cf. TirageChiffres.Resultat.solution, utilisé par le
+        // barème pour créditer 10 points à l'approche la plus proche théoriquement possible
+        // quand aucune solution exacte n'existe (retour utilisateur).
+        val meilleurEcartAtteignable = etat.solutionSolveur?.let { abs(etat.cible - it.resultat) } ?: 0
+        val score = Bareme.score(niveau, etat.cible, proposition, meilleurEcartAtteignable)
         val ecart = proposition?.let { abs(etat.cible - it) }
         _uiState.update { it.copy(termine = true, scoreObtenu = score, ecartCible = ecart) }
     }

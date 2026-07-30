@@ -13,15 +13,21 @@ import kotlin.math.abs
  * utilisateur : ce palier de 7 points s'applique à tout écart ≤ 100, qu'une
  * solution exacte ait existé ou non pour ce tirage (pas seulement quand c'est
  * la meilleure approche théoriquement atteignable).
+ *
+ * Exception (retour utilisateur) : quand le tirage n'a PAS de solution exacte
+ * ([meilleurEcartAtteignable] > 0, cf. [fr.pierre.chiffreslettres.numbers.TirageChiffres]),
+ * une proposition qui atteint cette meilleure approche théorique rapporte 10
+ * points comme un compte exact, même si l'écart dépasse 0.
  */
 object Bareme {
-    fun score(niveau: Niveau, cible: Int, propose: Int?): Int {
+    fun score(niveau: Niveau, cible: Int, propose: Int?, meilleurEcartAtteignable: Int = 0): Int {
         if (propose == null) return 0
         val ecart = abs(cible - propose)
         return when (niveau) {
             Niveau.EMILE, Niveau.NESTOR -> if (ecart == 0) 10 else 5
             Niveau.MONIQUE, Niveau.MATHIEU -> when {
                 ecart == 0 -> 10
+                meilleurEcartAtteignable > 0 && ecart == meilleurEcartAtteignable -> 10
                 ecart <= 100 -> 7
                 else -> 0
             }

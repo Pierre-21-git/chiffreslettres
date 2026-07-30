@@ -39,7 +39,7 @@ private const val LETTRES_PAR_LIGNE = 5
 fun LettresRoundScreen(
     viewModel: LettresRoundViewModel,
     scoreCumule: Int?,
-    onMancheTerminee: (score: Int, motValide: String?) -> Unit,
+    onMancheTerminee: (score: Int, motValide: String?, meilleurMot: String?) -> Unit,
     actionsFinManche: @Composable () -> Unit,
     onRetourEntrainement: (() -> Unit)? = null,
     pseudo: String? = null,
@@ -55,7 +55,7 @@ fun LettresRoundScreen(
     LaunchedEffect(etat.termine) {
         if (etat.termine) {
             val motValide = if (etat.motJoueurValide == true) etat.motSaisi else null
-            onMancheTerminee(etat.scoreObtenu ?: 0, motValide)
+            onMancheTerminee(etat.scoreObtenu ?: 0, motValide, etat.meilleurMot)
         }
     }
 

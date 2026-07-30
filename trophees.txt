@@ -1,4 +1,4 @@
-Catalogue des trophées — Chiffres & Lettres (71 trophées)
+Catalogue des trophées — Chiffres & Lettres (83 trophées)
 ============================================================
 Format : - Titre — description [id]
 L'[id] entre crochets est juste pour moi (Claude), ne le change pas si tu le gardes.
@@ -57,6 +57,20 @@ or/argent/bronze (par exemple en ajoutant une ligne "=== OR ===" / "=== ARGENT =
 - Dixième mot de 9 lettres [mot_9_10] {PLATINE}
 - Premier mot de 10 lettres (la longueur maximale du tirage) [mot_10_1] {PLATINE}
 - Dixième mot de 10 lettres [mot_10_10] {DIAMANT}
+
+=== Partie duo ===
+- Première partie duo jouée — Terminer une partie en mode Duo, tous niveaux confondus. [duo_1] {OR} ===ARGENT===
+- Première partie duo gagnée — Gagner une partie en mode Duo. [duo_gagnee_1] {OR}
+- Dixième partie duo gagnée — Gagner 10 parties en mode Duo. [duo_gagnee_10] {OR} ===PLATINE===
+- Première confrontation jouée — Terminer une partie en mode Confrontation, tous niveaux confondus. [confrontation_1] {OR} ===ARGENT===
+- Première confrontation gagnée — Gagner une partie en mode Confrontation. [confrontation_gagnee_1] {OR}
+- Dixième confrontation gagnée — Gagner 10 parties en mode Confrontation. [confrontation_gagnee_10] {OR} ===DIAMANT===
+- Première partie duo à distance jouée — Terminer une partie en mode Duo à distance, tous niveaux confondus. [duo_reseau_1] {OR} ===ARGENT===
+- Première partie duo à distance gagnée — Gagner une partie en mode Duo à distance. [duo_reseau_gagnee_1] {OR}
+- Dixième partie duo à distance gagnée — Gagner 10 parties en mode Duo à distance. [duo_reseau_gagnee_10] {OR} ===PLATINE===
+- Première confrontation à distance jouée — Terminer une partie en mode Confrontation à distance, tous niveaux confondus. [confrontation_reseau_1] {OR} ===ARGENT===
+- Première confrontation à distance gagnée — Gagner une partie en mode Confrontation à distance. [confrontation_reseau_gagnee_1] {OR}
+- Dixième confrontation à distance gagnée — Gagner 10 parties en mode Confrontation à distance. [confrontation_reseau_gagnee_10] {OR} ===DIAMANT===
 
 === Défi ===
 - Premier défi terminé — Aller jusqu'au bout d'un défi (chiffres ou lettres, tout niveau). [defi_1] {BRONZE}
