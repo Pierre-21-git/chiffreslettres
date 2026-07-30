@@ -17,7 +17,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.ProfilEntity
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
@@ -25,6 +27,7 @@ import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
 import fr.pierre.chiffreslettres.ui.partie.sequenceAlternee
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
+import fr.pierre.chiffreslettres.ui.theme.description
 import fr.pierre.chiffreslettres.ui.theme.libelle
 
 /**
@@ -47,19 +50,18 @@ fun ConfigurationPartieDuoScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        EnTeteEcran("Configurer la partie duo", onRetour)
+        EnTeteEcran(stringResource(R.string.configuration_duo_titre), onRetour)
         PucePseudo(pseudoActif)
 
         if (autresProfils.isEmpty()) {
             Text(
-                "Il faut au moins un second profil pour jouer en duo — créez-en un depuis " +
-                    "l'écran de changement de profil.",
+                stringResource(R.string.configuration_duo_pas_de_second_profil),
                 style = MaterialTheme.typography.bodyMedium,
             )
             return@Column
         }
 
-        Text("Contre qui ?", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.configuration_duo_contre_qui), style = MaterialTheme.typography.titleMedium)
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             for (candidat in autresProfils) {
                 val selectionne = candidat.id == profil2?.id
@@ -71,7 +73,7 @@ fun ConfigurationPartieDuoScreen(
             }
         }
 
-        Text("Quel niveau ?", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.configuration_quel_niveau), style = MaterialTheme.typography.titleMedium)
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             for (candidat in Niveau.entries) {
                 BoutonChoix(
@@ -82,11 +84,11 @@ fun ConfigurationPartieDuoScreen(
             }
         }
 
-        Text("Quel mode ?", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.configuration_quel_mode), style = MaterialTheme.typography.titleMedium)
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             for (candidat in ModeScoreDuo.entries) {
                 BoutonChoix(
-                    texte = candidat.libelle,
+                    texte = candidat.libelle(),
                     selectionne = candidat == mode,
                     onClick = { mode = candidat },
                 )
@@ -94,14 +96,7 @@ fun ConfigurationPartieDuoScreen(
         }
         val modeChoisi = mode
         if (modeChoisi != null) {
-            Text(
-                when (modeChoisi) {
-                    ModeScoreDuo.DUO -> "Chacun garde son propre score sur chaque manche, comme en solo."
-                    ModeScoreDuo.CONFRONTATION -> "Sur chaque manche, seul le joueur le plus proche de la " +
-                        "cible (ou le mot le plus long) marque les points ; à égalité, les deux les gardent."
-                },
-                style = MaterialTheme.typography.bodySmall,
-            )
+            Text(modeChoisi.description(), style = MaterialTheme.typography.bodySmall)
         }
 
         val niveauChoisi = niveau
@@ -121,7 +116,7 @@ fun ConfigurationPartieDuoScreen(
             },
             enabled = profil2 != null && niveauChoisi != null && modeChoisi != null,
             modifier = Modifier.fillMaxWidth(),
-        ) { Text("Démarrer le duel") }
+        ) { Text(stringResource(R.string.configuration_duo_demarrer)) }
     }
 }
 

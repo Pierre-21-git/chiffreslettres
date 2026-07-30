@@ -13,6 +13,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import fr.pierre.chiffreslettres.R
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -195,7 +197,7 @@ fun AppNavHost(
 
         composable(Routes.TROPHEES_CATALOGUE) {
             TropheesScreen(
-                titre = "Trophées",
+                titre = stringResource(R.string.apropos_bouton_trophees),
                 tropheesDebloques = null,
                 onRetour = { navController.popBackStack() },
             )
@@ -210,7 +212,7 @@ fun AppNavHost(
             val debloques by tropheeRepository.tropheesDebloques(profilIdArg).collectAsState(initial = null)
             val tropheesDebloques = debloques?.associate { it.trophyId to it.dateDebloque } ?: emptyMap()
             TropheesScreen(
-                titre = "Mes trophées",
+                titre = stringResource(R.string.mes_trophees_titre),
                 tropheesDebloques = tropheesDebloques,
                 onRetour = { navController.popBackStack() },
             )
@@ -313,7 +315,7 @@ fun AppNavHost(
                                 }
                             },
                             modifier = Modifier.fillMaxWidth(),
-                        ) { Text("Rejouer") }
+                        ) { Text(stringResource(R.string.action_rejouer)) }
                     },
                 )
             }
@@ -341,7 +343,7 @@ fun AppNavHost(
                                 }
                             },
                             modifier = Modifier.fillMaxWidth(),
-                        ) { Text("Rejouer") }
+                        ) { Text(stringResource(R.string.action_rejouer)) }
                     },
                 )
             }
@@ -634,16 +636,16 @@ fun AppNavHost(
                 if (demanderConfirmationRetour) {
                     AlertDialog(
                         onDismissRequest = { demanderConfirmationRetour = false },
-                        title = { Text("Quitter la partie duo ?") },
-                        text = { Text("La partie en cours sera perdue si vous quittez maintenant. Continuer ?") },
+                        title = { Text(stringResource(R.string.quitter_partie_duo_titre)) },
+                        text = { Text(stringResource(R.string.quitter_partie_message)) },
                         confirmButton = {
                             TextButton(onClick = {
                                 demanderConfirmationRetour = false
                                 navController.popBackStack(Routes.CONFIGURATION_PARTIE_DUO, inclusive = false)
-                            }) { Text("Quitter") }
+                            }) { Text(stringResource(R.string.action_quitter)) }
                         },
                         dismissButton = {
-                            TextButton(onClick = { demanderConfirmationRetour = false }) { Text("Annuler") }
+                            TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
                         },
                     )
                 }
@@ -832,7 +834,7 @@ fun AppNavHost(
                     ) {
                         Text(erreurJeu ?: "", style = MaterialTheme.typography.titleMedium)
                         Button(onClick = { navController.popBackStack(Routes.MENU, inclusive = false) }) {
-                            Text("Retour au menu")
+                            Text(stringResource(R.string.retour_au_menu))
                         }
                     }
                 } else if (sequence.isEmpty()) {
@@ -991,17 +993,17 @@ fun AppNavHost(
                 if (demanderConfirmationRetour) {
                     AlertDialog(
                         onDismissRequest = { demanderConfirmationRetour = false },
-                        title = { Text("Quitter la partie réseau ?") },
-                        text = { Text("La partie en cours sera perdue si vous quittez maintenant. Continuer ?") },
+                        title = { Text(stringResource(R.string.quitter_partie_reseau_titre)) },
+                        text = { Text(stringResource(R.string.quitter_partie_message)) },
                         confirmButton = {
                             TextButton(onClick = {
                                 demanderConfirmationRetour = false
                                 reseauVm.annulerEtRevenirAuChoix()
                                 navController.popBackStack(Routes.MENU, inclusive = false)
-                            }) { Text("Quitter") }
+                            }) { Text(stringResource(R.string.action_quitter)) }
                         },
                         dismissButton = {
-                            TextButton(onClick = { demanderConfirmationRetour = false }) { Text("Annuler") }
+                            TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
                         },
                     )
                 }
@@ -1047,7 +1049,7 @@ fun AppNavHost(
         // chrono" sont deux boutons séparés, pas des onglets d'un même écran).
         composable(Routes.CHOIX_DEFI_SERIE) {
             ChoixDefiScreen(
-                titre = "Défi série",
+                titre = stringResource(R.string.defi_type_serie),
                 pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                 afficherDuree = false,
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChiffres(niveau)) },
@@ -1058,7 +1060,7 @@ fun AppNavHost(
 
         composable(Routes.CHOIX_DEFI_CHRONO) {
             ChoixDefiScreen(
-                titre = "Défi chrono",
+                titre = stringResource(R.string.defi_type_chrono),
                 pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                 afficherDuree = true,
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoChiffres(niveau)) },
@@ -1164,7 +1166,7 @@ fun AppNavHost(
                             },
                         )
                     } else {
-                        Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text("Continuer") }
+                        Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_continuer)) }
                     }
                 },
             )
@@ -1231,7 +1233,7 @@ fun AppNavHost(
                             },
                         )
                     } else {
-                        Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text("Continuer") }
+                        Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_continuer)) }
                     }
                 },
             )
@@ -1309,7 +1311,7 @@ fun AppNavHost(
                         )
                     } else {
                         Button(onClick = { defiVm.mancheChronoTerminee(true) }, modifier = Modifier.fillMaxWidth()) {
-                            Text("Continuer")
+                            Text(stringResource(R.string.action_continuer))
                         }
                     }
                 },
@@ -1386,7 +1388,7 @@ fun AppNavHost(
                         )
                     } else {
                         Button(onClick = { defiVm.mancheChronoTerminee(true) }, modifier = Modifier.fillMaxWidth()) {
-                            Text("Continuer")
+                            Text(stringResource(R.string.action_continuer))
                         }
                     }
                 },
@@ -1400,8 +1402,8 @@ fun AppNavHost(
 private fun ActionsFinDefi(message: String, onRecommencer: () -> Unit, onChangerNiveau: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text(message)
-        Button(onClick = onRecommencer, modifier = Modifier.fillMaxWidth()) { Text("Recommencer") }
-        OutlinedButton(onClick = onChangerNiveau, modifier = Modifier.fillMaxWidth()) { Text("Retour") }
+        Button(onClick = onRecommencer, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_recommencer)) }
+        OutlinedButton(onClick = onChangerNiveau, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_retour)) }
     }
 }
 
@@ -1413,7 +1415,7 @@ private fun ActionsFinDefi(message: String, onRecommencer: () -> Unit, onChanger
 @Composable
 private fun DefiQuotidienGagne(onTerminer: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text("Défi quotidien remporté !")
-        Button(onClick = onTerminer, modifier = Modifier.fillMaxWidth()) { Text("Terminer") }
+        Text(stringResource(R.string.defi_quotidien_remporte))
+        Button(onClick = onTerminer, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_terminer)) }
     }
 }

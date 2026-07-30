@@ -9,7 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
 
 /**
@@ -23,8 +25,8 @@ fun DeclencherMancheChiffresScreen(progressionManche: String, onCommencer: () ->
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("Manche $progressionManche", style = MaterialTheme.typography.titleMedium)
-        Text("Chiffres", style = MaterialTheme.typography.headlineMedium)
-        TuilePrincipale("Commencer la manche", onClick = onCommencer)
+        Text(stringResource(R.string.declencher_manche_progression, progressionManche), style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.mode_chiffres), style = MaterialTheme.typography.headlineMedium)
+        TuilePrincipale(stringResource(R.string.declencher_manche_commencer), onClick = onCommencer)
     }
 }

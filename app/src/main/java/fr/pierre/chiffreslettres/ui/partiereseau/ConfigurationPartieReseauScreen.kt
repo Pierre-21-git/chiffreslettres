@@ -17,11 +17,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.partieduo.ModeScoreDuo
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
+import fr.pierre.chiffreslettres.ui.theme.description
 import fr.pierre.chiffreslettres.ui.theme.libelle
 
 /** Configuration de la partie réseau, hôte uniquement (l'adversaire est déjà déterminé par la connexion). */
@@ -37,32 +40,25 @@ fun ConfigurationPartieReseauScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        EnTeteEcran("Configurer la partie")
+        EnTeteEcran(stringResource(R.string.configuration_partie_titre))
         PucePseudo(pseudoActif)
 
-        Text("Quel niveau ?", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.configuration_quel_niveau), style = MaterialTheme.typography.titleMedium)
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             for (candidat in Niveau.entries) {
                 BoutonChoix(candidat.libelle(), selectionne = candidat == niveau, onClick = { niveau = candidat })
             }
         }
 
-        Text("Quel mode ?", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.configuration_quel_mode), style = MaterialTheme.typography.titleMedium)
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             for (candidat in ModeScoreDuo.entries) {
-                BoutonChoix(candidat.libelle, selectionne = candidat == mode, onClick = { mode = candidat })
+                BoutonChoix(candidat.libelle(), selectionne = candidat == mode, onClick = { mode = candidat })
             }
         }
         val modeChoisi = mode
         if (modeChoisi != null) {
-            Text(
-                when (modeChoisi) {
-                    ModeScoreDuo.DUO -> "Chacun garde son propre score sur chaque manche, comme en solo."
-                    ModeScoreDuo.CONFRONTATION -> "Sur chaque manche, seul le joueur le plus proche de la " +
-                        "cible (ou le mot le plus long) marque les points ; à égalité, les deux les gardent."
-                },
-                style = MaterialTheme.typography.bodySmall,
-            )
+            Text(modeChoisi.description(), style = MaterialTheme.typography.bodySmall)
         }
 
         val niveauChoisi = niveau
@@ -74,7 +70,7 @@ fun ConfigurationPartieReseauScreen(
             },
             enabled = niveauChoisi != null && modeChoisi != null,
             modifier = Modifier.fillMaxWidth(),
-        ) { Text("Démarrer la partie") }
+        ) { Text(stringResource(R.string.configuration_partie_reseau_demarrer)) }
     }
 }
 

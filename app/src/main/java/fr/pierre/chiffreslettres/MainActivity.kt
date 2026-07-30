@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import fr.pierre.chiffreslettres.data.AppDatabaseProvider
 import fr.pierre.chiffreslettres.data.DefiQuotidienRepository
 import fr.pierre.chiffreslettres.data.DefiRepository
@@ -93,7 +94,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     when {
         dictionnaireCharge == null -> {
             Box(modifier, contentAlignment = Alignment.Center) {
-                Text("Chargement...")
+                Text(stringResource(R.string.chargement))
             }
         }
         profils.isEmpty() -> {

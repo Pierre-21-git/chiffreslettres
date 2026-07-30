@@ -12,10 +12,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
@@ -55,7 +57,7 @@ fun TransitionJoueurScreen(
     ) {
         if (prochainPseudo != null) {
             Text(
-                "Passez le téléphone à",
+                stringResource(R.string.transition_passez_telephone),
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
@@ -66,9 +68,9 @@ fun TransitionJoueurScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
-            TuilePrincipale("Prêt", onClick = onPret)
+            TuilePrincipale(stringResource(R.string.transition_pret), onClick = onPret)
         } else {
-            TuilePrincipale("Voir les résultats", onClick = onPret)
+            TuilePrincipale(stringResource(R.string.revelation_voir_resultats), onClick = onPret)
         }
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -77,7 +79,7 @@ fun TransitionJoueurScreen(
         }
 
         if (resultats.isNotEmpty()) {
-            Text("Résultat de la manche", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.revelation_manche_titre), style = MaterialTheme.typography.titleMedium)
             Text(messageVainqueur(resultats), color = BrassBright, fontWeight = FontWeight.Bold)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 for (resultat in resultats) {
@@ -88,9 +90,10 @@ fun TransitionJoueurScreen(
     }
 }
 
+@Composable
 private fun messageVainqueur(resultats: List<ResultatAffichage>): String {
     val vainqueur = resultats.singleOrNull { it.estVainqueur }
-    return if (vainqueur != null) "🏆 ${vainqueur.pseudo} remporte la manche" else "Égalité sur cette manche"
+    return if (vainqueur != null) stringResource(R.string.revelation_manche_vainqueur, vainqueur.pseudo) else stringResource(R.string.revelation_manche_egalite)
 }
 
 @Composable
@@ -98,7 +101,11 @@ private fun ColonneResultat(resultat: ResultatAffichage, modifier: Modifier = Mo
     PanneauResultat(modifier = modifier) {
         Text(resultat.pseudo, color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
         Text(
-            if (resultat.estVainqueur) "🏆 ${resultat.score} pts" else "${resultat.score} pts",
+            if (resultat.estVainqueur) {
+                stringResource(R.string.revelation_score_vainqueur, resultat.score)
+            } else {
+                stringResource(R.string.revelation_score, resultat.score)
+            },
             color = if (resultat.estVainqueur) BrassBright else TextMuted,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,

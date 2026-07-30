@@ -28,7 +28,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilEntity
 import fr.pierre.chiffreslettres.data.ProfilRepository
@@ -67,7 +69,7 @@ fun ChangerProfilScreen(
             modifier = Modifier.align(Alignment.Center).fillMaxWidth().verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            EnTeteEcran("Choisir un profil", centre = true)
+            EnTeteEcran(stringResource(R.string.changer_profil_titre), centre = true)
             for (profil in profils) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -85,14 +87,14 @@ fun ChangerProfilScreen(
                         },
                     )
                     IconButton(onClick = { profilARenommer = profil }) {
-                        Icon(Icons.Filled.Edit, contentDescription = "Renommer")
+                        Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.action_renommer))
                     }
                     IconButton(onClick = { profilASupprimer = profil }) {
-                        Icon(Icons.Filled.Delete, contentDescription = "Supprimer")
+                        Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.action_supprimer))
                     }
                 }
             }
-            Button(onClick = onCreerNouveauProfil, modifier = Modifier.fillMaxWidth()) { Text("Créer un nouveau profil") }
+            Button(onClick = onCreerNouveauProfil, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.changer_profil_creer_nouveau)) }
         }
     }
 
@@ -101,7 +103,7 @@ fun ChangerProfilScreen(
         var nouvelAvatar by remember(profil.id) { mutableStateOf(profil.avatar) }
         AlertDialog(
             onDismissRequest = { profilARenommer = null },
-            title = { Text("Renommer le profil") },
+            title = { Text(stringResource(R.string.changer_profil_renommer_titre)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(value = nouveauPseudo, onValueChange = { nouveauPseudo = it })
@@ -118,10 +120,10 @@ fun ChangerProfilScreen(
                         }
                     }
                     profilARenommer = null
-                }) { Text("Valider") }
+                }) { Text(stringResource(R.string.action_valider)) }
             },
             dismissButton = {
-                TextButton(onClick = { profilARenommer = null }) { Text("Annuler") }
+                TextButton(onClick = { profilARenommer = null }) { Text(stringResource(R.string.action_annuler)) }
             },
         )
     }
@@ -129,16 +131,16 @@ fun ChangerProfilScreen(
     profilASupprimer?.let { profil ->
         AlertDialog(
             onDismissRequest = { profilASupprimer = null },
-            title = { Text("Supprimer le profil") },
-            text = { Text("Le profil \"${profil.pseudo}\" et tout son historique seront définitivement supprimés. Continuer ?") },
+            title = { Text(stringResource(R.string.changer_profil_supprimer_titre)) },
+            text = { Text(stringResource(R.string.changer_profil_supprimer_message, profil.pseudo)) },
             confirmButton = {
                 TextButton(onClick = {
                     scope.launch { profilRepository.supprimerProfil(profil) }
                     profilASupprimer = null
-                }) { Text("Supprimer") }
+                }) { Text(stringResource(R.string.action_supprimer)) }
             },
             dismissButton = {
-                TextButton(onClick = { profilASupprimer = null }) { Text("Annuler") }
+                TextButton(onClick = { profilASupprimer = null }) { Text(stringResource(R.string.action_annuler)) }
             },
         )
     }

@@ -22,8 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.network.TransportReseau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
@@ -118,38 +120,36 @@ fun ChoixRoleReseauScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        EnTeteEcran("Jouer en réseau", onRetour)
+        EnTeteEcran(stringResource(R.string.role_reseau_titre), onRetour)
         PucePseudo(pseudoActif)
         Text(
-            "Connectez deux téléphones pour jouer en duo ou en confrontation, chacun sur son " +
-                "propre appareil.",
+            stringResource(R.string.role_reseau_intro),
             style = MaterialTheme.typography.bodyMedium,
         )
 
-        Text("Comment se connecter ?", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.role_reseau_comment_connecter), style = MaterialTheme.typography.titleMedium)
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             BoutonChoixTransport(
-                "Wifi local",
+                stringResource(R.string.transport_wifi),
                 selectionne = transport == TransportReseau.WIFI,
                 onClick = { transport = TransportReseau.WIFI },
             )
             BoutonChoixTransport(
-                "Bluetooth",
+                stringResource(R.string.transport_bluetooth),
                 selectionne = transport == TransportReseau.BLUETOOTH,
                 onClick = { transport = TransportReseau.BLUETOOTH },
             )
         }
         Text(
             when (transport) {
-                TransportReseau.WIFI -> "Les deux téléphones doivent être sur le même réseau Wifi."
-                TransportReseau.BLUETOOTH -> "L'appareil hôte devra accepter d'être visible ; l'appairage " +
-                    "peut être demandé à la première connexion."
+                TransportReseau.WIFI -> stringResource(R.string.transport_wifi_instructions)
+                TransportReseau.BLUETOOTH -> stringResource(R.string.transport_bluetooth_instructions)
             },
             style = MaterialTheme.typography.bodySmall,
         )
 
-        TuilePrincipale("Héberger une partie", onClick = { executerHeberger { onHeberger(transport) } })
-        TuilePrincipale("Rejoindre une partie", onClick = { executerRejoindre { onRejoindre(transport) } })
+        TuilePrincipale(stringResource(R.string.attente_hote_titre), onClick = { executerHeberger { onHeberger(transport) } })
+        TuilePrincipale(stringResource(R.string.recherche_invite_titre), onClick = { executerRejoindre { onRejoindre(transport) } })
     }
 }
 

@@ -10,12 +10,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 
 private data class EntreeVersion(val version: String, val date: String, val changements: List<String>)
 
 private val HISTORIQUE_VERSIONS = listOf(
+    EntreeVersion(
+        version = "1.53",
+        date = "2026-07-30",
+        changements = listOf(
+            "Lot 2 de la déclinaison multilingue (retour utilisateur) : tous les textes de " +
+                "l'interface (boutons, titres, messages, règles du jeu...) ont été déplacés " +
+                "dans strings.xml, sur une trentaine d'écrans. Aucun changement visible en " +
+                "français — le changelog ci-dessous reste volontairement en dur (historique de " +
+                "développement, pas un contenu à traduire).",
+            "De nombreux libellés identiques entre écrans (\"Continuer\", \"Annuler\", " +
+                "\"Chiffres\"/\"Lettres\", messages de confrontation...) partagent maintenant la " +
+                "même ressource, pour éviter les doublons.",
+        ),
+    ),
     EntreeVersion(
         version = "1.52",
         date = "2026-07-30",
@@ -746,7 +762,7 @@ fun VersionsScreen(onRetour: (() -> Unit)? = null) {
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        EnTeteEcran("Versions", onRetour)
+        EnTeteEcran(stringResource(R.string.versions_titre), onRetour)
         for (entree in HISTORIQUE_VERSIONS) {
             Text("${entree.version} — ${entree.date}", style = MaterialTheme.typography.titleMedium)
             for (changement in entree.changements) {

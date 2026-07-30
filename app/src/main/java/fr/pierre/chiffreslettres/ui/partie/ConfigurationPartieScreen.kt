@@ -10,7 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
@@ -32,9 +34,9 @@ fun ConfigurationPartieScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        EnTeteEcran("Configurer la partie solo", onRetour)
+        EnTeteEcran(stringResource(R.string.configuration_partie_solo_titre), onRetour)
         PucePseudo(pseudoActif)
-        Text("Choisir un niveau", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.configuration_choisir_niveau), style = MaterialTheme.typography.titleMedium)
 
         for (niveau in Niveau.entries) {
             Button(

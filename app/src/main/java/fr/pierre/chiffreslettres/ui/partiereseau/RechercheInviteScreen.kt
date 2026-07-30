@@ -14,7 +14,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.network.CibleDecouverte
 import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
@@ -33,7 +35,7 @@ fun RechercheInviteScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        EnTeteEcran("Rejoindre une partie", onAnnuler)
+        EnTeteEcran(stringResource(R.string.recherche_invite_titre), onAnnuler)
 
         if (connexionEnCours) {
             Column(
@@ -42,7 +44,7 @@ fun RechercheInviteScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 CircularProgressIndicator()
-                Text("Connexion en cours…", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.recherche_invite_connexion_en_cours), style = MaterialTheme.typography.titleMedium)
             }
         } else if (parties.isEmpty()) {
             Column(
@@ -51,14 +53,14 @@ fun RechercheInviteScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 CircularProgressIndicator()
-                Text("Recherche en cours…", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.recherche_invite_recherche_en_cours), style = MaterialTheme.typography.titleMedium)
                 Text(
-                    "Vérifiez que l'hôte a bien lancé « Héberger une partie » avec le même transport.",
+                    stringResource(R.string.recherche_invite_instructions),
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
         } else {
-            Text("Parties trouvées", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.recherche_invite_parties_trouvees), style = MaterialTheme.typography.titleMedium)
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 for (partie in parties) {
                     OutlinedButton(onClick = { onSelectionner(partie) }, modifier = Modifier.fillMaxWidth()) {
@@ -68,15 +70,15 @@ fun RechercheInviteScreen(
             }
         }
 
-        BoutonSecondaireContour("Annuler", onClick = onAnnuler)
+        BoutonSecondaireContour(stringResource(R.string.action_annuler), onClick = onAnnuler)
     }
 
     if (erreur != null) {
         AlertDialog(
             onDismissRequest = onAnnulerErreur,
-            title = { Text("Connexion impossible") },
+            title = { Text(stringResource(R.string.recherche_invite_connexion_impossible)) },
             text = { Text(erreur) },
-            confirmButton = { TextButton(onClick = onAnnulerErreur) { Text("OK") } },
+            confirmButton = { TextButton(onClick = onAnnulerErreur) { Text(stringResource(R.string.action_ok)) } },
         )
     }
 }

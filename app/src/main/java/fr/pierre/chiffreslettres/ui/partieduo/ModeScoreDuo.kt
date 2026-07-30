@@ -7,9 +7,9 @@ import fr.pierre.chiffreslettres.data.TypePartie
  * chaque manche garde ses points, l'autre passe à 0 ; égalité → chacun garde son score
  * (retour utilisateur, choisi avant de démarrer la partie).
  */
-enum class ModeScoreDuo(val libelle: String) {
-    DUO("Duo"),
-    CONFRONTATION("Confrontation"),
+enum class ModeScoreDuo {
+    DUO,
+    CONFRONTATION,
 }
 
 fun ModeScoreDuo.versTypePartie(): TypePartie = when (this) {

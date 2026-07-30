@@ -18,9 +18,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.letters.TirageLettres
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
@@ -46,7 +48,7 @@ fun LettresRoundScreen(
     /** "2 / 4" par exemple, uniquement en partie structurée ou en défi (retour utilisateur). */
     progressionManche: String? = null,
     /** Libellé de la pastille [progressionManche] : "Manche" en partie solo, "Série" en défi. */
-    libelleProgression: String = "Manche",
+    libelleProgression: String = stringResource(R.string.libelle_manche),
     /** Faux en mode duo (retour utilisateur) : le score et le mot sont révélés sur l'écran de transition, pas ici — pour ne pas donner d'indice au second joueur avant qu'il ne joue le même tirage. */
     afficherResultat: Boolean = true,
 ) {
@@ -63,14 +65,14 @@ fun LettresRoundScreen(
         modifier = Modifier.fillMaxSize().fondPlateau().padding(20.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        EnTeteEcran("Lettres", onRetourEntrainement)
+        EnTeteEcran(stringResource(R.string.mode_lettres), onRetourEntrainement)
         if (pseudo != null) {
             PucePseudo(pseudo)
         }
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             if (scoreCumule != null) {
-                Afficheur("Score", "$scoreCumule", modifier = Modifier.weight(1f), centre = true)
+                Afficheur(stringResource(R.string.afficheur_score), "$scoreCumule", modifier = Modifier.weight(1f), centre = true)
             }
             if (progressionManche != null) {
                 Afficheur(libelleProgression, progressionManche, modifier = Modifier.weight(1f), centre = true)
@@ -78,10 +80,10 @@ fun LettresRoundScreen(
             // Cadre toujours affiché (retour utilisateur), même vide une fois le tirage
             // terminé sans chrono (entraînement libre) : sa position ne doit pas bouger.
             Afficheur(
-                label = if (!etat.tirageTermine) "Tirage" else "Temps",
+                label = if (!etat.tirageTermine) stringResource(R.string.lettres_tirage_label) else stringResource(R.string.afficheur_temps),
                 valeur = when {
-                    !etat.tirageTermine -> "${etat.lettresTirees.size} / ${etat.nombreLettres}"
-                    etat.tempsRestantSecondes != null -> "${etat.tempsRestantSecondes}s"
+                    !etat.tirageTermine -> stringResource(R.string.lettres_tirage_valeur, etat.lettresTirees.size, etat.nombreLettres)
+                    etat.tempsRestantSecondes != null -> stringResource(R.string.afficheur_temps_valeur, etat.tempsRestantSecondes ?: 0)
                     else -> ""
                 },
                 modifier = Modifier.weight(1f),
@@ -121,14 +123,14 @@ fun LettresRoundScreen(
         // fois le tirage terminé : sa position reste fixe, seul son contenu apparaît une fois
         // que le joueur compose son mot.
         Afficheur(
-            "Votre mot",
-            etat.motSaisi.ifEmpty { "…" },
+            stringResource(R.string.lettres_votre_mot),
+            etat.motSaisi.ifEmpty { stringResource(R.string.attente_hote_valeur_provisoire) },
             modifier = Modifier.fillMaxWidth(),
         )
 
         if (!etat.tirageTermine) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Nombre de voyelles souhaitées", color = TextMuted, fontSize = 13.sp)
+                Text(stringResource(R.string.lettres_nombre_voyelles), color = TextMuted, fontSize = 13.sp)
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     for (n in TirageLettres.VOYELLES_MINIMUM..TirageLettres.VOYELLES_MAXIMUM) {
                         TuilePrincipale(
@@ -142,29 +144,37 @@ fun LettresRoundScreen(
         } else {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 BoutonSecondaireContour(
-                    "Annuler",
+                    stringResource(R.string.action_annuler),
                     onClick = { viewModel.annulerLettre() },
                     enabled = !etat.termine && etat.indicesUtilises.isNotEmpty(),
                     modifier = Modifier.weight(1f),
                 )
                 BoutonSecondaireContour(
-                    "Effacer",
+                    stringResource(R.string.action_effacer),
                     onClick = { viewModel.effacerMot() },
                     enabled = !etat.termine && etat.indicesUtilises.isNotEmpty(),
                     modifier = Modifier.weight(1f),
                 )
             }
-            TuilePrincipale("Valider", onClick = { viewModel.valider() }, enabled = !etat.termine)
+            TuilePrincipale(stringResource(R.string.action_valider), onClick = { viewModel.valider() }, enabled = !etat.termine)
         }
 
         if (etat.termine) {
             if (afficherResultat) {
-                val validite = if (etat.motJoueurValide == true) "valide" else "invalide ou absent du dictionnaire"
+                val validite = if (etat.motJoueurValide == true) {
+                    stringResource(R.string.lettres_mot_valide)
+                } else {
+                    stringResource(R.string.lettres_mot_invalide)
+                }
                 PanneauResultat {
-                    Text("Score obtenu : ${etat.scoreObtenu}", color = BrassBright, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                    Text("Votre mot (\"${etat.motSaisi}\") : $validite", color = TextMuted, fontSize = 13.sp)
+                    Text(stringResource(R.string.score_obtenu, etat.scoreObtenu ?: 0), color = BrassBright, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Text(stringResource(R.string.lettres_votre_mot_validite, etat.motSaisi, validite), color = TextMuted, fontSize = 13.sp)
                     Text(
-                        "Meilleur mot trouvé : ${etat.meilleurMot?.let { "$it (${it.length} lettres)" } ?: "aucun"}",
+                        stringResource(
+                            R.string.lettres_meilleur_mot_trouve,
+                            etat.meilleurMot?.let { stringResource(R.string.lettres_meilleur_mot_detail, it, it.length) }
+                                ?: stringResource(R.string.lettres_meilleur_mot_aucun),
+                        ),
                         color = TextMuted,
                         fontSize = 13.sp,
                     )

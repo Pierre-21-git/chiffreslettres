@@ -38,10 +38,12 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.ExportStatistiques
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
@@ -96,6 +98,14 @@ fun StatistiquesJoueurScreen(
     var uriImportEnAttente by remember { mutableStateOf<Uri?>(null) }
     var messageErreurFichier by remember { mutableStateOf<String?>(null) }
 
+    // Modèles de message capturés ici (contexte composable requis par stringResource), utilisés
+    // tels quels dans les callbacks ci-dessous qui s'exécutent hors composition.
+    val exportEchecTemplate = stringResource(R.string.statistiques_export_echec)
+    val importEchecTemplate = stringResource(R.string.statistiques_import_echec)
+    val erreurEcritureMessage = stringResource(R.string.statistiques_erreur_ecriture)
+    val erreurLectureMessage = stringResource(R.string.statistiques_erreur_lecture)
+    val fichierInvalideMessage = stringResource(R.string.statistiques_fichier_invalide)
+
     val lanceurExport = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
         if (uri != null) {
             scope.launch {
@@ -108,10 +118,10 @@ fun StatistiquesJoueurScreen(
                     val json = StatistiquesExport.versJson(export)
                     withContext(Dispatchers.IO) {
                         context.contentResolver.openOutputStream(uri)?.use { it.write(json.toByteArray()) }
-                            ?: throw IOException("Impossible d'écrire le fichier.")
+                            ?: throw IOException(erreurEcritureMessage)
                     }
                 } catch (e: IOException) {
-                    messageErreurFichier = "L'export a échoué : ${e.message}"
+                    messageErreurFichier = exportEchecTemplate.format(e.message)
                 }
             }
         }
@@ -124,43 +134,40 @@ fun StatistiquesJoueurScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        EnTeteEcran(profil?.pseudo ?: "Statistiques", onRetour)
+        EnTeteEcran(profil?.pseudo ?: stringResource(R.string.statistiques_titre_defaut), onRetour)
 
         Button(onClick = onMesStatistiques, modifier = Modifier.fillMaxWidth()) {
-            Text("Mes statistiques")
+            Text(stringResource(R.string.statistiques_bouton_mes_stats))
         }
         Button(onClick = onStatistiquesGenerales, modifier = Modifier.fillMaxWidth()) {
-            Text("Statistiques générales")
+            Text(stringResource(R.string.statistiques_bouton_generales))
         }
 
         HorizontalDivider()
         Button(onClick = onVoirTrophees, modifier = Modifier.fillMaxWidth()) {
-            Text("Voir mes trophées")
+            Text(stringResource(R.string.statistiques_bouton_voir_trophees))
         }
 
         HorizontalDivider()
         Button(
             onClick = { lanceurExport.launch("statistiques-${nomFichier(profil?.pseudo)}.json") },
             modifier = Modifier.fillMaxWidth(),
-        ) { Text("Exporter mes statistiques") }
+        ) { Text(stringResource(R.string.statistiques_bouton_exporter)) }
         Button(
             onClick = { lanceurImport.launch(arrayOf("application/json")) },
             modifier = Modifier.fillMaxWidth(),
-        ) { Text("Importer mes statistiques") }
+        ) { Text(stringResource(R.string.statistiques_bouton_importer)) }
         Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
-            Text("Réinitialiser mes statistiques")
+            Text(stringResource(R.string.statistiques_bouton_reinitialiser))
         }
     }
 
     if (confirmationReinitialisation && profil != null) {
         AlertDialog(
             onDismissRequest = { confirmationReinitialisation = false },
-            title = { Text("Réinitialiser mes statistiques") },
+            title = { Text(stringResource(R.string.statistiques_bouton_reinitialiser)) },
             text = {
-                Text(
-                    "Tout l'historique de parties, scores et défis de " +
-                        "${profil.pseudo} sera définitivement supprimé. Continuer ?",
-                )
+                Text(stringResource(R.string.statistiques_confirm_reinit_message, profil.pseudo))
             },
             confirmButton = {
                 TextButton(onClick = {
@@ -170,10 +177,10 @@ fun StatistiquesJoueurScreen(
                         tropheeRepository.reinitialiserJoueur(profilId)
                     }
                     confirmationReinitialisation = false
-                }) { Text("Réinitialiser") }
+                }) { Text(stringResource(R.string.action_reinitialiser)) }
             },
             dismissButton = {
-                TextButton(onClick = { confirmationReinitialisation = false }) { Text("Annuler") }
+                TextButton(onClick = { confirmationReinitialisation = false }) { Text(stringResource(R.string.action_annuler)) }
             },
         )
     }
@@ -181,12 +188,9 @@ fun StatistiquesJoueurScreen(
     uriImportEnAttente?.let { uri ->
         AlertDialog(
             onDismissRequest = { uriImportEnAttente = null },
-            title = { Text("Importer mes statistiques") },
+            title = { Text(stringResource(R.string.statistiques_bouton_importer)) },
             text = {
-                Text(
-                    "Vos statistiques actuelles (parties, scores, défis et trophées) seront " +
-                        "définitivement remplacées par celles du fichier importé. Continuer ?",
-                )
+                Text(stringResource(R.string.statistiques_importer_message))
             },
             confirmButton = {
                 TextButton(onClick = {
@@ -195,7 +199,7 @@ fun StatistiquesJoueurScreen(
                         try {
                             val json = withContext(Dispatchers.IO) {
                                 context.contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() }
-                                    ?: throw IOException("Impossible de lire le fichier.")
+                                    ?: throw IOException(erreurLectureMessage)
                             }
                             val export = StatistiquesExport.depuisJson(json)
                             historiqueRepository.reinitialiserHistoriqueJoueur(profilId)
@@ -206,15 +210,15 @@ fun StatistiquesJoueurScreen(
                             tropheeRepository.importerTrophees(profilId, export.trophees)
                             tropheeRepository.reevaluer(profilId)
                         } catch (e: IllegalArgumentException) {
-                            messageErreurFichier = e.message ?: "Fichier invalide."
+                            messageErreurFichier = e.message ?: fichierInvalideMessage
                         } catch (e: IOException) {
-                            messageErreurFichier = "L'import a échoué : ${e.message}"
+                            messageErreurFichier = importEchecTemplate.format(e.message)
                         }
                     }
-                }) { Text("Remplacer") }
+                }) { Text(stringResource(R.string.action_remplacer)) }
             },
             dismissButton = {
-                TextButton(onClick = { uriImportEnAttente = null }) { Text("Annuler") }
+                TextButton(onClick = { uriImportEnAttente = null }) { Text(stringResource(R.string.action_annuler)) }
             },
         )
     }
@@ -222,10 +226,10 @@ fun StatistiquesJoueurScreen(
     messageErreurFichier?.let { message ->
         AlertDialog(
             onDismissRequest = { messageErreurFichier = null },
-            title = { Text("Opération impossible") },
+            title = { Text(stringResource(R.string.statistiques_operation_impossible)) },
             text = { Text(message) },
             confirmButton = {
-                TextButton(onClick = { messageErreurFichier = null }) { Text("OK") }
+                TextButton(onClick = { messageErreurFichier = null }) { Text(stringResource(R.string.action_ok)) }
             },
         )
     }
@@ -249,15 +253,16 @@ fun MesStatistiquesScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        EnTeteEcran("Mes statistiques", onRetour)
+        EnTeteEcran(stringResource(R.string.statistiques_bouton_mes_stats), onRetour)
 
         Text(
-            "Mes meilleurs scores par niveau (chiffres et lettres confondus)",
+            stringResource(R.string.statistiques_mes_meilleurs_scores),
             style = MaterialTheme.typography.titleMedium,
         )
+        val typesPartieAffiches = typesPartieAffiches()
         for ((position, niveau) in Niveau.entries.withIndex()) {
             val donneesParType = mutableListOf<Triple<TypePartie, String, List<fr.pierre.chiffreslettres.data.MeilleurePartieSolo>>>()
-            for ((type, libelle) in TYPES_PARTIE_AFFICHES) {
+            for ((type, libelle) in typesPartieAffiches) {
                 val meilleuresFlow = remember(niveau, type) { historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name, type) }
                 val meilleures by meilleuresFlow.collectAsState(initial = emptyList())
                 donneesParType.add(Triple(type, libelle, meilleures))
@@ -286,12 +291,13 @@ fun MesStatistiquesScreen(
 }
 
 /** Classements distincts par niveau (retour utilisateur) : le score d'une confrontation peut être écrasé à 0 par l'adversaire, il ne doit pas se mélanger au meilleur score solo. */
-private val TYPES_PARTIE_AFFICHES = listOf(
-    TypePartie.STRUCTUREE to "Solo",
-    TypePartie.DUO to "Duo",
-    TypePartie.DUO_CONFRONTATION to "Confrontation",
-    TypePartie.DUO_RESEAU to "Duo à distance",
-    TypePartie.DUO_CONFRONTATION_RESEAU to "Confrontation à distance",
+@Composable
+private fun typesPartieAffiches(): List<Pair<TypePartie, String>> = listOf(
+    TypePartie.STRUCTUREE to stringResource(R.string.type_partie_solo),
+    TypePartie.DUO to stringResource(R.string.mode_duo_libelle),
+    TypePartie.DUO_CONFRONTATION to stringResource(R.string.mode_confrontation_libelle),
+    TypePartie.DUO_RESEAU to stringResource(R.string.type_partie_duo_distance),
+    TypePartie.DUO_CONFRONTATION_RESEAU to stringResource(R.string.type_partie_confrontation_distance),
 )
 
 /**
@@ -305,7 +311,7 @@ private val TYPES_PARTIE_AFFICHES = listOf(
 private fun GraphiqueProgression(scores: List<Int>) {
     if (scores.size < 2) {
         Text(
-            "Pas encore assez de parties pour un graphique de progression.",
+            stringResource(R.string.statistiques_pas_assez_de_parties),
             style = MaterialTheme.typography.labelSmall,
             color = TextMuted,
         )
@@ -362,8 +368,8 @@ private fun GraphiqueProgression(scores: List<Int>) {
         }
     }
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text("${scores.size} parties", style = MaterialTheme.typography.labelSmall, color = TextMuted)
-        Text("meilleur : $scoreDataMax pts", style = MaterialTheme.typography.labelSmall, color = TextMuted)
+        Text(stringResource(R.string.statistiques_nb_parties, scores.size), style = MaterialTheme.typography.labelSmall, color = TextMuted)
+        Text(stringResource(R.string.statistiques_meilleur_score, scoreDataMax), style = MaterialTheme.typography.labelSmall, color = TextMuted)
     }
 }
 
@@ -377,15 +383,16 @@ fun StatistiquesGeneralesScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        EnTeteEcran("Statistiques générales", onRetour)
+        EnTeteEcran(stringResource(R.string.statistiques_bouton_generales), onRetour)
 
         Text(
-            "Classement par niveau (chiffres et lettres confondus)",
+            stringResource(R.string.statistiques_classement_par_niveau),
             style = MaterialTheme.typography.titleMedium,
         )
+        val typesPartieAffiches = typesPartieAffiches()
         for ((position, niveau) in Niveau.entries.withIndex()) {
             val donneesParType = mutableListOf<Triple<TypePartie, String, List<fr.pierre.chiffreslettres.data.LigneClassement>>>()
-            for ((type, libelle) in TYPES_PARTIE_AFFICHES) {
+            for ((type, libelle) in typesPartieAffiches) {
                 val classementFlow = remember(niveau, type) { historiqueRepository.classementParNiveau(niveau.name, type) }
                 val classement by classementFlow.collectAsState(initial = emptyList())
                 donneesParType.add(Triple(type, libelle, classement))
@@ -415,7 +422,7 @@ private data class EntreePodium(val label: String?, val score: Int, val date: Lo
 @Composable
 private fun Podium(entrees: List<EntreePodium>) {
     if (entrees.isEmpty()) {
-        Text("Aucun score enregistré.", style = MaterialTheme.typography.bodyMedium)
+        Text(stringResource(R.string.statistiques_aucun_score), style = MaterialTheme.typography.bodyMedium)
         return
     }
     Row(
@@ -442,7 +449,7 @@ private fun MarchePodium(rang: Int, entree: EntreePodium, modifier: Modifier = M
         if (entree.label != null) {
             Text(entree.label, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, maxLines = 1)
         }
-        Text("${entree.score} pts", color = Ivory, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+        Text(stringResource(R.string.revelation_score, entree.score), color = Ivory, fontWeight = FontWeight.Bold, fontSize = 14.sp)
         Box(
             modifier = Modifier
                 .fillMaxWidth()

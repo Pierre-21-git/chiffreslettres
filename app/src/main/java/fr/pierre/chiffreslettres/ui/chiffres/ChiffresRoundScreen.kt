@@ -16,10 +16,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.numbers.Operation
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BoutonOperateur
@@ -48,7 +50,7 @@ fun ChiffresRoundScreen(
     /** "2 / 4" par exemple, uniquement en partie structurée ou en défi (retour utilisateur). */
     progressionManche: String? = null,
     /** Libellé de la pastille [progressionManche] : "Manche" en partie solo, "Série" en défi. */
-    libelleProgression: String = "Manche",
+    libelleProgression: String = stringResource(R.string.libelle_manche),
     /** Faux en mode duo (retour utilisateur) : le score et la solution sont révélés sur l'écran de transition, pas ici — pour ne pas donner d'indice au second joueur avant qu'il ne joue le même tirage. */
     afficherResultat: Boolean = true,
 ) {
@@ -62,24 +64,24 @@ fun ChiffresRoundScreen(
         modifier = Modifier.fillMaxSize().fondPlateau().padding(20.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        EnTeteEcran("Chiffres", onRetourEntrainement)
+        EnTeteEcran(stringResource(R.string.mode_chiffres), onRetourEntrainement)
         if (pseudo != null) {
             PucePseudo(pseudo)
         }
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             if (scoreCumule != null) {
-                Afficheur("Score", "$scoreCumule", modifier = Modifier.weight(1f), centre = true)
+                Afficheur(stringResource(R.string.afficheur_score), "$scoreCumule", modifier = Modifier.weight(1f), centre = true)
             }
             if (progressionManche != null) {
                 Afficheur(libelleProgression, progressionManche, modifier = Modifier.weight(1f), centre = true)
             }
             etat.tempsRestantSecondes?.let {
-                Afficheur("Temps", "${it}s", modifier = Modifier.weight(1f), centre = true)
+                Afficheur(stringResource(R.string.afficheur_temps), stringResource(R.string.afficheur_temps_valeur, it), modifier = Modifier.weight(1f), centre = true)
             }
         }
 
-        Afficheur("Compte à trouver", "${etat.cible}", modifier = Modifier.fillMaxWidth(), grand = true)
+        Afficheur(stringResource(R.string.chiffres_compte_a_trouver), "${etat.cible}", modifier = Modifier.fillMaxWidth(), grand = true)
 
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
@@ -116,7 +118,7 @@ fun ChiffresRoundScreen(
         // tirés = 5 combinaisons possibles au maximum) : sa position ne doit pas bouger au
         // fil des opérations effectuées (retour utilisateur).
         PanneauResultat {
-            Text("Vos opérations", color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
+            Text(stringResource(R.string.chiffres_vos_operations), color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
             for (index in 0 until MAX_OPERATIONS) {
                 Text(
                     etat.operationsEffectuees.getOrNull(index) ?: "",
@@ -129,33 +131,36 @@ fun ChiffresRoundScreen(
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             BoutonSecondaireContour(
-                "Annuler",
+                stringResource(R.string.action_annuler),
                 onClick = { viewModel.annulerDerniereOperation() },
                 enabled = !etat.termine,
                 modifier = Modifier.weight(1f),
             )
             BoutonSecondaireContour(
-                "Effacer",
+                stringResource(R.string.action_effacer),
                 onClick = { viewModel.effacerCalcul() },
                 enabled = !etat.termine,
                 modifier = Modifier.weight(1f),
             )
         }
-        TuilePrincipale("Valider", onClick = { viewModel.valider() }, enabled = !etat.termine)
+        TuilePrincipale(stringResource(R.string.action_valider), onClick = { viewModel.valider() }, enabled = !etat.termine)
 
         if (etat.termine) {
             if (afficherResultat) {
                 PanneauResultat {
-                    Text("Score obtenu : ${etat.scoreObtenu}", color = BrassBright, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Text(stringResource(R.string.score_obtenu, etat.scoreObtenu ?: 0), color = BrassBright, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     val etapesSolution = etat.solutionSolveur?.etapes().orEmpty()
                     if (etapesSolution.isEmpty()) {
                         Text(
-                            "Une solution possible : ${etat.solutionSolveur?.texte() ?: "aucune"}",
+                            stringResource(
+                                R.string.chiffres_solution_possible_ligne,
+                                etat.solutionSolveur?.texte() ?: stringResource(R.string.chiffres_solution_aucune),
+                            ),
                             color = TextMuted,
                             fontSize = 13.sp,
                         )
                     } else {
-                        Text("Une solution possible", color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
+                        Text(stringResource(R.string.chiffres_solution_possible_titre), color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
                         for (ligne in etapesSolution) {
                             Text(ligne, color = Ivory, fontFamily = FontFamily.Monospace, fontSize = 15.sp)
                         }

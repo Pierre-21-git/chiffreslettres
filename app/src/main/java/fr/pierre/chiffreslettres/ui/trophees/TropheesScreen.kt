@@ -30,9 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.CatalogueTrophees
 import fr.pierre.chiffreslettres.data.CategorieTrophee
 import fr.pierre.chiffreslettres.data.Palier
@@ -78,7 +80,7 @@ fun TropheesScreen(
 
         if (tropheesDebloques != null) {
             Text(
-                "${tropheesDebloques.size} / ${CatalogueTrophees.TOUS.size} débloqués",
+                stringResource(R.string.trophees_debloques_compteur, tropheesDebloques.size, CatalogueTrophees.TOUS.size),
                 style = MaterialTheme.typography.titleMedium,
             )
             val rang = CatalogueTrophees.rangJoueur(tropheesDebloques.keys)
@@ -126,14 +128,14 @@ fun TropheesScreen(
                     Text(trophee.description)
                     if (tropheesDebloques != null) {
                         Text(
-                            if (date != null) "Obtenu le ${formatDate(date)}" else "Pas encore obtenu",
+                            if (date != null) stringResource(R.string.trophees_obtenu_le, formatDate(date)) else stringResource(R.string.trophees_pas_encore_obtenu),
                             style = MaterialTheme.typography.labelLarge,
                         )
                     }
                 }
             },
             confirmButton = {
-                TextButton(onClick = { tropheeSelectionne = null }) { Text("Fermer") }
+                TextButton(onClick = { tropheeSelectionne = null }) { Text(stringResource(R.string.action_fermer)) }
             },
         )
     }

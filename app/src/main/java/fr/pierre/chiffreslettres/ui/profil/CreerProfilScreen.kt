@@ -16,7 +16,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.AVATAR_PAR_DEFAUT
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
@@ -45,11 +47,11 @@ fun CreerProfilScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran(
-            if (premierLancement) "Bienvenue ! Choisis un pseudo pour commencer." else "Créer un nouveau profil",
+            if (premierLancement) stringResource(R.string.creer_profil_bienvenue) else stringResource(R.string.creer_profil_titre),
             onRetour,
         )
-        OutlinedTextField(value = pseudo, onValueChange = { pseudo = it }, label = { Text("Pseudo") })
-        Text("Avatar", style = MaterialTheme.typography.labelLarge)
+        OutlinedTextField(value = pseudo, onValueChange = { pseudo = it }, label = { Text(stringResource(R.string.creer_profil_pseudo_label)) })
+        Text(stringResource(R.string.creer_profil_avatar_label), style = MaterialTheme.typography.labelLarge)
         SelecteurAvatar(avatarSelectionne = avatar, onAvatarChoisi = { avatar = it })
         Button(
             onClick = {
@@ -65,7 +67,7 @@ fun CreerProfilScreen(
             enabled = pseudo.isNotBlank(),
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text("Créer")
+            Text(stringResource(R.string.creer_profil_bouton_creer))
         }
     }
 }

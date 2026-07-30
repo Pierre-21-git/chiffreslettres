@@ -37,4 +37,264 @@
     <string name="lettres_exclues_nestor">XYZWKQ</string>
     <string name="lettres_exclues_monique">XYZW</string>
     <string name="lettres_exclues_mathieu"></string>
+
+    <!-- Libellés des 2 modes de jeu. -->
+    <string name="mode_chiffres">Chiffres</string>
+    <string name="mode_lettres">Lettres</string>
+
+    <!-- Actions communes à plusieurs écrans (boutons, dialogues). -->
+    <string name="action_continuer">Continuer</string>
+    <string name="action_terminer">Terminer</string>
+    <string name="action_annuler">Annuler</string>
+    <string name="action_quitter">Quitter</string>
+    <string name="action_retour">Retour</string>
+    <string name="action_recommencer">Recommencer</string>
+    <string name="action_rejouer">Rejouer</string>
+    <string name="action_effacer">Effacer</string>
+    <string name="action_fermer">Fermer</string>
+    <string name="libelle_manche">Manche</string>
+    <string name="action_ok">OK</string>
+    <string name="action_valider">Valider</string>
+    <string name="action_supprimer">Supprimer</string>
+    <string name="action_renommer">Renommer</string>
+
+    <!-- ui/entrainement/ChoixNiveauEntrainementScreen -->
+    <string name="entrainement_titre">Entraînement</string>
+
+    <!-- ui/partiereseau/AttenteHoteScreen -->
+    <string name="attente_hote_titre">Héberger une partie</string>
+    <string name="attente_hote_en_attente">En attente d\'un adversaire…</string>
+    <string name="attente_hote_partie_publiee">Partie publiée</string>
+    <string name="attente_hote_valeur_provisoire">…</string>
+    <string name="attente_hote_instructions">L\'autre téléphone doit être sur le même réseau Wifi et choisir « Rejoindre une partie ».</string>
+    <string name="attente_hote_connexion_impossible">Connexion impossible</string>
+
+    <!-- ui/defi/ChoixDefiScreen -->
+    <string name="defi_niveau_duree">%1$s — %2$d min</string>
+
+    <!-- ui/apropos/AProposScreen -->
+    <string name="apropos_titre">À propos</string>
+    <string name="apropos_version">Chiffres &amp; Lettres — version %1$s (%2$d)</string>
+    <string name="apropos_licence_code">Code source sous licence GNU GPL-3.0.</string>
+    <string name="apropos_licence_dictionnaire">Dictionnaire français : Dicollecte (hunspell-fr), licence MPL-2.0.</string>
+    <string name="apropos_licence_filtrage">Filtrage grammatical (noms propres, sigles, verbes conjugués) : Morphalou3 (CNRS/ATILF), licence LGPL-LR.</string>
+    <string name="apropos_licence_bibliotheques">Bibliothèques open source utilisées : AndroidX Jetpack Compose, Room, Navigation (licence Apache 2.0).</string>
+    <string name="apropos_bouton_regles_du_jeu">Règles du jeu</string>
+    <string name="apropos_bouton_trophees">Trophées</string>
+    <string name="apropos_bouton_versions">Versions</string>
+
+    <!-- ui/profil/CreerProfilScreen -->
+    <string name="creer_profil_bienvenue">Bienvenue ! Choisis un pseudo pour commencer.</string>
+    <string name="creer_profil_titre">Créer un nouveau profil</string>
+    <string name="creer_profil_pseudo_label">Pseudo</string>
+    <string name="creer_profil_avatar_label">Avatar</string>
+    <string name="creer_profil_bouton_creer">Créer</string>
+
+    <!-- ui/partieduo/RecapPartieDuoScreen -->
+    <string name="recap_duo_titre">Partie duo terminée</string>
+    <string name="recap_duo_vainqueur">%1$s remporte le duel !</string>
+    <string name="recap_duo_match_nul">Match nul !</string>
+
+    <!-- ui/partiereseau/RevelationMancheReseauScreen + ui/partieduo/TransitionJoueurScreen (contenu identique) -->
+    <string name="revelation_manche_titre">Résultat de la manche</string>
+    <string name="revelation_manche_vainqueur">🏆 %1$s remporte la manche</string>
+    <string name="revelation_manche_egalite">Égalité sur cette manche</string>
+    <string name="revelation_manche_suivante">Manche suivante</string>
+    <string name="revelation_voir_resultats">Voir les résultats</string>
+    <string name="revelation_score_vainqueur">🏆 %1$d pts</string>
+    <string name="revelation_score">%1$d pts</string>
+
+    <!-- ui/partie/ConfigurationPartieScreen -->
+    <string name="configuration_partie_solo_titre">Configurer la partie solo</string>
+    <string name="configuration_choisir_niveau">Choisir un niveau</string>
+
+    <!-- ui/partiereseau/RechercheInviteScreen -->
+    <string name="recherche_invite_titre">Rejoindre une partie</string>
+    <string name="recherche_invite_connexion_en_cours">Connexion en cours…</string>
+    <string name="recherche_invite_recherche_en_cours">Recherche en cours…</string>
+    <string name="recherche_invite_instructions">Vérifiez que l\'hôte a bien lancé « Héberger une partie » avec le même transport.</string>
+    <string name="recherche_invite_parties_trouvees">Parties trouvées</string>
+    <string name="recherche_invite_connexion_impossible">Connexion impossible</string>
+
+    <!-- ui/partieduo/ModeScoreDuo + ConfigurationPartieDuoScreen/ConfigurationPartieReseauScreen -->
+    <string name="mode_duo_libelle">Duo</string>
+    <string name="mode_confrontation_libelle">Confrontation</string>
+    <string name="mode_duo_description">Chacun garde son propre score sur chaque manche, comme en solo.</string>
+    <string name="mode_confrontation_description">Sur chaque manche, seul le joueur le plus proche de la cible (ou le mot le plus long) marque les points ; à égalité, les deux les gardent.</string>
+    <string name="configuration_partie_titre">Configurer la partie</string>
+    <string name="configuration_quel_niveau">Quel niveau ?</string>
+    <string name="configuration_quel_mode">Quel mode ?</string>
+    <string name="configuration_partie_reseau_demarrer">Démarrer la partie</string>
+
+    <!-- ui/partieduo/ConfigurationPartieDuoScreen -->
+    <string name="configuration_duo_titre">Configurer la partie duo</string>
+    <string name="configuration_duo_pas_de_second_profil">Il faut au moins un second profil pour jouer en duo — créez-en un depuis l\'écran de changement de profil.</string>
+    <string name="configuration_duo_contre_qui">Contre qui ?</string>
+    <string name="configuration_duo_demarrer">Démarrer le duel</string>
+
+    <!-- ui/defi/DefiQuotidienScreen -->
+    <string name="defi_quotidien_titre">Défi quotidien</string>
+    <string name="defi_quotidien_aujourdhui">Aujourd\'hui : %1$s %2$s</string>
+    <string name="defi_type_serie">Défi série</string>
+    <string name="defi_type_chrono">Défi chrono</string>
+    <string name="defi_objectif">Objectif : %1$s</string>
+    <string name="defi_objectif_comptes_serie">%1$d comptes exacts d\'affilée</string>
+    <string name="defi_objectif_comptes">%1$d comptes exacts</string>
+    <string name="defi_objectif_mots_serie">%1$d mots valides d\'affilée</string>
+    <string name="defi_objectif_mots">%1$d mots valides</string>
+    <string name="defi_quotidien_aucune_serie">Aucune série en cours</string>
+    <string name="defi_quotidien_serie_en_cours">Série en cours : %1$d jour(s) d\'affilée</string>
+    <string name="defi_quotidien_prochain_palier">Encore %1$d jour(s) pour le trophée \"%2$s\"</string>
+    <string name="defi_quotidien_tous_paliers">Tous les paliers de série débloqués !</string>
+    <string name="defi_quotidien_deja_reussi">Défi du jour déjà réussi, bravo ! Reviens demain pour le prochain.</string>
+    <string name="defi_quotidien_choisis_niveau">Choisis ton niveau</string>
+    <string name="trophee_semaine_defi_quotidien">Une semaine de défi quotidien</string>
+    <string name="trophee_mois_defi_quotidien">Un mois de défi quotidien</string>
+
+    <!-- ui/partiereseau/DeclencherMancheChiffresScreen -->
+    <string name="declencher_manche_progression">Manche %1$s</string>
+    <string name="declencher_manche_commencer">Commencer la manche</string>
+
+    <!-- ui/partie/RecapPartieScreen -->
+    <string name="recap_partie_titre">Partie solo terminée</string>
+    <string name="recap_partie_score_total">Score total : %1$d</string>
+    <string name="recap_partie_manche_detail">Manche %1$d (%2$s) : %3$d points</string>
+
+    <!-- ui/partiereseau/ConfirmationConnexionScreen -->
+    <string name="confirmation_connexion_titre">Connexion établie</string>
+    <string name="confirmation_connexion_connecte">Connecté !</string>
+
+    <!-- ui/partieduo/TransitionJoueurScreen -->
+    <string name="transition_passez_telephone">Passez le téléphone à</string>
+    <string name="transition_pret">Prêt</string>
+
+    <!-- MainActivity -->
+    <string name="chargement">Chargement...</string>
+
+    <!-- ui/profil/ChangerProfilScreen -->
+    <string name="changer_profil_titre">Choisir un profil</string>
+    <string name="changer_profil_creer_nouveau">Créer un nouveau profil</string>
+    <string name="changer_profil_renommer_titre">Renommer le profil</string>
+    <string name="changer_profil_supprimer_titre">Supprimer le profil</string>
+    <string name="changer_profil_supprimer_message">Le profil \"%1$s\" et tout son historique seront définitivement supprimés. Continuer ?</string>
+
+    <!-- ui/partiereseau/ChoixRoleReseauScreen -->
+    <string name="role_reseau_titre">Jouer en réseau</string>
+    <string name="role_reseau_intro">Connectez deux téléphones pour jouer en duo ou en confrontation, chacun sur son propre appareil.</string>
+    <string name="role_reseau_comment_connecter">Comment se connecter ?</string>
+    <string name="transport_wifi">Wifi local</string>
+    <string name="transport_bluetooth">Bluetooth</string>
+    <string name="transport_wifi_instructions">Les deux téléphones doivent être sur le même réseau Wifi.</string>
+    <string name="transport_bluetooth_instructions">L\'appareil hôte devra accepter d\'être visible ; l\'appairage peut être demandé à la première connexion.</string>
+
+    <!-- ui/chiffres/ChiffresRoundScreen -->
+    <string name="afficheur_score">Score</string>
+    <string name="afficheur_temps">Temps</string>
+    <string name="afficheur_temps_valeur">%1$ds</string>
+    <string name="chiffres_compte_a_trouver">Compte à trouver</string>
+    <string name="chiffres_vos_operations">Vos opérations</string>
+    <string name="score_obtenu">Score obtenu : %1$d</string>
+    <string name="chiffres_solution_possible_ligne">Une solution possible : %1$s</string>
+    <string name="chiffres_solution_aucune">aucune</string>
+    <string name="chiffres_solution_possible_titre">Une solution possible</string>
+
+    <!-- ui/trophees/TropheesScreen -->
+    <string name="trophees_debloques_compteur">%1$d / %2$d débloqués</string>
+    <string name="trophees_obtenu_le">Obtenu le %1$s</string>
+    <string name="trophees_pas_encore_obtenu">Pas encore obtenu</string>
+
+    <!-- ui/lettres/LettresRoundScreen -->
+    <string name="lettres_tirage_label">Tirage</string>
+    <string name="lettres_tirage_valeur">%1$d / %2$d</string>
+    <string name="lettres_votre_mot">Votre mot</string>
+    <string name="lettres_nombre_voyelles">Nombre de voyelles souhaitées</string>
+    <string name="lettres_mot_valide">valide</string>
+    <string name="lettres_mot_invalide">invalide ou absent du dictionnaire</string>
+    <string name="lettres_votre_mot_validite">Votre mot (\"%1$s\") : %2$s</string>
+    <string name="lettres_meilleur_mot_trouve">Meilleur mot trouvé : %1$s</string>
+    <string name="lettres_meilleur_mot_detail">%1$s (%2$d lettres)</string>
+    <string name="lettres_meilleur_mot_aucun">aucun</string>
+
+    <!-- ui/statistiques/StatistiquesScreen -->
+    <string name="statistiques_titre_defaut">Statistiques</string>
+    <string name="statistiques_bouton_mes_stats">Mes statistiques</string>
+    <string name="statistiques_bouton_generales">Statistiques générales</string>
+    <string name="statistiques_bouton_voir_trophees">Voir mes trophées</string>
+    <string name="statistiques_bouton_exporter">Exporter mes statistiques</string>
+    <string name="statistiques_bouton_importer">Importer mes statistiques</string>
+    <string name="statistiques_bouton_reinitialiser">Réinitialiser mes statistiques</string>
+    <string name="statistiques_confirm_reinit_message">Tout l\'historique de parties, scores et défis de %1$s sera définitivement supprimé. Continuer ?</string>
+    <string name="action_reinitialiser">Réinitialiser</string>
+    <string name="statistiques_importer_message">Vos statistiques actuelles (parties, scores, défis et trophées) seront définitivement remplacées par celles du fichier importé. Continuer ?</string>
+    <string name="action_remplacer">Remplacer</string>
+    <string name="statistiques_operation_impossible">Opération impossible</string>
+    <string name="statistiques_fichier_invalide">Fichier invalide.</string>
+    <string name="statistiques_export_echec">L\'export a échoué : %1$s</string>
+    <string name="statistiques_import_echec">L\'import a échoué : %1$s</string>
+    <string name="statistiques_erreur_ecriture">Impossible d\'écrire le fichier.</string>
+    <string name="statistiques_erreur_lecture">Impossible de lire le fichier.</string>
+    <string name="statistiques_mes_meilleurs_scores">Mes meilleurs scores par niveau (chiffres et lettres confondus)</string>
+    <string name="statistiques_classement_par_niveau">Classement par niveau (chiffres et lettres confondus)</string>
+    <string name="statistiques_pas_assez_de_parties">Pas encore assez de parties pour un graphique de progression.</string>
+    <string name="statistiques_nb_parties">%1$d parties</string>
+    <string name="statistiques_meilleur_score">meilleur : %1$d pts</string>
+    <string name="statistiques_aucun_score">Aucun score enregistré.</string>
+    <string name="type_partie_solo">Solo</string>
+    <string name="type_partie_duo_distance">Duo à distance</string>
+    <string name="type_partie_confrontation_distance">Confrontation à distance</string>
+
+    <!-- ui/apropos/ReglesDuJeuScreen -->
+    <string name="regles_titre">Règles du jeu</string>
+    <string name="regles_mode_chiffres_titre">Mode Chiffres</string>
+    <string name="regles_mode_chiffres_texte">6 nombres sont tirés (parmi 1 à 10 en double exemplaire, et 25/50/75/100 en simple exemplaire), ainsi qu\'une cible à atteindre. Construisez votre calcul pas à pas façon calculatrice : touchez un premier nombre, un opérateur, puis un second nombre — le résultat remplace les deux nombres utilisés et peut resservir. Les boutons \"Annuler\" et \"Effacer\" permettent de revenir en arrière. Le dernier résultat obtenu est votre proposition : validez dès que vous êtes prêt, ou laissez le chrono s\'écouler s\'il y en a un.</string>
+    <string name="regles_comptage_points_titre">Comptage des points</string>
+    <string name="regles_chiffres_points_emile_nestor">Assez facile (Émile) et Ça va encore (Nestor) : 10 points si le compte est exact, 5 points pour toute proposition non exacte.</string>
+    <string name="regles_chiffres_points_monique_mathieu">Ça se complique (Monique) et Là c\'est sérieux (Mathieu) : 10 points si le compte est exact, 7 points pour un compte approchant (écart d\'au plus 100 avec la cible), 0 point au-delà.</string>
+    <string name="regles_mode_lettres_titre">Mode Lettres</string>
+    <string name="regles_mode_lettres_texte">Choisissez le nombre de voyelles souhaité (2, 3, 4 ou 5 ; le Y compte comme une voyelle), puis les 10 lettres sont tirées d\'un coup. Construisez ensuite votre mot en touchant les lettres dans l\'ordre voulu (chaque lettre tirée ne peut être utilisée qu\'une fois) ; les boutons \"Annuler\" et \"Effacer\" permettent de revenir en arrière. Trouvez le mot le plus long possible avec ces lettres, avant la fin du chrono s\'il y en a un.</string>
+    <string name="regles_lettres_points_emile_nestor">Assez facile (Émile) et Ça va encore (Nestor) : 5 points pour un mot de 2 à 4 lettres, 10 points à partir de 5 lettres.</string>
+    <string name="regles_lettres_points_monique_mathieu">Ça se complique (Monique) et Là c\'est sérieux (Mathieu) : le score correspond au nombre de lettres du mot validé.</string>
+    <string name="regles_mots_acceptes_titre">Mots acceptés</string>
+    <string name="regles_mots_acceptes_texte">Le dictionnaire embarqué exclut les noms propres, les sigles/abréviations, et les formes de verbes purement conjuguées : seuls l\'infinitif et les participes présent/passé restent acceptés (\"aimer\", \"aimant\", \"aimé\" sont valides, pas \"aimerait\" ni \"aimons\").</string>
+    <string name="regles_mode_entrainement_titre">Mode Entraînement</string>
+    <string name="regles_mode_entrainement_texte">Pas de limite de temps ni de nombre de manches : choisissez un niveau (chiffres ou lettres) et jouez autant de manches que vous voulez, à votre rythme. Pour arrêter, utilisez la flèche de retour en haut de l\'écran ; la session est alors enregistrée dans les statistiques.</string>
+    <string name="regles_mode_partie_solo_titre">Mode Partie solo</string>
+    <string name="regles_partie_solo_intro">Un seul choix à faire : le niveau, appliqué aux manches chiffres et lettres, jouées en alternance. La durée du chrono et le nombre de manches sont fixés par niveau :</string>
+    <string name="regles_partie_solo_emile">Assez facile, Émile (2 manches par mode) — Chiffres : cible ≤ 100, addition et soustraction seulement, solution garantie, 120s. Lettres : X, Y, Z, W, K, Q, H, J exclues, 110s.</string>
+    <string name="regles_partie_solo_nestor">Ça va encore, Nestor (3 manches par mode) — Chiffres : cible ≤ 100, les 4 opérations, solution garantie, 100s. Lettres : X, Y, Z, W, K, Q exclues, 90s.</string>
+    <string name="regles_partie_solo_monique">Ça se complique, Monique (4 manches par mode) — Chiffres : cible ≤ 500, les 4 opérations, pas de garantie de solution, 60s. Lettres : X, Y, Z, W exclues, 50s.</string>
+    <string name="regles_partie_solo_mathieu">Là c\'est sérieux, Mathieu (5 manches par mode) — Chiffres : cible entre 100 et 999, pas de garantie de solution, 45s. Lettres : aucune lettre exclue, 40s.</string>
+    <string name="regles_mode_partie_duo_titre">Mode Partie duo</string>
+    <string name="regles_partie_duo_intro">Deux joueurs sur le même téléphone, en tour par tour : après avoir choisi l\'adversaire, le niveau (comme en solo) et le mode de calcul des points, chaque manche est jouée par les deux joueurs sur exactement le même tirage (mêmes nombres et cible en chiffres, mêmes lettres en lettres). Le joueur qui commence change à chaque manche, pour que le choix du nombre de voyelles ne revienne pas toujours au même :</string>
+    <string name="regles_partie_duo_mode_duo">Duo : chaque joueur garde son propre score sur chaque manche, comme en solo.</string>
+    <string name="regles_partie_duo_mode_confrontation">Confrontation : sur chaque manche, seul le joueur le plus proche de la cible (ou avec le mot le plus long) marque les points ; à égalité, les deux les gardent.</string>
+    <string name="regles_mode_defi_serie_titre">Mode Défi série</string>
+    <string name="regles_defi_serie_intro">Choisissez un mode (chiffres ou lettres) et un niveau, puis enchaînez les manches pour aligner le plus de réussites possible d\'affilée, avec le même chrono qu\'en partie solo pour ce niveau. Une réussite, c\'est un compte exact en chiffres, ou un mot valide d\'au moins une longueur minimale en lettres :</string>
+    <string name="regles_seuil_emile">Émile : 4 lettres</string>
+    <string name="regles_seuil_nestor">Nestor : 5 lettres</string>
+    <string name="regles_seuil_monique">Monique : 6 lettres</string>
+    <string name="regles_seuil_mathieu">Mathieu : 7 lettres</string>
+    <string name="regles_defi_serie_chiffres_note">En chiffres, une solution exacte est toujours garantie, même sur Monique et Mathieu : le défi ne s\'arrête que sur une erreur ou un temps écoulé. La série obtenue est enregistrée dans les statistiques.</string>
+    <string name="regles_mode_defi_chrono_titre">Mode Défi chrono</string>
+    <string name="regles_defi_chrono_intro">Même principe que le défi série, mais contre la montre : un budget de temps global est fixé par niveau :</string>
+    <string name="regles_defi_chrono_budget_emile">Émile : 2 minutes</string>
+    <string name="regles_defi_chrono_budget_nestor">Nestor : 3 minutes</string>
+    <string name="regles_defi_chrono_budget_monique">Monique : 4 minutes</string>
+    <string name="regles_defi_chrono_budget_mathieu">Mathieu : 5 minutes</string>
+    <string name="regles_defi_chrono_seuil_intro">Une réussite, c\'est un compte exact en chiffres, ou un mot valide d\'au moins une longueur minimale en lettres (la même qu\'en défi série) :</string>
+    <string name="regles_defi_chrono_detail">L\'objectif est d\'aligner le plus de réussites possible avant que le temps ne soit épuisé. Contrairement au défi série, une erreur ne met pas fin au défi : elle compte simplement pour zéro, et la manche suivante démarre aussitôt avec le temps restant. La manche en cours peut être coupée en plein milieu si le temps s\'épuise. Les règles du niveau choisi s\'appliquent normalement (cible et opérations en chiffres, lettres exclues en lettres, sans garantie de solution forcée sur Monique et Mathieu). Le nombre de réussites obtenu est enregistré dans les statistiques.</string>
+    <string name="regles_mode_defi_quotidien_titre">Mode Défi quotidien</string>
+    <string name="regles_defi_quotidien_texte1">Un défi série ou chrono, en chiffres ou en lettres, est tiré au sort chaque jour avec un objectif à atteindre (nombre de réussites, ou de réussites d\'affilée selon le type tiré) ; le tirage est le même toute la journée, mais différent d\'un profil à l\'autre. Le niveau reste libre : lui seul détermine la difficulté pour atteindre l\'objectif.</string>
+    <string name="regles_defi_quotidien_texte2">Une fois l\'objectif du jour atteint, le défi se verrouille jusqu\'au lendemain ; en cas d\'échec avant de l\'atteindre, il reste retentable le même jour. Deux trophées récompensent une série de jours consécutifs réussie (7 et 30 jours).</string>
+
+    <!-- ui/apropos/VersionsScreen (uniquement le titre : le changelog historique reste en dur, cf. commentaire dans le fichier) -->
+    <string name="versions_titre">Versions</string>
+
+    <!-- ui/navigation/AppNavHost -->
+    <string name="quitter_partie_duo_titre">Quitter la partie duo ?</string>
+    <string name="quitter_partie_reseau_titre">Quitter la partie réseau ?</string>
+    <string name="quitter_partie_message">La partie en cours sera perdue si vous quittez maintenant. Continuer ?</string>
+    <string name="retour_au_menu">Retour au menu</string>
+    <string name="defi_quotidien_remporte">Défi quotidien remporté !</string>
+    <string name="mes_trophees_titre">Mes trophées</string>
 </resources>
