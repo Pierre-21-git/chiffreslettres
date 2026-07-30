@@ -56,6 +56,7 @@ import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.PalierArgent
 import fr.pierre.chiffreslettres.ui.theme.PalierBronze
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
+import fr.pierre.chiffreslettres.ui.theme.libelle
 import java.io.IOException
 import java.time.Instant
 import java.time.ZoneId
@@ -266,7 +267,7 @@ fun MesStatistiquesScreen(
             if (donneesParType.all { it.third.isEmpty() }) continue
 
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Text(niveau.label, style = MaterialTheme.typography.titleMedium)
+                Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
                 for ((type, libelle, meilleures) in donneesParType) {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(libelle, style = MaterialTheme.typography.titleSmall)
@@ -394,7 +395,7 @@ fun StatistiquesGeneralesScreen(
             if (donneesParType.all { it.third.isEmpty() }) continue
 
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Text(niveau.label, style = MaterialTheme.typography.titleMedium)
+                Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
                 for ((_, libelle, classement) in donneesParType) {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(libelle, style = MaterialTheme.typography.titleSmall)

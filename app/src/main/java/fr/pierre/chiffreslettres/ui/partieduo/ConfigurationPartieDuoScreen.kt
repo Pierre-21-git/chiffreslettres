@@ -25,6 +25,7 @@ import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
 import fr.pierre.chiffreslettres.ui.partie.sequenceAlternee
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
+import fr.pierre.chiffreslettres.ui.theme.libelle
 
 /**
  * Configuration d'une partie duo (retour utilisateur) : choix de l'adversaire (parmi les autres
@@ -74,7 +75,7 @@ fun ConfigurationPartieDuoScreen(
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             for (candidat in Niveau.entries) {
                 BoutonChoix(
-                    texte = candidat.label,
+                    texte = candidat.libelle(),
                     selectionne = candidat == niveau,
                     onClick = { niveau = candidat },
                 )

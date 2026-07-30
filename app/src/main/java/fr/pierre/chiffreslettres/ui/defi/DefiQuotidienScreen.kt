@@ -21,6 +21,7 @@ import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
+import fr.pierre.chiffreslettres.ui.theme.libelle
 
 /** Paliers de trophées de série de jours (cf. CatalogueTrophees), pour l'affichage de la progression. */
 private val PALIERS_SERIE_JOURS = listOf(7 to "Une semaine de défi quotidien", 30 to "Un mois de défi quotidien")
@@ -78,14 +79,14 @@ fun DefiQuotidienScreen(
             Text("Choisis ton niveau", style = MaterialTheme.typography.titleMedium)
             for (niveau in Niveau.entries) {
                 Button(onClick = { onNiveauChiffresChoisi(niveau) }, modifier = Modifier.fillMaxWidth()) {
-                    Text(niveau.label)
+                    Text(niveau.libelle())
                 }
             }
         } else {
             Text("Choisis ton niveau", style = MaterialTheme.typography.titleMedium)
             for (niveau in NiveauLettres.entries) {
                 Button(onClick = { onNiveauLettresChoisi(niveau) }, modifier = Modifier.fillMaxWidth()) {
-                    Text(niveau.label)
+                    Text(niveau.libelle())
                 }
             }
         }

@@ -22,6 +22,7 @@ import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.partieduo.ModeScoreDuo
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
+import fr.pierre.chiffreslettres.ui.theme.libelle
 
 /** Configuration de la partie réseau, hôte uniquement (l'adversaire est déjà déterminé par la connexion). */
 @Composable
@@ -42,7 +43,7 @@ fun ConfigurationPartieReseauScreen(
         Text("Quel niveau ?", style = MaterialTheme.typography.titleMedium)
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             for (candidat in Niveau.entries) {
-                BoutonChoix(candidat.label, selectionne = candidat == niveau, onClick = { niveau = candidat })
+                BoutonChoix(candidat.libelle(), selectionne = candidat == niveau, onClick = { niveau = candidat })
             }
         }
 

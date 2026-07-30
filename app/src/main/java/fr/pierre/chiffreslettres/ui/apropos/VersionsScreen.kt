@@ -17,6 +17,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.52",
+        date = "2026-07-30",
+        changements = listOf(
+            "Premier pas vers une déclinaison multilingue (retour utilisateur) : les libellés " +
+                "des 4 niveaux de difficulté, l'alphabet du mode Lettres (distribution des " +
+                "lettres, voyelles) et les lettres exclues par niveau vivent maintenant dans " +
+                "strings.xml au lieu d'être codés en dur — rien ne change pour l'instant en " +
+                "français, ça prépare juste le terrain.",
+            "Les modules core-numbers et core-letters restent du Kotlin pur sans dépendance " +
+                "Android : c'est l'appli qui lit ces ressources et les transmet.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.51",
         date = "2026-07-30",
         changements = listOf(

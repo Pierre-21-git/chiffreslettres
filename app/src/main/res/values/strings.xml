@@ -1,3 +1,40 @@
 <resources>
     <string name="app_name">Chiffres &amp; Lettres</string>
+
+    <!-- Libellés des 4 niveaux de difficulté (communs aux modes Chiffres et Lettres). Jeux de
+         mots en français (l'adjectif rime avec le prénom) : à adapter par langue, pas à
+         traduire mot à mot. -->
+    <string name="niveau_emile">Assez facile, Émile</string>
+    <string name="niveau_nestor">Ça va encore, Nestor</string>
+    <string name="niveau_monique">Ça se complique, Monique</string>
+    <string name="niveau_mathieu">Là c\'est sérieux, Mathieu</string>
+
+    <!-- Alphabet du mode Lettres (retour utilisateur : externalisé pour permettre une
+         déclinaison par langue). alphabet_lettres/alphabet_comptes sont deux tableaux
+         parallèles (même ordre, même longueur) : lettre et nombre d'exemplaires dans le sac. -->
+    <string-array name="alphabet_lettres">
+        <item>A</item><item>B</item><item>C</item><item>D</item><item>E</item>
+        <item>F</item><item>G</item><item>H</item><item>I</item><item>J</item>
+        <item>K</item><item>L</item><item>M</item><item>N</item><item>O</item>
+        <item>P</item><item>Q</item><item>R</item><item>S</item><item>T</item>
+        <item>U</item><item>V</item><item>W</item><item>X</item><item>Y</item>
+        <item>Z</item>
+    </string-array>
+    <integer-array name="alphabet_comptes">
+        <item>9</item><item>2</item><item>2</item><item>3</item><item>15</item>
+        <item>2</item><item>2</item><item>2</item><item>8</item><item>1</item>
+        <item>1</item><item>5</item><item>3</item><item>6</item><item>6</item>
+        <item>2</item><item>1</item><item>6</item><item>6</item><item>6</item>
+        <item>6</item><item>2</item><item>1</item><item>1</item><item>1</item>
+        <item>1</item>
+    </integer-array>
+    <!-- Lettres comptant comme voyelles pour la règle du minimum de voyelles au tirage. -->
+    <string name="alphabet_voyelles">AEIOUY</string>
+
+    <!-- Lettres exclues du sac par niveau, du plus facile (le plus de lettres rares
+         exclues) au plus difficile (aucune exclusion). -->
+    <string name="lettres_exclues_emile">XYZWKQHJ</string>
+    <string name="lettres_exclues_nestor">XYZWKQ</string>
+    <string name="lettres_exclues_monique">XYZW</string>
+    <string name="lettres_exclues_mathieu"></string>
 </resources>

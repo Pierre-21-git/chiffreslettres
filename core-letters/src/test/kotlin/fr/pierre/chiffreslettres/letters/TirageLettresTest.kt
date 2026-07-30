@@ -11,9 +11,9 @@ class TirageLettresTest {
     fun `le tirage respecte le nombre de voyelles demande`() {
         val random = Random(42)
         for (nombreVoyelles in TirageLettres.VOYELLES_MINIMUM..TirageLettres.VOYELLES_MAXIMUM) {
-            val sac = SacLettres.creer(NiveauLettres.MATHIEU)
+            val sac = AlphabetTestFixture.creerSac(NiveauLettres.MATHIEU)
             val tirees = TirageLettres.tirer(sac, nombreVoyelles, random = random)
-            val nbVoyelles = tirees.count { it in SacLettres.VOYELLES }
+            val nbVoyelles = tirees.count { it in AlphabetTestFixture.VOYELLES }
             assertEquals(nombreVoyelles, nbVoyelles)
             assertEquals(TirageLettres.NOMBRE_LETTRES, tirees.size)
         }
@@ -21,7 +21,7 @@ class TirageLettresTest {
 
     @Test
     fun `le tirage refuse un nombre de voyelles hors bornes`() {
-        val sac = SacLettres.creer(NiveauLettres.MATHIEU)
+        val sac = AlphabetTestFixture.creerSac(NiveauLettres.MATHIEU)
         assertThrows(IllegalArgumentException::class.java) {
             TirageLettres.tirer(sac, TirageLettres.VOYELLES_MINIMUM - 1)
         }

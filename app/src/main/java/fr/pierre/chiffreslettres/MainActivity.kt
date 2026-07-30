@@ -28,6 +28,7 @@ import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.data.TropheeRepository
+import fr.pierre.chiffreslettres.data.alphabet.ConfigurationAlphabetProvider
 import fr.pierre.chiffreslettres.data.dictionary.DictionnaireProvider
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.rappel.creerCanalNotificationRappel
@@ -74,6 +75,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
         lanceurPermissionNotification.launch(android.Manifest.permission.POST_NOTIFICATIONS)
     }
 
+    val configurationAlphabet = remember { ConfigurationAlphabetProvider.charger(context.applicationContext) }
     val db = remember { AppDatabaseProvider.obtenir(context.applicationContext) }
     val profilRepository = remember { ProfilRepository(db.profilDao()) }
     val historiqueRepository = remember { HistoriqueRepository(db.historiqueDao()) }
@@ -128,6 +130,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
         else -> {
             AppNavHost(
                 dictionnaire = dictionnaireCharge,
+                configurationAlphabet = configurationAlphabet,
                 profilRepository = profilRepository,
                 historiqueRepository = historiqueRepository,
                 defiRepository = defiRepository,

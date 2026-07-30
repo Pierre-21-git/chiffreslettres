@@ -15,6 +15,7 @@ import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
+import fr.pierre.chiffreslettres.ui.theme.libelle
 
 /**
  * Un seul choix de niveau, appliqué aux manches chiffres et lettres (retour utilisateur).
@@ -44,7 +45,7 @@ fun ConfigurationPartieScreen(
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text(niveau.label) }
+            ) { Text(niveau.libelle()) }
         }
     }
 }

@@ -57,6 +57,7 @@ import fr.pierre.chiffreslettres.ui.defi.ChoixDefiScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiQuotidienScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiViewModel
 import fr.pierre.chiffreslettres.ui.defi.budgetSecondesDefiChrono
+import fr.pierre.chiffreslettres.data.alphabet.ConfigurationAlphabetLettres
 import fr.pierre.chiffreslettres.ui.defi.motEstReussiDefiLettres
 import fr.pierre.chiffreslettres.ui.defi.seuilLongueurDefiLettres
 import fr.pierre.chiffreslettres.ui.entrainement.ChoixNiveauEntrainementScreen
@@ -142,6 +143,7 @@ private fun partieReseauViewModel(
 @Composable
 fun AppNavHost(
     dictionnaire: DictionnaireIndex,
+    configurationAlphabet: ConfigurationAlphabetLettres,
     profilRepository: ProfilRepository,
     historiqueRepository: HistoriqueRepository,
     defiRepository: DefiRepository,
@@ -324,7 +326,7 @@ fun AppNavHost(
                 val entrainementVm = entrainementViewModel(navController, backStackEntry, historiqueRepository, profilId)
                 // Pas de limite de temps en entraînement libre (retour utilisateur) : dureeSecondes = null.
                 val roundVm: LettresRoundViewModel =
-                    viewModel(backStackEntry) { LettresRoundViewModel(niveau, dictionnaire) }
+                    viewModel(backStackEntry) { LettresRoundViewModel(niveau, dictionnaire, configurationAlphabet) }
                 LettresRoundScreen(
                     viewModel = roundVm,
                     scoreCumule = null,
@@ -403,7 +405,7 @@ fun AppNavHost(
                         is ManchePlanifiee.Lettres -> {
                             val roundVm: LettresRoundViewModel =
                                 viewModel(key = "partie-lettres-$index") {
-                                    LettresRoundViewModel(manche.niveau, dictionnaire, manche.niveau.dureeSecondesPartieStructuree)
+                                    LettresRoundViewModel(manche.niveau, dictionnaire, configurationAlphabet, manche.niveau.dureeSecondesPartieStructuree)
                                 }
                             LettresRoundScreen(
                                 viewModel = roundVm,
@@ -581,6 +583,7 @@ fun AppNavHost(
                                     LettresRoundViewModel(
                                         manche.niveau,
                                         dictionnaire,
+                                        configurationAlphabet,
                                         manche.niveau.dureeSecondesPartieStructuree,
                                         random = Random(seedManche),
                                     )
@@ -595,6 +598,7 @@ fun AppNavHost(
                                         LettresRoundViewModel(
                                             manche.niveau,
                                             dictionnaire,
+                                            configurationAlphabet,
                                             manche.niveau.dureeSecondesPartieStructuree,
                                             random = Random(seedManche),
                                         )
@@ -940,6 +944,7 @@ fun AppNavHost(
                                     LettresRoundViewModel(
                                         manche.niveau,
                                         dictionnaire,
+                                        configurationAlphabet,
                                         manche.niveau.dureeSecondesPartieStructuree,
                                         random = Random(seedManche),
                                     )
@@ -1197,7 +1202,7 @@ fun AppNavHost(
             // sur le défi chiffres.
             val roundVm: LettresRoundViewModel =
                 viewModel(key = "defi-lettres-$essaiId") {
-                    LettresRoundViewModel(niveau, dictionnaire, niveau.dureeSecondesPartieStructuree)
+                    LettresRoundViewModel(niveau, dictionnaire, configurationAlphabet, niveau.dureeSecondesPartieStructuree)
                 }
             LettresRoundScreen(
                 viewModel = roundVm,
@@ -1349,7 +1354,7 @@ fun AppNavHost(
             }
             val roundVm: LettresRoundViewModel =
                 viewModel(key = "defi-chrono-lettres-$essaiId") {
-                    LettresRoundViewModel(niveau, dictionnaire, defiVm.dureeProchaineManche())
+                    LettresRoundViewModel(niveau, dictionnaire, configurationAlphabet, defiVm.dureeProchaineManche())
                 }
             LettresRoundScreen(
                 viewModel = roundVm,

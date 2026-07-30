@@ -2,6 +2,7 @@ package fr.pierre.chiffreslettres.ui.lettres
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.pierre.chiffreslettres.data.alphabet.ConfigurationAlphabetLettres
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.letters.SacLettres
@@ -38,13 +39,18 @@ data class LettresRoundUiState(
 class LettresRoundViewModel(
     niveau: NiveauLettres,
     private val dictionnaire: DictionnaireIndex,
+    configurationAlphabet: ConfigurationAlphabetLettres,
     dureeSecondes: Int? = null,
     private val nombreLettres: Int = TirageLettres.NOMBRE_LETTRES,
     /** Permet au mode Duo de rejouer exactement le même tirage pour les deux joueurs (même graine, nouvelle instance de Random par joueur ; combiné au même nombreVoyelles forcé côté second joueur). */
     private val random: Random = Random,
 ) : ViewModel() {
 
-    private val sac = SacLettres.creer(niveau)
+    private val sac = SacLettres.creer(
+        configurationAlphabet.distributionBase,
+        configurationAlphabet.voyelles,
+        configurationAlphabet.lettresExcluesParNiveau.getValue(niveau),
+    )
     private var timerJob: Job? = null
 
     private val _uiState = MutableStateFlow(

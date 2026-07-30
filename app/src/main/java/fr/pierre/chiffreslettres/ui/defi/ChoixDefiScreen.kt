@@ -17,6 +17,7 @@ import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
+import fr.pierre.chiffreslettres.ui.theme.libelle
 
 /**
  * Choix du mode/niveau du défi, même pattern que `ChoixNiveauEntrainementScreen`. Un écran
@@ -43,14 +44,14 @@ fun ChoixDefiScreen(
         Text("Chiffres", style = MaterialTheme.typography.titleMedium)
         for (niveau in Niveau.entries) {
             Button(onClick = { onNiveauChiffresChoisi(niveau) }, modifier = Modifier.fillMaxWidth()) {
-                Text(if (afficherDuree) "${niveau.label} — ${budgetSecondesDefiChrono(niveau) / 60} min" else niveau.label)
+                Text(if (afficherDuree) "${niveau.libelle()} — ${budgetSecondesDefiChrono(niveau) / 60} min" else niveau.libelle())
             }
         }
 
         Text("Lettres", style = MaterialTheme.typography.titleMedium)
         for (niveau in NiveauLettres.entries) {
             Button(onClick = { onNiveauLettresChoisi(niveau) }, modifier = Modifier.fillMaxWidth()) {
-                Text(if (afficherDuree) "${niveau.label} — ${budgetSecondesDefiChrono(niveau) / 60} min" else niveau.label)
+                Text(if (afficherDuree) "${niveau.libelle()} — ${budgetSecondesDefiChrono(niveau) / 60} min" else niveau.libelle())
             }
         }
     }
