@@ -64,10 +64,6 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     var dictionnaire by remember { mutableStateOf<DictionnaireIndex?>(null) }
 
-    LaunchedEffect(Unit) {
-        dictionnaire = DictionnaireProvider.obtenir(context.applicationContext)
-    }
-
     // Demande la permission de notification une fois au lancement (retour utilisateur : sans
     // elle, le rappel de défi quotidien planifié ci-dessous ne peut rien afficher).
     val lanceurPermissionNotification =
@@ -86,6 +82,13 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val profilActifStore = remember { ProfilActifStore(context.applicationContext) }
 
     val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
+    // Dictionnaire selon la langue du profil actif (retour utilisateur) : rechargé si le profil
+    // change de langue ou si un autre profil (langue différente) devient actif.
+    val profilActifIdStore by profilActifStore.profilActifId.collectAsState(initial = null)
+    val profilActifPourLangue = profils.find { it.id == profilActifIdStore } ?: profils.firstOrNull()
+    LaunchedEffect(profilActifPourLangue?.langue) {
+        dictionnaire = DictionnaireProvider.obtenir(context.applicationContext, profilActifPourLangue?.langue ?: "fr")
+    }
     val dictionnaireCharge = dictionnaire
     // Non persisté : redemande confirmation à chaque lancement de l'app (retour utilisateur,
     // cloisonnement des profils), mais pas en boucle au sein d'une même session.

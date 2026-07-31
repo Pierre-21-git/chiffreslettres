@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.56",
+        date = "2026-07-31",
+        changements = listOf(
+            "Le dictionnaire du mode Lettres suit maintenant la langue du profil actif : un " +
+                "profil en anglais utilise le dictionnaire anglais (dictionnaire_en.txt, " +
+                "construit en 1.54, jusqu'ici non branché). Allemand et espagnol utilisent " +
+                "encore le dictionnaire français en attendant leur propre dictionnaire.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.55",
         date = "2026-07-31",
         changements = listOf(
