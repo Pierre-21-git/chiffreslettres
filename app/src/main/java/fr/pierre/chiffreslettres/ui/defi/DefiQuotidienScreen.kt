@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.R
@@ -34,6 +35,7 @@ fun DefiQuotidienScreen(
     onNiveauChiffresChoisi: (Niveau) -> Unit,
     onNiveauLettresChoisi: (NiveauLettres) -> Unit,
     onRetour: (() -> Unit)? = null,
+    couleurRang: Color? = null,
 ) {
     // Paliers de trophées de série de jours (cf. CatalogueTrophees), pour l'affichage de la progression.
     val paliersSerieJours = listOf(
@@ -55,7 +57,7 @@ fun DefiQuotidienScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran(stringResource(R.string.defi_quotidien_titre), onRetour)
-        PucePseudo(pseudoActif)
+        PucePseudo(pseudoActif, couleurRang = couleurRang)
 
         Text(stringResource(R.string.defi_quotidien_aujourdhui, nomType, nomMode), style = MaterialTheme.typography.titleMedium)
         Text(stringResource(R.string.defi_objectif, natureObjectif), style = MaterialTheme.typography.bodyMedium)

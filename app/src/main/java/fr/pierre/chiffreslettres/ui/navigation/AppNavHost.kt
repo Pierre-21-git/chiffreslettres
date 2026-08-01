@@ -46,6 +46,7 @@ import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.data.ResultatManche
 import fr.pierre.chiffreslettres.data.TropheeRepository
+import fr.pierre.chiffreslettres.data.TropheeStats
 import fr.pierre.chiffreslettres.data.TypeDefi
 import fr.pierre.chiffreslettres.data.TypePartie
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
@@ -104,6 +105,7 @@ import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
 import fr.pierre.chiffreslettres.ui.statistiques.MesStatistiquesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesGeneralesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesJoueurScreen
+import fr.pierre.chiffreslettres.ui.theme.couleurRangJoueur
 import fr.pierre.chiffreslettres.ui.trophees.TropheesScreen
 import java.time.LocalDate
 import kotlin.random.Random
@@ -225,9 +227,15 @@ fun AppNavHost(
             LaunchedEffect(profilIdArg) { tropheeRepository.reevaluer(profilIdArg) }
             val debloques by tropheeRepository.tropheesDebloques(profilIdArg).collectAsState(initial = null)
             val tropheesDebloques = debloques?.associate { it.trophyId to it.dateDebloque } ?: emptyMap()
+            // Stats brutes pour la progression ("X / objectif") des trophées non débloqués, dans
+            // leur détail (retour utilisateur) — recalculées à chaque changement de trophées
+            // débloqués pour rester cohérentes avec l'affichage.
+            var stats by remember { mutableStateOf<TropheeStats?>(null) }
+            LaunchedEffect(profilIdArg, debloques) { stats = tropheeRepository.stats(profilIdArg) }
             TropheesScreen(
                 titre = stringResource(R.string.mes_trophees_titre),
                 tropheesDebloques = tropheesDebloques,
+                stats = stats,
                 onRetour = { navController.popBackStack() },
             )
         }
@@ -294,6 +302,7 @@ fun AppNavHost(
                 val entrainementVm = entrainementViewModel(navController, backStackEntry, historiqueRepository, profilId)
                 ChoixNiveauEntrainementScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                     onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuChiffres(niveau)) },
                     onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuLettres(niveau)) },
                     onRetour = {
@@ -320,6 +329,7 @@ fun AppNavHost(
                     viewModel = roundVm,
                     scoreCumule = null,
                     pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                    couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                     onMancheTerminee = { obtenu -> entrainementVm.enregistrerMancheChiffres(niveau, obtenu) },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
@@ -348,6 +358,7 @@ fun AppNavHost(
                     viewModel = roundVm,
                     scoreCumule = null,
                     pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                    couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                     onMancheTerminee = { obtenu, motValide, _ -> entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide) },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
@@ -369,6 +380,7 @@ fun AppNavHost(
                 val partieVm = partieViewModel(navController, backStackEntry)
                 ConfigurationPartieScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                     onDemarrer = { sequence ->
                         partieVm.demarrer(sequence)
                         navController.navigate(Routes.JEU_PARTIE)
@@ -409,6 +421,7 @@ fun AppNavHost(
                                 viewModel = roundVm,
                                 scoreCumule = scoreCumule,
                                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                                 onMancheTerminee = { obtenu ->
                                     partieVm.enregistrerResultat(ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu))
                                 },
@@ -428,6 +441,7 @@ fun AppNavHost(
                                 viewModel = roundVm,
                                 scoreCumule = scoreCumule,
                                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                                 onMancheTerminee = { obtenu, motValide, _ ->
                                     partieVm.enregistrerResultat(
                                         ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
@@ -471,6 +485,7 @@ fun AppNavHost(
                 val duoVm = partieDuoViewModel(navController, backStackEntry)
                 ConfigurationPartieDuoScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                     autresProfils = profils.filter { it.id != profilId },
                     onDemarrer = { profil2Id, sequence, mode ->
                         duoVm.demarrer(profil2Id, sequence, mode)
@@ -577,6 +592,7 @@ fun AppNavHost(
                                 viewModel = roundVm,
                                 scoreCumule = null,
                                 pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
+                                couleurRang = joueurActif?.let { couleurRangJoueur(it.id, tropheeRepository) },
                                 afficherResultat = false,
                                 onMancheTerminee = { obtenu ->
                                     val detail = roundVm.uiState.value.operationsEffectuees
@@ -631,6 +647,7 @@ fun AppNavHost(
                                 viewModel = roundVm,
                                 scoreCumule = null,
                                 pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
+                                couleurRang = joueurActif?.let { couleurRangJoueur(it.id, tropheeRepository) },
                                 afficherResultat = false,
                                 onMancheTerminee = { obtenu, motValide, _ ->
                                     duoVm.enregistrerResultat(
@@ -706,6 +723,7 @@ fun AppNavHost(
                 )
                 ChoixRoleReseauScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                     onHeberger = { transport ->
                         reseauVm.choisirHote(transport)
                         navController.navigate(Routes.HOTE_ATTENTE_RESEAU)
@@ -809,6 +827,7 @@ fun AppNavHost(
                 )
                 ConfigurationPartieReseauScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                     onDemarrer = { niveau, mode ->
                         reseauVm.demarrerCommeHote(niveau, mode)
                         navController.navigate(Routes.JEU_PARTIE_RESEAU)
@@ -1066,6 +1085,7 @@ fun AppNavHost(
             ChoixDefiScreen(
                 titre = stringResource(R.string.defi_type_serie),
                 pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 afficherDuree = false,
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChiffres(niveau)) },
                 onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiLettres(niveau)) },
@@ -1077,6 +1097,7 @@ fun AppNavHost(
             ChoixDefiScreen(
                 titre = stringResource(R.string.defi_type_chrono),
                 pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 afficherDuree = true,
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoChiffres(niveau)) },
                 onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoLettres(niveau)) },
@@ -1095,6 +1116,7 @@ fun AppNavHost(
             }
             DefiQuotidienScreen(
                 pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 tirage = tirage,
                 dejaReussiAujourdhui = dejaReussi,
                 serieActuelle = serieActuelle,
@@ -1142,6 +1164,7 @@ fun AppNavHost(
             if (jourQuotidien != null) {
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
+                        defiVm.objectifQuotidienAtteint()
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
                         DefiQuotidienWidgetProvider.demanderMiseAJour(context)
@@ -1161,6 +1184,7 @@ fun AppNavHost(
                 viewModel = roundVm,
                 scoreCumule = null,
                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 progressionManche = "$index",
                 libelleProgression = "Série",
                 onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.echec() },
@@ -1209,6 +1233,7 @@ fun AppNavHost(
             if (jourQuotidien != null) {
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
+                        defiVm.objectifQuotidienAtteint()
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
                         DefiQuotidienWidgetProvider.demanderMiseAJour(context)
@@ -1225,6 +1250,7 @@ fun AppNavHost(
                 viewModel = roundVm,
                 scoreCumule = null,
                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 progressionManche = "$index",
                 libelleProgression = "Série",
                 onMancheTerminee = { _, motValide, meilleurMot ->
@@ -1283,6 +1309,7 @@ fun AppNavHost(
             if (jourQuotidien != null) {
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
+                        defiVm.objectifQuotidienAtteint()
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
                         DefiQuotidienWidgetProvider.demanderMiseAJour(context)
@@ -1302,6 +1329,7 @@ fun AppNavHost(
                 viewModel = roundVm,
                 scoreCumule = null,
                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 progressionManche = "$reussites",
                 libelleProgression = "Réussites",
                 // Comme en défi série : un échec avance seul (pas de confirmation), une
@@ -1363,6 +1391,7 @@ fun AppNavHost(
             if (jourQuotidien != null) {
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
+                        defiVm.objectifQuotidienAtteint()
                         defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
                         tropheeRepository.reevaluer(profilId)
                         DefiQuotidienWidgetProvider.demanderMiseAJour(context)
@@ -1377,6 +1406,7 @@ fun AppNavHost(
                 viewModel = roundVm,
                 scoreCumule = null,
                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 progressionManche = "$reussites",
                 libelleProgression = "Réussites",
                 // Comme en défi série : un échec avance seul (pas de confirmation), une

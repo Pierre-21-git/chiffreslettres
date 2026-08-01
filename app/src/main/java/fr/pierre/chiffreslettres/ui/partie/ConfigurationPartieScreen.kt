@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.R
@@ -29,13 +30,14 @@ fun ConfigurationPartieScreen(
     pseudoActif: String,
     onDemarrer: (List<ManchePlanifiee>) -> Unit,
     onRetour: (() -> Unit)? = null,
+    couleurRang: Color? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran(stringResource(R.string.configuration_partie_solo_titre), onRetour)
-        PucePseudo(pseudoActif)
+        PucePseudo(pseudoActif, couleurRang = couleurRang)
         Text(stringResource(R.string.configuration_choisir_niveau), style = MaterialTheme.typography.titleMedium)
 
         for (niveau in Niveau.entries) {

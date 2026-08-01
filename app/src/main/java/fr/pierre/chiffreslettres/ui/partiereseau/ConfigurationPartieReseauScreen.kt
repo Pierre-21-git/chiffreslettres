@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.R
@@ -32,6 +33,7 @@ import fr.pierre.chiffreslettres.ui.theme.libelle
 fun ConfigurationPartieReseauScreen(
     pseudoActif: String,
     onDemarrer: (niveau: Niveau, mode: ModeScoreDuo) -> Unit,
+    couleurRang: Color? = null,
 ) {
     var niveau by remember { mutableStateOf<Niveau?>(null) }
     var mode by remember { mutableStateOf<ModeScoreDuo?>(null) }
@@ -41,7 +43,7 @@ fun ConfigurationPartieReseauScreen(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         EnTeteEcran(stringResource(R.string.configuration_partie_titre))
-        PucePseudo(pseudoActif)
+        PucePseudo(pseudoActif, couleurRang = couleurRang)
 
         Text(stringResource(R.string.configuration_quel_niveau), style = MaterialTheme.typography.titleMedium)
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {

@@ -37,6 +37,8 @@ import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.CatalogueTrophees
 import fr.pierre.chiffreslettres.data.CategorieTrophee
 import fr.pierre.chiffreslettres.data.Trophee
+import fr.pierre.chiffreslettres.data.TropheeStats
+import fr.pierre.chiffreslettres.data.libelleCourt
 import fr.pierre.chiffreslettres.data.libelleJoueur
 import fr.pierre.chiffreslettres.ui.statistiques.formatDate
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
@@ -55,6 +57,8 @@ fun TropheesScreen(
     titre: String,
     tropheesDebloques: Map<String, Long>?,
     onRetour: (() -> Unit)? = null,
+    /** Stats du joueur (retour utilisateur : affiche "X / objectif" dans le détail d'un trophée non débloqué), null en consultation du catalogue seul. */
+    stats: TropheeStats? = null,
 ) {
     var tropheeSelectionne by remember { mutableStateOf<Trophee?>(null) }
 
@@ -106,12 +110,26 @@ fun TropheesScreen(
 
     tropheeSelectionne?.let { trophee ->
         val date = tropheesDebloques?.get(trophee.id)
+        val objectif = trophee.objectif
+        val progression = trophee.progression
         AlertDialog(
             onDismissRequest = { tropheeSelectionne = null },
             title = { Text(trophee.titre) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        trophee.palier.libelleCourt,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = couleurPalier(trophee.palier),
+                    )
                     Text(trophee.description)
+                    if (date == null && objectif != null && progression != null && stats != null) {
+                        Text(
+                            stringResource(R.string.trophees_progression, progression(stats).coerceAtMost(objectif), objectif),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = TextMuted,
+                        )
+                    }
                     if (tropheesDebloques != null) {
                         Text(
                             if (date != null) stringResource(R.string.trophees_obtenu_le, formatDate(date)) else stringResource(R.string.trophees_pas_encore_obtenu),

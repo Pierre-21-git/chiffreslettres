@@ -104,6 +104,27 @@ class DefiViewModel(
         }
     }
 
+    /**
+     * Défi quotidien (série ou chrono) : l'objectif du jour vient d'être atteint. Arrête
+     * immédiatement le défi (retour utilisateur : pas question de laisser continuer à jouer
+     * après la réussite) et enregistre la performance du jour, en comptant la dernière manche
+     * qui vient de faire atteindre l'objectif — sans cela, cette performance n'était jamais
+     * écrite en base (bug remonté par l'utilisateur : le trophée "défi chrono lettres, au moins
+     * 3" ne se débloquait jamais via le défi quotidien, dont l'objectif en lettres est toujours
+     * exactement 3 ; le même défaut existait côté défi série quotidien, où aucune réussite
+     * n'était alors jamais enregistrée pour les trophées de série).
+     */
+    fun objectifQuotidienAtteint() {
+        if (_termine.value) return
+        if (type == TypeDefi.CHRONO) _reussites.value += 1 else _index.value += 1
+        _termine.value = true
+        val valeurFinale = if (type == TypeDefi.CHRONO) _reussites.value else _index.value
+        viewModelScope.launch {
+            defiRepository.enregistrer(profilId, mode, niveauCode, type, valeurFinale)
+            tropheeRepository.reevaluer(profilId)
+        }
+    }
+
     fun recommencer() {
         _index.value = 0
         _reussites.value = 0

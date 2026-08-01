@@ -22,32 +22,35 @@ class TropheeRepository(
 ) {
     fun tropheesDebloques(profilId: Long): Flow<List<TropheeEntity>> = tropheeDao.tropheesDebloques(profilId)
 
+    /** Stats agrégées d'un joueur pour l'évaluation des trophées — aussi utilisé pour afficher la progression ("X / objectif") d'un trophée non débloqué. */
+    suspend fun stats(profilId: Long): TropheeStats = TropheeStats(
+        comptesExacts = historiqueDao.compterComptesExacts(profilId),
+        motsParLongueur = LONGUEURS_MOTS_TROPHEE.associateWith { historiqueDao.compterMotsLongueur(profilId, it) },
+        partieTousComptesExacts = historiqueDao.compterPartiesTousComptesExacts(profilId) >= 1,
+        partiesMotsMin = SEUILS_MOTS.associateWith { historiqueDao.compterPartiesMotsMin(profilId, it) >= 1 },
+        partiesParSeuilScore = SEUILS_SCORE.associateWith { historiqueDao.compterPartiesScoreAuMoins(profilId, it) },
+        partiesSoloTotal = historiqueDao.compterPartiesSoloTotal(profilId),
+        partiesDuoJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO.name),
+        partiesDuoGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO.name),
+        partiesConfrontationJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO_CONFRONTATION.name),
+        partiesConfrontationGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO_CONFRONTATION.name),
+        partiesDuoReseauJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO_RESEAU.name),
+        partiesDuoReseauGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO_RESEAU.name),
+        partiesConfrontationReseauJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO_CONFRONTATION_RESEAU.name),
+        partiesConfrontationReseauGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO_CONFRONTATION_RESEAU.name),
+        defisTotal = defiDao.compterDefisTotal(profilId),
+        meilleuresSeriesDefi = defiDao.meilleuresSeriesDefiParMode(profilId)
+            .associate { it.mode.name to it.meilleur },
+        meilleuresReussitesDefiChrono = defiDao.meilleuresReussitesChronoParCombinaison(profilId)
+            .groupBy { it.mode.name }
+            .mapValues { (_, combinaisons) -> combinaisons.maxOf { it.meilleur } },
+        meilleureSerieJoursDefiQuotidien = plusLongueSerieDeJours(
+            defiQuotidienDao.joursReussis(profilId).mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
+        ),
+    )
+
     suspend fun reevaluer(profilId: Long) {
-        val stats = TropheeStats(
-            comptesExacts = historiqueDao.compterComptesExacts(profilId),
-            motsParLongueur = LONGUEURS_MOTS_TROPHEE.associateWith { historiqueDao.compterMotsLongueur(profilId, it) },
-            partieTousComptesExacts = historiqueDao.compterPartiesTousComptesExacts(profilId) >= 1,
-            partiesMotsMin = SEUILS_MOTS.associateWith { historiqueDao.compterPartiesMotsMin(profilId, it) >= 1 },
-            partiesParSeuilScore = SEUILS_SCORE.associateWith { historiqueDao.compterPartiesScoreAuMoins(profilId, it) },
-            partiesSoloTotal = historiqueDao.compterPartiesSoloTotal(profilId),
-            partiesDuoJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO.name),
-            partiesDuoGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO.name),
-            partiesConfrontationJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO_CONFRONTATION.name),
-            partiesConfrontationGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO_CONFRONTATION.name),
-            partiesDuoReseauJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO_RESEAU.name),
-            partiesDuoReseauGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO_RESEAU.name),
-            partiesConfrontationReseauJouees = historiqueDao.compterPartiesParType(profilId, TypePartie.DUO_CONFRONTATION_RESEAU.name),
-            partiesConfrontationReseauGagnees = historiqueDao.compterPartiesGagneesParType(profilId, TypePartie.DUO_CONFRONTATION_RESEAU.name),
-            defisTotal = defiDao.compterDefisTotal(profilId),
-            meilleuresSeriesDefi = defiDao.meilleuresSeriesDefiParMode(profilId)
-                .associate { it.mode.name to it.meilleur },
-            meilleuresReussitesDefiChrono = defiDao.meilleuresReussitesChronoParCombinaison(profilId)
-                .groupBy { it.mode.name }
-                .mapValues { (_, combinaisons) -> combinaisons.maxOf { it.meilleur } },
-            meilleureSerieJoursDefiQuotidien = plusLongueSerieDeJours(
-                defiQuotidienDao.joursReussis(profilId).mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
-            ),
-        )
+        val stats = stats(profilId)
         for (trophee in CatalogueTrophees.TOUS) {
             if (trophee.estDebloque(stats)) {
                 tropheeDao.debloquerSiAbsent(TropheeEntity(profilId, trophee.id, System.currentTimeMillis()))

@@ -19,6 +19,39 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.58",
+        date = "2026-08-01",
+        changements = listOf(
+            "Corrigé : changer de profil actif pour un profil réglé sur une autre langue " +
+                "provoquait un rechargement de l'écran \"Choisir un profil\" (la recréation " +
+                "d'activité déclenchée par le changement de langue de l'application faisait " +
+                "perdre l'état de confirmation du profil), obligeant à cliquer une seconde fois " +
+                "sur le profil pour atteindre l'accueil ; un bref écran de création de profil " +
+                "(sélecteur d'avatars) pouvait aussi apparaître dans la foulée, le temps que la " +
+                "liste des profils se recharge après cette même recréation.",
+            "Drapeaux allemand et espagnol masqués dans le sélecteur de langue d'un profil, " +
+                "tant que leur dictionnaire dédié n'est pas prêt (ils utilisent encore le " +
+                "dictionnaire français) — un profil déjà réglé sur l'une de ces langues garde " +
+                "son réglage sans problème.",
+        ),
+    ),
+    EntreeVersion(
+        version = "1.57",
+        date = "2026-08-01",
+        changements = listOf(
+            "Corrigé : en défi quotidien (série ou chrono), la dernière manche qui faisait " +
+                "atteindre l'objectif du jour n'était jamais enregistrée en base — ce qui " +
+                "empêchait notamment le trophée \"défi chrono lettres, au moins 3 mots\" de se " +
+                "débloquer, l'objectif du jour en lettres étant toujours exactement 3.",
+            "Le cadre du profil (pseudo/avatar) est maintenant entouré de la couleur du rang " +
+                "joueur (bronze/argent/or/platine/diamant) sur tous les écrans qui l'affichent, " +
+                "et pas seulement sur l'accueil et l'écran \"Choisir un profil\".",
+            "Détail d'un trophée (dialogue) : affiche désormais sa difficulté " +
+                "(bronze/argent/or/platine/diamant) et, pour un trophée pas encore débloqué à " +
+                "objectif chiffré, la progression actuelle (ex. \"2 / 3\").",
+        ),
+    ),
+    EntreeVersion(
         version = "1.56",
         date = "2026-07-31",
         changements = listOf(

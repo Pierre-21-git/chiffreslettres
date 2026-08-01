@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,6 +48,8 @@ fun ChiffresRoundScreen(
     actionsFinManche: @Composable () -> Unit,
     onRetourEntrainement: (() -> Unit)? = null,
     pseudo: String? = null,
+    /** Couleur du rang joueur (bronze/argent/or...) pour le cadre de [pseudo], cf. `PucePseudo`. */
+    couleurRang: Color? = null,
     /** "2 / 4" par exemple, uniquement en partie structurée ou en défi (retour utilisateur). */
     progressionManche: String? = null,
     /** Libellé de la pastille [progressionManche] : "Manche" en partie solo, "Série" en défi. */
@@ -66,7 +69,7 @@ fun ChiffresRoundScreen(
     ) {
         EnTeteEcran(stringResource(R.string.mode_chiffres), onRetourEntrainement)
         if (pseudo != null) {
-            PucePseudo(pseudo)
+            PucePseudo(pseudo, couleurRang = couleurRang)
         }
 
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {

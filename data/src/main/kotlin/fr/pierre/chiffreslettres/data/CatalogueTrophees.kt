@@ -45,6 +45,16 @@ val Palier.libelleJoueur: String
         Palier.DIAMANT -> "Joueur Diamant"
     }
 
+/** Libellé court de la difficulté d'un trophée (retour utilisateur, ex. "Bronze"), affiché dans son détail. */
+val Palier.libelleCourt: String
+    get() = when (this) {
+        Palier.BRONZE -> "Bronze"
+        Palier.ARGENT -> "Argent"
+        Palier.OR -> "Or"
+        Palier.PLATINE -> "Platine"
+        Palier.DIAMANT -> "Diamant"
+    }
+
 enum class CategorieTrophee(val titre: String) {
     PARTIES_TERMINEES("Parties terminées"),
     SCORE_PARTIE("Score de partie"),
@@ -65,6 +75,13 @@ class Trophee(
     val palier: Palier,
     /** Regroupement visuel au sein d'une catégorie (ex. niveau du défi chrono), null si non applicable. */
     val sousTitre: String? = null,
+    /**
+     * Objectif numérique affiché "X / objectif" dans le détail du trophée (retour utilisateur),
+     * null si le trophée n'a pas de progression chiffrée (ex. partie parfaite, tout ou rien).
+     */
+    val objectif: Int? = null,
+    /** Valeur courante du joueur pour [objectif] (retour utilisateur), null si non applicable. */
+    val progression: ((TropheeStats) -> Int)? = null,
     val estDebloque: (TropheeStats) -> Boolean,
 )
 
@@ -114,6 +131,8 @@ object CatalogueTrophees {
                 "Obtenir un compte exact en chiffres, en partie (solo, duo ou confrontation).",
                 CategorieTrophee.COMPTES_EXACTS,
                 palier = Palier.BRONZE,
+                objectif = 1,
+                progression = { it.comptesExacts },
             ) { it.comptesExacts >= 1 },
         )
         add(
@@ -123,6 +142,8 @@ object CatalogueTrophees {
                 "Obtenir 10 comptes exacts en chiffres, en partie (solo, duo ou confrontation).",
                 CategorieTrophee.COMPTES_EXACTS,
                 palier = Palier.ARGENT,
+                objectif = 10,
+                progression = { it.comptesExacts },
             ) { it.comptesExacts >= 10 },
         )
         add(
@@ -132,6 +153,8 @@ object CatalogueTrophees {
                 "Obtenir 100 comptes exacts en chiffres, en partie (solo, duo ou confrontation).",
                 CategorieTrophee.COMPTES_EXACTS,
                 palier = Palier.PLATINE,
+                objectif = 100,
+                progression = { it.comptesExacts },
             ) { it.comptesExacts >= 100 },
         )
 
@@ -144,6 +167,8 @@ object CatalogueTrophees {
                     "Trouver un mot de $longueur lettres$precision, en partie (solo, duo ou confrontation).",
                     CategorieTrophee.MOTS,
                     palier = PALIERS_MOTS_1.getValue(longueur),
+                    objectif = 1,
+                    progression = { (it.motsParLongueur[longueur] ?: 0) },
                 ) { (it.motsParLongueur[longueur] ?: 0) >= 1 },
             )
             add(
@@ -153,6 +178,8 @@ object CatalogueTrophees {
                     "Trouver 10 mots de $longueur lettres, en partie (solo, duo ou confrontation).",
                     CategorieTrophee.MOTS,
                     palier = PALIERS_MOTS_10.getValue(longueur),
+                    objectif = 10,
+                    progression = { (it.motsParLongueur[longueur] ?: 0) },
                 ) { (it.motsParLongueur[longueur] ?: 0) >= 10 },
             )
         }
@@ -186,6 +213,8 @@ object CatalogueTrophees {
                     "Terminer une partie (solo, duo ou confrontation) avec au moins $seuil points.",
                     CategorieTrophee.SCORE_PARTIE,
                     palier = PALIERS_SCORE_1.getValue(seuil),
+                    objectif = 1,
+                    progression = { (it.partiesParSeuilScore[seuil] ?: 0) },
                 ) { (it.partiesParSeuilScore[seuil] ?: 0) >= 1 },
             )
             add(
@@ -195,6 +224,8 @@ object CatalogueTrophees {
                     "Terminer 10 parties (solo, duo ou confrontation) avec au moins $seuil points.",
                     CategorieTrophee.SCORE_PARTIE,
                     palier = PALIERS_SCORE_10.getValue(seuil),
+                    objectif = 10,
+                    progression = { (it.partiesParSeuilScore[seuil] ?: 0) },
                 ) { (it.partiesParSeuilScore[seuil] ?: 0) >= 10 },
             )
         }
@@ -206,6 +237,8 @@ object CatalogueTrophees {
                 "Terminer une partie (solo, duo ou confrontation), tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
                 palier = Palier.BRONZE,
+                objectif = 1,
+                progression = { it.partiesSoloTotal },
             ) { it.partiesSoloTotal >= 1 },
         )
         add(
@@ -215,6 +248,8 @@ object CatalogueTrophees {
                 "Terminer 10 parties (solo, duo ou confrontation), tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
                 palier = Palier.ARGENT,
+                objectif = 10,
+                progression = { it.partiesSoloTotal },
             ) { it.partiesSoloTotal >= 10 },
         )
         add(
@@ -224,6 +259,8 @@ object CatalogueTrophees {
                 "Terminer 100 parties (solo, duo ou confrontation), tous niveaux confondus.",
                 CategorieTrophee.PARTIES_TERMINEES,
                 palier = Palier.PLATINE,
+                objectif = 100,
+                progression = { it.partiesSoloTotal },
             ) { it.partiesSoloTotal >= 100 },
         )
 
@@ -235,6 +272,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.ARGENT,
                 sousTitre = "Duo",
+                objectif = 1,
+                progression = { it.partiesDuoJouees },
             ) { it.partiesDuoJouees >= 1 },
         )
         add(
@@ -245,6 +284,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.OR,
                 sousTitre = "Duo",
+                objectif = 1,
+                progression = { it.partiesDuoGagnees },
             ) { it.partiesDuoGagnees >= 1 },
         )
         add(
@@ -255,6 +296,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.PLATINE,
                 sousTitre = "Duo",
+                objectif = 10,
+                progression = { it.partiesDuoGagnees },
             ) { it.partiesDuoGagnees >= 10 },
         )
         add(
@@ -265,6 +308,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.ARGENT,
                 sousTitre = "Confrontation",
+                objectif = 1,
+                progression = { it.partiesConfrontationJouees },
             ) { it.partiesConfrontationJouees >= 1 },
         )
         add(
@@ -275,6 +320,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.OR,
                 sousTitre = "Confrontation",
+                objectif = 1,
+                progression = { it.partiesConfrontationGagnees },
             ) { it.partiesConfrontationGagnees >= 1 },
         )
         add(
@@ -285,6 +332,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.DIAMANT,
                 sousTitre = "Confrontation",
+                objectif = 10,
+                progression = { it.partiesConfrontationGagnees },
             ) { it.partiesConfrontationGagnees >= 10 },
         )
 
@@ -296,6 +345,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.ARGENT,
                 sousTitre = "Duo à distance",
+                objectif = 1,
+                progression = { it.partiesDuoReseauJouees },
             ) { it.partiesDuoReseauJouees >= 1 },
         )
         add(
@@ -306,6 +357,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.OR,
                 sousTitre = "Duo à distance",
+                objectif = 1,
+                progression = { it.partiesDuoReseauGagnees },
             ) { it.partiesDuoReseauGagnees >= 1 },
         )
         add(
@@ -316,6 +369,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.PLATINE,
                 sousTitre = "Duo à distance",
+                objectif = 10,
+                progression = { it.partiesDuoReseauGagnees },
             ) { it.partiesDuoReseauGagnees >= 10 },
         )
         add(
@@ -326,6 +381,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.ARGENT,
                 sousTitre = "Confrontation à distance",
+                objectif = 1,
+                progression = { it.partiesConfrontationReseauJouees },
             ) { it.partiesConfrontationReseauJouees >= 1 },
         )
         add(
@@ -336,6 +393,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.OR,
                 sousTitre = "Confrontation à distance",
+                objectif = 1,
+                progression = { it.partiesConfrontationReseauGagnees },
             ) { it.partiesConfrontationReseauGagnees >= 1 },
         )
         add(
@@ -346,6 +405,8 @@ object CatalogueTrophees {
                 CategorieTrophee.DUO,
                 palier = Palier.DIAMANT,
                 sousTitre = "Confrontation à distance",
+                objectif = 10,
+                progression = { it.partiesConfrontationReseauGagnees },
             ) { it.partiesConfrontationReseauGagnees >= 10 },
         )
 
@@ -356,6 +417,8 @@ object CatalogueTrophees {
                 "Aller jusqu'au bout d'un défi (chiffres ou lettres, tout niveau).",
                 CategorieTrophee.DEFI,
                 palier = Palier.BRONZE,
+                objectif = 1,
+                progression = { it.defisTotal },
             ) { it.defisTotal >= 1 },
         )
         for (mode in ModeJeu.entries) {
@@ -370,6 +433,8 @@ object CatalogueTrophees {
                         CategorieTrophee.DEFI,
                         palier = PALIERS_DEFI_SERIE.getValue(seuil),
                         sousTitre = sousTitreMode,
+                        objectif = seuil,
+                        progression = { (it.meilleuresSeriesDefi[mode.name] ?: 0) },
                     ) { (it.meilleuresSeriesDefi[mode.name] ?: 0) >= seuil },
                 )
             }
@@ -388,6 +453,8 @@ object CatalogueTrophees {
                         CategorieTrophee.DEFI_CHRONO,
                         palier = PALIERS_DEFI_CHRONO.getValue(seuil),
                         sousTitre = sousTitreMode,
+                        objectif = seuil,
+                        progression = { (it.meilleuresReussitesDefiChrono[mode.name] ?: 0) },
                     ) { (it.meilleuresReussitesDefiChrono[mode.name] ?: 0) >= seuil },
                 )
             }
@@ -402,6 +469,8 @@ object CatalogueTrophees {
                     "Réussir le défi quotidien $seuil jours d'affilée.",
                     CategorieTrophee.DEFI_QUOTIDIEN,
                     palier = PALIERS_DEFI_QUOTIDIEN.getValue(seuil),
+                    objectif = seuil,
+                    progression = { it.meilleureSerieJoursDefiQuotidien },
                 ) { it.meilleureSerieJoursDefiQuotidien >= seuil },
             )
         }

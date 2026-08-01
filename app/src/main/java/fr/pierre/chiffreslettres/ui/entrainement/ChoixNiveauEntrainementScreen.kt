@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.R
@@ -28,13 +29,14 @@ fun ChoixNiveauEntrainementScreen(
     onNiveauChiffresChoisi: (Niveau) -> Unit,
     onNiveauLettresChoisi: (NiveauLettres) -> Unit,
     onRetour: (() -> Unit)? = null,
+    couleurRang: Color? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         EnTeteEcran(stringResource(R.string.entrainement_titre), onRetour)
-        PucePseudo(pseudoActif)
+        PucePseudo(pseudoActif, couleurRang = couleurRang)
 
         Text(stringResource(R.string.mode_chiffres), style = MaterialTheme.typography.titleMedium)
         for (niveau in Niveau.entries) {

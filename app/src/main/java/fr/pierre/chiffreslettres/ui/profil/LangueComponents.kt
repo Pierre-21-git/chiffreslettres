@@ -9,12 +9,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.ui.theme.TuileJeton
 
-/** Langues disponibles (retour utilisateur : un drapeau par langue), code ISO -> drapeau. */
+/**
+ * Langues disponibles (retour utilisateur : un drapeau par langue), code ISO -> drapeau.
+ * Allemand et espagnol masqués tant que leur dictionnaire dédié n'est pas branché (ils
+ * utilisent encore le dictionnaire français, cf. changelog 1.56) — un profil déjà réglé sur
+ * "de"/"es" garde sa langue en base sans problème, cf. [SelecteurLangue].
+ */
 val LANGUES_DISPONIBLES = listOf(
     "fr" to "🇫🇷",
     "en" to "🇬🇧",
-    "de" to "🇩🇪",
-    "es" to "🇪🇸",
+    // "de" to "🇩🇪",
+    // "es" to "🇪🇸",
 )
 
 @Composable

@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -49,6 +50,7 @@ fun ChoixRoleReseauScreen(
     onHeberger: (TransportReseau) -> Unit,
     onRejoindre: (TransportReseau) -> Unit,
     onRetour: () -> Unit,
+    couleurRang: Color? = null,
 ) {
     val context = LocalContext.current
     var transport by remember { mutableStateOf(TransportReseau.WIFI) }
@@ -121,7 +123,7 @@ fun ChoixRoleReseauScreen(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         EnTeteEcran(stringResource(R.string.role_reseau_titre), onRetour)
-        PucePseudo(pseudoActif)
+        PucePseudo(pseudoActif, couleurRang = couleurRang)
         Text(
             stringResource(R.string.role_reseau_intro),
             style = MaterialTheme.typography.bodyMedium,

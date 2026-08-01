@@ -202,6 +202,7 @@
     <string name="trophees_debloques_compteur">%1$d / %2$d débloqués</string>
     <string name="trophees_obtenu_le">Obtenu le %1$s</string>
     <string name="trophees_pas_encore_obtenu">Pas encore obtenu</string>
+    <string name="trophees_progression">%1$d / %2$d</string>
 
     <!-- ui/lettres/LettresRoundScreen -->
     <string name="lettres_tirage_label">Tirage</string>

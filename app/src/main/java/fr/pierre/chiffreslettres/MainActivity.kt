@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,21 +82,30 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val defiQuotidienRepository = remember { DefiQuotidienRepository(db.defiQuotidienDao()) }
     val profilActifStore = remember { ProfilActifStore(context.applicationContext) }
 
-    val profils by profilRepository.tousLesProfils().collectAsState(initial = emptyList())
+    // null = pas encore chargé (distinct d'une vraie liste vide, cf. plus bas) : un simple
+    // `initial = emptyList()` ferait passer par l'écran "premier lancement" à chaque
+    // recréation d'Activity (changement de langue de profil, cf. AppNavHost) le temps que ce
+    // flow Room réémette la vraie liste — bug remonté par l'utilisateur (flash de l'écran de
+    // création de profil, avec son sélecteur d'avatars).
+    val profils = profilRepository.tousLesProfils().collectAsState(initial = null).value
     // Dictionnaire selon la langue du profil actif (retour utilisateur) : rechargé si le profil
     // change de langue ou si un autre profil (langue différente) devient actif.
     val profilActifIdStore by profilActifStore.profilActifId.collectAsState(initial = null)
-    val profilActifPourLangue = profils.find { it.id == profilActifIdStore } ?: profils.firstOrNull()
+    val profilActifPourLangue = profils?.find { it.id == profilActifIdStore } ?: profils?.firstOrNull()
     LaunchedEffect(profilActifPourLangue?.langue) {
         dictionnaire = DictionnaireProvider.obtenir(context.applicationContext, profilActifPourLangue?.langue ?: "fr")
     }
     val dictionnaireCharge = dictionnaire
-    // Non persisté : redemande confirmation à chaque lancement de l'app (retour utilisateur,
-    // cloisonnement des profils), mais pas en boucle au sein d'une même session.
-    var etapeGate by remember { mutableStateOf(EtapeGateProfil.SELECTION) }
+    // Non persisté d'un lancement à l'autre : redemande confirmation à chaque lancement de
+    // l'app (retour utilisateur, cloisonnement des profils). rememberSaveable (et non simple
+    // remember) pour survivre à la recréation d'Activity déclenchée par un changement de
+    // langue de profil (LocaleManager.applicationLocales, cf. AppNavHost) — sans quoi ce gate
+    // repassait à SELECTION en pleine confirmation et forçait un second clic sur le profil
+    // (bug remonté par l'utilisateur).
+    var etapeGate by rememberSaveable { mutableStateOf(EtapeGateProfil.SELECTION) }
 
     when {
-        dictionnaireCharge == null -> {
+        dictionnaireCharge == null || profils == null -> {
             Box(modifier, contentAlignment = Alignment.Center) {
                 Text(stringResource(R.string.chargement))
             }

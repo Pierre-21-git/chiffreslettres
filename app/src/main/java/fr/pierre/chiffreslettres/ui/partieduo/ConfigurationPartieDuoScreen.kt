@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.R
@@ -41,6 +42,7 @@ fun ConfigurationPartieDuoScreen(
     autresProfils: List<ProfilEntity>,
     onDemarrer: (profil2Id: Long, sequence: List<ManchePlanifiee>, mode: ModeScoreDuo) -> Unit,
     onRetour: (() -> Unit)? = null,
+    couleurRang: Color? = null,
 ) {
     var profil2 by remember { mutableStateOf<ProfilEntity?>(null) }
     var niveau by remember { mutableStateOf<Niveau?>(null) }
@@ -51,7 +53,7 @@ fun ConfigurationPartieDuoScreen(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         EnTeteEcran(stringResource(R.string.configuration_duo_titre), onRetour)
-        PucePseudo(pseudoActif)
+        PucePseudo(pseudoActif, couleurRang = couleurRang)
 
         if (autresProfils.isEmpty()) {
             Text(
