@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.59",
+        date = "2026-08-01",
+        changements = listOf(
+            "Trophées \"Partie duo\" : les sous-catégories \"Duo à distance\" et \"Confrontation " +
+                "à distance\" sont fusionnées avec \"Duo\" et \"Confrontation\" — une partie compte " +
+                "pour le même trophée qu'elle soit jouée sur un seul téléphone ou à distance sur " +
+                "deux téléphones. Moins de trophées au total dans cette catégorie.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.58",
         date = "2026-08-01",
         changements = listOf(

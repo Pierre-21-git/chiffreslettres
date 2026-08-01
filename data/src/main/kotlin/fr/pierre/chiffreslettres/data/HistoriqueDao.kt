@@ -190,4 +190,16 @@ interface HistoriqueDao {
     /** Nombre de parties d'un [type] gagnées par ce profil (`victoireDuel = 1`), tous niveaux confondus. */
     @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type = :type AND victoireDuel = 1")
     suspend fun compterPartiesGagneesParType(profilId: Long, type: String): Int
+
+    /**
+     * Nombre de parties dont le type figure dans [types] jouées par ce profil, tous niveaux
+     * confondus — pour les trophées, où le duo même téléphone et le duo à distance comptent
+     * ensemble (retour utilisateur : trophées "Duo"/"Confrontation" fusionnés).
+     */
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type IN (:types)")
+    suspend fun compterPartiesParTypes(profilId: Long, types: List<String>): Int
+
+    /** Nombre de parties dont le type figure dans [types] gagnées par ce profil (`victoireDuel = 1`), tous niveaux confondus. */
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type IN (:types) AND victoireDuel = 1")
+    suspend fun compterPartiesGagneesParTypes(profilId: Long, types: List<String>): Int
 }

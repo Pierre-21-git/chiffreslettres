@@ -12,7 +12,7 @@ import androidx.room.RoomDatabase
         TropheeEntity::class,
         DefiQuotidienEntity::class,
     ],
-    version = 8,
+    version = 9,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {

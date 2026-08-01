@@ -105,6 +105,26 @@ private val MIGRATION_7_8 = object : Migration(7, 8) {
     }
 }
 
+/**
+ * v8 → v9 : les trophées "Duo à distance"/"Confrontation à distance" sont fusionnés avec
+ * "Duo"/"Confrontation" (retour utilisateur : une partie compte pour le même trophée qu'elle
+ * soit jouée sur un seul téléphone ou à distance). Purge les trophées déjà débloqués sous les
+ * anciens ids, devenus orphelins (absents du catalogue), pour ne pas fausser le compteur
+ * "X / total" affiché à l'écran Trophées.
+ */
+private val MIGRATION_8_9 = object : Migration(8, 9) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """
+            DELETE FROM `TropheeEntity` WHERE `trophyId` IN (
+                'duo_reseau_1', 'duo_reseau_gagnee_1', 'duo_reseau_gagnee_10',
+                'confrontation_reseau_1', 'confrontation_reseau_gagnee_1', 'confrontation_reseau_gagnee_10'
+            )
+            """.trimIndent(),
+        )
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null
@@ -112,7 +132,10 @@ object AppDatabaseProvider {
     fun obtenir(context: Context): AppDatabase =
         instance ?: synchronized(this) {
             instance ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "chiffreslettres.db")
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
+                .addMigrations(
+                    MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5,
+                    MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9,
+                )
                 .build()
                 .also { instance = it }
         }
