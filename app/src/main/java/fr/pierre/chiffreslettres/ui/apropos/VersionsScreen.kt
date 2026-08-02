@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.61",
+        date = "2026-08-02",
+        changements = listOf(
+            "Écran Trophées : le titre reste maintenant affiché en haut quand on scrolle.",
+            "Écran Trophées : nouveau lien sous le titre pour masquer/afficher les trophées " +
+                "déjà obtenus.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.60",
         date = "2026-08-02",
         changements = listOf(

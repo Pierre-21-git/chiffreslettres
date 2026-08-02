@@ -175,6 +175,8 @@
     <string name="trophees_obtenu_le">Unlocked on %1$s</string>
     <string name="trophees_pas_encore_obtenu">Not yet unlocked</string>
     <string name="trophees_progression">%1$d / %2$d</string>
+    <string name="trophees_masquer_obtenus">Hide unlocked trophies</string>
+    <string name="trophees_afficher_obtenus">Show unlocked trophies</string>
 
     <string name="lettres_tirage_label">Draw</string>
     <string name="lettres_tirage_valeur">%1$d / %2$d</string>

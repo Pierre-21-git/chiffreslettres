@@ -203,6 +203,8 @@
     <string name="trophees_obtenu_le">Obtenu le %1$s</string>
     <string name="trophees_pas_encore_obtenu">Pas encore obtenu</string>
     <string name="trophees_progression">%1$d / %2$d</string>
+    <string name="trophees_masquer_obtenus">Masquer les trophées obtenus</string>
+    <string name="trophees_afficher_obtenus">Afficher les trophées obtenus</string>
 
     <!-- ui/lettres/LettresRoundScreen -->
     <string name="lettres_tirage_label">Tirage</string>

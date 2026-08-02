@@ -149,6 +149,8 @@
     <string name="trophees_obtenu_le">Obtenido el %1$s</string>
     <string name="trophees_pas_encore_obtenu">Aún no obtenido</string>
     <string name="trophees_progression">%1$d / %2$d</string>
+    <string name="trophees_masquer_obtenus">Ocultar trofeos obtenidos</string>
+    <string name="trophees_afficher_obtenus">Mostrar trofeos obtenidos</string>
 
     <string name="lettres_tirage_label">Letras</string>
     <string name="lettres_tirage_valeur">%1$d / %2$d</string>
