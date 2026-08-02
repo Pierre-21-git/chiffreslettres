@@ -3,6 +3,7 @@ package fr.pierre.chiffreslettres
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -44,6 +45,11 @@ import fr.pierre.chiffreslettres.widget.planifierRafraichissementWidgetMinuit
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // targetSdk 36 impose l'edge-to-edge (retour utilisateur : l'accueil passait sous la
+        // barre système en bas) sans forcément bien câbler la remontée des insets système tant
+        // que enableEdgeToEdge() n'est pas appelé explicitement : sans lui, systemBarsPadding()
+        // ci-dessous ne recevait pas les bonnes valeurs.
+        enableEdgeToEdge()
         creerCanalNotificationRappel(this)
         planifierRappelQuotidien(this)
         planifierRafraichissementWidgetMinuit(this)

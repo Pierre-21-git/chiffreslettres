@@ -19,6 +19,14 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.62",
+        date = "2026-08-02",
+        changements = listOf(
+            "Corrigé : l'écran d'accueil passait sous la barre système en bas (la dernière " +
+                "tuile \"À propos\" pouvait être partiellement masquée/inaccessible).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.61",
         date = "2026-08-02",
         changements = listOf(

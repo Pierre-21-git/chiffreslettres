@@ -2,8 +2,10 @@ package fr.pierre.chiffreslettres.ui.menu
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -72,5 +74,11 @@ fun MenuPrincipalScreen(
 
         TuilePrincipale(stringResource(R.string.statistiques_titre_defaut), onClick = onStatistiques)
         TuilePrincipale(stringResource(R.string.apropos_titre), onClick = onAPropos)
+
+        // Marge de fin dédiée à la barre système (retour utilisateur : la tuile "À propos"
+        // passait encore un peu sous la barre malgré systemBarsPadding() en amont) : réservée en
+        // plus du padding(24.dp) ci-dessus, pas à sa place, pour ne pas retoucher l'espacement
+        // des autres écrans.
+        Spacer(modifier = Modifier.navigationBarsPadding())
     }
 }
