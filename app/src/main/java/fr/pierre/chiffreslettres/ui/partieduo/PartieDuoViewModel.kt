@@ -16,8 +16,19 @@ enum class TourDuo { JOUEUR1, JOUEUR2 }
  * Résultat d'un joueur sur une manche, avec l'écart à la cible pour les manches chiffres (null
  * en lettres — la comparaison s'y fait sur la longueur du mot), et [detail] à afficher sur
  * l'écran de transition (le calcul effectué en chiffres, le mot joué en lettres).
+ *
+ * [meilleureReponse] : la meilleure réponse possible sur ce tirage (mot le plus long en lettres,
+ * texte de l'expression solution en chiffres, ex. "(5+3)*2"), null si aucune n'existe (retour
+ * utilisateur : affichée une seule fois par manche sur l'écran de transition, pas par joueur,
+ * puisque les deux joueurs jouent le même tirage). Calculée localement par chaque téléphone (pas
+ * transmise sur le réseau) : déterministe à partir du même tirage, donc identique des deux côtés.
  */
-data class ResultatDuoManche(val resultat: ResultatManche, val ecartCible: Int? = null, val detail: String = "")
+data class ResultatDuoManche(
+    val resultat: ResultatManche,
+    val ecartCible: Int? = null,
+    val detail: String = "",
+    val meilleureReponse: String? = null,
+)
 
 /**
  * Qui commence une manche donnée (retour utilisateur : cycle A,B,B,A répété — pas une simple

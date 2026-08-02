@@ -19,6 +19,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.66",
+        date = "2026-08-02",
+        changements = listOf(
+            "Écran de transition (Duo même téléphone et Réseau) : affiche désormais le mot le " +
+                "plus long possible en lettres, ou une solution possible en chiffres, une fois " +
+                "que les deux joueurs ont joué une manche.",
+            "Corrigé (mode Réseau uniquement) : l'ordre gauche/droite du résultat de la manche " +
+                "pouvait être inversé par rapport à l'ordre gauche/droite du score de la partie " +
+                "quand on était le second joueur réseau. Les deux lignes suivent maintenant " +
+                "toujours le même ordre (Moi, Adversaire).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.65",
         date = "2026-08-02",
         changements = listOf(

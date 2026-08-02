@@ -571,6 +571,8 @@ fun AppNavHost(
                         scorePartie1 = scoreFinal1.sumOf { it.score },
                         scorePartie2 = scoreFinal2.sumOf { it.score },
                         onPret = { duoVm.confirmerTransition() },
+                        mode = r1Manche?.resultat?.mode,
+                        meilleureReponse = r1Manche?.meilleureReponse,
                     )
                 } else {
                     val joueurActif = if (tour == TourDuo.JOUEUR1) profilActif else profil2
@@ -603,6 +605,7 @@ fun AppNavHost(
                                             ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu),
                                             roundVm.uiState.value.ecartCible,
                                             detail,
+                                            meilleureReponse = roundVm.uiState.value.solutionSolveur?.texte(),
                                         ),
                                     )
                                 },
@@ -650,11 +653,12 @@ fun AppNavHost(
                                 pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
                                 couleurRang = joueurActif?.let { couleurRangJoueur(it.id, tropheeRepository) },
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu, motValide, _ ->
+                                onMancheTerminee = { obtenu, motValide, meilleurMot ->
                                     duoVm.enregistrerResultat(
                                         ResultatDuoManche(
                                             ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
                                             detail = motValide ?: texteAucunMot,
+                                            meilleureReponse = meilleurMot,
                                         ),
                                     )
                                 },
@@ -891,27 +895,30 @@ fun AppNavHost(
                         }
                         fun scoreAffiche(brut: Int, perdant: Boolean) =
                             if (reseauVm.mode == ModeScoreDuo.CONFRONTATION && perdant) 0 else brut
-                        val (pseudoJ1, pseudoJ2) = if (reseauVm.monTourDuo == TourDuo.JOUEUR1) {
-                            pseudoMoi to pseudoAdversaire
-                        } else {
-                            pseudoAdversaire to pseudoMoi
-                        }
+                        // Ordre toujours "Moi, Adversaire" (retour utilisateur : doit correspondre à
+                        // la ligne de score ci-dessous, qui est dans cet ordre fixe) — pas l'ordre
+                        // Joueur1/Joueur2 réseau, qui dépend de mon rôle dans la partie.
+                        val moiEstJoueur1 = reseauVm.monTourDuo == TourDuo.JOUEUR1
+                        val resultatMoi = if (moiEstJoueur1) r1 else r2
+                        val resultatAdversaire = if (moiEstJoueur1) r2 else r1
+                        val jeGagne = vainqueur == (if (moiEstJoueur1) VainqueurManche.JOUEUR1 else VainqueurManche.JOUEUR2)
+                        val adversaireGagne = vainqueur == (if (moiEstJoueur1) VainqueurManche.JOUEUR2 else VainqueurManche.JOUEUR1)
                         val resultatsAffiches = listOf(
                             ResultatAffichage(
-                                pseudoJ1,
-                                scoreAffiche(r1.resultat.score, vainqueur == VainqueurManche.JOUEUR2),
-                                r1.detail,
-                                vainqueur == VainqueurManche.JOUEUR1,
+                                pseudoMoi,
+                                scoreAffiche(resultatMoi.resultat.score, adversaireGagne),
+                                resultatMoi.detail,
+                                jeGagne,
                             ),
                             ResultatAffichage(
-                                pseudoJ2,
-                                scoreAffiche(r2.resultat.score, vainqueur == VainqueurManche.JOUEUR1),
-                                r2.detail,
-                                vainqueur == VainqueurManche.JOUEUR2,
+                                pseudoAdversaire,
+                                scoreAffiche(resultatAdversaire.resultat.score, jeGagne),
+                                resultatAdversaire.detail,
+                                adversaireGagne,
                             ),
                         )
                         val (scoreFinal1, scoreFinal2) = reseauVm.resultatsFinaux()
-                        val (scoreMoi, scoreAdv) = if (reseauVm.monTourDuo == TourDuo.JOUEUR1) {
+                        val (scoreMoi, scoreAdv) = if (moiEstJoueur1) {
                             scoreFinal1.sumOf { it.score } to scoreFinal2.sumOf { it.score }
                         } else {
                             scoreFinal2.sumOf { it.score } to scoreFinal1.sumOf { it.score }
@@ -922,6 +929,8 @@ fun AppNavHost(
                             pseudoAdversaire = pseudoAdversaire,
                             scoreMoi = scoreMoi,
                             scoreAdversaire = scoreAdv,
+                            mode = resultatMoi.resultat.mode,
+                            meilleureReponse = resultatMoi.meilleureReponse,
                             dernierManche = index == sequence.lastIndex,
                             onSuivant = { reseauVm.mancheSuivante() },
                         )
@@ -967,6 +976,7 @@ fun AppNavHost(
                                                 ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu),
                                                 roundVm.uiState.value.ecartCible,
                                                 detail,
+                                                meilleureReponse = roundVm.uiState.value.solutionSolveur?.texte(),
                                             ),
                                         )
                                     },
@@ -1010,11 +1020,12 @@ fun AppNavHost(
                                 scoreCumule = null,
                                 pseudo = null,
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu, motValide, _ ->
+                                onMancheTerminee = { obtenu, motValide, meilleurMot ->
                                     reseauVm.enregistrerMonResultat(
                                         ResultatDuoManche(
                                             ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
                                             detail = motValide ?: texteAucunMot,
+                                            meilleureReponse = meilleurMot,
                                         ),
                                     )
                                 },

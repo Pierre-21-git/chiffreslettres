@@ -17,7 +17,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.R
+import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.ui.partieduo.ResultatAffichage
+import fr.pierre.chiffreslettres.ui.partieduo.texteMeilleureReponse
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
@@ -34,6 +36,9 @@ fun RevelationMancheReseauScreen(
     scoreAdversaire: Int,
     dernierManche: Boolean,
     onSuivant: () -> Unit,
+    mode: ModeJeu,
+    /** Meilleure réponse possible sur le tirage de cette manche, affichée une seule fois (retour utilisateur : même tirage pour les deux joueurs). Null si aucune réponse n'existe sur ce tirage. */
+    meilleureReponse: String? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
@@ -46,6 +51,7 @@ fun RevelationMancheReseauScreen(
                 ColonneResultat(resultat, modifier = Modifier.weight(1f))
             }
         }
+        Text(texteMeilleureReponse(mode, meilleureReponse), color = TextMuted, fontSize = 13.sp)
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Afficheur(label = pseudoMoi, valeur = "$scoreMoi", modifier = Modifier.weight(1f), centre = true)
             Afficheur(label = pseudoAdversaire, valeur = "$scoreAdversaire", modifier = Modifier.weight(1f), centre = true)

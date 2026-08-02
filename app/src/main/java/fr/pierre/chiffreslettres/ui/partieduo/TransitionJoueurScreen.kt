@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.R
+import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
@@ -50,6 +51,10 @@ fun TransitionJoueurScreen(
     scorePartie1: Int,
     scorePartie2: Int,
     onPret: () -> Unit,
+    /** Mode de la manche qui vient de se terminer, pour choisir le libellé de [meilleureReponse] ; null si [resultats] est vide. */
+    mode: ModeJeu? = null,
+    /** Meilleure réponse possible sur le tirage de cette manche (mot le plus long en lettres, solution en chiffres), affichée une seule fois (retour utilisateur : même tirage pour les deux joueurs). Null si [resultats] est vide ou si aucune réponse n'existe sur ce tirage. */
+    meilleureReponse: String? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxSize().fondPlateau().padding(24.dp).verticalScroll(rememberScrollState()),
@@ -86,6 +91,9 @@ fun TransitionJoueurScreen(
                     ColonneResultat(resultat, modifier = Modifier.weight(1f))
                 }
             }
+            if (mode != null) {
+                Text(texteMeilleureReponse(mode, meilleureReponse), color = TextMuted, fontSize = 13.sp)
+            }
         }
     }
 }
@@ -94,6 +102,20 @@ fun TransitionJoueurScreen(
 private fun messageVainqueur(resultats: List<ResultatAffichage>): String {
     val vainqueur = resultats.singleOrNull { it.estVainqueur }
     return if (vainqueur != null) stringResource(R.string.revelation_manche_vainqueur, vainqueur.pseudo) else stringResource(R.string.revelation_manche_egalite)
+}
+
+/** Même libellé que la révélation en solo (`ChiffresRoundScreen`/`LettresRoundScreen`), affiché une seule fois par manche ici (retour utilisateur : pas par joueur, le tirage est commun). */
+@Composable
+internal fun texteMeilleureReponse(mode: ModeJeu, meilleureReponse: String?): String = when (mode) {
+    ModeJeu.CHIFFRES -> stringResource(
+        R.string.chiffres_solution_possible_ligne,
+        meilleureReponse ?: stringResource(R.string.chiffres_solution_aucune),
+    )
+    ModeJeu.LETTRES -> stringResource(
+        R.string.lettres_meilleur_mot_trouve,
+        meilleureReponse?.let { stringResource(R.string.lettres_meilleur_mot_detail, it, it.length) }
+            ?: stringResource(R.string.lettres_meilleur_mot_aucun),
+    )
 }
 
 @Composable
