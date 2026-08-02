@@ -1157,10 +1157,18 @@ fun AppNavHost(
             val index by defiVm.index.collectAsState()
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
+            // Résultat de la manche en cours, connu seulement une fois qu'elle se termine
+            // (via onMancheTerminee ci-dessous) : remis à null à chaque nouvelle manche.
+            // Sans lui, le "+1" ci-dessous restait vrai pendant toute la manche SUIVANT
+            // celle qui amenait index à objectifQuotidien - 1 (y compris avant même qu'elle
+            // ait commencé), déclenchant une victoire prématurée et un compteur gonflé d'une
+            // unité (bug remonté par l'utilisateur).
+            var derniereMancheReussie by remember(essaiId) { mutableStateOf<Boolean?>(null) }
             // Compte de réussites confirmées, y compris la manche qui vient de se terminer avec
             // succès mais pas encore validée par "Continuer" (retour utilisateur : le défi
             // quotidien doit s'arrêter DÈS que l'objectif est atteint, pas à la manche suivante).
-            val objectifAtteint = jourQuotidien != null && (if (termine) index else index + 1) >= objectifQuotidien
+            val objectifAtteint = jourQuotidien != null &&
+                (if (termine) index else if (derniereMancheReussie == true) index + 1 else index) >= objectifQuotidien
             if (jourQuotidien != null) {
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
@@ -1187,7 +1195,10 @@ fun AppNavHost(
                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 progressionManche = "$index",
                 libelleProgression = "Série",
-                onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.echec() },
+                onMancheTerminee = { obtenu ->
+                    derniereMancheReussie = obtenu == 10
+                    if (obtenu != 10) defiVm.echec()
+                },
                 onRetourEntrainement = {
                     val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
                     navController.popBackStack(cible, inclusive = false)
@@ -1229,7 +1240,11 @@ fun AppNavHost(
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
             val seuil = seuilLongueurDefiLettres(niveau)
-            val objectifAtteint = jourQuotidien != null && (if (termine) index else index + 1) >= objectifQuotidien
+            // Résultat de la manche en cours, connu seulement une fois qu'elle se termine
+            // (via onMancheTerminee ci-dessous) : cf. commentaire équivalent sur le défi chiffres.
+            var derniereMancheReussie by remember(essaiId) { mutableStateOf<Boolean?>(null) }
+            val objectifAtteint = jourQuotidien != null &&
+                (if (termine) index else if (derniereMancheReussie == true) index + 1 else index) >= objectifQuotidien
             if (jourQuotidien != null) {
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
@@ -1255,6 +1270,7 @@ fun AppNavHost(
                 libelleProgression = "Série",
                 onMancheTerminee = { _, motValide, meilleurMot ->
                     val reussi = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
+                    derniereMancheReussie = reussi
                     if (!reussi) defiVm.echec()
                 },
                 onRetourEntrainement = {
@@ -1305,7 +1321,11 @@ fun AppNavHost(
             val reussites by defiVm.reussites.collectAsState()
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
-            val objectifAtteint = jourQuotidien != null && (if (termine) reussites else reussites + 1) >= objectifQuotidien
+            // Résultat de la manche en cours, connu seulement une fois qu'elle se termine
+            // (via onMancheTerminee ci-dessous) : cf. commentaire équivalent sur le défi série.
+            var derniereMancheReussie by remember(essaiId) { mutableStateOf<Boolean?>(null) }
+            val objectifAtteint = jourQuotidien != null &&
+                (if (termine) reussites else if (derniereMancheReussie == true) reussites + 1 else reussites) >= objectifQuotidien
             if (jourQuotidien != null) {
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
@@ -1335,7 +1355,10 @@ fun AppNavHost(
                 // Comme en défi série : un échec avance seul (pas de confirmation), une
                 // réussite attend le "Continuer" du joueur avant d'enchaîner (retour
                 // utilisateur, cohérence avec le défi série existant).
-                onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.mancheChronoTerminee(false) },
+                onMancheTerminee = { obtenu ->
+                    derniereMancheReussie = obtenu == 10
+                    if (obtenu != 10) defiVm.mancheChronoTerminee(false)
+                },
                 onRetourEntrainement = {
                     val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
                     navController.popBackStack(cible, inclusive = false)
@@ -1387,7 +1410,11 @@ fun AppNavHost(
             val essaiId by defiVm.essaiId.collectAsState()
             val termine by defiVm.termine.collectAsState()
             val seuil = seuilLongueurDefiLettres(niveau)
-            val objectifAtteint = jourQuotidien != null && (if (termine) reussites else reussites + 1) >= objectifQuotidien
+            // Résultat de la manche en cours, connu seulement une fois qu'elle se termine
+            // (via onMancheTerminee ci-dessous) : cf. commentaire équivalent sur le défi série.
+            var derniereMancheReussie by remember(essaiId) { mutableStateOf<Boolean?>(null) }
+            val objectifAtteint = jourQuotidien != null &&
+                (if (termine) reussites else if (derniereMancheReussie == true) reussites + 1 else reussites) >= objectifQuotidien
             if (jourQuotidien != null) {
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
@@ -1413,6 +1440,7 @@ fun AppNavHost(
                 // réussite attend le "Continuer" du joueur avant d'enchaîner.
                 onMancheTerminee = { _, motValide, meilleurMot ->
                     val reussi = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
+                    derniereMancheReussie = reussi
                     if (!reussi) defiVm.mancheChronoTerminee(false)
                 },
                 onRetourEntrainement = {

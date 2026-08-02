@@ -19,6 +19,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.60",
+        date = "2026-08-02",
+        changements = listOf(
+            "Corrigé : en défi quotidien (série ou chrono, chiffres ou lettres), le compteur de " +
+                "réussites pouvait afficher une réussite de plus que le nombre réel de manches " +
+                "jouées, et le défi pouvait se terminer \"gagné\" avant même que la dernière " +
+                "manche ait été jouée — le calcul anticipait l'atteinte de l'objectif dès le " +
+                "début de la manche suivante au lieu d'attendre son résultat réel.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.59",
         date = "2026-08-01",
         changements = listOf(
