@@ -408,7 +408,7 @@ fun AppNavHost(
                     val progressionManche = "${index + 1} / ${sequence.size}"
                     val actionsFinManche: @Composable () -> Unit = {
                         Button(onClick = { partieVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) {
-                            Text(if (estDerniere) "Voir le résultat" else "Manche suivante")
+                            Text(stringResource(if (estDerniere) R.string.revelation_voir_resultats else R.string.revelation_manche_suivante))
                         }
                     }
                     when (manche) {
@@ -507,6 +507,7 @@ fun AppNavHost(
                 val profil2 = profils.find { it.id == duoVm.profil2Id }
                 val manche = sequence.getOrNull(index)
                 var demanderConfirmationRetour by remember { mutableStateOf(false) }
+                val texteAucunMot = stringResource(R.string.revelation_aucun_mot)
 
                 val onRetourAvecConfirmation = { demanderConfirmationRetour = true }
 
@@ -653,7 +654,7 @@ fun AppNavHost(
                                     duoVm.enregistrerResultat(
                                         ResultatDuoManche(
                                             ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
-                                            detail = motValide ?: "(aucun mot)",
+                                            detail = motValide ?: texteAucunMot,
                                         ),
                                     )
                                 },
@@ -859,6 +860,7 @@ fun AppNavHost(
                 var demanderConfirmationRetour by remember { mutableStateOf(false) }
                 val onRetourAvecConfirmation = { demanderConfirmationRetour = true }
                 val jeSuisDeclencheur = tour == reseauVm.monTourDuo
+                val texteAucunMot = stringResource(R.string.revelation_aucun_mot)
 
                 if (erreurJeu != null) {
                     Column(
@@ -1012,7 +1014,7 @@ fun AppNavHost(
                                     reseauVm.enregistrerMonResultat(
                                         ResultatDuoManche(
                                             ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
-                                            detail = motValide ?: "(aucun mot)",
+                                            detail = motValide ?: texteAucunMot,
                                         ),
                                     )
                                 },

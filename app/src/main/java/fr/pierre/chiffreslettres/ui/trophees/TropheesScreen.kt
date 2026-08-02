@@ -35,12 +35,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.R
+import fr.pierre.chiffreslettres.data.ArgRes
 import fr.pierre.chiffreslettres.data.CatalogueTrophees
 import fr.pierre.chiffreslettres.data.CategorieTrophee
 import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.TropheeStats
-import fr.pierre.chiffreslettres.data.libelleCourt
-import fr.pierre.chiffreslettres.data.libelleJoueur
+import fr.pierre.chiffreslettres.data.libelleCourtRes
+import fr.pierre.chiffreslettres.data.libelleJoueurRes
 import fr.pierre.chiffreslettres.ui.statistiques.formatDate
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.Ivory
@@ -53,6 +54,13 @@ import fr.pierre.chiffreslettres.ui.theme.couleurPalier
  * "À propos" ([tropheesDebloques] = null, aucun état débloqué/verrouillé affiché) et fiche
  * d'un joueur depuis Statistiques > Joueurs ([tropheesDebloques] = trophyId -> date d'obtention).
  */
+/** Résout un titre/description de trophée : substitue les [ArgRes] (nom de mode, etc.) par leur texte avant le format. */
+@Composable
+private fun texteTrophee(res: Int, args: List<Any>): String {
+    val argsResolus = args.map { if (it is ArgRes) stringResource(it.res) else it }
+    return stringResource(res, *argsResolus.toTypedArray())
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TropheesScreen(
@@ -101,7 +109,7 @@ fun TropheesScreen(
                     val rang = CatalogueTrophees.rangJoueur(tropheesDebloques.keys)
                     if (rang != null) {
                         Text(
-                            rang.libelleJoueur,
+                            stringResource(rang.libelleJoueurRes),
                             style = MaterialTheme.typography.titleSmall,
                             color = couleurPalier(rang),
                         )
@@ -125,15 +133,15 @@ fun TropheesScreen(
             val (categorie, tropheesCategorie) = entry
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(categorie.titre, style = MaterialTheme.typography.titleSmall)
+                    Text(stringResource(categorie.titreRes), style = MaterialTheme.typography.titleSmall)
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        var sousTitrePrecedent: String? = null
+                        var sousTitrePrecedentRes: Int? = null
                         for (trophee in tropheesCategorie) {
-                            val sousTitre = trophee.sousTitre
-                            if (sousTitre != null && sousTitre != sousTitrePrecedent) {
-                                sousTitrePrecedent = sousTitre
+                            val sousTitreRes = trophee.sousTitreRes
+                            if (sousTitreRes != null && sousTitreRes != sousTitrePrecedentRes) {
+                                sousTitrePrecedentRes = sousTitreRes
                                 Text(
-                                    sousTitre,
+                                    stringResource(sousTitreRes),
                                     style = MaterialTheme.typography.labelLarge,
                                     color = TextMuted,
                                 )
@@ -156,15 +164,15 @@ fun TropheesScreen(
         val progression = trophee.progression
         AlertDialog(
             onDismissRequest = { tropheeSelectionne = null },
-            title = { Text(trophee.titre) },
+            title = { Text(texteTrophee(trophee.titreRes, trophee.titreArgs)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        trophee.palier.libelleCourt,
+                        stringResource(trophee.palier.libelleCourtRes),
                         style = MaterialTheme.typography.labelLarge,
                         color = couleurPalier(trophee.palier),
                     )
-                    Text(trophee.description)
+                    Text(texteTrophee(trophee.descriptionRes, trophee.descriptionArgs))
                     if (date == null && objectif != null && progression != null && stats != null) {
                         Text(
                             stringResource(R.string.trophees_progression, progression(stats).coerceAtMost(objectif), objectif),
@@ -213,7 +221,7 @@ private fun TuileTrophee(trophee: Trophee, debloque: Boolean, onClick: () -> Uni
             Text("🏆", fontSize = 18.sp)
         }
         Text(
-            trophee.titre,
+            texteTrophee(trophee.titreRes, trophee.titreArgs),
             color = if (debloque) Ivory else TextMuted,
             fontSize = 13.sp,
             textAlign = TextAlign.Start,

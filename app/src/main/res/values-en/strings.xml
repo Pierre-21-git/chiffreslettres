@@ -90,6 +90,7 @@
     <string name="revelation_manche_egalite">Tie on this round</string>
     <string name="revelation_manche_suivante">Next round</string>
     <string name="revelation_voir_resultats">See results</string>
+    <string name="revelation_aucun_mot">(no word)</string>
     <string name="revelation_score_vainqueur">🏆 %1$d pts</string>
     <string name="revelation_score">%1$d pts</string>
 

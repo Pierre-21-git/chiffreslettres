@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Trophy categories -->
+    <string name="categorie_parties_terminees">Games completed</string>
+    <string name="categorie_score_partie">Game score</string>
+    <string name="categorie_comptes_exacts">Exact counts</string>
+    <string name="categorie_partie_parfaite">Perfect game</string>
+    <string name="categorie_mots">Words</string>
+    <string name="categorie_duo">Duo game</string>
+    <string name="categorie_defi">Challenge</string>
+    <string name="categorie_defi_chrono">Timed challenge</string>
+    <string name="categorie_defi_quotidien">Daily challenge</string>
+
+    <!-- Tier labels (full player rank, e.g. "Bronze Player") -->
+    <string name="palier_joueur_bronze">Bronze Player</string>
+    <string name="palier_joueur_argent">Silver Player</string>
+    <string name="palier_joueur_or">Gold Player</string>
+    <string name="palier_joueur_platine">Platinum Player</string>
+    <string name="palier_joueur_diamant">Diamond Player</string>
+
+    <!-- Tier labels (short, trophy detail) -->
+    <string name="palier_court_bronze">Bronze</string>
+    <string name="palier_court_argent">Silver</string>
+    <string name="palier_court_or">Gold</string>
+    <string name="palier_court_platine">Platinum</string>
+    <string name="palier_court_diamant">Diamond</string>
+
+    <!-- Visual grouping subtitles -->
+    <string name="soustitre_duo">Duo</string>
+    <string name="soustitre_confrontation">Head-to-head</string>
+    <string name="soustitre_chiffres">Numbers</string>
+    <string name="soustitre_lettres">Letters</string>
+
+    <!-- Lower-case mode name, embedded in a sentence (e.g. "in the numbers challenge") -->
+    <string name="mode_minuscule_chiffres">numbers</string>
+    <string name="mode_minuscule_lettres">letters</string>
+
+    <!-- Nature of the success in a timed challenge -->
+    <string name="nature_comptes_exacts">exact counts</string>
+    <string name="nature_mots">words</string>
+
+    <!-- Trophy titles -->
+    <string name="trophee_titre_compte_exact_1">First exact count</string>
+    <string name="trophee_titre_compte_exact_10">Tenth exact count</string>
+    <string name="trophee_titre_compte_exact_100">Hundredth exact count</string>
+    <string name="trophee_titre_mot_1">First %1$d-letter word</string>
+    <string name="trophee_titre_mot_10">Tenth %1$d-letter word</string>
+    <string name="trophee_titre_partie_parfaite_chiffres">All exact counts in a game</string>
+    <string name="trophee_titre_partie_mots_min">Only %1$d-letter words or longer in a game</string>
+    <string name="trophee_titre_score_1">First game with at least %1$d points</string>
+    <string name="trophee_titre_score_10">Tenth game with at least %1$d points</string>
+    <string name="trophee_titre_parties_1">First game completed</string>
+    <string name="trophee_titre_parties_10">Tenth game completed</string>
+    <string name="trophee_titre_parties_100">Hundredth game completed</string>
+    <string name="trophee_titre_duo_1">First duo game played</string>
+    <string name="trophee_titre_duo_gagnee_1">First duo game won</string>
+    <string name="trophee_titre_duo_gagnee_10">Tenth duo game won</string>
+    <string name="trophee_titre_confrontation_1">First head-to-head played</string>
+    <string name="trophee_titre_confrontation_gagnee_1">First head-to-head won</string>
+    <string name="trophee_titre_confrontation_gagnee_10">Tenth head-to-head won</string>
+    <string name="trophee_titre_defi_1">First challenge completed</string>
+    <string name="trophee_titre_defi_serie">Streak of %1$d in the %2$s challenge</string>
+    <string name="trophee_titre_defi_chrono">%1$d %2$s in a timed challenge</string>
+    <string name="trophee_titre_defi_quotidien_semaine">A week of daily challenges</string>
+    <string name="trophee_titre_defi_quotidien_mois">A month of daily challenges</string>
+
+    <!-- Trophy descriptions -->
+    <string name="trophee_desc_compte_exact_1">Get an exact count in numbers, in a game (solo, duo, or head-to-head).</string>
+    <string name="trophee_desc_compte_exact_10">Get 10 exact counts in numbers, in a game (solo, duo, or head-to-head).</string>
+    <string name="trophee_desc_compte_exact_100">Get 100 exact counts in numbers, in a game (solo, duo, or head-to-head).</string>
+    <string name="trophee_desc_mot_1">Find a %1$d-letter word, in a game (solo, duo, or head-to-head).</string>
+    <string name="trophee_desc_mot_1_max">Find a %1$d-letter word (the maximum draw length), in a game (solo, duo, or head-to-head).</string>
+    <string name="trophee_desc_mot_10">Find 10 %1$d-letter words, in a game (solo, duo, or head-to-head).</string>
+    <string name="trophee_desc_partie_parfaite_chiffres">Complete a game (solo, duo, or head-to-head) where every numbers round has an exact count.</string>
+    <string name="trophee_desc_partie_mots_min">Complete a game (solo, duo, or head-to-head) where every letters round has a valid word of at least %1$d letters.</string>
+    <string name="trophee_desc_score_1">Complete a game (solo, duo, or head-to-head) with at least %1$d points.</string>
+    <string name="trophee_desc_score_10">Complete 10 games (solo, duo, or head-to-head) with at least %1$d points.</string>
+    <string name="trophee_desc_parties_1">Complete a game (solo, duo, or head-to-head), any level.</string>
+    <string name="trophee_desc_parties_10">Complete 10 games (solo, duo, or head-to-head), any level.</string>
+    <string name="trophee_desc_parties_100">Complete 100 games (solo, duo, or head-to-head), any level.</string>
+    <string name="trophee_desc_duo_1">Complete a game in Duo mode, same phone or remote, any level.</string>
+    <string name="trophee_desc_duo_gagnee_1">Win a game in Duo mode, same phone or remote.</string>
+    <string name="trophee_desc_duo_gagnee_10">Win 10 games in Duo mode, same phone or remote.</string>
+    <string name="trophee_desc_confrontation_1">Complete a game in Head-to-head mode, same phone or remote, any level.</string>
+    <string name="trophee_desc_confrontation_gagnee_1">Win a game in Head-to-head mode, same phone or remote.</string>
+    <string name="trophee_desc_confrontation_gagnee_10">Win 10 games in Head-to-head mode, same phone or remote.</string>
+    <string name="trophee_desc_defi_1">Reach the end of a challenge (numbers or letters, any level).</string>
+    <string name="trophee_desc_defi_serie">String together %1$d or more successes in a row in the same %2$s challenge.</string>
+    <string name="trophee_desc_defi_chrono">Get %1$d %2$s in a %3$s timed challenge, any level.</string>
+    <string name="trophee_desc_defi_quotidien">Succeed at the daily challenge %1$d days in a row.</string>
+</resources>

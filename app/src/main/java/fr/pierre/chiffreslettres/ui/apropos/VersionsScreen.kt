@@ -19,6 +19,20 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.65",
+        date = "2026-08-02",
+        changements = listOf(
+            "Corrigé : le bouton \"Manche suivante\"/\"Voir les résultats\" restait en français " +
+                "quelle que soit la langue.",
+            "Corrigé : le texte \"(aucun mot)\" affiché quand un joueur ne propose aucun mot en " +
+                "lettres (mode Duo/Réseau) restait en français.",
+            "Corrigé : l'écran Trophées (titres, descriptions, catégories, rangs) n'était quasiment " +
+                "pas traduit — ces textes venaient du module data (hors accès aux ressources " +
+                "Android) au lieu de strings.xml. Ce module a maintenant ses propres ressources " +
+                "traduites (en/de/es) et l'écran Trophées est désormais entièrement traduit.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.64",
         date = "2026-08-02",
         changements = listOf(

@@ -104,6 +104,7 @@
     <string name="revelation_manche_egalite">Égalité sur cette manche</string>
     <string name="revelation_manche_suivante">Manche suivante</string>
     <string name="revelation_voir_resultats">Voir les résultats</string>
+    <string name="revelation_aucun_mot">(aucun mot)</string>
     <string name="revelation_score_vainqueur">🏆 %1$d pts</string>
     <string name="revelation_score">%1$d pts</string>
 

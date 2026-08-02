@@ -64,6 +64,7 @@
     <string name="revelation_manche_egalite">Empate en esta ronda</string>
     <string name="revelation_manche_suivante">Siguiente ronda</string>
     <string name="revelation_voir_resultats">Ver resultados</string>
+    <string name="revelation_aucun_mot">(ninguna palabra)</string>
     <string name="revelation_score_vainqueur">🏆 %1$d pts</string>
     <string name="revelation_score">%1$d pts</string>
 

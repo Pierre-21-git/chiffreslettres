@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Trophäenkategorien -->
+    <string name="categorie_parties_terminees">Beendete Partien</string>
+    <string name="categorie_score_partie">Punktzahl einer Partie</string>
+    <string name="categorie_comptes_exacts">Exakte Ergebnisse</string>
+    <string name="categorie_partie_parfaite">Perfekte Partie</string>
+    <string name="categorie_mots">Wörter</string>
+    <string name="categorie_duo">Duo-Partie</string>
+    <string name="categorie_defi">Herausforderung</string>
+    <string name="categorie_defi_chrono">Zeitherausforderung</string>
+    <string name="categorie_defi_quotidien">Tägliche Herausforderung</string>
+
+    <!-- Rang-Bezeichnungen (voller Spielerrang, z. B. "Bronze-Spieler") -->
+    <string name="palier_joueur_bronze">Bronze-Spieler</string>
+    <string name="palier_joueur_argent">Silber-Spieler</string>
+    <string name="palier_joueur_or">Gold-Spieler</string>
+    <string name="palier_joueur_platine">Platin-Spieler</string>
+    <string name="palier_joueur_diamant">Diamant-Spieler</string>
+
+    <!-- Rang-Bezeichnungen (kurz, Trophäendetail) -->
+    <string name="palier_court_bronze">Bronze</string>
+    <string name="palier_court_argent">Silber</string>
+    <string name="palier_court_or">Gold</string>
+    <string name="palier_court_platine">Platin</string>
+    <string name="palier_court_diamant">Diamant</string>
+
+    <!-- Untertitel zur visuellen Gruppierung -->
+    <string name="soustitre_duo">Duo</string>
+    <string name="soustitre_confrontation">Duell</string>
+    <string name="soustitre_chiffres">Zahlen</string>
+    <string name="soustitre_lettres">Buchstaben</string>
+
+    <!-- Modusname, in einen Satz eingefügt (z. B. "in der Zahlen-Herausforderung") -->
+    <string name="mode_minuscule_chiffres">Zahlen</string>
+    <string name="mode_minuscule_lettres">Buchstaben</string>
+
+    <!-- Art des Erfolgs in einer Zeitherausforderung -->
+    <string name="nature_comptes_exacts">exakte Ergebnisse</string>
+    <string name="nature_mots">Wörter</string>
+
+    <!-- Trophäentitel -->
+    <string name="trophee_titre_compte_exact_1">Erstes exaktes Ergebnis</string>
+    <string name="trophee_titre_compte_exact_10">Zehntes exaktes Ergebnis</string>
+    <string name="trophee_titre_compte_exact_100">Hundertstes exaktes Ergebnis</string>
+    <string name="trophee_titre_mot_1">Erstes Wort mit %1$d Buchstaben</string>
+    <string name="trophee_titre_mot_10">Zehntes Wort mit %1$d Buchstaben</string>
+    <string name="trophee_titre_partie_parfaite_chiffres">Alle exakten Ergebnisse in einer Partie</string>
+    <string name="trophee_titre_partie_mots_min">Nur Wörter mit mindestens %1$d Buchstaben in einer Partie</string>
+    <string name="trophee_titre_score_1">Erste Partie mit mindestens %1$d Punkten</string>
+    <string name="trophee_titre_score_10">Zehnte Partie mit mindestens %1$d Punkten</string>
+    <string name="trophee_titre_parties_1">Erste beendete Partie</string>
+    <string name="trophee_titre_parties_10">Zehnte beendete Partie</string>
+    <string name="trophee_titre_parties_100">Hundertste beendete Partie</string>
+    <string name="trophee_titre_duo_1">Erste gespielte Duo-Partie</string>
+    <string name="trophee_titre_duo_gagnee_1">Erste gewonnene Duo-Partie</string>
+    <string name="trophee_titre_duo_gagnee_10">Zehnte gewonnene Duo-Partie</string>
+    <string name="trophee_titre_confrontation_1">Erstes gespieltes Duell</string>
+    <string name="trophee_titre_confrontation_gagnee_1">Erstes gewonnenes Duell</string>
+    <string name="trophee_titre_confrontation_gagnee_10">Zehntes gewonnenes Duell</string>
+    <string name="trophee_titre_defi_1">Erste beendete Herausforderung</string>
+    <string name="trophee_titre_defi_serie">%1$d in Folge in der %2$s-Herausforderung</string>
+    <string name="trophee_titre_defi_chrono">%1$d %2$s in einer Zeitherausforderung</string>
+    <string name="trophee_titre_defi_quotidien_semaine">Eine Woche tägliche Herausforderung</string>
+    <string name="trophee_titre_defi_quotidien_mois">Ein Monat tägliche Herausforderung</string>
+
+    <!-- Trophäenbeschreibungen -->
+    <string name="trophee_desc_compte_exact_1">Ein exaktes Ergebnis in Zahlen erzielen, in einer Partie (Solo, Duo oder Duell).</string>
+    <string name="trophee_desc_compte_exact_10">10 exakte Ergebnisse in Zahlen erzielen, in einer Partie (Solo, Duo oder Duell).</string>
+    <string name="trophee_desc_compte_exact_100">100 exakte Ergebnisse in Zahlen erzielen, in einer Partie (Solo, Duo oder Duell).</string>
+    <string name="trophee_desc_mot_1">Ein Wort mit %1$d Buchstaben finden, in einer Partie (Solo, Duo oder Duell).</string>
+    <string name="trophee_desc_mot_1_max">Ein Wort mit %1$d Buchstaben finden (die maximale Länge der Ziehung), in einer Partie (Solo, Duo oder Duell).</string>
+    <string name="trophee_desc_mot_10">10 Wörter mit %1$d Buchstaben finden, in einer Partie (Solo, Duo oder Duell).</string>
+    <string name="trophee_desc_partie_parfaite_chiffres">Eine Partie (Solo, Duo oder Duell) beenden, bei der jede Zahlen-Runde ein exaktes Ergebnis hat.</string>
+    <string name="trophee_desc_partie_mots_min">Eine Partie (Solo, Duo oder Duell) beenden, bei der jede Buchstaben-Runde ein gültiges Wort mit mindestens %1$d Buchstaben hat.</string>
+    <string name="trophee_desc_score_1">Eine Partie (Solo, Duo oder Duell) mit mindestens %1$d Punkten beenden.</string>
+    <string name="trophee_desc_score_10">10 Partien (Solo, Duo oder Duell) mit mindestens %1$d Punkten beenden.</string>
+    <string name="trophee_desc_parties_1">Eine Partie (Solo, Duo oder Duell) beenden, alle Stufen.</string>
+    <string name="trophee_desc_parties_10">10 Partien (Solo, Duo oder Duell) beenden, alle Stufen.</string>
+    <string name="trophee_desc_parties_100">100 Partien (Solo, Duo oder Duell) beenden, alle Stufen.</string>
+    <string name="trophee_desc_duo_1">Eine Partie im Duo-Modus beenden, gleiches Telefon oder aus der Ferne, alle Stufen.</string>
+    <string name="trophee_desc_duo_gagnee_1">Eine Partie im Duo-Modus gewinnen, gleiches Telefon oder aus der Ferne.</string>
+    <string name="trophee_desc_duo_gagnee_10">10 Partien im Duo-Modus gewinnen, gleiches Telefon oder aus der Ferne.</string>
+    <string name="trophee_desc_confrontation_1">Eine Partie im Duell-Modus beenden, gleiches Telefon oder aus der Ferne, alle Stufen.</string>
+    <string name="trophee_desc_confrontation_gagnee_1">Eine Partie im Duell-Modus gewinnen, gleiches Telefon oder aus der Ferne.</string>
+    <string name="trophee_desc_confrontation_gagnee_10">10 Partien im Duell-Modus gewinnen, gleiches Telefon oder aus der Ferne.</string>
+    <string name="trophee_desc_defi_1">Eine Herausforderung bis zum Ende durchspielen (Zahlen oder Buchstaben, alle Stufen).</string>
+    <string name="trophee_desc_defi_serie">%1$d oder mehr Erfolge in Folge in derselben %2$s-Herausforderung erzielen.</string>
+    <string name="trophee_desc_defi_chrono">%1$d %2$s in einer %3$s-Zeitherausforderung erzielen, alle Stufen.</string>
+    <string name="trophee_desc_defi_quotidien">Die tägliche Herausforderung %1$d Tage in Folge schaffen.</string>
+</resources>
