@@ -572,7 +572,8 @@ fun AppNavHost(
                         scorePartie2 = scoreFinal2.sumOf { it.score },
                         onPret = { duoVm.confirmerTransition() },
                         mode = r1Manche?.resultat?.mode,
-                        meilleureReponse = r1Manche?.meilleureReponse,
+                        meilleurMot = r1Manche?.meilleurMot,
+                        solutionPossible = r1Manche?.solutionPossible,
                     )
                 } else {
                     val joueurActif = if (tour == TourDuo.JOUEUR1) profilActif else profil2
@@ -605,7 +606,7 @@ fun AppNavHost(
                                             ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu),
                                             roundVm.uiState.value.ecartCible,
                                             detail,
-                                            meilleureReponse = roundVm.uiState.value.solutionSolveur?.texte(),
+                                            solutionPossible = roundVm.uiState.value.solutionSolveur,
                                         ),
                                     )
                                 },
@@ -658,7 +659,7 @@ fun AppNavHost(
                                         ResultatDuoManche(
                                             ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
                                             detail = motValide ?: texteAucunMot,
-                                            meilleureReponse = meilleurMot,
+                                            meilleurMot = meilleurMot,
                                         ),
                                     )
                                 },
@@ -930,7 +931,8 @@ fun AppNavHost(
                             scoreMoi = scoreMoi,
                             scoreAdversaire = scoreAdv,
                             mode = resultatMoi.resultat.mode,
-                            meilleureReponse = resultatMoi.meilleureReponse,
+                            meilleurMot = resultatMoi.meilleurMot,
+                            solutionPossible = resultatMoi.solutionPossible,
                             dernierManche = index == sequence.lastIndex,
                             onSuivant = { reseauVm.mancheSuivante() },
                         )
@@ -976,7 +978,7 @@ fun AppNavHost(
                                                 ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu),
                                                 roundVm.uiState.value.ecartCible,
                                                 detail,
-                                                meilleureReponse = roundVm.uiState.value.solutionSolveur?.texte(),
+                                                solutionPossible = roundVm.uiState.value.solutionSolveur,
                                             ),
                                         )
                                     },
@@ -1025,7 +1027,7 @@ fun AppNavHost(
                                         ResultatDuoManche(
                                             ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
                                             detail = motValide ?: texteAucunMot,
-                                            meilleureReponse = meilleurMot,
+                                            meilleurMot = meilleurMot,
                                         ),
                                     )
                                 },

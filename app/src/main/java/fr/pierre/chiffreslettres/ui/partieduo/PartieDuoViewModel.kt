@@ -3,6 +3,7 @@ package fr.pierre.chiffreslettres.ui.partieduo
 import androidx.lifecycle.ViewModel
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ResultatManche
+import fr.pierre.chiffreslettres.numbers.Expression
 import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
 import kotlin.random.Random
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,17 +18,19 @@ enum class TourDuo { JOUEUR1, JOUEUR2 }
  * en lettres — la comparaison s'y fait sur la longueur du mot), et [detail] à afficher sur
  * l'écran de transition (le calcul effectué en chiffres, le mot joué en lettres).
  *
- * [meilleureReponse] : la meilleure réponse possible sur ce tirage (mot le plus long en lettres,
- * texte de l'expression solution en chiffres, ex. "(5+3)*2"), null si aucune n'existe (retour
- * utilisateur : affichée une seule fois par manche sur l'écran de transition, pas par joueur,
- * puisque les deux joueurs jouent le même tirage). Calculée localement par chaque téléphone (pas
- * transmise sur le réseau) : déterministe à partir du même tirage, donc identique des deux côtés.
+ * [meilleurMot]/[solutionPossible] : la meilleure réponse possible sur ce tirage (mode Lettres/
+ * Chiffres respectivement, l'autre restant null), affichée une seule fois par manche sur l'écran
+ * de transition, pas par joueur, puisque les deux joueurs jouent le même tirage. [solutionPossible]
+ * garde l'[Expression] complète (pas juste son texte) pour pouvoir afficher le détail étape par
+ * étape, comme en solo. Calculées localement par chaque téléphone (pas transmises sur le réseau) :
+ * déterministes à partir du même tirage, donc identiques des deux côtés.
  */
 data class ResultatDuoManche(
     val resultat: ResultatManche,
     val ecartCible: Int? = null,
     val detail: String = "",
-    val meilleureReponse: String? = null,
+    val meilleurMot: String? = null,
+    val solutionPossible: Expression? = null,
 )
 
 /**

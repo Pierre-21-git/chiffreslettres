@@ -13,14 +13,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.ModeJeu
+import fr.pierre.chiffreslettres.numbers.Expression
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
+import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
 import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
@@ -51,10 +54,12 @@ fun TransitionJoueurScreen(
     scorePartie1: Int,
     scorePartie2: Int,
     onPret: () -> Unit,
-    /** Mode de la manche qui vient de se terminer, pour choisir le libellé de [meilleureReponse] ; null si [resultats] est vide. */
+    /** Mode de la manche qui vient de se terminer ; null si [resultats] est vide. */
     mode: ModeJeu? = null,
-    /** Meilleure réponse possible sur le tirage de cette manche (mot le plus long en lettres, solution en chiffres), affichée une seule fois (retour utilisateur : même tirage pour les deux joueurs). Null si [resultats] est vide ou si aucune réponse n'existe sur ce tirage. */
-    meilleureReponse: String? = null,
+    /** Meilleur mot possible sur le tirage de cette manche (mode Lettres uniquement), affiché une seule fois (retour utilisateur : même tirage pour les deux joueurs). */
+    meilleurMot: String? = null,
+    /** Solution possible sur le tirage de cette manche (mode Chiffres uniquement), affichée une seule fois, détail étape par étape comme en solo. */
+    solutionPossible: Expression? = null,
 ) {
     Column(
         modifier = Modifier.fillMaxSize().fondPlateau().padding(24.dp).verticalScroll(rememberScrollState()),
@@ -92,9 +97,7 @@ fun TransitionJoueurScreen(
                 }
             }
             if (mode != null) {
-                PanneauResultat {
-                    Text(texteMeilleureReponse(mode, meilleureReponse), color = TextMuted, fontSize = 13.sp)
-                }
+                PanneauMeilleureReponse(mode, meilleurMot, solutionPossible)
             }
         }
     }
@@ -106,18 +109,45 @@ private fun messageVainqueur(resultats: List<ResultatAffichage>): String {
     return if (vainqueur != null) stringResource(R.string.revelation_manche_vainqueur, vainqueur.pseudo) else stringResource(R.string.revelation_manche_egalite)
 }
 
-/** Même libellé que la révélation en solo (`ChiffresRoundScreen`/`LettresRoundScreen`), affiché une seule fois par manche ici (retour utilisateur : pas par joueur, le tirage est commun). */
+/**
+ * Même contenu que la révélation en solo (`ChiffresRoundScreen`/`LettresRoundScreen`), affiché
+ * une seule fois par manche ici (retour utilisateur : pas par joueur, le tirage est commun). En
+ * chiffres, une opération par ligne quand la solution en compte plusieurs (retour utilisateur),
+ * comme en solo.
+ */
 @Composable
-internal fun texteMeilleureReponse(mode: ModeJeu, meilleureReponse: String?): String = when (mode) {
-    ModeJeu.CHIFFRES -> stringResource(
-        R.string.chiffres_solution_possible_ligne,
-        meilleureReponse ?: stringResource(R.string.chiffres_solution_aucune),
-    )
-    ModeJeu.LETTRES -> stringResource(
-        R.string.lettres_meilleur_mot_trouve,
-        meilleureReponse?.let { stringResource(R.string.lettres_meilleur_mot_detail, it, it.length) }
-            ?: stringResource(R.string.lettres_meilleur_mot_aucun),
-    )
+internal fun PanneauMeilleureReponse(mode: ModeJeu, meilleurMot: String?, solutionPossible: Expression?) {
+    PanneauResultat {
+        when (mode) {
+            ModeJeu.LETTRES -> Text(
+                stringResource(
+                    R.string.lettres_meilleur_mot_trouve,
+                    meilleurMot?.let { stringResource(R.string.lettres_meilleur_mot_detail, it, it.length) }
+                        ?: stringResource(R.string.lettres_meilleur_mot_aucun),
+                ),
+                color = TextMuted,
+                fontSize = 13.sp,
+            )
+            ModeJeu.CHIFFRES -> {
+                val etapesSolution = solutionPossible?.etapes().orEmpty()
+                if (etapesSolution.isEmpty()) {
+                    Text(
+                        stringResource(
+                            R.string.chiffres_solution_possible_ligne,
+                            solutionPossible?.texte() ?: stringResource(R.string.chiffres_solution_aucune),
+                        ),
+                        color = TextMuted,
+                        fontSize = 13.sp,
+                    )
+                } else {
+                    Text(stringResource(R.string.chiffres_solution_possible_titre), color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
+                    for (ligne in etapesSolution) {
+                        Text(ligne, color = Ivory, fontFamily = FontFamily.Monospace, fontSize = 15.sp)
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable

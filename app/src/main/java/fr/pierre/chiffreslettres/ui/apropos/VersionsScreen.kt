@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.68",
+        date = "2026-08-03",
+        changements = listOf(
+            "Chiffres, écran de transition (Duo et Réseau) : la solution possible affiche " +
+                "maintenant chaque opération sur sa propre ligne quand il y en a plusieurs " +
+                "(au lieu d'une seule expression du type \"(5+3)*2\"), comme en partie solo.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.67",
         date = "2026-08-02",
         changements = listOf(
