@@ -40,6 +40,7 @@
     <string name="apropos_version">Números y Letras — versión %1$s (%2$d)</string>
     <string name="apropos_licence_code">Código fuente bajo licencia GNU GPL-3.0.</string>
     <string name="apropos_licence_dictionnaire">Diccionario francés: Dicollecte (hunspell-fr), licencia MPL-2.0.</string>
+    <string name="apropos_licence_dictionnaire_en">Diccionario inglés: en_US (proyecto SCOWL, © Kevin Atkinson), licencia permisiva de tipo BSD.</string>
     <string name="apropos_licence_filtrage">Filtrado gramatical (nombres propios, siglas, formas verbales conjugadas): Morphalou3 (CNRS/ATILF), licencia LGPL-LR.</string>
     <string name="apropos_licence_bibliotheques">Bibliotecas de código abierto utilizadas: AndroidX Jetpack Compose, Room, Navigation (licencia Apache 2.0).</string>
     <string name="apropos_bouton_regles_du_jeu">Reglas del juego</string>

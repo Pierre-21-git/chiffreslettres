@@ -43,6 +43,10 @@ fun AProposScreen(
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
+                stringResource(R.string.apropos_licence_dictionnaire_en),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
                 stringResource(R.string.apropos_licence_filtrage),
                 style = MaterialTheme.typography.bodyMedium,
             )

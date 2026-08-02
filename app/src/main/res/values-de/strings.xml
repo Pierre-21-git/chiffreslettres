@@ -40,6 +40,7 @@
     <string name="apropos_version">Zahlen &amp; Buchstaben — Version %1$s (%2$d)</string>
     <string name="apropos_licence_code">Quellcode unter der GNU-GPL-3.0-Lizenz.</string>
     <string name="apropos_licence_dictionnaire">Französisches Wörterbuch: Dicollecte (hunspell-fr), MPL-2.0-Lizenz.</string>
+    <string name="apropos_licence_dictionnaire_en">Englisches Wörterbuch: en_US (SCOWL-Projekt, © Kevin Atkinson), freizügige BSD-artige Lizenz.</string>
     <string name="apropos_licence_filtrage">Grammatikalische Filterung (Eigennamen, Abkürzungen, konjugierte Verbformen): Morphalou3 (CNRS/ATILF), LGPL-LR-Lizenz.</string>
     <string name="apropos_licence_bibliotheques">Verwendete Open-Source-Bibliotheken: AndroidX Jetpack Compose, Room, Navigation (Apache-2.0-Lizenz).</string>
     <string name="apropos_bouton_regles_du_jeu">Spielregeln</string>

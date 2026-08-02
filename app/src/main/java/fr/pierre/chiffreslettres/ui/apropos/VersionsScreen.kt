@@ -19,6 +19,14 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.63",
+        date = "2026-08-02",
+        changements = listOf(
+            "Écran À propos : ajout de la mention de licence manquante pour le dictionnaire " +
+                "anglais (en_US, projet SCOWL, © Kevin Atkinson, licence permissive de type BSD).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.62",
         date = "2026-08-02",
         changements = listOf(

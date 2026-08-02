@@ -66,6 +66,7 @@
     <string name="apropos_version">Numbers &amp; Letters — version %1$s (%2$d)</string>
     <string name="apropos_licence_code">Source code under the GNU GPL-3.0 license.</string>
     <string name="apropos_licence_dictionnaire">French dictionary: Dicollecte (hunspell-fr), MPL-2.0 license.</string>
+    <string name="apropos_licence_dictionnaire_en">English dictionary: en_US (SCOWL project, © Kevin Atkinson), permissive BSD-style license.</string>
     <string name="apropos_licence_filtrage">Grammatical filtering (proper nouns, acronyms, conjugated verb forms): Morphalou3 (CNRS/ATILF), LGPL-LR license.</string>
     <string name="apropos_licence_bibliotheques">Open source libraries used: AndroidX Jetpack Compose, Room, Navigation (Apache 2.0 license).</string>
     <string name="apropos_bouton_regles_du_jeu">Game rules</string>
