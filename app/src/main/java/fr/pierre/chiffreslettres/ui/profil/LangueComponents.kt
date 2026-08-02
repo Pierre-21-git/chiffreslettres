@@ -18,8 +18,8 @@ import fr.pierre.chiffreslettres.ui.theme.TuileJeton
 val LANGUES_DISPONIBLES = listOf(
     "fr" to "🇫🇷",
     "en" to "🇬🇧",
-    // "de" to "🇩🇪",
-    // "es" to "🇪🇸",
+    "de" to "🇩🇪",
+    "es" to "🇪🇸",
 )
 
 @Composable

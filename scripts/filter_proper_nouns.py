@@ -4,6 +4,11 @@ retire les noms propres et les sigles/abréviations (étape 1 de filter_grammar.
 ressource externe), mais ne filtre PAS les formes de verbes purement conjuguées faute
 d'un lexique morphologique équivalent pour cette langue (limite connue, cf. mémoire projet
 "reference_dictionnaires_langues" — à revoir si un lexique adapté est trouvé plus tard).
+
+Heuristique noms propres ("majuscule sans forme minuscule connue") invalide pour les langues
+où TOUS les noms communs sont capitalisés par convention orthographique (ex. allemand) : dans
+ce cas, utiliser --pas-de-detection-noms-propres pour ne retirer que les sigles. Les vrais noms
+propres présents dans le dictionnaire source restent alors acceptés (limite connue).
 """
 from __future__ import annotations
 
@@ -20,18 +25,20 @@ def est_sigle(mot: str) -> bool:
 
 
 def main() -> None:
-    if len(sys.argv) != 3:
-        print("Usage: filter_proper_nouns.py <input_file> <output_file>", file=sys.stderr)
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    detecter_noms_propres = "--pas-de-detection-noms-propres" not in sys.argv
+    if len(args) != 2:
+        print("Usage: filter_proper_nouns.py <input_file> <output_file> [--pas-de-detection-noms-propres]", file=sys.stderr)
         sys.exit(1)
 
-    input_file, output_file = Path(sys.argv[1]), Path(sys.argv[2])
+    input_file, output_file = Path(args[0]), Path(args[1])
 
     mots = [l.strip() for l in input_file.read_text(encoding="utf-8").splitlines() if l.strip()]
     total_depart = len(mots)
     mots_connus = set(mots)
 
     print("Noms propres et sigles (par casse)...", file=sys.stderr)
-    noms_propres = {m for m in mots if est_nom_propre(m, mots_connus)}
+    noms_propres = {m for m in mots if detecter_noms_propres and est_nom_propre(m, mots_connus)}
     sigles = {m for m in mots if m not in noms_propres and est_sigle(m)}
     retires = noms_propres | sigles
     mots_finaux = [m for m in mots if m not in retires]

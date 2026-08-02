@@ -17,6 +17,8 @@ private const val LANGUE_PAR_DEFAUT = "fr"
 private val ASSETS_PAR_LANGUE = mapOf(
     "fr" to "dictionnaire_fr.txt",
     "en" to "dictionnaire_en.txt",
+    "es" to "dictionnaire_es.txt",
+    "de" to "dictionnaire_de.txt",
 )
 
 /**

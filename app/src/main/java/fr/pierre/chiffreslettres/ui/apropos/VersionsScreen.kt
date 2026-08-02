@@ -19,6 +19,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.64",
+        date = "2026-08-02",
+        changements = listOf(
+            "Dictionnaires espagnol (658 014 mots, es_ES/LibreOffice dictionaries) et allemand " +
+                "(318 071 mots, de_DE/igerman98) ajoutés et branchés : l'espagnol et l'allemand " +
+                "sont maintenant jouables en mode Lettres.",
+            "Drapeaux 🇩🇪🇪🇸 réaffichés sur l'écran de modification de profil.",
+            "Licences des dictionnaires espagnol et allemand ajoutées à l'écran À propos.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.63",
         date = "2026-08-02",
         changements = listOf(
