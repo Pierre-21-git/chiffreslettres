@@ -51,7 +51,9 @@ fun RevelationMancheReseauScreen(
                 ColonneResultat(resultat, modifier = Modifier.weight(1f))
             }
         }
-        Text(texteMeilleureReponse(mode, meilleureReponse), color = TextMuted, fontSize = 13.sp)
+        PanneauResultat {
+            Text(texteMeilleureReponse(mode, meilleureReponse), color = TextMuted, fontSize = 13.sp)
+        }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Afficheur(label = pseudoMoi, valeur = "$scoreMoi", modifier = Modifier.weight(1f), centre = true)
             Afficheur(label = pseudoAdversaire, valeur = "$scoreAdversaire", modifier = Modifier.weight(1f), centre = true)

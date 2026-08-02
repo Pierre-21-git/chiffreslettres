@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.67",
+        date = "2026-08-02",
+        changements = listOf(
+            "Le mot le plus long possible / la solution possible (écran de transition Duo et " +
+                "Réseau, nouveauté de la version précédente) est maintenant affiché dans un encadré, " +
+                "comme le reste des résultats de la manche.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.66",
         date = "2026-08-02",
         changements = listOf(

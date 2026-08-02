@@ -92,7 +92,9 @@ fun TransitionJoueurScreen(
                 }
             }
             if (mode != null) {
-                Text(texteMeilleureReponse(mode, meilleureReponse), color = TextMuted, fontSize = 13.sp)
+                PanneauResultat {
+                    Text(texteMeilleureReponse(mode, meilleureReponse), color = TextMuted, fontSize = 13.sp)
+                }
             }
         }
     }
