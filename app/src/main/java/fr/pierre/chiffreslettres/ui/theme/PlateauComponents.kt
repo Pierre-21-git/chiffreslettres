@@ -98,7 +98,7 @@ fun PucePseudo(
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(Ivory.copy(alpha = 0.06f))
-            .border(if (couleurRang != null) 2.dp else 1.dp, couleurRang ?: Ivory.copy(alpha = 0.18f), RoundedCornerShape(16.dp))
+            .border(if (couleurRang != null) 3.dp else 1.dp, couleurRang ?: Ivory.copy(alpha = 0.18f), RoundedCornerShape(16.dp))
             .let { if (onClick != null) it.clickable(onClick = onClick) else it }
             .padding(horizontal = 14.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
