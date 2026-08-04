@@ -43,6 +43,20 @@ interface DefiDao {
     )
     suspend fun meilleuresSeriesDefiParMode(profilId: Long): List<MeilleureSerieDefi>
 
+    /**
+     * Meilleure série jamais réalisée en défi série, par mode, restreinte aux niveaux de
+     * [niveauCodes] (retour utilisateur : paliers Platine/Diamant du barème unifié, gagnés par le
+     * niveau atteint plutôt que par un seuil plus élevé).
+     */
+    @Query(
+        """
+        SELECT mode, MAX(serie) as meilleur FROM DefiEntity
+        WHERE profilId = :profilId AND type = 'SERIE' AND niveauCode IN (:niveauCodes)
+        GROUP BY mode
+        """,
+    )
+    suspend fun meilleuresSeriesDefiParModeEtNiveaux(profilId: Long, niveauCodes: List<String>): List<MeilleureSerieDefi>
+
     /** Meilleure performance (nombre de réussites) en défi chrono, par combinaison mode × niveau. */
     @Query(
         """
@@ -53,11 +67,29 @@ interface DefiDao {
     )
     suspend fun meilleuresReussitesChronoParCombinaison(profilId: Long): List<MeilleureReussiteChrono>
 
+    /** Meilleure performance en défi chrono, par mode, restreinte aux niveaux de [niveauCodes]. */
+    @Query(
+        """
+        SELECT mode, MAX(serie) as meilleur FROM DefiEntity
+        WHERE profilId = :profilId AND type = 'CHRONO' AND niveauCode IN (:niveauCodes)
+        GROUP BY mode
+        """,
+    )
+    suspend fun meilleuresReussitesChronoParModeEtNiveaux(profilId: Long, niveauCodes: List<String>): List<MeilleureSerieDefi>
+
     /** Meilleur nombre de mots trouvés en défi mots max (lettres uniquement), tous niveaux confondus. */
     @Query("SELECT MAX(serie) FROM DefiEntity WHERE profilId = :profilId AND type = 'MOTS_MAX'")
     suspend fun meilleurScoreDefiMotsMax(profilId: Long): Int?
 
+    /** Meilleur nombre de mots trouvés en défi mots max, restreint aux niveaux de [niveauCodes]. */
+    @Query("SELECT MAX(serie) FROM DefiEntity WHERE profilId = :profilId AND type = 'MOTS_MAX' AND niveauCode IN (:niveauCodes)")
+    suspend fun meilleurScoreDefiMotsMaxNiveaux(profilId: Long, niveauCodes: List<String>): Int?
+
     /** Meilleure série jamais réalisée en défi sans faute (mixte chiffres+lettres), tous niveaux confondus. */
     @Query("SELECT MAX(serie) FROM DefiEntity WHERE profilId = :profilId AND type = 'SANS_FAUTE'")
     suspend fun meilleureSerieSansFaute(profilId: Long): Int?
+
+    /** Meilleure série en défi sans faute, restreinte aux niveaux de [niveauCodes]. */
+    @Query("SELECT MAX(serie) FROM DefiEntity WHERE profilId = :profilId AND type = 'SANS_FAUTE' AND niveauCode IN (:niveauCodes)")
+    suspend fun meilleureSerieSansFauteNiveaux(profilId: Long, niveauCodes: List<String>): Int?
 }

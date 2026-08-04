@@ -5,8 +5,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
 private val SEUILS_MOTS = listOf(4, 5, 6, 7, 8)
+private val SEUILS_MOTS_NIVEAU_MATHIEU = listOf(7, 8)
 private val SEUILS_SCORE = listOf(20, 30, 40, 50, 60, 70, 80, 90)
 private val LONGUEURS_MOTS_TROPHEE = 4..10
+private val NIVEAUX_MONIQUE_OU_PLUS = listOf("MONIQUE", "MATHIEU")
+private val NIVEAUX_MATHIEU = listOf("MATHIEU")
 
 /**
  * Évalue et débloque les trophées d'un joueur à partir de son historique (parties solo + défis,
@@ -28,6 +31,9 @@ class TropheeRepository(
         motsParLongueur = LONGUEURS_MOTS_TROPHEE.associateWith { historiqueDao.compterMotsLongueur(profilId, it) },
         partieTousComptesExacts = historiqueDao.compterPartiesTousComptesExacts(profilId) >= 1,
         partiesMotsMin = SEUILS_MOTS.associateWith { historiqueDao.compterPartiesMotsMin(profilId, it) >= 1 },
+        partiesMotsMinNiveauMathieu = SEUILS_MOTS_NIVEAU_MATHIEU.associateWith {
+            historiqueDao.compterPartiesMotsMinNiveau(profilId, it, "MATHIEU") >= 1
+        },
         partiesParSeuilScore = SEUILS_SCORE.associateWith { historiqueDao.compterPartiesScoreAuMoins(profilId, it) },
         partiesSoloTotal = historiqueDao.compterPartiesSoloTotal(profilId),
         partiesDuoJouees = historiqueDao.compterPartiesParTypes(profilId, listOf(TypePartie.DUO.name, TypePartie.DUO_RESEAU.name)),
@@ -43,11 +49,23 @@ class TropheeRepository(
         defisTotal = defiDao.compterDefisTotal(profilId),
         meilleuresSeriesDefi = defiDao.meilleuresSeriesDefiParMode(profilId)
             .associate { it.mode.name to it.meilleur },
+        meilleuresSeriesDefiNiveauMonique = defiDao.meilleuresSeriesDefiParModeEtNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)
+            .associate { it.mode.name to it.meilleur },
+        meilleuresSeriesDefiNiveauMathieu = defiDao.meilleuresSeriesDefiParModeEtNiveaux(profilId, NIVEAUX_MATHIEU)
+            .associate { it.mode.name to it.meilleur },
         meilleuresReussitesDefiChrono = defiDao.meilleuresReussitesChronoParCombinaison(profilId)
             .groupBy { it.mode.name }
             .mapValues { (_, combinaisons) -> combinaisons.maxOf { it.meilleur } },
+        meilleuresReussitesDefiChronoNiveauMonique = defiDao.meilleuresReussitesChronoParModeEtNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)
+            .associate { it.mode.name to it.meilleur },
+        meilleuresReussitesDefiChronoNiveauMathieu = defiDao.meilleuresReussitesChronoParModeEtNiveaux(profilId, NIVEAUX_MATHIEU)
+            .associate { it.mode.name to it.meilleur },
         meilleurScoreDefiMotsMax = defiDao.meilleurScoreDefiMotsMax(profilId) ?: 0,
+        meilleurScoreDefiMotsMaxNiveauMonique = defiDao.meilleurScoreDefiMotsMaxNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS) ?: 0,
+        meilleurScoreDefiMotsMaxNiveauMathieu = defiDao.meilleurScoreDefiMotsMaxNiveaux(profilId, NIVEAUX_MATHIEU) ?: 0,
         meilleureSerieSansFaute = defiDao.meilleureSerieSansFaute(profilId) ?: 0,
+        meilleureSerieSansFauteNiveauMonique = defiDao.meilleureSerieSansFauteNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS) ?: 0,
+        meilleureSerieSansFauteNiveauMathieu = defiDao.meilleureSerieSansFauteNiveaux(profilId, NIVEAUX_MATHIEU) ?: 0,
         meilleureSerieJoursDefiQuotidien = plusLongueSerieDeJours(
             defiQuotidienDao.joursReussis(profilId).mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
         ),

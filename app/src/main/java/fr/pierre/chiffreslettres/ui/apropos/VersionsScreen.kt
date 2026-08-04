@@ -19,6 +19,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.74",
+        date = "2026-08-05",
+        changements = listOf(
+            "Refonte des trophées (retour utilisateur) : comptes exacts et parties terminées vont " +
+                "désormais jusqu'à 200 (Or à 50, Diamant à 200) ; les trophées \"partie parfaite\" " +
+                "mots de 7 et 8 lettres exigent en plus le niveau Mathieu (aucune lettre exclue) ; " +
+                "défi série, défi chrono, défi mots et défi sans faute partagent un même barème " +
+                "(3 Bronze, 5 Argent, 10 Or, puis Platine et Diamant selon que la série de 10 a été " +
+                "réalisée au niveau Monique/Mathieu ou au niveau Mathieu seul) ; dixième " +
+                "confrontation gagnée repasse de Diamant à Platine.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.73",
         date = "2026-08-04",
         changements = listOf(

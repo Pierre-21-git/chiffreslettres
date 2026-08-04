@@ -170,6 +170,24 @@ interface HistoriqueDao {
     )
     suspend fun compterPartiesMotsMin(profilId: Long, longueurMin: Int): Int
 
+    /**
+     * Comme [compterPartiesMotsMin], mais restreint aux parties jouées au niveau [niveauCode]
+     * (retour utilisateur : trophées "partie parfaite" 7/8 lettres, exigeant le niveau Mathieu).
+     */
+    @Query(
+        """
+        SELECT COUNT(*) FROM (
+            SELECT s.id
+            FROM SessionEntity s
+            INNER JOIN MancheEntity m ON m.sessionId = s.id AND m.mode = 'LETTRES' AND m.niveauCode = :niveauCode
+            WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+            GROUP BY s.id
+            HAVING COUNT(*) = COUNT(m.motJoue) AND MIN(LENGTH(m.motJoue)) >= :longueurMin
+        )
+        """,
+    )
+    suspend fun compterPartiesMotsMinNiveau(profilId: Long, longueurMin: Int, niveauCode: String): Int
+
     /** Nombre de parties dont le score total atteint au moins [seuil]. */
     @Query(
         """
