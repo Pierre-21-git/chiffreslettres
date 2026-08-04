@@ -19,6 +19,14 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.70",
+        date = "2026-08-04",
+        changements = listOf(
+            "Le widget \"Défi du jour\" prend maintenant moins de place par défaut sur l'écran " +
+                "d'accueil (redimensionnable en hauteur si besoin pour voir plus de profils).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.68",
         date = "2026-08-03",
         changements = listOf(

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/widget_fond"
-    android:padding="12dp">
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/widget_titre"
@@ -13,8 +13,8 @@
         android:text="Défi du jour"
         android:textColor="@color/widget_titre"
         android:textStyle="bold"
-        android:textSize="14sp"
-        android:paddingBottom="6dp" />
+        android:textSize="13sp"
+        android:paddingBottom="3dp" />
 
     <TextView
         android:id="@+id/widget_vide"
