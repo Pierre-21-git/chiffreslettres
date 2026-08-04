@@ -8,5 +8,8 @@ enum class ModeJeu { CHIFFRES, LETTRES }
  * MOTS_MAX : un seul tirage de lettres, 5 minutes, le plus de mots distincts possible sur ce même
  * tirage (retour utilisateur) — s'arrête sur un mot refusé par le dictionnaire ou une validation
  * à vide, jamais sur un mot déjà trouvé (qui ne compte simplement pas de point supplémentaire).
+ * SANS_FAUTE : alterne strictement manches chiffres et lettres (retour utilisateur), sans le
+ * plafond de manches du niveau, jusqu'à la première erreur — mode mixte, donc `DefiEntity.mode`
+ * n'est pas signifiant pour ce type (toujours CHIFFRES par convention, cf. sa doc).
  */
-enum class TypeDefi { SERIE, CHRONO, MOTS_MAX }
+enum class TypeDefi { SERIE, CHRONO, MOTS_MAX, SANS_FAUTE }

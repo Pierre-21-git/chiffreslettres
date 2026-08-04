@@ -142,6 +142,7 @@
     <string name="defi_type_serie">Défi série</string>
     <string name="defi_type_chrono">Défi chrono</string>
     <string name="defi_type_mots_max">Défi mots</string>
+    <string name="defi_type_sans_faute">Défi sans faute</string>
     <string name="defi_objectif">Objectif : %1$s</string>
     <string name="defi_objectif_comptes_serie">%1$d comptes exacts d\'affilée</string>
     <string name="defi_objectif_comptes">%1$d comptes exacts</string>
@@ -159,6 +160,10 @@
     <!-- ui/defi/DefiMotsMaxScreen -->
     <string name="defi_mots_max_deja_trouve">« %1$s » déjà trouvé, cherches-en un autre !</string>
     <string name="defi_mots_max_recap_score">%1$d mot(s) trouvé(s)</string>
+
+    <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
+    <string name="defi_sans_faute_libelle_progression">Série</string>
+    <string name="defi_sans_faute_recap">Série terminée : %1$d réussite(s)</string>
 
     <!-- ui/partiereseau/DeclencherMancheChiffresScreen -->
     <string name="declencher_manche_progression">Manche %1$s</string>

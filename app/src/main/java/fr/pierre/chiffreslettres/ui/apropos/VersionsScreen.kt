@@ -19,6 +19,18 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.72",
+        date = "2026-08-04",
+        changements = listOf(
+            "Nouveau : \"Défi sans faute\" (menu principal). Alterne strictement une manche " +
+                "chiffres et une manche lettres dans les conditions du niveau choisi, sans limite " +
+                "de manches, jusqu'à la première erreur (solution garantie côté chiffres, comme " +
+                "le défi série). Nouveaux trophées associés (3/5/10/15/20 réussites d'affilée).",
+            "Défi mots : la liste des mots déjà trouvés est maintenant affichée dans un encadré, " +
+                "un mot par ligne, au lieu d'une simple ligne de texte.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.71",
         date = "2026-08-04",
         changements = listOf(

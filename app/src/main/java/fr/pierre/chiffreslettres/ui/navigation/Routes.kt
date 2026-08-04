@@ -50,6 +50,7 @@ object Routes {
     const val CHOIX_DEFI_SERIE = "defi/choixNiveauSerie"
     const val CHOIX_DEFI_CHRONO = "defi/choixNiveauChrono"
     const val CHOIX_DEFI_MOTS_MAX = "defi/choixNiveauMotsMax"
+    const val CHOIX_DEFI_SANS_FAUTE = "defi/choixNiveauSansFaute"
     const val CHOIX_DEFI_QUOTIDIEN = "defi/quotidien"
 
     // Arguments optionnels portés par les 4 routes de jeu défi ci-dessous, uniquement
@@ -80,6 +81,11 @@ object Routes {
     // quotidien pour ce type de défi, donc pas de suffixe optionnel comme les 4 routes ci-dessus.
     const val JEU_DEFI_MOTS_MAX_PATTERN = "defi/motsMax/jeuLettres/{$ARG_NIVEAU}"
     fun jeuDefiMotsMax(niveau: NiveauLettres) = "defi/motsMax/jeuLettres/${niveau.name}"
+
+    // Un seul niveau pour les deux modes (retour utilisateur) : Niveau et NiveauLettres partagent
+    // les mêmes noms (EMILE/NESTOR/MONIQUE/MATHIEU), niveau.name convient donc pour les deux.
+    const val JEU_DEFI_SANS_FAUTE_PATTERN = "defi/sansFaute/jeu/{$ARG_NIVEAU}"
+    fun jeuDefiSansFaute(niveau: Niveau) = "defi/sansFaute/jeu/${niveau.name}"
 
     const val A_PROPOS = "apropos"
     const val REGLES_DU_JEU = "apropos/reglesDuJeu"

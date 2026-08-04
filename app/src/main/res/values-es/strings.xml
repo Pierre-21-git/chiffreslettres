@@ -97,6 +97,7 @@
     <string name="defi_type_serie">Desafío de racha</string>
     <string name="defi_type_chrono">Desafío contrarreloj</string>
     <string name="defi_type_mots_max">Desafío de palabras</string>
+    <string name="defi_type_sans_faute">Desafío sin fallos</string>
     <string name="defi_objectif">Objetivo: %1$s</string>
     <string name="defi_objectif_comptes_serie">%1$d resultados exactos seguidos</string>
     <string name="defi_objectif_comptes">%1$d resultados exactos</string>
@@ -114,6 +115,10 @@
     <!-- ui/defi/DefiMotsMaxScreen -->
     <string name="defi_mots_max_deja_trouve">«%1$s» ya encontrada, ¡busca otra!</string>
     <string name="defi_mots_max_recap_score">%1$d palabra(s) encontrada(s)</string>
+
+    <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
+    <string name="defi_sans_faute_libelle_progression">Racha</string>
+    <string name="defi_sans_faute_recap">Racha terminada: %1$d victoria(s)</string>
 
     <string name="declencher_manche_progression">Ronda %1$s</string>
     <string name="declencher_manche_commencer">Iniciar la ronda</string>

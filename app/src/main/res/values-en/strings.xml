@@ -123,6 +123,7 @@
     <string name="defi_type_serie">Streak challenge</string>
     <string name="defi_type_chrono">Timed challenge</string>
     <string name="defi_type_mots_max">Word challenge</string>
+    <string name="defi_type_sans_faute">Flawless challenge</string>
     <string name="defi_objectif">Goal: %1$s</string>
     <string name="defi_objectif_comptes_serie">%1$d exact counts in a row</string>
     <string name="defi_objectif_comptes">%1$d exact counts</string>
@@ -140,6 +141,10 @@
     <!-- ui/defi/DefiMotsMaxScreen -->
     <string name="defi_mots_max_deja_trouve">“%1$s” already found, try another one!</string>
     <string name="defi_mots_max_recap_score">%1$d word(s) found</string>
+
+    <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
+    <string name="defi_sans_faute_libelle_progression">Streak</string>
+    <string name="defi_sans_faute_recap">Streak over: %1$d win(s)</string>
 
     <string name="declencher_manche_progression">Round %1$s</string>
     <string name="declencher_manche_commencer">Start the round</string>

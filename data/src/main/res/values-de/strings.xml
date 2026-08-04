@@ -10,6 +10,7 @@
     <string name="categorie_defi">Herausforderung</string>
     <string name="categorie_defi_chrono">Zeitherausforderung</string>
     <string name="categorie_defi_mots_max">Wörter-Herausforderung</string>
+    <string name="categorie_defi_sans_faute">Fehlerfreie Herausforderung</string>
     <string name="categorie_defi_quotidien">Tägliche Herausforderung</string>
 
     <!-- Rang-Bezeichnungen (voller Spielerrang, z. B. "Bronze-Spieler") -->
@@ -63,6 +64,7 @@
     <string name="trophee_titre_defi_serie">%1$d in Folge in der %2$s-Herausforderung</string>
     <string name="trophee_titre_defi_chrono">%1$d %2$s in einer Zeitherausforderung</string>
     <string name="trophee_titre_defi_mots_max">%1$d Wörter bei derselben Ziehung</string>
+    <string name="trophee_titre_defi_sans_faute">%1$d fehlerfrei in Folge</string>
     <string name="trophee_titre_defi_quotidien_semaine">Eine Woche tägliche Herausforderung</string>
     <string name="trophee_titre_defi_quotidien_mois">Ein Monat tägliche Herausforderung</string>
 
@@ -90,5 +92,6 @@
     <string name="trophee_desc_defi_serie">%1$d oder mehr Erfolge in Folge in derselben %2$s-Herausforderung erzielen.</string>
     <string name="trophee_desc_defi_chrono">%1$d %2$s in einer %3$s-Zeitherausforderung erzielen, alle Stufen.</string>
     <string name="trophee_desc_defi_mots_max">%1$d oder mehr Wörter bei derselben Buchstabenziehung finden, in der Wörter-Herausforderung.</string>
+    <string name="trophee_desc_defi_sans_faute">%1$d oder mehr Erfolge in Folge in der fehlerfreien Herausforderung erzielen, Zahlen und Wörter im Wechsel.</string>
     <string name="trophee_desc_defi_quotidien">Die tägliche Herausforderung %1$d Tage in Folge schaffen.</string>
 </resources>

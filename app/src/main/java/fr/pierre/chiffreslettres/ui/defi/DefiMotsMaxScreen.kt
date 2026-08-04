@@ -142,7 +142,11 @@ fun DefiMotsMaxScreen(
         }
 
         if (etat.motsTrouves.isNotEmpty()) {
-            Text(etat.motsTrouves.joinToString(", "), color = TextMuted, fontSize = 13.sp)
+            PanneauResultat {
+                for (mot in etat.motsTrouves) {
+                    Text(mot, color = TextMuted, fontSize = 13.sp)
+                }
+            }
         }
 
         if (etat.termine) {

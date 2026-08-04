@@ -58,6 +58,7 @@ import fr.pierre.chiffreslettres.ui.apropos.ReglesDuJeuScreen
 import fr.pierre.chiffreslettres.ui.apropos.VersionsScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundViewModel
+import fr.pierre.chiffreslettres.ui.defi.ChoixDefiSansFauteScreen
 import fr.pierre.chiffreslettres.ui.defi.ChoixDefiScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiMotsMaxScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiMotsMaxViewModel
@@ -190,6 +191,7 @@ fun AppNavHost(
                 onDefiSerie = { navController.navigate(Routes.CHOIX_DEFI_SERIE) },
                 onDefiChrono = { navController.navigate(Routes.CHOIX_DEFI_CHRONO) },
                 onDefiMotsMax = { navController.navigate(Routes.CHOIX_DEFI_MOTS_MAX) },
+                onDefiSansFaute = { navController.navigate(Routes.CHOIX_DEFI_SANS_FAUTE) },
                 onDefiQuotidien = { navController.navigate(Routes.CHOIX_DEFI_QUOTIDIEN) },
                 onStatistiques = { navController.navigate(Routes.statistiquesJoueur(profilId)) },
                 onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
@@ -1162,6 +1164,91 @@ fun AppNavHost(
                     }
                 },
             )
+        }
+
+        // Un seul niveau pour les deux modes (retour utilisateur) : cf. doc de ChoixDefiSansFauteScreen.
+        composable(Routes.CHOIX_DEFI_SANS_FAUTE) {
+            ChoixDefiSansFauteScreen(
+                pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                onNiveauChoisi = { niveau -> navController.navigate(Routes.jeuDefiSansFaute(niveau)) },
+                onRetour = { navController.popBackStack() },
+            )
+        }
+
+        composable(
+            route = Routes.JEU_DEFI_SANS_FAUTE_PATTERN,
+            arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val niveauCode = backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!
+            val niveauChiffres = Niveau.valueOf(niveauCode)
+            val niveauLettres = NiveauLettres.valueOf(niveauCode)
+            // Mode field non signifiant pour SANS_FAUTE (défi mixte, cf. doc DefiEntity.mode) :
+            // toujours ModeJeu.CHIFFRES par convention.
+            val defiVm: DefiViewModel = viewModel(backStackEntry) {
+                DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.CHIFFRES, niveauCode, TypeDefi.SANS_FAUTE)
+            }
+            val index by defiVm.index.collectAsState()
+            val essaiId by defiVm.essaiId.collectAsState()
+            val termine by defiVm.termine.collectAsState()
+            val seuilLettres = seuilLongueurDefiLettres(niveauLettres)
+            val libelleProgression = stringResource(R.string.defi_sans_faute_libelle_progression)
+            val pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" }
+            val couleurRang = couleurRangJoueur(profilId, tropheeRepository)
+
+            val actionsFinManche: @Composable () -> Unit = {
+                if (termine) {
+                    ActionsFinDefi(
+                        message = stringResource(R.string.defi_sans_faute_recap, index),
+                        onRecommencer = { defiVm.recommencer() },
+                        onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false) },
+                    )
+                } else {
+                    Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(R.string.action_continuer))
+                    }
+                }
+            }
+
+            // Alternance stricte (retour utilisateur), chiffres en premier : index pair = chiffres,
+            // impair = lettres. Clé sur essaiId (jamais réutilisé, y compris entre les deux modes) :
+            // cf. commentaire équivalent sur le défi série mono-mode.
+            if (index % 2 == 0) {
+                val roundVm: ChiffresRoundViewModel =
+                    viewModel(key = "defi-sansfaute-$essaiId") {
+                        ChiffresRoundViewModel(niveauChiffres, niveauChiffres.dureeSecondesPartieStructuree, garantieSolution = true)
+                    }
+                ChiffresRoundScreen(
+                    viewModel = roundVm,
+                    scoreCumule = null,
+                    pseudo = pseudo,
+                    couleurRang = couleurRang,
+                    progressionManche = "$index",
+                    libelleProgression = libelleProgression,
+                    onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.echec() },
+                    onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false) },
+                    actionsFinManche = actionsFinManche,
+                )
+            } else {
+                val roundVm: LettresRoundViewModel =
+                    viewModel(key = "defi-sansfaute-$essaiId") {
+                        LettresRoundViewModel(niveauLettres, dictionnaire, configurationAlphabet, niveauLettres.dureeSecondesPartieStructuree)
+                    }
+                LettresRoundScreen(
+                    viewModel = roundVm,
+                    scoreCumule = null,
+                    pseudo = pseudo,
+                    couleurRang = couleurRang,
+                    progressionManche = "$index",
+                    libelleProgression = libelleProgression,
+                    onMancheTerminee = { _, motValide, meilleurMot ->
+                        val reussi = motValide != null && motEstReussiDefiLettres(niveauLettres, motValide, seuilLettres, meilleurMot)
+                        if (!reussi) defiVm.echec()
+                    },
+                    onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false) },
+                    actionsFinManche = actionsFinManche,
+                )
+            }
         }
 
         composable(Routes.CHOIX_DEFI_QUOTIDIEN) {

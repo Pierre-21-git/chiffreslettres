@@ -97,6 +97,7 @@
     <string name="defi_type_serie">Serien-Herausforderung</string>
     <string name="defi_type_chrono">Zeit-Herausforderung</string>
     <string name="defi_type_mots_max">Wörter-Herausforderung</string>
+    <string name="defi_type_sans_faute">Fehlerfreie Herausforderung</string>
     <string name="defi_objectif">Ziel: %1$s</string>
     <string name="defi_objectif_comptes_serie">%1$d exakte Ergebnisse in Folge</string>
     <string name="defi_objectif_comptes">%1$d exakte Ergebnisse</string>
@@ -114,6 +115,10 @@
     <!-- ui/defi/DefiMotsMaxScreen -->
     <string name="defi_mots_max_deja_trouve">„%1$s“ schon gefunden, versuch ein anderes!</string>
     <string name="defi_mots_max_recap_score">%1$d Wort/Wörter gefunden</string>
+
+    <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
+    <string name="defi_sans_faute_libelle_progression">Serie</string>
+    <string name="defi_sans_faute_recap">Serie beendet: %1$d Erfolg(e)</string>
 
     <string name="declencher_manche_progression">Runde %1$s</string>
     <string name="declencher_manche_commencer">Runde starten</string>

@@ -10,6 +10,7 @@
     <string name="categorie_defi">Défi</string>
     <string name="categorie_defi_chrono">Défi chrono</string>
     <string name="categorie_defi_mots_max">Défi mots</string>
+    <string name="categorie_defi_sans_faute">Défi sans faute</string>
     <string name="categorie_defi_quotidien">Défi quotidien</string>
 
     <!-- Libellés de palier (rang joueur complet, ex. "Joueur Bronze") -->
@@ -63,6 +64,7 @@
     <string name="trophee_titre_defi_serie">Série de %1$d en défi %2$s</string>
     <string name="trophee_titre_defi_chrono">%1$d %2$s en défi chrono</string>
     <string name="trophee_titre_defi_mots_max">%1$d mots sur un même tirage</string>
+    <string name="trophee_titre_defi_sans_faute">Série de %1$d sans faute</string>
     <string name="trophee_titre_defi_quotidien_semaine">Une semaine de défi quotidien</string>
     <string name="trophee_titre_defi_quotidien_mois">Un mois de défi quotidien</string>
 
@@ -90,5 +92,6 @@
     <string name="trophee_desc_defi_serie">Aligner %1$d réussites ou plus d\'affilée dans un même défi %2$s.</string>
     <string name="trophee_desc_defi_chrono">Obtenir %1$d %2$s en défi chrono %3$s, tous niveaux confondus.</string>
     <string name="trophee_desc_defi_mots_max">Trouver %1$d mots ou plus sur le même tirage de lettres, en défi mots.</string>
+    <string name="trophee_desc_defi_sans_faute">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés.</string>
     <string name="trophee_desc_defi_quotidien">Réussir le défi quotidien %1$d jours d\'affilée.</string>
 </resources>

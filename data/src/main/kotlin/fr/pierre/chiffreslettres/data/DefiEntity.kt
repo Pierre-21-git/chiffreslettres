@@ -20,6 +20,7 @@ import androidx.room.PrimaryKey
 data class DefiEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val profilId: Long,
+    /** Non signifiant pour `TypeDefi.SANS_FAUTE` (défi mixte chiffres+lettres) : toujours `ModeJeu.CHIFFRES` par convention. */
     val mode: ModeJeu,
     /** Nom de l'enum `Niveau`/`NiveauLettres` correspondant, comme `MancheEntity.niveauCode`. */
     val niveauCode: String,
@@ -28,6 +29,7 @@ data class DefiEntity(
      * SERIE : nombre de réussites d'affilée avant l'échec qui a terminé le défi.
      * CHRONO : nombre total de réussites obtenues avant l'épuisement du budget de temps.
      * MOTS_MAX : nombre de mots distincts trouvés sur le même tirage avant l'arrêt du défi.
+     * SANS_FAUTE : nombre de manches (chiffres et lettres confondues) réussies d'affilée.
      */
     val serie: Int,
     val date: Long,

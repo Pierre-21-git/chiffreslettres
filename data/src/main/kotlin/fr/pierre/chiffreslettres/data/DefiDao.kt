@@ -56,4 +56,8 @@ interface DefiDao {
     /** Meilleur nombre de mots trouvés en défi mots max (lettres uniquement), tous niveaux confondus. */
     @Query("SELECT MAX(serie) FROM DefiEntity WHERE profilId = :profilId AND type = 'MOTS_MAX'")
     suspend fun meilleurScoreDefiMotsMax(profilId: Long): Int?
+
+    /** Meilleure série jamais réalisée en défi sans faute (mixte chiffres+lettres), tous niveaux confondus. */
+    @Query("SELECT MAX(serie) FROM DefiEntity WHERE profilId = :profilId AND type = 'SANS_FAUTE'")
+    suspend fun meilleureSerieSansFaute(profilId: Long): Int?
 }
