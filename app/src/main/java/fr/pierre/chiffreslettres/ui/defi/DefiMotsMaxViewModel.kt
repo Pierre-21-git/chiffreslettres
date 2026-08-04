@@ -64,6 +64,7 @@ class DefiMotsMaxViewModel(
         configurationAlphabet.lettresExcluesParNiveau.getValue(niveau),
     )
     private val niveauCode = niveau.name
+    private val seuilLongueur = seuilLongueurDefiLettres(niveau)
     private var timerJob: Job? = null
     private var enregistre = false
 
@@ -114,15 +115,15 @@ class DefiMotsMaxViewModel(
 
     /**
      * Valide le mot en cours (retour utilisateur) : vide → arrêt volontaire ; invalide (hors
-     * dictionnaire) → arrêt du défi (comme le défi série, une erreur y met fin) ; déjà trouvé →
-     * signalé, lettres dégrisées, le défi continue sans point ; nouveau → +1, lettres dégrisées,
-     * le défi continue.
+     * dictionnaire ou plus court que le seuil du niveau, cf. [seuilLongueurDefiLettres]) → arrêt
+     * du défi (comme le défi série, une erreur y met fin) ; déjà trouvé → signalé, lettres
+     * dégrisées, le défi continue sans point ; nouveau → +1, lettres dégrisées, le défi continue.
      */
     fun valider() {
         val etat = _uiState.value
         if (etat.termine || !etat.tirageTermine) return
         val mot = etat.motSaisi
-        if (mot.isBlank() || !dictionnaire.estJouable(mot)) {
+        if (mot.isBlank() || mot.length < seuilLongueur || !dictionnaire.estJouable(mot)) {
             terminer()
             return
         }

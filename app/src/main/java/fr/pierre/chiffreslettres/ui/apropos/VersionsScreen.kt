@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.73",
+        date = "2026-08-04",
+        changements = listOf(
+            "Correction (retour utilisateur) : le défi mots n'appliquait pas le seuil de longueur " +
+                "minimale du niveau (ex. 7 lettres pour Mathieu) — un mot trouvé dans le dictionnaire " +
+                "était accepté quelle que soit sa longueur. Il doit maintenant atteindre le seuil du " +
+                "niveau choisi, sinon le défi s'arrête comme pour un mot hors dictionnaire.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.72",
         date = "2026-08-04",
         changements = listOf(
