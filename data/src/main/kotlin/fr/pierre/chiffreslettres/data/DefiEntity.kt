@@ -27,6 +27,7 @@ data class DefiEntity(
     /**
      * SERIE : nombre de réussites d'affilée avant l'échec qui a terminé le défi.
      * CHRONO : nombre total de réussites obtenues avant l'épuisement du budget de temps.
+     * MOTS_MAX : nombre de mots distincts trouvés sur le même tirage avant l'arrêt du défi.
      */
     val serie: Int,
     val date: Long,

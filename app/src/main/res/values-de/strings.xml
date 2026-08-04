@@ -96,6 +96,7 @@
     <string name="defi_quotidien_aujourdhui">Heute: %1$s %2$s</string>
     <string name="defi_type_serie">Serien-Herausforderung</string>
     <string name="defi_type_chrono">Zeit-Herausforderung</string>
+    <string name="defi_type_mots_max">Wörter-Herausforderung</string>
     <string name="defi_objectif">Ziel: %1$s</string>
     <string name="defi_objectif_comptes_serie">%1$d exakte Ergebnisse in Folge</string>
     <string name="defi_objectif_comptes">%1$d exakte Ergebnisse</string>
@@ -109,6 +110,10 @@
     <string name="defi_quotidien_choisis_niveau">Wähle dein Level</string>
     <string name="trophee_semaine_defi_quotidien">Eine Woche tägliche Herausforderungen</string>
     <string name="trophee_mois_defi_quotidien">Ein Monat tägliche Herausforderungen</string>
+
+    <!-- ui/defi/DefiMotsMaxScreen -->
+    <string name="defi_mots_max_deja_trouve">„%1$s“ schon gefunden, versuch ein anderes!</string>
+    <string name="defi_mots_max_recap_score">%1$d Wort/Wörter gefunden</string>
 
     <string name="declencher_manche_progression">Runde %1$s</string>
     <string name="declencher_manche_commencer">Runde starten</string>
@@ -142,6 +147,7 @@
     <string name="afficheur_score">Punkte</string>
     <string name="afficheur_temps">Zeit</string>
     <string name="afficheur_temps_valeur">%1$ds</string>
+    <string name="afficheur_mots_trouves">Gefundene Wörter</string>
     <string name="chiffres_compte_a_trouver">Zu findende Zahl</string>
     <string name="chiffres_vos_operations">Deine Rechenschritte</string>
     <string name="score_obtenu">Punktzahl: %1$d</string>

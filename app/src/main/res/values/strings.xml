@@ -141,6 +141,7 @@
     <string name="defi_quotidien_aujourdhui">Aujourd\'hui : %1$s %2$s</string>
     <string name="defi_type_serie">Défi série</string>
     <string name="defi_type_chrono">Défi chrono</string>
+    <string name="defi_type_mots_max">Défi mots</string>
     <string name="defi_objectif">Objectif : %1$s</string>
     <string name="defi_objectif_comptes_serie">%1$d comptes exacts d\'affilée</string>
     <string name="defi_objectif_comptes">%1$d comptes exacts</string>
@@ -154,6 +155,10 @@
     <string name="defi_quotidien_choisis_niveau">Choisis ton niveau</string>
     <string name="trophee_semaine_defi_quotidien">Une semaine de défi quotidien</string>
     <string name="trophee_mois_defi_quotidien">Un mois de défi quotidien</string>
+
+    <!-- ui/defi/DefiMotsMaxScreen -->
+    <string name="defi_mots_max_deja_trouve">« %1$s » déjà trouvé, cherches-en un autre !</string>
+    <string name="defi_mots_max_recap_score">%1$d mot(s) trouvé(s)</string>
 
     <!-- ui/partiereseau/DeclencherMancheChiffresScreen -->
     <string name="declencher_manche_progression">Manche %1$s</string>
@@ -195,6 +200,7 @@
     <string name="afficheur_score">Score</string>
     <string name="afficheur_temps">Temps</string>
     <string name="afficheur_temps_valeur">%1$ds</string>
+    <string name="afficheur_mots_trouves">Mots trouvés</string>
     <string name="chiffres_compte_a_trouver">Compte à trouver</string>
     <string name="chiffres_vos_operations">Vos opérations</string>
     <string name="score_obtenu">Score obtenu : %1$d</string>

@@ -26,6 +26,8 @@ data class TropheeStats(
     val meilleuresSeriesDefi: Map<String, Int>,
     /** Clé = nom du [ModeJeu] (ex. "CHIFFRES"), valeur = meilleur nombre de réussites en défi chrono, tous niveaux confondus. */
     val meilleuresReussitesDefiChrono: Map<String, Int>,
+    /** Meilleur nombre de mots distincts trouvés en défi mots max (lettres uniquement), tous niveaux confondus. */
+    val meilleurScoreDefiMotsMax: Int,
     /** Plus longue série de jours consécutifs avec le défi quotidien réussi. */
     val meilleureSerieJoursDefiQuotidien: Int,
 )
@@ -66,6 +68,7 @@ enum class CategorieTrophee(val titreRes: Int) {
     DUO(R.string.categorie_duo),
     DEFI(R.string.categorie_defi),
     DEFI_CHRONO(R.string.categorie_defi_chrono),
+    DEFI_MOTS_MAX(R.string.categorie_defi_mots_max),
     DEFI_QUOTIDIEN(R.string.categorie_defi_quotidien),
 }
 
@@ -103,6 +106,7 @@ private val SEUILS_DEFI_SERIE = listOf(3, 5, 10, 15, 20, 30, 50)
 private val SEUILS_DEFI_CHRONO = listOf(2, 3, 5, 10, 12, 15)
 private val LONGUEURS_MOTS_TROPHEE = 4..10
 private val SEUILS_DEFI_QUOTIDIEN = listOf(7, 30)
+private val SEUILS_DEFI_MOTS_MAX = listOf(2, 3, 5, 8, 10)
 
 // Paliers choisis par l'utilisateur (retour utilisateur, fichier trophees.txt réorganisé à la main).
 private val PALIERS_PARTIE_MOTS_MIN = mapOf(4 to Palier.BRONZE, 5 to Palier.ARGENT, 6 to Palier.OR, 7 to Palier.PLATINE, 8 to Palier.DIAMANT)
@@ -131,8 +135,12 @@ private val PALIERS_DEFI_CHRONO = mapOf(
     12 to Palier.PLATINE, 15 to Palier.DIAMANT,
 )
 private val PALIERS_DEFI_QUOTIDIEN = mapOf(7 to Palier.OR, 30 to Palier.PLATINE)
+// Paliers choisis par l'utilisateur : 2 mots bronze, 3 argent, 5 or, 8 platine, 10 diamant.
+private val PALIERS_DEFI_MOTS_MAX = mapOf(
+    2 to Palier.BRONZE, 3 to Palier.ARGENT, 5 to Palier.OR, 8 to Palier.PLATINE, 10 to Palier.DIAMANT,
+)
 
-/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 77 au total. */
+/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 82 au total. */
 object CatalogueTrophees {
 
     val TOUS: List<Trophee> = buildList {
@@ -413,6 +421,22 @@ object CatalogueTrophees {
                     ) { (it.meilleuresReussitesDefiChrono[mode.name] ?: 0) >= seuil },
                 )
             }
+        }
+
+        for (seuil in SEUILS_DEFI_MOTS_MAX) {
+            add(
+                Trophee(
+                    "defi_mots_max_$seuil",
+                    titreRes = R.string.trophee_titre_defi_mots_max,
+                    titreArgs = listOf(seuil),
+                    descriptionRes = R.string.trophee_desc_defi_mots_max,
+                    descriptionArgs = listOf(seuil),
+                    categorie = CategorieTrophee.DEFI_MOTS_MAX,
+                    palier = PALIERS_DEFI_MOTS_MAX.getValue(seuil),
+                    objectif = seuil,
+                    progression = { it.meilleurScoreDefiMotsMax },
+                ) { it.meilleurScoreDefiMotsMax >= seuil },
+            )
         }
 
         val titresPaliersQuotidien = mapOf(7 to R.string.trophee_titre_defi_quotidien_semaine, 30 to R.string.trophee_titre_defi_quotidien_mois)

@@ -59,6 +59,8 @@ import fr.pierre.chiffreslettres.ui.apropos.VersionsScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundViewModel
 import fr.pierre.chiffreslettres.ui.defi.ChoixDefiScreen
+import fr.pierre.chiffreslettres.ui.defi.DefiMotsMaxScreen
+import fr.pierre.chiffreslettres.ui.defi.DefiMotsMaxViewModel
 import fr.pierre.chiffreslettres.ui.defi.DefiQuotidienScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiViewModel
 import fr.pierre.chiffreslettres.ui.defi.budgetSecondesDefiChrono
@@ -187,6 +189,7 @@ fun AppNavHost(
                 onPartieReseau = { navController.navigate(Routes.RESEAU_GRAPH) },
                 onDefiSerie = { navController.navigate(Routes.CHOIX_DEFI_SERIE) },
                 onDefiChrono = { navController.navigate(Routes.CHOIX_DEFI_CHRONO) },
+                onDefiMotsMax = { navController.navigate(Routes.CHOIX_DEFI_MOTS_MAX) },
                 onDefiQuotidien = { navController.navigate(Routes.CHOIX_DEFI_QUOTIDIEN) },
                 onStatistiques = { navController.navigate(Routes.statistiquesJoueur(profilId)) },
                 onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
@@ -1117,6 +1120,47 @@ fun AppNavHost(
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoChiffres(niveau)) },
                 onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoLettres(niveau)) },
                 onRetour = { navController.popBackStack() },
+            )
+        }
+
+        // Lettres uniquement (retour utilisateur) : onNiveauChiffresChoisi = null masque la
+        // section chiffres de ChoixDefiScreen.
+        composable(Routes.CHOIX_DEFI_MOTS_MAX) {
+            ChoixDefiScreen(
+                titre = stringResource(R.string.defi_type_mots_max),
+                pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                afficherDuree = false,
+                onNiveauChiffresChoisi = null,
+                onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiMotsMax(niveau)) },
+                onRetour = { navController.popBackStack() },
+            )
+        }
+
+        composable(
+            route = Routes.JEU_DEFI_MOTS_MAX_PATTERN,
+            arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val niveau = NiveauLettres.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+            val defiVm: DefiMotsMaxViewModel = viewModel(backStackEntry) {
+                DefiMotsMaxViewModel(niveau, dictionnaire, configurationAlphabet, defiRepository, tropheeRepository, profilId)
+            }
+            DefiMotsMaxScreen(
+                viewModel = defiVm,
+                pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                onRetour = { navController.popBackStack(Routes.CHOIX_DEFI_MOTS_MAX, inclusive = false) },
+                actionsFin = {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Button(onClick = { defiVm.recommencer() }, modifier = Modifier.fillMaxWidth()) {
+                            Text(stringResource(R.string.action_recommencer))
+                        }
+                        OutlinedButton(
+                            onClick = { navController.popBackStack(Routes.CHOIX_DEFI_MOTS_MAX, inclusive = false) },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) { Text(stringResource(R.string.action_retour)) }
+                    }
+                },
             )
         }
 

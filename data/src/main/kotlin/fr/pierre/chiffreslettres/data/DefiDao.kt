@@ -52,4 +52,8 @@ interface DefiDao {
         """,
     )
     suspend fun meilleuresReussitesChronoParCombinaison(profilId: Long): List<MeilleureReussiteChrono>
+
+    /** Meilleur nombre de mots trouvés en défi mots max (lettres uniquement), tous niveaux confondus. */
+    @Query("SELECT MAX(serie) FROM DefiEntity WHERE profilId = :profilId AND type = 'MOTS_MAX'")
+    suspend fun meilleurScoreDefiMotsMax(profilId: Long): Int?
 }

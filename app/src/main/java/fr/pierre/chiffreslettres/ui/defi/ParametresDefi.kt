@@ -44,3 +44,6 @@ fun budgetSecondesDefiChrono(niveau: NiveauLettres): Int = when (niveau) {
     NiveauLettres.MONIQUE -> 240
     NiveauLettres.MATHIEU -> 300
 }
+
+/** Durée fixe (retour utilisateur : 5 minutes), identique quel que soit le niveau, du défi mots max. */
+const val DUREE_SECONDES_DEFI_MOTS_MAX = 300

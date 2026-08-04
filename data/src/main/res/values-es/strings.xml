@@ -9,6 +9,7 @@
     <string name="categorie_duo">Partida dúo</string>
     <string name="categorie_defi">Desafío</string>
     <string name="categorie_defi_chrono">Desafío cronometrado</string>
+    <string name="categorie_defi_mots_max">Desafío de palabras</string>
     <string name="categorie_defi_quotidien">Desafío diario</string>
 
     <!-- Etiquetas de nivel (rango completo del jugador, ej. "Jugador Bronce") -->
@@ -61,6 +62,7 @@
     <string name="trophee_titre_defi_1">Primer desafío terminado</string>
     <string name="trophee_titre_defi_serie">Racha de %1$d en el desafío de %2$s</string>
     <string name="trophee_titre_defi_chrono">%1$d %2$s en un desafío cronometrado</string>
+    <string name="trophee_titre_defi_mots_max">%1$d palabras en un mismo sorteo</string>
     <string name="trophee_titre_defi_quotidien_semaine">Una semana de desafío diario</string>
     <string name="trophee_titre_defi_quotidien_mois">Un mes de desafío diario</string>
 
@@ -87,5 +89,6 @@
     <string name="trophee_desc_defi_1">Llegar hasta el final de un desafío (números o letras, cualquier nivel).</string>
     <string name="trophee_desc_defi_serie">Encadenar %1$d éxitos o más seguidos en un mismo desafío de %2$s.</string>
     <string name="trophee_desc_defi_chrono">Obtener %1$d %2$s en un desafío cronometrado de %3$s, cualquier nivel.</string>
+    <string name="trophee_desc_defi_mots_max">Encontrar %1$d palabras o más en el mismo sorteo de letras, en el desafío de palabras.</string>
     <string name="trophee_desc_defi_quotidien">Superar el desafío diario %1$d días seguidos.</string>
 </resources>

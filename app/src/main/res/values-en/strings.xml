@@ -122,6 +122,7 @@
     <string name="defi_quotidien_aujourdhui">Today: %1$s %2$s</string>
     <string name="defi_type_serie">Streak challenge</string>
     <string name="defi_type_chrono">Timed challenge</string>
+    <string name="defi_type_mots_max">Word challenge</string>
     <string name="defi_objectif">Goal: %1$s</string>
     <string name="defi_objectif_comptes_serie">%1$d exact counts in a row</string>
     <string name="defi_objectif_comptes">%1$d exact counts</string>
@@ -135,6 +136,10 @@
     <string name="defi_quotidien_choisis_niveau">Choose your level</string>
     <string name="trophee_semaine_defi_quotidien">A week of daily challenges</string>
     <string name="trophee_mois_defi_quotidien">A month of daily challenges</string>
+
+    <!-- ui/defi/DefiMotsMaxScreen -->
+    <string name="defi_mots_max_deja_trouve">“%1$s” already found, try another one!</string>
+    <string name="defi_mots_max_recap_score">%1$d word(s) found</string>
 
     <string name="declencher_manche_progression">Round %1$s</string>
     <string name="declencher_manche_commencer">Start the round</string>
@@ -168,6 +173,7 @@
     <string name="afficheur_score">Score</string>
     <string name="afficheur_temps">Time</string>
     <string name="afficheur_temps_valeur">%1$ds</string>
+    <string name="afficheur_mots_trouves">Words found</string>
     <string name="chiffres_compte_a_trouver">Target number</string>
     <string name="chiffres_vos_operations">Your operations</string>
     <string name="score_obtenu">Score: %1$d</string>

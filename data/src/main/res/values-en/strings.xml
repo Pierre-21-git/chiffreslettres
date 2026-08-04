@@ -9,6 +9,7 @@
     <string name="categorie_duo">Duo game</string>
     <string name="categorie_defi">Challenge</string>
     <string name="categorie_defi_chrono">Timed challenge</string>
+    <string name="categorie_defi_mots_max">Word challenge</string>
     <string name="categorie_defi_quotidien">Daily challenge</string>
 
     <!-- Tier labels (full player rank, e.g. "Bronze Player") -->
@@ -61,6 +62,7 @@
     <string name="trophee_titre_defi_1">First challenge completed</string>
     <string name="trophee_titre_defi_serie">Streak of %1$d in the %2$s challenge</string>
     <string name="trophee_titre_defi_chrono">%1$d %2$s in a timed challenge</string>
+    <string name="trophee_titre_defi_mots_max">%1$d words on a single draw</string>
     <string name="trophee_titre_defi_quotidien_semaine">A week of daily challenges</string>
     <string name="trophee_titre_defi_quotidien_mois">A month of daily challenges</string>
 
@@ -87,5 +89,6 @@
     <string name="trophee_desc_defi_1">Reach the end of a challenge (numbers or letters, any level).</string>
     <string name="trophee_desc_defi_serie">String together %1$d or more successes in a row in the same %2$s challenge.</string>
     <string name="trophee_desc_defi_chrono">Get %1$d %2$s in a %3$s timed challenge, any level.</string>
+    <string name="trophee_desc_defi_mots_max">Find %1$d or more words on the same letter draw, in the word challenge.</string>
     <string name="trophee_desc_defi_quotidien">Succeed at the daily challenge %1$d days in a row.</string>
 </resources>

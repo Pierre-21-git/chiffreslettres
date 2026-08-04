@@ -33,7 +33,8 @@ fun ChoixDefiScreen(
     titre: String,
     pseudoActif: String,
     afficherDuree: Boolean,
-    onNiveauChiffresChoisi: (Niveau) -> Unit,
+    /** Null pour masquer entièrement la section chiffres (retour utilisateur : le défi mots max est réservé aux lettres). */
+    onNiveauChiffresChoisi: ((Niveau) -> Unit)?,
     onNiveauLettresChoisi: (NiveauLettres) -> Unit,
     onRetour: (() -> Unit)? = null,
     couleurRang: Color? = null,
@@ -45,10 +46,12 @@ fun ChoixDefiScreen(
         EnTeteEcran(titre, onRetour)
         PucePseudo(pseudoActif, couleurRang = couleurRang)
 
-        Text(stringResource(R.string.mode_chiffres), style = MaterialTheme.typography.titleMedium)
-        for (niveau in Niveau.entries) {
-            Button(onClick = { onNiveauChiffresChoisi(niveau) }, modifier = Modifier.fillMaxWidth()) {
-                Text(if (afficherDuree) stringResource(R.string.defi_niveau_duree, niveau.libelle(), budgetSecondesDefiChrono(niveau) / 60) else niveau.libelle())
+        if (onNiveauChiffresChoisi != null) {
+            Text(stringResource(R.string.mode_chiffres), style = MaterialTheme.typography.titleMedium)
+            for (niveau in Niveau.entries) {
+                Button(onClick = { onNiveauChiffresChoisi(niveau) }, modifier = Modifier.fillMaxWidth()) {
+                    Text(if (afficherDuree) stringResource(R.string.defi_niveau_duree, niveau.libelle(), budgetSecondesDefiChrono(niveau) / 60) else niveau.libelle())
+                }
             }
         }
 

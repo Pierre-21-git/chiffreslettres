@@ -46,6 +46,7 @@ class TropheeRepository(
         meilleuresReussitesDefiChrono = defiDao.meilleuresReussitesChronoParCombinaison(profilId)
             .groupBy { it.mode.name }
             .mapValues { (_, combinaisons) -> combinaisons.maxOf { it.meilleur } },
+        meilleurScoreDefiMotsMax = defiDao.meilleurScoreDefiMotsMax(profilId) ?: 0,
         meilleureSerieJoursDefiQuotidien = plusLongueSerieDeJours(
             defiQuotidienDao.joursReussis(profilId).mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
         ),

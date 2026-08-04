@@ -49,6 +49,7 @@ object Routes {
 
     const val CHOIX_DEFI_SERIE = "defi/choixNiveauSerie"
     const val CHOIX_DEFI_CHRONO = "defi/choixNiveauChrono"
+    const val CHOIX_DEFI_MOTS_MAX = "defi/choixNiveauMotsMax"
     const val CHOIX_DEFI_QUOTIDIEN = "defi/quotidien"
 
     // Arguments optionnels portés par les 4 routes de jeu défi ci-dessous, uniquement
@@ -74,6 +75,11 @@ object Routes {
         "defi/chrono/jeuChiffres/${niveau.name}${suffixeQuotidien(objectifQuotidien, jourQuotidien)}"
     fun jeuDefiChronoLettres(niveau: NiveauLettres, objectifQuotidien: Int? = null, jourQuotidien: String? = null) =
         "defi/chrono/jeuLettres/${niveau.name}${suffixeQuotidien(objectifQuotidien, jourQuotidien)}"
+
+    // Un seul tirage, pas de chaînage de manches (retour utilisateur) : pas de variante défi
+    // quotidien pour ce type de défi, donc pas de suffixe optionnel comme les 4 routes ci-dessus.
+    const val JEU_DEFI_MOTS_MAX_PATTERN = "defi/motsMax/jeuLettres/{$ARG_NIVEAU}"
+    fun jeuDefiMotsMax(niveau: NiveauLettres) = "defi/motsMax/jeuLettres/${niveau.name}"
 
     const val A_PROPOS = "apropos"
     const val REGLES_DU_JEU = "apropos/reglesDuJeu"

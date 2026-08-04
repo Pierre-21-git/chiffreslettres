@@ -1,0 +1,160 @@
+package fr.pierre.chiffreslettres.ui.defi
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import fr.pierre.chiffreslettres.R
+import fr.pierre.chiffreslettres.letters.TirageLettres
+import fr.pierre.chiffreslettres.ui.theme.Afficheur
+import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
+import fr.pierre.chiffreslettres.ui.theme.BrassBright
+import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
+import fr.pierre.chiffreslettres.ui.theme.PucePseudo
+import fr.pierre.chiffreslettres.ui.theme.TextMuted
+import fr.pierre.chiffreslettres.ui.theme.TuileJeton
+import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
+import fr.pierre.chiffreslettres.ui.theme.fondPlateau
+
+private const val LETTRES_PAR_LIGNE = 5
+
+/**
+ * Défi mots max (retour utilisateur) : contrairement à `LettresRoundScreen`, un seul écran
+ * couvre tout le défi (pas de chaînage manche par manche) — [actionsFin] ne fournit que les
+ * boutons "Recommencer"/"Retour" une fois [DefiMotsMaxUiState.termine], le reste (tirage,
+ * saisie, décompte des mots) est géré ici en continu sur le même tirage.
+ */
+@Composable
+fun DefiMotsMaxScreen(
+    viewModel: DefiMotsMaxViewModel,
+    pseudo: String?,
+    couleurRang: Color?,
+    onRetour: (() -> Unit)?,
+    actionsFin: @Composable () -> Unit,
+) {
+    val etat by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = Modifier.fillMaxSize().fondPlateau().padding(20.dp).verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        EnTeteEcran(stringResource(R.string.defi_type_mots_max), onRetour)
+        if (pseudo != null) {
+            PucePseudo(pseudo, couleurRang = couleurRang)
+        }
+
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Afficheur(stringResource(R.string.afficheur_mots_trouves), "${etat.motsTrouves.size}", modifier = Modifier.weight(1f), centre = true)
+            Afficheur(
+                label = if (!etat.tirageTermine) stringResource(R.string.lettres_tirage_label) else stringResource(R.string.afficheur_temps),
+                valeur = if (!etat.tirageTermine) {
+                    stringResource(R.string.lettres_tirage_valeur, etat.lettresTirees.size, etat.nombreLettres)
+                } else {
+                    stringResource(R.string.afficheur_temps_valeur, etat.tempsRestantSecondes)
+                },
+                modifier = Modifier.weight(1f),
+                centre = true,
+            )
+        }
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            maxItemsInEachRow = LETTRES_PAR_LIGNE,
+        ) {
+            for (index in 0 until etat.nombreLettres) {
+                val lettre = etat.lettresTirees.getOrNull(index)
+                if (lettre == null) {
+                    Spacer(Modifier.size(56.dp, 60.dp))
+                } else {
+                    val utilisee = index in etat.indicesUtilises
+                    TuileJeton(
+                        texte = "$lettre",
+                        selectionne = false,
+                        enabled = etat.tirageTermine && !etat.termine && !utilisee,
+                        monospace = false,
+                        grand = true,
+                        onClick = { viewModel.cliquerLettre(index) },
+                    )
+                }
+            }
+        }
+
+        Afficheur(
+            stringResource(R.string.lettres_votre_mot),
+            etat.motSaisi.ifEmpty { stringResource(R.string.attente_hote_valeur_provisoire) },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        if (etat.motDejaTrouve != null && !etat.termine) {
+            Text(stringResource(R.string.defi_mots_max_deja_trouve, etat.motDejaTrouve ?: ""), color = TextMuted, fontSize = 13.sp)
+        }
+
+        if (!etat.tirageTermine) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(stringResource(R.string.lettres_nombre_voyelles), color = TextMuted, fontSize = 13.sp)
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    for (n in TirageLettres.VOYELLES_MINIMUM..TirageLettres.VOYELLES_MAXIMUM) {
+                        TuilePrincipale(
+                            "$n",
+                            onClick = { viewModel.choisirNombreVoyelles(n) },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
+            }
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                BoutonSecondaireContour(
+                    stringResource(R.string.action_annuler),
+                    onClick = { viewModel.annulerLettre() },
+                    enabled = !etat.termine && etat.indicesUtilises.isNotEmpty(),
+                    modifier = Modifier.weight(1f),
+                )
+                BoutonSecondaireContour(
+                    stringResource(R.string.action_effacer),
+                    onClick = { viewModel.effacerMot() },
+                    enabled = !etat.termine && etat.indicesUtilises.isNotEmpty(),
+                    modifier = Modifier.weight(1f),
+                )
+            }
+            TuilePrincipale(stringResource(R.string.action_valider), onClick = { viewModel.valider() }, enabled = !etat.termine)
+        }
+
+        if (etat.motsTrouves.isNotEmpty()) {
+            Text(etat.motsTrouves.joinToString(", "), color = TextMuted, fontSize = 13.sp)
+        }
+
+        if (etat.termine) {
+            PanneauResultat {
+                Text(
+                    stringResource(R.string.defi_mots_max_recap_score, etat.motsTrouves.size),
+                    color = BrassBright,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                )
+            }
+            actionsFin()
+        }
+    }
+}

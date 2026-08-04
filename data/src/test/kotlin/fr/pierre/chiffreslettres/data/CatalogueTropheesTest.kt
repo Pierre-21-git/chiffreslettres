@@ -19,6 +19,7 @@ private fun statsVides() = TropheeStats(
     defisTotal = 0,
     meilleuresSeriesDefi = emptyMap(),
     meilleuresReussitesDefiChrono = emptyMap(),
+    meilleurScoreDefiMotsMax = 0,
     meilleureSerieJoursDefiQuotidien = 0,
 )
 
@@ -27,8 +28,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `77 trophees au total`() {
-        assertEquals(77, CatalogueTrophees.TOUS.size)
+    fun `82 trophees au total`() {
+        assertEquals(82, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -102,6 +103,17 @@ class CatalogueTropheesTest {
         val stats = statsVides().copy(meilleuresReussitesDefiChrono = mapOf("LETTRES" to 14))
         assertTrue(trophee("defi_chrono_lettres_12").estDebloque(stats))
         assertFalse(trophee("defi_chrono_lettres_15").estDebloque(stats))
+    }
+
+    @Test
+    fun `defi mots max a des paliers 2 bronze, 3 argent, 5 or, 8 platine, 10 diamant`() {
+        assertTrue(trophee("defi_mots_max_2").estDebloque(statsVides().copy(meilleurScoreDefiMotsMax = 2)))
+        assertFalse(trophee("defi_mots_max_3").estDebloque(statsVides().copy(meilleurScoreDefiMotsMax = 2)))
+        assertEquals(Palier.BRONZE, trophee("defi_mots_max_2").palier)
+        assertEquals(Palier.ARGENT, trophee("defi_mots_max_3").palier)
+        assertEquals(Palier.OR, trophee("defi_mots_max_5").palier)
+        assertEquals(Palier.PLATINE, trophee("defi_mots_max_8").palier)
+        assertEquals(Palier.DIAMANT, trophee("defi_mots_max_10").palier)
     }
 
     @Test
