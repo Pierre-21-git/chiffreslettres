@@ -4,16 +4,19 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -243,49 +246,64 @@ private fun nomFichier(pseudo: String?): String =
  * Mêmes podiums que [StatistiquesGeneralesScreen], mais uniquement les meilleurs scores de ce
  * profil (retour utilisateur : même page, sans le détail entraînement/défi d'avant).
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MesStatistiquesScreen(
     profilId: Long,
     historiqueRepository: HistoriqueRepository,
     onRetour: (() -> Unit)? = null,
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
+    val typesPartieAffiches = typesPartieAffiches()
+    // Calculé ici, avant le LazyColumn (retour utilisateur : titre épinglé au scroll) : les
+    // Flow doivent être collectés à chaque recomposition, pas seulement quand un item devient
+    // visible, pour savoir dès le départ quels niveaux ont des données (filtre ci-dessous).
+    val donneesParNiveau = Niveau.entries.map { niveau ->
+        niveau to typesPartieAffiches.map { (type, libelle) ->
+            val meilleuresFlow = remember(niveau, type) { historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name, type) }
+            val meilleures by meilleuresFlow.collectAsState(initial = emptyList())
+            Triple(type, libelle, meilleures)
+        }
+        // Retour utilisateur : un niveau qu'aucun type de partie n'a encore alimenté (ex.
+        // Mathieu jamais joué, ou mode réseau tout juste ajouté) ne doit pas polluer l'écran.
+    }.filter { (_, donneesParType) -> donneesParType.any { it.third.isNotEmpty() } }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(24.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        EnTeteEcran(stringResource(R.string.statistiques_bouton_mes_stats), onRetour)
-
-        Text(
-            stringResource(R.string.statistiques_mes_meilleurs_scores),
-            style = MaterialTheme.typography.titleMedium,
-        )
-        val typesPartieAffiches = typesPartieAffiches()
-        for ((position, niveau) in Niveau.entries.withIndex()) {
-            val donneesParType = mutableListOf<Triple<TypePartie, String, List<fr.pierre.chiffreslettres.data.MeilleurePartieSolo>>>()
-            for ((type, libelle) in typesPartieAffiches) {
-                val meilleuresFlow = remember(niveau, type) { historiqueRepository.meilleuresPartiesSoloParNiveau(profilId, niveau.name, type) }
-                val meilleures by meilleuresFlow.collectAsState(initial = emptyList())
-                donneesParType.add(Triple(type, libelle, meilleures))
+        // stickyHeader (retour utilisateur : le titre doit rester visible en scrollant).
+        stickyHeader {
+            Column(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background)) {
+                EnTeteEcran(stringResource(R.string.statistiques_bouton_mes_stats), onRetour)
             }
-            // Retour utilisateur : un niveau qu'aucun type de partie n'a encore alimenté (ex.
-            // Mathieu jamais joué, ou mode réseau tout juste ajouté) ne doit pas polluer l'écran.
-            if (donneesParType.all { it.third.isEmpty() }) continue
+        }
 
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
-                for ((type, libelle, meilleures) in donneesParType) {
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text(libelle, style = MaterialTheme.typography.titleSmall)
-                        Podium(meilleures.map { EntreePodium(null, it.score, it.date) })
-                        if (type == TypePartie.STRUCTUREE) {
-                            val historiqueFlow = remember(niveau) { historiqueRepository.historiqueScoresParNiveau(profilId, niveau.name, type) }
-                            val historique by historiqueFlow.collectAsState(initial = emptyList())
-                            GraphiqueProgression(historique.map { it.score })
+        item {
+            Text(
+                stringResource(R.string.statistiques_mes_meilleurs_scores),
+                style = MaterialTheme.typography.titleMedium,
+            )
+        }
+        for ((position, entry) in donneesParNiveau.withIndex()) {
+            val (niveau, donneesParType) = entry
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
+                    for ((type, libelle, meilleures) in donneesParType) {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Text(libelle, style = MaterialTheme.typography.titleSmall)
+                            Podium(meilleures.map { EntreePodium(null, it.score, it.date) })
+                            if (type == TypePartie.STRUCTUREE) {
+                                val historiqueFlow = remember(niveau) { historiqueRepository.historiqueScoresParNiveau(profilId, niveau.name, type) }
+                                val historique by historiqueFlow.collectAsState(initial = emptyList())
+                                GraphiqueProgression(historique.map { it.score })
+                            }
                         }
                     }
                 }
             }
-            if (position != Niveau.entries.lastIndex) HorizontalDivider()
+            if (position != donneesParNiveau.lastIndex) item { HorizontalDivider() }
         }
     }
 }
@@ -374,43 +392,57 @@ private fun GraphiqueProgression(scores: List<Int>) {
 }
 
 /** Classement général par niveau, commun à tous les profils (retour utilisateur : écran dédié, séparé de la fiche). */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StatistiquesGeneralesScreen(
     historiqueRepository: HistoriqueRepository,
     onRetour: (() -> Unit)? = null,
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
+    val typesPartieAffiches = typesPartieAffiches()
+    // Calculé ici, avant le LazyColumn (retour utilisateur : titre épinglé au scroll) : cf.
+    // commentaire équivalent sur MesStatistiquesScreen.
+    val donneesParNiveau = Niveau.entries.map { niveau ->
+        niveau to typesPartieAffiches.map { (type, libelle) ->
+            val classementFlow = remember(niveau, type) { historiqueRepository.classementParNiveau(niveau.name, type) }
+            val classement by classementFlow.collectAsState(initial = emptyList())
+            Triple(type, libelle, classement)
+        }
+        // Retour utilisateur : un niveau sans aucune donnée, tous types confondus, ne doit
+        // pas s'afficher.
+    }.filter { (_, donneesParType) -> donneesParType.any { it.third.isNotEmpty() } }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(24.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        EnTeteEcran(stringResource(R.string.statistiques_bouton_generales), onRetour)
-
-        Text(
-            stringResource(R.string.statistiques_classement_par_niveau),
-            style = MaterialTheme.typography.titleMedium,
-        )
-        val typesPartieAffiches = typesPartieAffiches()
-        for ((position, niveau) in Niveau.entries.withIndex()) {
-            val donneesParType = mutableListOf<Triple<TypePartie, String, List<fr.pierre.chiffreslettres.data.LigneClassement>>>()
-            for ((type, libelle) in typesPartieAffiches) {
-                val classementFlow = remember(niveau, type) { historiqueRepository.classementParNiveau(niveau.name, type) }
-                val classement by classementFlow.collectAsState(initial = emptyList())
-                donneesParType.add(Triple(type, libelle, classement))
+        // stickyHeader (retour utilisateur : le titre doit rester visible en scrollant).
+        stickyHeader {
+            Column(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background)) {
+                EnTeteEcran(stringResource(R.string.statistiques_bouton_generales), onRetour)
             }
-            // Retour utilisateur : un niveau sans aucune donnée, tous types confondus, ne doit
-            // pas s'afficher.
-            if (donneesParType.all { it.third.isEmpty() }) continue
+        }
 
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
-                for ((_, libelle, classement) in donneesParType) {
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text(libelle, style = MaterialTheme.typography.titleSmall)
-                        Podium(classement.map { EntreePodium("${it.avatar} ${it.pseudo}", it.score, it.date) })
+        item {
+            Text(
+                stringResource(R.string.statistiques_classement_par_niveau),
+                style = MaterialTheme.typography.titleMedium,
+            )
+        }
+        for ((position, entry) in donneesParNiveau.withIndex()) {
+            val (niveau, donneesParType) = entry
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
+                    for ((_, libelle, classement) in donneesParType) {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Text(libelle, style = MaterialTheme.typography.titleSmall)
+                            Podium(classement.map { EntreePodium("${it.avatar} ${it.pseudo}", it.score, it.date) })
+                        }
                     }
                 }
             }
-            if (position != Niveau.entries.lastIndex) HorizontalDivider()
+            if (position != donneesParNiveau.lastIndex) item { HorizontalDivider() }
         }
     }
 }
