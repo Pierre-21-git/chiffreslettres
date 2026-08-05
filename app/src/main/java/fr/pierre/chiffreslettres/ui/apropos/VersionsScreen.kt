@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.81",
+        date = "2026-08-05",
+        changements = listOf(
+            "Fiche profil (écran \"Mes statistiques\"/\"Statistiques générales\"/\"Voir mes " +
+                "trophées\"...) : titre épinglé en haut au scroll, même traitement que les 3 " +
+                "autres écrans concernés en 1.61 et 1.80.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.80",
         date = "2026-08-05",
         changements = listOf(

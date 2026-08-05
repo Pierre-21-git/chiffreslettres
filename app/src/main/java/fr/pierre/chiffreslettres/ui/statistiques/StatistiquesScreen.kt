@@ -81,6 +81,7 @@ fun formatDate(epochMillis: Long): String =
  * propres statistiques ([MesStatistiquesScreen]), au classement général commun à tous les
  * profils ([StatistiquesGeneralesScreen]), à ses trophées, et à la réinitialisation.
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StatistiquesJoueurScreen(
     profilId: Long,
@@ -133,35 +134,51 @@ fun StatistiquesJoueurScreen(
         if (uri != null) uriImportEnAttente = uri
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(24.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-        EnTeteEcran(profil?.pseudo ?: stringResource(R.string.statistiques_titre_defaut), onRetour)
-
-        Button(onClick = onMesStatistiques, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.statistiques_bouton_mes_stats))
-        }
-        Button(onClick = onStatistiquesGenerales, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.statistiques_bouton_generales))
+        // stickyHeader (retour utilisateur : le titre doit rester visible en scrollant).
+        stickyHeader {
+            Column(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background)) {
+                EnTeteEcran(profil?.pseudo ?: stringResource(R.string.statistiques_titre_defaut), onRetour)
+            }
         }
 
-        HorizontalDivider()
-        Button(onClick = onVoirTrophees, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.statistiques_bouton_voir_trophees))
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+                Button(onClick = onMesStatistiques, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.statistiques_bouton_mes_stats))
+                }
+                Button(onClick = onStatistiquesGenerales, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.statistiques_bouton_generales))
+                }
+            }
         }
 
-        HorizontalDivider()
-        Button(
-            onClick = { lanceurExport.launch("statistiques-${nomFichier(profil?.pseudo)}.json") },
-            modifier = Modifier.fillMaxWidth(),
-        ) { Text(stringResource(R.string.statistiques_bouton_exporter)) }
-        Button(
-            onClick = { lanceurImport.launch(arrayOf("application/json")) },
-            modifier = Modifier.fillMaxWidth(),
-        ) { Text(stringResource(R.string.statistiques_bouton_importer)) }
-        Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.statistiques_bouton_reinitialiser))
+        item { HorizontalDivider() }
+        item {
+            Button(onClick = onVoirTrophees, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.statistiques_bouton_voir_trophees))
+            }
+        }
+
+        item { HorizontalDivider() }
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+                Button(
+                    onClick = { lanceurExport.launch("statistiques-${nomFichier(profil?.pseudo)}.json") },
+                    modifier = Modifier.fillMaxWidth(),
+                ) { Text(stringResource(R.string.statistiques_bouton_exporter)) }
+                Button(
+                    onClick = { lanceurImport.launch(arrayOf("application/json")) },
+                    modifier = Modifier.fillMaxWidth(),
+                ) { Text(stringResource(R.string.statistiques_bouton_importer)) }
+                Button(onClick = { confirmationReinitialisation = true }, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.statistiques_bouton_reinitialiser))
+                }
+            }
         }
     }
 
