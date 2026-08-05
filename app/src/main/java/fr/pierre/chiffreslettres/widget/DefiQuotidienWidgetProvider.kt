@@ -11,30 +11,45 @@ import android.widget.RemoteViews
 import fr.pierre.chiffreslettres.MainActivity
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.AppDatabaseProvider
+import fr.pierre.chiffreslettres.data.CatalogueTrophees
 import fr.pierre.chiffreslettres.data.DefiQuotidienRepository
+import fr.pierre.chiffreslettres.data.Palier
 import fr.pierre.chiffreslettres.data.ProfilEntity
 import fr.pierre.chiffreslettres.data.ProfilRepository
+import fr.pierre.chiffreslettres.data.TropheeRepository
 import java.time.LocalDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
 
-/** Une ligne par profil (max 6, largement suffisant pour un usage familial). */
-private val LIGNES = listOf(
-    Triple(R.id.ligne_1, R.id.nom_1, R.id.statut_1),
-    Triple(R.id.ligne_2, R.id.nom_2, R.id.statut_2),
-    Triple(R.id.ligne_3, R.id.nom_3, R.id.statut_3),
-    Triple(R.id.ligne_4, R.id.nom_4, R.id.statut_4),
-    Triple(R.id.ligne_5, R.id.nom_5, R.id.statut_5),
-    Triple(R.id.ligne_6, R.id.nom_6, R.id.statut_6),
+/** Une case par profil (max 8, grille 2x4, largement suffisant pour un usage familial). */
+private val CASES = listOf(
+    Triple(R.id.cadre_1, R.id.nom_1, R.id.statut_1),
+    Triple(R.id.cadre_2, R.id.nom_2, R.id.statut_2),
+    Triple(R.id.cadre_3, R.id.nom_3, R.id.statut_3),
+    Triple(R.id.cadre_4, R.id.nom_4, R.id.statut_4),
+    Triple(R.id.cadre_5, R.id.nom_5, R.id.statut_5),
+    Triple(R.id.cadre_6, R.id.nom_6, R.id.statut_6),
+    Triple(R.id.cadre_7, R.id.nom_7, R.id.statut_7),
+    Triple(R.id.cadre_8, R.id.nom_8, R.id.statut_8),
 )
+
+/** Drawable de cadre associé au palier de rang du joueur (voir ui/theme/CouleurPalier.kt pour l'équivalent Compose). */
+private fun drawableCadre(palier: Palier?): Int = when (palier) {
+    Palier.BRONZE -> R.drawable.widget_cadre_bronze
+    Palier.ARGENT -> R.drawable.widget_cadre_argent
+    Palier.OR -> R.drawable.widget_cadre_or
+    Palier.PLATINE -> R.drawable.widget_cadre_platine
+    Palier.DIAMANT -> R.drawable.widget_cadre_diamant
+    null -> R.drawable.widget_cadre_neutre
+}
 
 /**
  * Widget écran d'accueil listant tous les profils avec leur statut du défi quotidien (retour
  * utilisateur : un seul widget compact pour toute la famille plutôt qu'un widget par profil).
- * Les lignes fixes (jusqu'à 6) évitent la complexité d'un `RemoteViewsService` façon liste
- * dynamique, inutile vu le nombre de profils attendu dans ce jeu.
+ * Grille de cases fixes (jusqu'à 8, 4 par ligne) : évite la complexité d'un `RemoteViewsService`
+ * façon liste dynamique, inutile vu le nombre de profils attendu dans ce jeu.
  */
 class DefiQuotidienWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -69,6 +84,7 @@ private suspend fun construireVues(context: Context): RemoteViews {
     val db = AppDatabaseProvider.obtenir(context.applicationContext)
     val profilRepository = ProfilRepository(db.profilDao())
     val defiQuotidienRepository = DefiQuotidienRepository(db.defiQuotidienDao())
+    val tropheeRepository = TropheeRepository(db.tropheeDao(), db.historiqueDao(), db.defiDao(), db.defiQuotidienDao())
     val profils = profilRepository.tousLesProfils().first()
     val jour = LocalDate.now().toString()
 
@@ -82,34 +98,40 @@ private suspend fun construireVues(context: Context): RemoteViews {
     vues.setOnClickPendingIntent(R.id.widget_racine, intentOuverture)
     vues.setViewVisibility(R.id.widget_vide, if (profils.isEmpty()) View.VISIBLE else View.GONE)
 
-    for ((index, ids) in LIGNES.withIndex()) {
-        val (idLigne, idNom, idStatut) = ids
+    for ((index, ids) in CASES.withIndex()) {
+        val (idCadre, idNom, idStatut) = ids
         val profil = profils.getOrNull(index)
         if (profil == null) {
-            vues.setViewVisibility(idLigne, View.GONE)
+            vues.setViewVisibility(idCadre, View.GONE)
             continue
         }
-        vues.setViewVisibility(idLigne, View.VISIBLE)
-        remplirLigne(vues, idNom, idStatut, profil, defiQuotidienRepository, jour)
+        vues.setViewVisibility(idCadre, View.VISIBLE)
+        remplirCase(vues, idCadre, idNom, idStatut, profil, defiQuotidienRepository, tropheeRepository, jour)
     }
     return vues
 }
 
-private suspend fun remplirLigne(
+private suspend fun remplirCase(
     vues: RemoteViews,
+    idCadre: Int,
     idNom: Int,
     idStatut: Int,
     profil: ProfilEntity,
     defiQuotidienRepository: DefiQuotidienRepository,
+    tropheeRepository: TropheeRepository,
     jour: String,
 ) {
     val fait = defiQuotidienRepository.reussiteDuJour(profil.id, jour)
     val statut = if (fait) {
         val serie = defiQuotidienRepository.serieActuelle(profil.id)
-        "✅ série $serie"
+        "✅ $serie"
     } else {
         "⏳"
     }
+    val debloques = tropheeRepository.tropheesDebloques(profil.id).first()
+    val palier = CatalogueTrophees.rangJoueur(debloques.map { it.trophyId }.toSet())
+
+    vues.setInt(idCadre, "setBackgroundResource", drawableCadre(palier))
     vues.setTextViewText(idNom, "${profil.avatar} ${profil.pseudo}")
     vues.setTextViewText(idStatut, statut)
 }

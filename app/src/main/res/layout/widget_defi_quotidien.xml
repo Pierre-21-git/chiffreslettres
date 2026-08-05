@@ -26,135 +26,309 @@
         android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/ligne_1"
+        android:id="@+id/ligne_haut"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/nom_1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/widget_texte"
-            android:textSize="12sp"
-            android:maxLines="1" />
-        <TextView
-            android:id="@+id/statut_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/widget_texte_muet"
-            android:textSize="12sp" />
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:id="@+id/cadre_1"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="2dp"
+            android:orientation="vertical"
+            android:background="@drawable/widget_cadre_neutre"
+            android:padding="3dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/widget_cadre_interieur"
+                android:padding="2dp">
+                <TextView
+                    android:id="@+id/nom_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte"
+                    android:textSize="10sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/statut_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte_muet"
+                    android:textSize="9sp"
+                    android:maxLines="1"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cadre_2"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="2dp"
+            android:orientation="vertical"
+            android:background="@drawable/widget_cadre_neutre"
+            android:padding="3dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/widget_cadre_interieur"
+                android:padding="2dp">
+                <TextView
+                    android:id="@+id/nom_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte"
+                    android:textSize="10sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/statut_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte_muet"
+                    android:textSize="9sp"
+                    android:maxLines="1"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cadre_3"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="2dp"
+            android:orientation="vertical"
+            android:background="@drawable/widget_cadre_neutre"
+            android:padding="3dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/widget_cadre_interieur"
+                android:padding="2dp">
+                <TextView
+                    android:id="@+id/nom_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte"
+                    android:textSize="10sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/statut_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte_muet"
+                    android:textSize="9sp"
+                    android:maxLines="1"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cadre_4"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="2dp"
+            android:orientation="vertical"
+            android:background="@drawable/widget_cadre_neutre"
+            android:padding="3dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/widget_cadre_interieur"
+                android:padding="2dp">
+                <TextView
+                    android:id="@+id/nom_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte"
+                    android:textSize="10sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/statut_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte_muet"
+                    android:textSize="9sp"
+                    android:maxLines="1"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ligne_2"
+        android:id="@+id/ligne_bas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/nom_2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/widget_texte"
-            android:textSize="12sp"
-            android:maxLines="1" />
-        <TextView
-            android:id="@+id/statut_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/widget_texte_muet"
-            android:textSize="12sp" />
-    </LinearLayout>
+        android:gravity="center_horizontal">
 
-    <LinearLayout
-        android:id="@+id/ligne_3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/nom_3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/widget_texte"
-            android:textSize="12sp"
-            android:maxLines="1" />
-        <TextView
-            android:id="@+id/statut_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/widget_texte_muet"
-            android:textSize="12sp" />
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/cadre_5"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="2dp"
+            android:orientation="vertical"
+            android:background="@drawable/widget_cadre_neutre"
+            android:padding="3dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/widget_cadre_interieur"
+                android:padding="2dp">
+                <TextView
+                    android:id="@+id/nom_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte"
+                    android:textSize="10sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/statut_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte_muet"
+                    android:textSize="9sp"
+                    android:maxLines="1"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ligne_4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/nom_4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/widget_texte"
-            android:textSize="12sp"
-            android:maxLines="1" />
-        <TextView
-            android:id="@+id/statut_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/widget_texte_muet"
-            android:textSize="12sp" />
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/cadre_6"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="2dp"
+            android:orientation="vertical"
+            android:background="@drawable/widget_cadre_neutre"
+            android:padding="3dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/widget_cadre_interieur"
+                android:padding="2dp">
+                <TextView
+                    android:id="@+id/nom_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte"
+                    android:textSize="10sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/statut_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte_muet"
+                    android:textSize="9sp"
+                    android:maxLines="1"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ligne_5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/nom_5"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/widget_texte"
-            android:textSize="12sp"
-            android:maxLines="1" />
-        <TextView
-            android:id="@+id/statut_5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/widget_texte_muet"
-            android:textSize="12sp" />
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/cadre_7"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="2dp"
+            android:orientation="vertical"
+            android:background="@drawable/widget_cadre_neutre"
+            android:padding="3dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/widget_cadre_interieur"
+                android:padding="2dp">
+                <TextView
+                    android:id="@+id/nom_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte"
+                    android:textSize="10sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/statut_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte_muet"
+                    android:textSize="9sp"
+                    android:maxLines="1"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ligne_6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/nom_6"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/widget_texte"
-            android:textSize="12sp"
-            android:maxLines="1" />
-        <TextView
-            android:id="@+id/statut_6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/widget_texte_muet"
-            android:textSize="12sp" />
+        <LinearLayout
+            android:id="@+id/cadre_8"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_margin="2dp"
+            android:orientation="vertical"
+            android:background="@drawable/widget_cadre_neutre"
+            android:padding="3dp"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@drawable/widget_cadre_interieur"
+                android:padding="2dp">
+                <TextView
+                    android:id="@+id/nom_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte"
+                    android:textSize="10sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center" />
+                <TextView
+                    android:id="@+id/statut_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/widget_texte_muet"
+                    android:textSize="9sp"
+                    android:maxLines="1"
+                    android:gravity="center" />
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

@@ -12,4 +12,12 @@
     <color name="widget_titre">#FFE4BE4A</color>
     <color name="widget_texte">#FFF1E6CF</color>
     <color name="widget_texte_muet">#FFCBB98A</color>
+
+    <!-- Couleurs de cadre par palier de rang, alignées sur ui/theme/Color.kt (CouleurPalier.kt) -->
+    <color name="widget_palier_bronze">#FFCD7F32</color>
+    <color name="widget_palier_argent">#FF9AA5B1</color>
+    <color name="widget_palier_or">#FFE4BE4A</color>
+    <color name="widget_palier_platine">#FF7FE3C4</color>
+    <color name="widget_palier_diamant">#FF33D2FF</color>
+    <color name="widget_palier_neutre">#33CBB98A</color>
 </resources>
