@@ -4,17 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/widget_fond"
-    android:padding="8dp">
-
-    <TextView
-        android:id="@+id/widget_titre"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Défi du jour"
-        android:textColor="@color/widget_titre"
-        android:textStyle="bold"
-        android:textSize="13sp"
-        android:paddingBottom="3dp" />
+    android:padding="6dp">
 
     <TextView
         android:id="@+id/widget_vide"
@@ -34,12 +24,13 @@
 
         <LinearLayout
             android:id="@+id/cadre_1"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_margin="2dp"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginVertical="2dp"
+            android:layout_marginHorizontal="6dp"
             android:orientation="vertical"
             android:background="@drawable/widget_cadre_neutre"
-            android:padding="2dp"
+            android:padding="4dp"
             android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,13 +38,13 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:background="@drawable/widget_cadre_interieur"
-                android:padding="1dp">
+                android:padding="2dp">
                 <TextView
                     android:id="@+id/nom_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte"
-                    android:textSize="8sp"
+                    android:textSize="15sp"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center" />
@@ -62,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte_muet"
-                    android:textSize="7sp"
+                    android:textSize="13sp"
                     android:maxLines="1"
                     android:gravity="center" />
             </LinearLayout>
@@ -70,12 +61,13 @@
 
         <LinearLayout
             android:id="@+id/cadre_2"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_margin="2dp"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginVertical="2dp"
+            android:layout_marginHorizontal="6dp"
             android:orientation="vertical"
             android:background="@drawable/widget_cadre_neutre"
-            android:padding="2dp"
+            android:padding="4dp"
             android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,13 +75,13 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:background="@drawable/widget_cadre_interieur"
-                android:padding="1dp">
+                android:padding="2dp">
                 <TextView
                     android:id="@+id/nom_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte"
-                    android:textSize="8sp"
+                    android:textSize="15sp"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center" />
@@ -98,7 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte_muet"
-                    android:textSize="7sp"
+                    android:textSize="13sp"
                     android:maxLines="1"
                     android:gravity="center" />
             </LinearLayout>
@@ -106,12 +98,13 @@
 
         <LinearLayout
             android:id="@+id/cadre_3"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_margin="2dp"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginVertical="2dp"
+            android:layout_marginHorizontal="6dp"
             android:orientation="vertical"
             android:background="@drawable/widget_cadre_neutre"
-            android:padding="2dp"
+            android:padding="4dp"
             android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -119,13 +112,13 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:background="@drawable/widget_cadre_interieur"
-                android:padding="1dp">
+                android:padding="2dp">
                 <TextView
                     android:id="@+id/nom_3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte"
-                    android:textSize="8sp"
+                    android:textSize="15sp"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center" />
@@ -134,7 +127,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte_muet"
-                    android:textSize="7sp"
+                    android:textSize="13sp"
                     android:maxLines="1"
                     android:gravity="center" />
             </LinearLayout>
@@ -142,12 +135,13 @@
 
         <LinearLayout
             android:id="@+id/cadre_4"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_margin="2dp"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginVertical="2dp"
+            android:layout_marginHorizontal="6dp"
             android:orientation="vertical"
             android:background="@drawable/widget_cadre_neutre"
-            android:padding="2dp"
+            android:padding="4dp"
             android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -155,13 +149,13 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:background="@drawable/widget_cadre_interieur"
-                android:padding="1dp">
+                android:padding="2dp">
                 <TextView
                     android:id="@+id/nom_4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte"
-                    android:textSize="8sp"
+                    android:textSize="15sp"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center" />
@@ -170,7 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte_muet"
-                    android:textSize="7sp"
+                    android:textSize="13sp"
                     android:maxLines="1"
                     android:gravity="center" />
             </LinearLayout>
@@ -178,12 +172,13 @@
 
         <LinearLayout
             android:id="@+id/cadre_5"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_margin="2dp"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginVertical="2dp"
+            android:layout_marginHorizontal="6dp"
             android:orientation="vertical"
             android:background="@drawable/widget_cadre_neutre"
-            android:padding="2dp"
+            android:padding="4dp"
             android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -191,13 +186,13 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:background="@drawable/widget_cadre_interieur"
-                android:padding="1dp">
+                android:padding="2dp">
                 <TextView
                     android:id="@+id/nom_5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte"
-                    android:textSize="8sp"
+                    android:textSize="15sp"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center" />
@@ -206,7 +201,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte_muet"
-                    android:textSize="7sp"
+                    android:textSize="13sp"
                     android:maxLines="1"
                     android:gravity="center" />
             </LinearLayout>
@@ -214,12 +209,13 @@
 
         <LinearLayout
             android:id="@+id/cadre_6"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_margin="2dp"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_marginVertical="2dp"
+            android:layout_marginHorizontal="6dp"
             android:orientation="vertical"
             android:background="@drawable/widget_cadre_neutre"
-            android:padding="2dp"
+            android:padding="4dp"
             android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -227,13 +223,13 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:background="@drawable/widget_cadre_interieur"
-                android:padding="1dp">
+                android:padding="2dp">
                 <TextView
                     android:id="@+id/nom_6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte"
-                    android:textSize="8sp"
+                    android:textSize="15sp"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center" />
@@ -242,7 +238,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/widget_texte_muet"
-                    android:textSize="7sp"
+                    android:textSize="13sp"
                     android:maxLines="1"
                     android:gravity="center" />
             </LinearLayout>
