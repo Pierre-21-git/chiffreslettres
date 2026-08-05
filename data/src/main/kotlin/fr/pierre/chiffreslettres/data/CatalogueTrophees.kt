@@ -53,6 +53,10 @@ data class TropheeStats(
     val meilleureSerieSansFauteNiveauMathieu: Int,
     /** Plus longue série de jours consécutifs avec le défi quotidien réussi. */
     val meilleureSerieJoursDefiQuotidien: Int,
+    /** Comme [meilleureSerieJoursDefiQuotidien], restreint aux jours joués au niveau Monique ou Mathieu. */
+    val meilleureSerieJoursDefiQuotidienNiveauMonique: Int,
+    /** Comme [meilleureSerieJoursDefiQuotidien], restreint aux jours joués au niveau Mathieu. */
+    val meilleureSerieJoursDefiQuotidienNiveauMathieu: Int,
 )
 
 /** Palier de difficulté d'un trophée (retour utilisateur), du plus facile au plus rare. */
@@ -137,7 +141,9 @@ private val SEUILS_DEFI_SANS_FAUTE = listOf(3, 5, 10)
 /** Seuil des 2 jalons "niveau" (Platine à Monique+, Diamant à Mathieu) des 5 familles de défi. */
 private const val SEUIL_DEFI_NIVEAU = 10
 private val LONGUEURS_MOTS_TROPHEE = 4..10
-private val SEUILS_DEFI_QUOTIDIEN = listOf(7, 30)
+private val SEUILS_DEFI_QUOTIDIEN = listOf(7, 14, 30)
+/** Seuil du jalon "niveau" (Platine à Monique+, Diamant à Mathieu) du défi quotidien. */
+private const val SEUIL_DEFI_QUOTIDIEN_NIVEAU = 30
 
 // Paliers choisis par l'utilisateur (retour utilisateur, fichier trophees.txt réorganisé à la main).
 private val PALIERS_PARTIE_MOTS_MIN = mapOf(4 to Palier.BRONZE, 5 to Palier.ARGENT, 6 to Palier.OR, 7 to Palier.PLATINE, 8 to Palier.DIAMANT)
@@ -163,9 +169,9 @@ private val PALIERS_DEFI_SERIE = PALIERS_DEFI_UNIFIE
 private val PALIERS_DEFI_CHRONO = PALIERS_DEFI_UNIFIE
 private val PALIERS_DEFI_MOTS_MAX = PALIERS_DEFI_UNIFIE
 private val PALIERS_DEFI_SANS_FAUTE = PALIERS_DEFI_UNIFIE
-private val PALIERS_DEFI_QUOTIDIEN = mapOf(7 to Palier.OR, 30 to Palier.PLATINE)
+private val PALIERS_DEFI_QUOTIDIEN = mapOf(7 to Palier.BRONZE, 14 to Palier.ARGENT, 30 to Palier.OR)
 
-/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 85 au total. */
+/** Catalogue complet des trophées possibles (spec produit, retour utilisateur) : 88 au total. */
 object CatalogueTrophees {
 
     val TOUS: List<Trophee> = buildList {
@@ -651,7 +657,11 @@ object CatalogueTrophees {
             ) { it.meilleureSerieSansFauteNiveauMathieu >= SEUIL_DEFI_NIVEAU },
         )
 
-        val titresPaliersQuotidien = mapOf(7 to R.string.trophee_titre_defi_quotidien_semaine, 30 to R.string.trophee_titre_defi_quotidien_mois)
+        val titresPaliersQuotidien = mapOf(
+            7 to R.string.trophee_titre_defi_quotidien_semaine,
+            14 to R.string.trophee_titre_defi_quotidien_deux_semaines,
+            30 to R.string.trophee_titre_defi_quotidien_mois,
+        )
         for (seuil in SEUILS_DEFI_QUOTIDIEN) {
             add(
                 Trophee(
@@ -666,6 +676,32 @@ object CatalogueTrophees {
                 ) { it.meilleureSerieJoursDefiQuotidien >= seuil },
             )
         }
+        add(
+            Trophee(
+                "defi_quotidien_30_monique",
+                titreRes = R.string.trophee_titre_defi_quotidien_niveau_monique,
+                titreArgs = listOf(SEUIL_DEFI_QUOTIDIEN_NIVEAU),
+                descriptionRes = R.string.trophee_desc_defi_quotidien_niveau_monique,
+                descriptionArgs = listOf(SEUIL_DEFI_QUOTIDIEN_NIVEAU),
+                categorie = CategorieTrophee.DEFI_QUOTIDIEN,
+                palier = Palier.PLATINE,
+                objectif = SEUIL_DEFI_QUOTIDIEN_NIVEAU,
+                progression = { it.meilleureSerieJoursDefiQuotidienNiveauMonique },
+            ) { it.meilleureSerieJoursDefiQuotidienNiveauMonique >= SEUIL_DEFI_QUOTIDIEN_NIVEAU },
+        )
+        add(
+            Trophee(
+                "defi_quotidien_30_mathieu",
+                titreRes = R.string.trophee_titre_defi_quotidien_niveau_mathieu,
+                titreArgs = listOf(SEUIL_DEFI_QUOTIDIEN_NIVEAU),
+                descriptionRes = R.string.trophee_desc_defi_quotidien_niveau_mathieu,
+                descriptionArgs = listOf(SEUIL_DEFI_QUOTIDIEN_NIVEAU),
+                categorie = CategorieTrophee.DEFI_QUOTIDIEN,
+                palier = Palier.DIAMANT,
+                objectif = SEUIL_DEFI_QUOTIDIEN_NIVEAU,
+                progression = { it.meilleureSerieJoursDefiQuotidienNiveauMathieu },
+            ) { it.meilleureSerieJoursDefiQuotidienNiveauMathieu >= SEUIL_DEFI_QUOTIDIEN_NIVEAU },
+        )
     }
 
     /**

@@ -18,6 +18,10 @@ interface DefiQuotidienDao {
     @Query("SELECT jour FROM DefiQuotidienEntity WHERE profilId = :profilId ORDER BY jour DESC")
     suspend fun joursReussis(profilId: Long): List<String>
 
+    /** Comme [joursReussis], restreint aux jours joués à l'un des [niveaux] donnés. */
+    @Query("SELECT jour FROM DefiQuotidienEntity WHERE profilId = :profilId AND niveau IN (:niveaux) ORDER BY jour DESC")
+    suspend fun joursReussisNiveaux(profilId: Long, niveaux: List<String>): List<String>
+
     @Query("DELETE FROM DefiQuotidienEntity WHERE profilId = :profilId")
     suspend fun reinitialiserJoueur(profilId: Long)
 }

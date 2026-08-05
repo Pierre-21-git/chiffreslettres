@@ -1310,7 +1310,7 @@ fun AppNavHost(
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
                         defiVm.objectifQuotidienAtteint()
-                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
+                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveau.name)
                         tropheeRepository.reevaluer(profilId)
                         DefiQuotidienWidgetProvider.demanderMiseAJour(context)
                     }
@@ -1386,7 +1386,7 @@ fun AppNavHost(
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
                         defiVm.objectifQuotidienAtteint()
-                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
+                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveau.name)
                         tropheeRepository.reevaluer(profilId)
                         DefiQuotidienWidgetProvider.demanderMiseAJour(context)
                     }
@@ -1467,7 +1467,7 @@ fun AppNavHost(
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
                         defiVm.objectifQuotidienAtteint()
-                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
+                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveau.name)
                         tropheeRepository.reevaluer(profilId)
                         DefiQuotidienWidgetProvider.demanderMiseAJour(context)
                     }
@@ -1556,7 +1556,7 @@ fun AppNavHost(
                 LaunchedEffect(objectifAtteint) {
                     if (objectifAtteint) {
                         defiVm.objectifQuotidienAtteint()
-                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien)
+                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveau.name)
                         tropheeRepository.reevaluer(profilId)
                         DefiQuotidienWidgetProvider.demanderMiseAJour(context)
                     }

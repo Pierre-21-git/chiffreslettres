@@ -79,7 +79,10 @@
     <string name="trophee_titre_defi_sans_faute_niveau_monique">Una racha sin fallos de %1$d, nivel Monique o superior</string>
     <string name="trophee_titre_defi_sans_faute_niveau_mathieu">Una racha sin fallos de %1$d, nivel Mathieu</string>
     <string name="trophee_titre_defi_quotidien_semaine">Una semana de desafío diario</string>
+    <string name="trophee_titre_defi_quotidien_deux_semaines">Dos semanas de desafío diario</string>
     <string name="trophee_titre_defi_quotidien_mois">Un mes de desafío diario</string>
+    <string name="trophee_titre_defi_quotidien_niveau_monique">%1$d días de desafío diario, nivel Monique o superior</string>
+    <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d días de desafío diario, nivel Mathieu</string>
 
     <!-- Descripciones de trofeos -->
     <string name="trophee_desc_compte_exact_1">Obtener un resultado exacto en números, en una partida (individual, dúo o enfrentamiento).</string>
@@ -120,4 +123,6 @@
     <string name="trophee_desc_defi_sans_faute_niveau_monique">Encadenar %1$d victorias o más seguidas en el desafío sin fallos, números y letras alternados, en el nivel Monique o Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Encadenar %1$d victorias o más seguidas en el desafío sin fallos, números y letras alternados, en el nivel Mathieu.</string>
     <string name="trophee_desc_defi_quotidien">Superar el desafío diario %1$d días seguidos.</string>
+    <string name="trophee_desc_defi_quotidien_niveau_monique">Superar el desafío diario %1$d días seguidos, en el nivel Monique o Mathieu.</string>
+    <string name="trophee_desc_defi_quotidien_niveau_mathieu">Superar el desafío diario %1$d días seguidos, en el nivel Mathieu.</string>
 </resources>

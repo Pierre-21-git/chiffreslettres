@@ -79,7 +79,10 @@
     <string name="trophee_titre_defi_sans_faute_niveau_monique">A flawless streak of %1$d, Monique level or above</string>
     <string name="trophee_titre_defi_sans_faute_niveau_mathieu">A flawless streak of %1$d, Mathieu level</string>
     <string name="trophee_titre_defi_quotidien_semaine">A week of daily challenges</string>
+    <string name="trophee_titre_defi_quotidien_deux_semaines">Two weeks of daily challenges</string>
     <string name="trophee_titre_defi_quotidien_mois">A month of daily challenges</string>
+    <string name="trophee_titre_defi_quotidien_niveau_monique">%1$d days of daily challenges, Monique level or above</string>
+    <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d days of daily challenges, Mathieu level</string>
 
     <!-- Trophy descriptions -->
     <string name="trophee_desc_compte_exact_1">Get an exact count in numbers, in a game (solo, duo, or head-to-head).</string>
@@ -120,4 +123,6 @@
     <string name="trophee_desc_defi_sans_faute_niveau_monique">Get %1$d or more wins in a row in the flawless challenge, numbers and letters alternating, at Monique or Mathieu level.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Get %1$d or more wins in a row in the flawless challenge, numbers and letters alternating, at Mathieu level.</string>
     <string name="trophee_desc_defi_quotidien">Succeed at the daily challenge %1$d days in a row.</string>
+    <string name="trophee_desc_defi_quotidien_niveau_monique">Succeed at the daily challenge %1$d days in a row, at Monique or Mathieu level.</string>
+    <string name="trophee_desc_defi_quotidien_niveau_mathieu">Succeed at the daily challenge %1$d days in a row, at Mathieu level.</string>
 </resources>

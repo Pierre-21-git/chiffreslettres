@@ -79,7 +79,10 @@
     <string name="trophee_titre_defi_sans_faute_niveau_monique">Série de %1$d sans faute, niveau Monique ou plus</string>
     <string name="trophee_titre_defi_sans_faute_niveau_mathieu">Série de %1$d sans faute, niveau Mathieu</string>
     <string name="trophee_titre_defi_quotidien_semaine">Une semaine de défi quotidien</string>
+    <string name="trophee_titre_defi_quotidien_deux_semaines">Deux semaines de défi quotidien</string>
     <string name="trophee_titre_defi_quotidien_mois">Un mois de défi quotidien</string>
+    <string name="trophee_titre_defi_quotidien_niveau_monique">%1$d jours de défi quotidien, niveau Monique ou plus</string>
+    <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d jours de défi quotidien, niveau Mathieu</string>
 
     <!-- Descriptions de trophées -->
     <string name="trophee_desc_compte_exact_1">Obtenir un compte exact en chiffres, en partie (solo, duo ou confrontation).</string>
@@ -120,4 +123,6 @@
     <string name="trophee_desc_defi_sans_faute_niveau_monique">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés, au niveau Monique ou Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés, au niveau Mathieu.</string>
     <string name="trophee_desc_defi_quotidien">Réussir le défi quotidien %1$d jours d\'affilée.</string>
+    <string name="trophee_desc_defi_quotidien_niveau_monique">Réussir le défi quotidien %1$d jours d\'affilée, au niveau Monique ou Mathieu.</string>
+    <string name="trophee_desc_defi_quotidien_niveau_mathieu">Réussir le défi quotidien %1$d jours d\'affilée, au niveau Mathieu.</string>
 </resources>

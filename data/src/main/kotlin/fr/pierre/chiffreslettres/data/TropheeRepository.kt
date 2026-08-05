@@ -69,6 +69,14 @@ class TropheeRepository(
         meilleureSerieJoursDefiQuotidien = plusLongueSerieDeJours(
             defiQuotidienDao.joursReussis(profilId).mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
         ),
+        meilleureSerieJoursDefiQuotidienNiveauMonique = plusLongueSerieDeJours(
+            defiQuotidienDao.joursReussisNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)
+                .mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
+        ),
+        meilleureSerieJoursDefiQuotidienNiveauMathieu = plusLongueSerieDeJours(
+            defiQuotidienDao.joursReussisNiveaux(profilId, NIVEAUX_MATHIEU)
+                .mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
+        ),
     )
 
     suspend fun reevaluer(profilId: Long) {

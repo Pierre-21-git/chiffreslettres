@@ -79,7 +79,10 @@
     <string name="trophee_titre_defi_sans_faute_niveau_monique">%1$d fehlerfrei in Folge, Stufe Monique oder höher</string>
     <string name="trophee_titre_defi_sans_faute_niveau_mathieu">%1$d fehlerfrei in Folge, Stufe Mathieu</string>
     <string name="trophee_titre_defi_quotidien_semaine">Eine Woche tägliche Herausforderung</string>
+    <string name="trophee_titre_defi_quotidien_deux_semaines">Zwei Wochen tägliche Herausforderung</string>
     <string name="trophee_titre_defi_quotidien_mois">Ein Monat tägliche Herausforderung</string>
+    <string name="trophee_titre_defi_quotidien_niveau_monique">%1$d Tage tägliche Herausforderung, Stufe Monique oder höher</string>
+    <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d Tage tägliche Herausforderung, Stufe Mathieu</string>
 
     <!-- Trophäenbeschreibungen -->
     <string name="trophee_desc_compte_exact_1">Ein exaktes Ergebnis in Zahlen erzielen, in einer Partie (Solo, Duo oder Duell).</string>
@@ -120,4 +123,6 @@
     <string name="trophee_desc_defi_sans_faute_niveau_monique">%1$d oder mehr Erfolge in Folge in der fehlerfreien Herausforderung erzielen, Zahlen und Wörter im Wechsel, auf Stufe Monique oder Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">%1$d oder mehr Erfolge in Folge in der fehlerfreien Herausforderung erzielen, Zahlen und Wörter im Wechsel, auf Stufe Mathieu.</string>
     <string name="trophee_desc_defi_quotidien">Die tägliche Herausforderung %1$d Tage in Folge schaffen.</string>
+    <string name="trophee_desc_defi_quotidien_niveau_monique">Die tägliche Herausforderung %1$d Tage in Folge schaffen, auf Stufe Monique oder Mathieu.</string>
+    <string name="trophee_desc_defi_quotidien_niveau_mathieu">Die tägliche Herausforderung %1$d Tage in Folge schaffen, auf Stufe Mathieu.</string>
 </resources>

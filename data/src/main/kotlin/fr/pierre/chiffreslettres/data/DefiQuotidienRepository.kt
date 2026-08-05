@@ -37,8 +37,10 @@ class DefiQuotidienRepository(private val dao: DefiQuotidienDao) {
 
     suspend fun reussiteDuJour(profilId: Long, jour: String): Boolean = dao.reussiteDuJour(profilId, jour) != null
 
-    suspend fun enregistrerReussite(profilId: Long, jour: String) {
-        dao.enregistrerReussite(DefiQuotidienEntity(profilId = profilId, jour = jour, dateReussite = System.currentTimeMillis()))
+    suspend fun enregistrerReussite(profilId: Long, jour: String, niveau: String) {
+        dao.enregistrerReussite(
+            DefiQuotidienEntity(profilId = profilId, jour = jour, dateReussite = System.currentTimeMillis(), niveau = niveau),
+        )
     }
 
     suspend fun reinitialiserJoueur(profilId: Long) = dao.reinitialiserJoueur(profilId)

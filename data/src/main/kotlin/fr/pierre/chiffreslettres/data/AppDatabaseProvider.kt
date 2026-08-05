@@ -125,6 +125,17 @@ private val MIGRATION_8_9 = object : Migration(8, 9) {
     }
 }
 
+/**
+ * v9 → v10 : ajout de la colonne `niveau` sur `DefiQuotidienEntity` (retour utilisateur :
+ * trophées défi quotidien niveau Monique/Mathieu). Nullable, sans défaut — les réussites déjà
+ * enregistrées n'ont pas de niveau connu et ne compteront simplement pas pour ces trophées.
+ */
+private val MIGRATION_9_10 = object : Migration(9, 10) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `DefiQuotidienEntity` ADD COLUMN `niveau` TEXT")
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null

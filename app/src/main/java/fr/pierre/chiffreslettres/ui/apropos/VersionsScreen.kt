@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.79",
+        date = "2026-08-05",
+        changements = listOf(
+            "Trophées défi quotidien revus (retour utilisateur) : 7 jours passe en Bronze, " +
+                "nouveau palier à 14 jours en Argent, 30 jours redescend en Or ; deux nouveaux " +
+                "trophées à 30 jours d'affilée au niveau Monique/Mathieu (Platine) ou au niveau " +
+                "Mathieu seul (Diamant) — le niveau joué chaque jour est désormais mémorisé.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.75",
         date = "2026-08-05",
         changements = listOf(

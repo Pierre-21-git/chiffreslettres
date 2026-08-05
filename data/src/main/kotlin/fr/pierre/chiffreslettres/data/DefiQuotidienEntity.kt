@@ -22,4 +22,11 @@ data class DefiQuotidienEntity(
     /** Format ISO (yyyy-MM-dd), date locale du joueur au moment de la réussite. */
     val jour: String,
     val dateReussite: Long,
+    /**
+     * Niveau (nom d'enum [fr.pierre.chiffreslettres.numbers.Niveau] ou
+     * [fr.pierre.chiffreslettres.letters.NiveauLettres]) du défi joué ce jour-là — le tirage du
+     * jour ne propose que chiffres OU lettres, jamais les deux (retour utilisateur). Nullable :
+     * absent sur les réussites enregistrées avant l'ajout des trophées défi quotidien niveau.
+     */
+    val niveau: String? = null,
 )
