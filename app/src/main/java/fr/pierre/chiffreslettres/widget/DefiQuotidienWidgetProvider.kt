@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
 
-/** Une case par profil (max 8, grille 2x4, largement suffisant pour un usage familial). */
+/** Une case par profil (max 6, une seule ligne, largement suffisant pour un usage familial). */
 private val CASES = listOf(
     Triple(R.id.cadre_1, R.id.nom_1, R.id.statut_1),
     Triple(R.id.cadre_2, R.id.nom_2, R.id.statut_2),
@@ -31,8 +31,6 @@ private val CASES = listOf(
     Triple(R.id.cadre_4, R.id.nom_4, R.id.statut_4),
     Triple(R.id.cadre_5, R.id.nom_5, R.id.statut_5),
     Triple(R.id.cadre_6, R.id.nom_6, R.id.statut_6),
-    Triple(R.id.cadre_7, R.id.nom_7, R.id.statut_7),
-    Triple(R.id.cadre_8, R.id.nom_8, R.id.statut_8),
 )
 
 /** Drawable de cadre associé au palier de rang du joueur (voir ui/theme/CouleurPalier.kt pour l'équivalent Compose). */
@@ -48,7 +46,7 @@ private fun drawableCadre(palier: Palier?): Int = when (palier) {
 /**
  * Widget écran d'accueil listant tous les profils avec leur statut du défi quotidien (retour
  * utilisateur : un seul widget compact pour toute la famille plutôt qu'un widget par profil).
- * Grille de cases fixes (jusqu'à 8, 4 par ligne) : évite la complexité d'un `RemoteViewsService`
+ * Rangée unique de cases fixes (jusqu'à 6) : évite la complexité d'un `RemoteViewsService`
  * façon liste dynamique, inutile vu le nombre de profils attendu dans ce jeu.
  */
 class DefiQuotidienWidgetProvider : AppWidgetProvider() {
