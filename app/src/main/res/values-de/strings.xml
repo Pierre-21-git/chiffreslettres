@@ -46,7 +46,6 @@
     <string name="apropos_licence_filtrage">Grammatikalische Filterung (Eigennamen, Abkürzungen, konjugierte Verbformen): Morphalou3 (CNRS/ATILF), LGPL-LR-Lizenz.</string>
     <string name="apropos_licence_bibliotheques">Verwendete Open-Source-Bibliotheken: AndroidX Jetpack Compose, Room, Navigation (Apache-2.0-Lizenz).</string>
     <string name="apropos_bouton_regles_du_jeu">Spielregeln</string>
-    <string name="apropos_bouton_trophees">Trophäen</string>
     <string name="apropos_bouton_versions">Versionen</string>
 
     <string name="creer_profil_bienvenue">Willkommen! Wähle einen Spitznamen, um loszulegen.</string>

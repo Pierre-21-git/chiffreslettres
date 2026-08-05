@@ -72,7 +72,6 @@
     <string name="apropos_licence_filtrage">Grammatical filtering (proper nouns, acronyms, conjugated verb forms): Morphalou3 (CNRS/ATILF), LGPL-LR license.</string>
     <string name="apropos_licence_bibliotheques">Open source libraries used: AndroidX Jetpack Compose, Room, Navigation (Apache 2.0 license).</string>
     <string name="apropos_bouton_regles_du_jeu">Game rules</string>
-    <string name="apropos_bouton_trophees">Trophies</string>
     <string name="apropos_bouton_versions">Versions</string>
 
     <string name="creer_profil_bienvenue">Welcome! Choose a nickname to get started.</string>

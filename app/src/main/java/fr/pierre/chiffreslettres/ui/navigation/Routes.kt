@@ -22,7 +22,6 @@ object Routes {
     const val MES_STATISTIQUES_PATTERN = "statistiques/joueur/{$ARG_PROFIL_ID}/mesStatistiques"
     const val STATISTIQUES_GENERALES = "statistiques/generales"
     const val TROPHEES_JOUEUR_PATTERN = "statistiques/trophees/{$ARG_PROFIL_ID}"
-    const val TROPHEES_CATALOGUE = "apropos/trophees"
 
     fun statistiquesJoueur(profilId: Long) = "statistiques/joueur/$profilId"
     fun mesStatistiques(profilId: Long) = "statistiques/joueur/$profilId/mesStatistiques"

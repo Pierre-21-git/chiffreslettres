@@ -203,7 +203,6 @@ fun AppNavHost(
             AProposScreen(
                 onReglesDuJeu = { navController.navigate(Routes.REGLES_DU_JEU) },
                 onVersions = { navController.navigate(Routes.VERSIONS) },
-                onTrophees = { navController.navigate(Routes.TROPHEES_CATALOGUE) },
                 onRetour = { navController.popBackStack() },
             )
         }
@@ -214,14 +213,6 @@ fun AppNavHost(
 
         composable(Routes.VERSIONS) {
             VersionsScreen(onRetour = { navController.popBackStack() })
-        }
-
-        composable(Routes.TROPHEES_CATALOGUE) {
-            TropheesScreen(
-                titre = stringResource(R.string.apropos_bouton_trophees),
-                tropheesDebloques = null,
-                onRetour = { navController.popBackStack() },
-            )
         }
 
         composable(

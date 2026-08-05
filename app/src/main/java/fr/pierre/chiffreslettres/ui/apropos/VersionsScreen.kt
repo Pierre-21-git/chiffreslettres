@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.75",
+        date = "2026-08-05",
+        changements = listOf(
+            "Écran d'accueil : ajout d'un séparateur entre \"Partie réseau\" et \"Défi série\" " +
+                "(retour utilisateur).",
+            "Écran \"À propos\" : retrait du bouton \"Trophées\" (le catalogue complet des " +
+                "trophées reste accessible depuis Statistiques → mes trophées).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.74",
         date = "2026-08-05",
         changements = listOf(

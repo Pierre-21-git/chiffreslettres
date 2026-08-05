@@ -83,7 +83,6 @@
     <string name="apropos_licence_filtrage">Filtrage grammatical (noms propres, sigles, verbes conjugués) : Morphalou3 (CNRS/ATILF), licence LGPL-LR.</string>
     <string name="apropos_licence_bibliotheques">Bibliothèques open source utilisées : AndroidX Jetpack Compose, Room, Navigation (licence Apache 2.0).</string>
     <string name="apropos_bouton_regles_du_jeu">Règles du jeu</string>
-    <string name="apropos_bouton_trophees">Trophées</string>
     <string name="apropos_bouton_versions">Versions</string>
 
     <!-- ui/profil/CreerProfilScreen -->

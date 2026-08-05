@@ -20,7 +20,6 @@ import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 fun AProposScreen(
     onReglesDuJeu: () -> Unit,
     onVersions: () -> Unit,
-    onTrophees: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
     Column(
@@ -66,7 +65,6 @@ fun AProposScreen(
 
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Button(onClick = onReglesDuJeu, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.apropos_bouton_regles_du_jeu)) }
-            Button(onClick = onTrophees, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.apropos_bouton_trophees)) }
             if (BuildConfig.DEBUG) {
                 Button(onClick = onVersions, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.apropos_bouton_versions)) }
             }
