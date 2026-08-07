@@ -28,7 +28,7 @@ fun AProposScreen(
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 stringResource(R.string.apropos_sous_titre_version),
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
             )
             Text(
@@ -40,7 +40,7 @@ fun AProposScreen(
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
                 stringResource(R.string.apropos_sous_titre_licences),
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
             )
             Text(

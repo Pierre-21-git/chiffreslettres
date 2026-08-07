@@ -159,6 +159,11 @@
     <!-- ui/defi/DefiMotsMaxScreen -->
     <string name="defi_mots_max_deja_trouve">« %1$s » déjà trouvé, cherches-en un autre !</string>
     <string name="defi_mots_max_recap_score">%1$d mot(s) trouvé(s)</string>
+    <string name="defi_mots_max_fin_mot_invalide">« %1$s » n\'est pas un mot du dictionnaire.</string>
+    <string name="defi_mots_max_fin_mot_trop_court">« %1$s » est un mot valide, mais trop court pour ce niveau : il fallait au moins %2$d lettres.</string>
+    <string name="defi_mots_max_fin_temps_ecoule">Temps écoulé !</string>
+    <string name="defi_mots_max_mots_possibles_titre">Mots possibles sur ce tirage</string>
+    <string name="defi_mots_max_mot_possible_trouve">%1$s (trouvé)</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
     <string name="defi_sans_faute_libelle_progression">Série</string>
@@ -231,6 +236,8 @@
     <string name="lettres_meilleur_mot_trouve">Meilleur mot trouvé : %1$s</string>
     <string name="lettres_meilleur_mot_detail">%1$s (%2$d lettres)</string>
     <string name="lettres_meilleur_mot_aucun">aucun</string>
+    <string name="lettres_mot_trop_court">Mot valide, mais trop court pour ce niveau : il fallait au moins %1$d lettres — la manche ne compte pas comme une réussite.</string>
+    <string name="lettres_mot_trop_court_tolere">Mot valide, trop court pour ce niveau (il faudrait %1$d lettres), mais c\'est le plus long mot possible sur ce tirage : la manche compte quand même comme une réussite.</string>
 
     <!-- ui/statistiques/StatistiquesScreen -->
     <string name="statistiques_titre_defaut">Statistiques</string>

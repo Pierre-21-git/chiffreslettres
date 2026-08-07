@@ -114,6 +114,11 @@
     <!-- ui/defi/DefiMotsMaxScreen -->
     <string name="defi_mots_max_deja_trouve">„%1$s“ schon gefunden, versuch ein anderes!</string>
     <string name="defi_mots_max_recap_score">%1$d Wort/Wörter gefunden</string>
+    <string name="defi_mots_max_fin_mot_invalide">„%1$s“ ist kein Wörterbuchwort.</string>
+    <string name="defi_mots_max_fin_mot_trop_court">„%1$s“ ist ein gültiges Wort, aber zu kurz für diese Stufe: mindestens %2$d Buchstaben wären nötig gewesen.</string>
+    <string name="defi_mots_max_fin_temps_ecoule">Zeit abgelaufen!</string>
+    <string name="defi_mots_max_mots_possibles_titre">Mit dieser Ziehung mögliche Wörter</string>
+    <string name="defi_mots_max_mot_possible_trouve">%1$s (gefunden)</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
     <string name="defi_sans_faute_libelle_progression">Serie</string>
@@ -176,6 +181,8 @@
     <string name="lettres_meilleur_mot_trouve">Bestes gefundenes Wort: %1$s</string>
     <string name="lettres_meilleur_mot_detail">%1$s (%2$d Buchstaben)</string>
     <string name="lettres_meilleur_mot_aucun">keines</string>
+    <string name="lettres_mot_trop_court">Gültiges Wort, aber zu kurz für diese Stufe: mindestens %1$d Buchstaben wären nötig gewesen — diese Runde zählt nicht als Erfolg.</string>
+    <string name="lettres_mot_trop_court_tolere">Gültiges Wort, zu kurz für diese Stufe (%1$d Buchstaben nötig), aber das längstmögliche Wort bei dieser Ziehung: die Runde zählt trotzdem als Erfolg.</string>
 
     <string name="statistiques_titre_defaut">Statistiken</string>
     <string name="statistiques_bouton_mes_stats">Meine Statistiken</string>

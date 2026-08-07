@@ -28,6 +28,7 @@ import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
@@ -157,6 +158,31 @@ fun DefiMotsMaxScreen(
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                 )
+                val explication = when (etat.raisonFin) {
+                    RaisonFinDefiMotsMax.MOT_INVALIDE ->
+                        stringResource(R.string.defi_mots_max_fin_mot_invalide, etat.motRejete)
+                    RaisonFinDefiMotsMax.MOT_TROP_COURT ->
+                        stringResource(R.string.defi_mots_max_fin_mot_trop_court, etat.motRejete, seuilLongueurDefiLettres(etat.niveau))
+                    RaisonFinDefiMotsMax.TEMPS_ECOULE ->
+                        stringResource(R.string.defi_mots_max_fin_temps_ecoule)
+                    RaisonFinDefiMotsMax.VOLONTAIRE, null -> null
+                }
+                if (explication != null) {
+                    Text(explication, color = TextMuted, fontSize = 13.sp)
+                }
+            }
+            if (etat.motsPossibles.isNotEmpty()) {
+                PanneauResultat {
+                    Text(stringResource(R.string.defi_mots_max_mots_possibles_titre), color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
+                    for (mot in etat.motsPossibles) {
+                        val trouve = mot in etat.motsTrouves
+                        Text(
+                            if (trouve) stringResource(R.string.defi_mots_max_mot_possible_trouve, mot) else mot,
+                            color = if (trouve) TextMuted else Ivory,
+                            fontSize = 13.sp,
+                        )
+                    }
+                }
             }
             actionsFin()
         }

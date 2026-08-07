@@ -20,6 +20,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/** Raison de fin du défi (retour utilisateur) : affichée à l'écran pour expliquer l'arrêt. */
+enum class RaisonFinDefiMotsMax { VOLONTAIRE, MOT_INVALIDE, MOT_TROP_COURT, TEMPS_ECOULE }
+
 data class DefiMotsMaxUiState(
     val niveau: NiveauLettres,
     val nombreLettres: Int,
@@ -34,6 +37,12 @@ data class DefiMotsMaxUiState(
     /** Dernier mot revalidé alors qu'il était déjà trouvé (retour utilisateur : signalé au joueur, sans point ni arrêt), remis à null au clic suivant. */
     val motDejaTrouve: String? = null,
     val nombreVoyellesChoisi: Int? = null,
+    /** Pourquoi le défi s'est arrêté (retour utilisateur : explique un mot valide mais trop court, ou invalide), null tant qu'il n'est pas terminé. */
+    val raisonFin: RaisonFinDefiMotsMax? = null,
+    /** Mot qui a mis fin au défi (retour utilisateur, cf. [raisonFin]), vide si arrêt volontaire ou temps écoulé. */
+    val motRejete: String = "",
+    /** Tous les mots d'au moins [seuilLongueurDefiLettres] lettres jouables sur ce tirage (retour utilisateur : révélés en fin de défi), triés du plus long au plus court. */
+    val motsPossibles: List<String> = emptyList(),
 )
 
 /**
@@ -109,7 +118,7 @@ class DefiMotsMaxViewModel(
                 if (_uiState.value.termine) return@launch
                 _uiState.update { it.copy(tempsRestantSecondes = it.tempsRestantSecondes - 1) }
             }
-            terminer()
+            terminer(RaisonFinDefiMotsMax.TEMPS_ECOULE)
         }
     }
 
@@ -137,17 +146,28 @@ class DefiMotsMaxViewModel(
     }
 
     /**
-     * Valide le mot en cours (retour utilisateur) : vide → arrêt volontaire ; invalide (hors
-     * dictionnaire ou plus court que le seuil du niveau, cf. [seuilLongueurDefiLettres]) → arrêt
-     * du défi (comme le défi série, une erreur y met fin) ; déjà trouvé → signalé, lettres
-     * dégrisées, le défi continue sans point ; nouveau → +1, lettres dégrisées, le défi continue.
+     * Valide le mot en cours (retour utilisateur) : vide → arrêt volontaire ; hors dictionnaire →
+     * arrêt (mot invalide) ; valide mais plus court que le seuil du niveau (cf.
+     * [seuilLongueurDefiLettres]) → arrêt (mot trop court) — comme le défi série, une erreur y
+     * met fin, mais chaque cas est distingué ([RaisonFinDefiMotsMax]) pour l'expliquer au joueur
+     * (retour utilisateur : "mot valide" sans plus de précision ne disait pas pourquoi il ne
+     * comptait pas) ; déjà trouvé → signalé, lettres dégrisées, le défi continue sans point ;
+     * nouveau → +1, lettres dégrisées, le défi continue.
      */
     fun valider() {
         val etat = _uiState.value
         if (etat.termine || !etat.tirageTermine) return
         val mot = etat.motSaisi
-        if (mot.isBlank() || mot.length < seuilLongueur || !dictionnaire.estJouable(mot)) {
-            terminer()
+        if (mot.isBlank()) {
+            terminer(RaisonFinDefiMotsMax.VOLONTAIRE)
+            return
+        }
+        if (!dictionnaire.estJouable(mot)) {
+            terminer(RaisonFinDefiMotsMax.MOT_INVALIDE, mot)
+            return
+        }
+        if (mot.length < seuilLongueur) {
+            terminer(RaisonFinDefiMotsMax.MOT_TROP_COURT, mot)
             return
         }
         if (mot in etat.motsTrouves) {
@@ -159,10 +179,13 @@ class DefiMotsMaxViewModel(
         }
     }
 
-    private fun terminer() {
+    private fun terminer(raison: RaisonFinDefiMotsMax, motRejete: String = "") {
         if (_uiState.value.termine) return
         timerJob?.cancel()
-        _uiState.update { it.copy(termine = true) }
+        val motsPossibles = dictionnaire.rechercherAuMoins(_uiState.value.lettresTirees, seuilLongueur)
+            .distinct()
+            .sortedByDescending { it.length }
+        _uiState.update { it.copy(termine = true, raisonFin = raison, motRejete = motRejete, motsPossibles = motsPossibles) }
         if (enregistre) return
         enregistre = true
         val score = _uiState.value.motsTrouves.size

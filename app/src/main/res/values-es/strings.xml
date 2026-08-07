@@ -114,6 +114,11 @@
     <!-- ui/defi/DefiMotsMaxScreen -->
     <string name="defi_mots_max_deja_trouve">«%1$s» ya encontrada, ¡busca otra!</string>
     <string name="defi_mots_max_recap_score">%1$d palabra(s) encontrada(s)</string>
+    <string name="defi_mots_max_fin_mot_invalide">«%1$s» no es una palabra del diccionario.</string>
+    <string name="defi_mots_max_fin_mot_trop_court">«%1$s» es una palabra válida, pero demasiado corta para este nivel: hacían falta al menos %2$d letras.</string>
+    <string name="defi_mots_max_fin_temps_ecoule">¡Se acabó el tiempo!</string>
+    <string name="defi_mots_max_mots_possibles_titre">Palabras posibles con este sorteo</string>
+    <string name="defi_mots_max_mot_possible_trouve">%1$s (encontrada)</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
     <string name="defi_sans_faute_libelle_progression">Racha</string>
@@ -176,6 +181,8 @@
     <string name="lettres_meilleur_mot_trouve">Mejor palabra encontrada: %1$s</string>
     <string name="lettres_meilleur_mot_detail">%1$s (%2$d letras)</string>
     <string name="lettres_meilleur_mot_aucun">ninguna</string>
+    <string name="lettres_mot_trop_court">Palabra válida, pero demasiado corta para este nivel: hacían falta al menos %1$d letras — esta ronda no cuenta como un éxito.</string>
+    <string name="lettres_mot_trop_court_tolere">Palabra válida, demasiado corta para este nivel (harían falta %1$d letras), pero es la palabra más larga posible con este sorteo: la ronda cuenta igualmente como un éxito.</string>
 
     <string name="statistiques_titre_defaut">Estadísticas</string>
     <string name="statistiques_bouton_mes_stats">Mis estadísticas</string>

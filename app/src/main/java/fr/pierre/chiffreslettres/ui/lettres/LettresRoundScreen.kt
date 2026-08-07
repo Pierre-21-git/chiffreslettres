@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.letters.TirageLettres
+import fr.pierre.chiffreslettres.ui.defi.motEstReussiDefiLettres
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
@@ -54,6 +55,13 @@ fun LettresRoundScreen(
     libelleProgression: String = stringResource(R.string.libelle_manche),
     /** Faux en mode duo (retour utilisateur) : le score et le mot sont révélés sur l'écran de transition, pas ici — pour ne pas donner d'indice au second joueur avant qu'il ne joue le même tirage. */
     afficherResultat: Boolean = true,
+    /**
+     * Défi série/chrono/sans faute uniquement (retour utilisateur) : longueur minimale exigée
+     * par le niveau pour que la manche compte comme une réussite. Permet d'expliquer un mot
+     * valide (reconnu par le dictionnaire) mais trop court — sans lui, rien n'indiquait
+     * pourquoi la manche ne comptait pas.
+     */
+    seuilRequis: Int? = null,
 ) {
     val etat by viewModel.uiState.collectAsState()
 
@@ -172,6 +180,18 @@ fun LettresRoundScreen(
                 PanneauResultat {
                     Text(stringResource(R.string.score_obtenu, etat.scoreObtenu ?: 0), color = BrassBright, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     Text(stringResource(R.string.lettres_votre_mot_validite, etat.motSaisi, validite), color = TextMuted, fontSize = 13.sp)
+                    if (seuilRequis != null && etat.motJoueurValide == true && etat.motSaisi.length < seuilRequis) {
+                        val compteQuandMeme = motEstReussiDefiLettres(etat.niveau, etat.motSaisi, seuilRequis, etat.meilleurMot)
+                        Text(
+                            if (compteQuandMeme) {
+                                stringResource(R.string.lettres_mot_trop_court_tolere, seuilRequis)
+                            } else {
+                                stringResource(R.string.lettres_mot_trop_court, seuilRequis)
+                            },
+                            color = TextMuted,
+                            fontSize = 13.sp,
+                        )
+                    }
                     Text(
                         stringResource(
                             R.string.lettres_meilleur_mot_trouve,

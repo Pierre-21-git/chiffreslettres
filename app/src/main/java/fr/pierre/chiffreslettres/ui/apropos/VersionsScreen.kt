@@ -19,6 +19,22 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.83",
+        date = "2026-08-07",
+        changements = listOf(
+            "Écran \"À propos\" : sous-titres \"Version\"/\"Licences\" agrandis (retour " +
+                "utilisateur).",
+            "Le bouton \"Versions\" de l'accueil n'est de nouveau visible qu'en version debug, " +
+                "comme avant son déplacement en 1.82 (retour utilisateur).",
+            "Défis lettres (série, chrono, sans faute) : un mot valide mais trop court pour le " +
+                "niveau affiche maintenant une explication (retour utilisateur : \"Mot valide\" " +
+                "seul ne disait pas pourquoi la manche ne comptait pas).",
+            "Défi mots : la fin du défi explique désormais la cause (mot invalide, mot trop " +
+                "court, ou temps écoulé) et révèle les mots d'au moins 6/7 lettres possibles sur " +
+                "le tirage, trouvés ou non (retour utilisateur).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.82",
         date = "2026-08-07",
         changements = listOf(

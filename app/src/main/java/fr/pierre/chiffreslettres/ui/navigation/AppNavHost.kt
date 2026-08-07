@@ -1244,6 +1244,7 @@ fun AppNavHost(
                     },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false) },
                     actionsFinManche = actionsFinManche,
+                    seuilRequis = seuilLettres,
                 )
             }
         }
@@ -1442,6 +1443,7 @@ fun AppNavHost(
                         Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_continuer)) }
                     }
                 },
+                seuilRequis = seuil,
             )
         }
 
@@ -1614,6 +1616,7 @@ fun AppNavHost(
                         }
                     }
                 },
+                seuilRequis = seuil,
             )
         }
     }

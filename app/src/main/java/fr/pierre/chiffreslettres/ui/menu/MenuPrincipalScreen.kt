@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.pierre.chiffreslettres.BuildConfig
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.ui.theme.BandeDoree
@@ -84,7 +85,9 @@ fun MenuPrincipalScreen(
         TuilePrincipale(stringResource(R.string.statistiques_titre_defaut), onClick = onStatistiques)
         TuilePrincipale(stringResource(R.string.apropos_titre), onClick = onAPropos)
         TuilePrincipale(stringResource(R.string.apropos_bouton_regles_du_jeu), onClick = onReglesDuJeu)
-        TuilePrincipale(stringResource(R.string.apropos_bouton_versions), onClick = onVersions)
+        if (BuildConfig.DEBUG) {
+            TuilePrincipale(stringResource(R.string.apropos_bouton_versions), onClick = onVersions)
+        }
 
         // Marge de fin dédiée à la barre système (retour utilisateur : la tuile "À propos"
         // passait encore un peu sous la barre malgré systemBarsPadding() en amont) : réservée en
