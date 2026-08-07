@@ -5,7 +5,7 @@
     <string name="niveau_emile">Assez facile, Émile</string>
     <string name="niveau_nestor">Ça va encore, Nestor</string>
     <string name="niveau_monique">Ça se complique, Monique</string>
-    <string name="niveau_mathieu">Là c\'est sérieux, Mathieu</string>
+    <string name="niveau_mathieu">C\'est du sérieux, Mathieu</string>
 
     <string name="mode_chiffres">Zahlen</string>
     <string name="mode_lettres">Buchstaben</string>
@@ -37,7 +37,9 @@
     <string name="defi_niveau_duree">%1$s — %2$d Min.</string>
 
     <string name="apropos_titre">Über</string>
+    <string name="apropos_sous_titre_version">Version</string>
     <string name="apropos_version">Zahlen &amp; Buchstaben — Version %1$s (%2$d)</string>
+    <string name="apropos_sous_titre_licences">Lizenzen</string>
     <string name="apropos_licence_code">Quellcode unter der GNU-GPL-3.0-Lizenz.</string>
     <string name="apropos_licence_dictionnaire">Französisches Wörterbuch: Dicollecte (hunspell-fr), MPL-2.0-Lizenz.</string>
     <string name="apropos_licence_dictionnaire_en">Englisches Wörterbuch: en_US (SCOWL-Projekt, © Kevin Atkinson), freizügige BSD-artige Lizenz.</string>
@@ -104,8 +106,6 @@
     <string name="defi_objectif_mots">%1$d gültige Wörter</string>
     <string name="defi_quotidien_aucune_serie">Keine laufende Serie</string>
     <string name="defi_quotidien_serie_en_cours">Aktuelle Serie: %1$d Tag(e) in Folge</string>
-    <string name="defi_quotidien_prochain_palier">Noch %1$d Tag(e) bis zur Trophäe \"%2$s\"</string>
-    <string name="defi_quotidien_tous_paliers">Alle Serien-Stufen freigeschaltet!</string>
     <string name="defi_quotidien_deja_reussi">Heutige Herausforderung bereits geschafft, gut gemacht! Komm morgen für die nächste wieder.</string>
     <string name="defi_quotidien_choisis_niveau">Wähle dein Level</string>
     <string name="trophee_semaine_defi_quotidien">Eine Woche tägliche Herausforderungen</string>
@@ -209,11 +209,11 @@
     <string name="regles_mode_chiffres_texte">Es werden 6 Zahlen gezogen (1 bis 10 jeweils doppelt, sowie 25/50/75/100 einfach), zusammen mit einer zu erreichenden Zielzahl. Baue deine Rechnung Schritt für Schritt wie mit einem Taschenrechner auf: berühre eine erste Zahl, einen Operator, dann eine zweite Zahl — das Ergebnis ersetzt die beiden verwendeten Zahlen und kann weiterverwendet werden. Die Schaltflächen \"Rückgängig\" und \"Löschen\" erlauben es, einen Schritt zurückzugehen. Das zuletzt erhaltene Ergebnis ist dein Vorschlag: bestätige, sobald du bereit bist, oder lass die Zeit ablaufen, falls es eine gibt.</string>
     <string name="regles_comptage_points_titre">Punktezählung</string>
     <string name="regles_chiffres_points_emile_nestor">Assez facile, Émile und Ça va encore, Nestor: 10 Punkte bei exaktem Ergebnis, 5 Punkte für jeden nicht exakten Vorschlag.</string>
-    <string name="regles_chiffres_points_monique_mathieu">Ça se complique, Monique und Là c\'est sérieux, Mathieu: 10 Punkte bei exaktem Ergebnis, 7 Punkte bei einem angenäherten Ergebnis (Abweichung von höchstens 100 zur Zielzahl), 0 Punkte darüber hinaus.</string>
+    <string name="regles_chiffres_points_monique_mathieu">Ça se complique, Monique und C\'est du sérieux, Mathieu: 10 Punkte bei exaktem Ergebnis, 7 Punkte bei einem angenäherten Ergebnis (Abweichung von höchstens 100 zur Zielzahl), 0 Punkte darüber hinaus.</string>
     <string name="regles_mode_lettres_titre">Buchstaben-Modus</string>
     <string name="regles_mode_lettres_texte">Wähle die gewünschte Anzahl Vokale (2, 3, 4 oder 5), danach werden alle 10 Buchstaben auf einmal gezogen. Bilde dein Wort, indem du die Buchstaben in der gewünschten Reihenfolge berührst (jeder gezogene Buchstabe kann nur einmal verwendet werden); die Schaltflächen \"Rückgängig\" und \"Löschen\" erlauben es, einen Schritt zurückzugehen. Finde das längstmögliche Wort mit diesen Buchstaben, bevor die Zeit abläuft, falls es eine gibt.</string>
     <string name="regles_lettres_points_emile_nestor">Assez facile, Émile und Ça va encore, Nestor: 5 Punkte für ein Wort von 2 bis 4 Buchstaben, 10 Punkte ab 5 Buchstaben.</string>
-    <string name="regles_lettres_points_monique_mathieu">Ça se complique, Monique und Là c\'est sérieux, Mathieu: die Punktzahl entspricht der Anzahl der Buchstaben des gültigen Worts.</string>
+    <string name="regles_lettres_points_monique_mathieu">Ça se complique, Monique und C\'est du sérieux, Mathieu: die Punktzahl entspricht der Anzahl der Buchstaben des gültigen Worts.</string>
     <string name="regles_mots_acceptes_titre">Akzeptierte Wörter</string>
     <string name="regles_mots_acceptes_texte">Das integrierte Wörterbuch schließt Eigennamen, Abkürzungen und rein konjugierte Verbformen aus: nur der Infinitiv und die Partizipien Präsens/Perfekt bleiben zulässig.</string>
     <string name="regles_mode_entrainement_titre">Trainingsmodus</string>
@@ -223,7 +223,7 @@
     <string name="regles_partie_solo_emile">Assez facile, Émile (2 Runden pro Modus) — Zahlen: Zielzahl ≤ 100, nur Addition und Subtraktion, Lösung garantiert, 120s. Buchstaben: X, Y, Z, W, K, Q, H, J ausgeschlossen, 110s.</string>
     <string name="regles_partie_solo_nestor">Ça va encore, Nestor (3 Runden pro Modus) — Zahlen: Zielzahl ≤ 100, alle 4 Operationen, Lösung garantiert, 100s. Buchstaben: X, Y, Z, W, K, Q ausgeschlossen, 90s.</string>
     <string name="regles_partie_solo_monique">Ça se complique, Monique (4 Runden pro Modus) — Zahlen: Zielzahl ≤ 500, alle 4 Operationen, keine Lösungsgarantie, 60s. Buchstaben: X, Y, Z, W ausgeschlossen, 50s.</string>
-    <string name="regles_partie_solo_mathieu">Là c\'est sérieux, Mathieu (5 Runden pro Modus) — Zahlen: Zielzahl zwischen 100 und 999, keine Lösungsgarantie, 45s. Buchstaben: keine Buchstaben ausgeschlossen, 40s.</string>
+    <string name="regles_partie_solo_mathieu">C\'est du sérieux, Mathieu (5 Runden pro Modus) — Zahlen: Zielzahl zwischen 100 und 999, keine Lösungsgarantie, 45s. Buchstaben: keine Buchstaben ausgeschlossen, 40s.</string>
     <string name="regles_mode_partie_duo_titre">Duo-Spielmodus</string>
     <string name="regles_partie_duo_intro">Zwei Spieler am selben Telefon, abwechselnd: nach Wahl des Gegners, des Levels (wie im Solo-Modus) und des Punktemodus wird jede Runde von beiden Spielern mit genau demselben Zug gespielt (gleiche Zahlen und Zielzahl im Zahlen-Modus, gleiche Buchstaben im Buchstaben-Modus). Der beginnende Spieler wechselt bei jeder Runde, damit die Wahl der Vokalanzahl nicht immer demselben zufällt:</string>
     <string name="regles_partie_duo_mode_duo">Duo: jeder Spieler behält seine eigene Punktzahl in jeder Runde, wie im Solo-Modus.</string>

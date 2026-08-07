@@ -48,9 +48,9 @@ data class DefiMotsMaxUiState(
  * donc il enregistre lui-même la performance finale.
  */
 class DefiMotsMaxViewModel(
-    niveau: NiveauLettres,
+    private val niveau: NiveauLettres,
     private val dictionnaire: DictionnaireIndex,
-    configurationAlphabet: ConfigurationAlphabetLettres,
+    private val configurationAlphabet: ConfigurationAlphabetLettres,
     private val defiRepository: DefiRepository,
     private val tropheeRepository: TropheeRepository,
     private val profilId: Long,
@@ -58,13 +58,21 @@ class DefiMotsMaxViewModel(
     private val random: Random = Random,
 ) : ViewModel() {
 
-    private val sac = SacLettres.creer(
+    private fun sacNeuf() = SacLettres.creer(
         configurationAlphabet.distributionBase,
         configurationAlphabet.voyelles,
         configurationAlphabet.lettresExcluesParNiveau.getValue(niveau),
     )
+
+    private var sac = sacNeuf()
     private val niveauCode = niveau.name
     private val seuilLongueur = seuilLongueurDefiLettres(niveau)
+    /**
+     * Niveau Monique ou Mathieu uniquement (retour utilisateur) : les trophées Platine/Diamant
+     * du défi mots exigent 10 mots de [seuilLongueur] lettres ou plus sur le même tirage — sans
+     * garantie, un tirage aléatoire n'en contient pas forcément autant. Cf. [tirerAvecGarantie].
+     */
+    private val garantieDixMots = niveau == NiveauLettres.MONIQUE || niveau == NiveauLettres.MATHIEU
     private var timerJob: Job? = null
     private var enregistre = false
 
@@ -74,9 +82,24 @@ class DefiMotsMaxViewModel(
     fun choisirNombreVoyelles(nombreVoyelles: Int) {
         val etat = _uiState.value
         if (etat.tirageTermine || etat.termine) return
-        val lettres = TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
+        val lettres = if (garantieDixMots) tirerAvecGarantie(nombreVoyelles) else TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
         _uiState.update { it.copy(lettresTirees = lettres, tirageTermine = true, nombreVoyellesChoisi = nombreVoyelles) }
         demarrerChrono()
+    }
+
+    /**
+     * Chaque tentative recrée un sac neuf (le précédent tirage l'a vidé) jusqu'à trouver un
+     * tirage offrant au moins [NOMBRE_MOTS_GARANTIS] mots distincts de [seuilLongueur] lettres ou
+     * plus, ou abandonne après [MAX_TENTATIVES_GARANTIE] essais (dictionnaire trop pauvre pour ce
+     * tirage de lettres) en renvoyant le dernier tirage obtenu, pour ne jamais bloquer la partie.
+     */
+    private fun tirerAvecGarantie(nombreVoyelles: Int): List<Char> {
+        repeat(MAX_TENTATIVES_GARANTIE - 1) {
+            val tirage = TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
+            if (dictionnaire.rechercherAuMoins(tirage, seuilLongueur).distinct().size >= NOMBRE_MOTS_GARANTIS) return tirage
+            sac = sacNeuf()
+        }
+        return TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
     }
 
     private fun demarrerChrono() {
@@ -152,10 +175,16 @@ class DefiMotsMaxViewModel(
     fun recommencer() {
         timerJob?.cancel()
         enregistre = false
+        sac = sacNeuf()
         _uiState.update { DefiMotsMaxUiState(niveau = it.niveau, nombreLettres = nombreLettres) }
     }
 
     override fun onCleared() {
         timerJob?.cancel()
+    }
+
+    private companion object {
+        const val NOMBRE_MOTS_GARANTIS = 10
+        const val MAX_TENTATIVES_GARANTIE = 300
     }
 }

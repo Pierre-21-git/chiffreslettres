@@ -3,14 +3,13 @@ package fr.pierre.chiffreslettres.ui.apropos
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.BuildConfig
 import fr.pierre.chiffreslettres.R
@@ -18,8 +17,6 @@ import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 
 @Composable
 fun AProposScreen(
-    onReglesDuJeu: () -> Unit,
-    onVersions: () -> Unit,
     onRetour: (() -> Unit)? = null,
 ) {
     Column(
@@ -27,12 +24,25 @@ fun AProposScreen(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         EnTeteEcran(stringResource(R.string.apropos_titre), onRetour)
-        Text(
-            stringResource(R.string.apropos_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
-            style = MaterialTheme.typography.titleMedium,
-        )
+
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(
+                stringResource(R.string.apropos_sous_titre_version),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                stringResource(R.string.apropos_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
+                style = MaterialTheme.typography.titleMedium,
+            )
+        }
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                stringResource(R.string.apropos_sous_titre_licences),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+            )
             Text(
                 stringResource(R.string.apropos_licence_code),
                 style = MaterialTheme.typography.bodyMedium,
@@ -61,13 +71,6 @@ fun AProposScreen(
                 stringResource(R.string.apropos_licence_bibliotheques),
                 style = MaterialTheme.typography.bodyMedium,
             )
-        }
-
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Button(onClick = onReglesDuJeu, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.apropos_bouton_regles_du_jeu)) }
-            if (BuildConfig.DEBUG) {
-                Button(onClick = onVersions, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.apropos_bouton_versions)) }
-            }
         }
     }
 }

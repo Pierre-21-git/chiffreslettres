@@ -53,7 +53,7 @@ même palier de difficulté, même nom, pour permettre un classement combiné
 | Assez facile, Émile | aléatoire entre 10 et 100 | + et − uniquement | **Oui**, une solution exacte existe toujours |
 | Ça va encore, Nestor | aléatoire entre 10 et 100 | +, −, ×, ÷ | **Oui** |
 | Ça se complique, Monique | aléatoire entre 10 et 200 | +, −, ×, ÷ | Non, peut ne pas avoir de solution exacte |
-| Là c'est sérieux, Mathieu | aléatoire entre 100 et 999 | +, −, ×, ÷ | Non — comme le jeu télévisé (mode officiel) |
+| C'est du sérieux, Mathieu | aléatoire entre 100 et 999 | +, −, ×, ÷ | Non — comme le jeu télévisé (mode officiel) |
 
 Dans l'interface, le jeu d'opérations restreint (Émile) se traduit simplement
 par la désactivation des boutons × et ÷ sur la calculatrice (voir §3.4).
@@ -135,7 +135,7 @@ classement combiné (§7.2) :
 | Assez facile, Émile | X, Y, Z, W, K, Q, H, J |
 | Ça va encore, Nestor | X, Y, Z, W, K, Q |
 | Ça se complique, Monique | X, Y, Z, W |
-| Là c'est sérieux, Mathieu | Aucune exclusion (alphabet complet) |
+| C'est du sérieux, Mathieu | Aucune exclusion (alphabet complet) |
 
 Lorsque des lettres sont exclues, retirer leurs occurrences du sac de 100 et
 conserver les proportions relatives des lettres restantes (pas besoin de
@@ -206,7 +206,7 @@ la page a été supprimée) :
 | Assez facile, Émile | 120s | 110s |
 | Ça va encore, Nestor | 100s | 90s |
 | Ça se complique, Monique | 60s | 50s |
-| Là c'est sérieux, Mathieu | 45s | 40s |
+| C'est du sérieux, Mathieu | 45s | 40s |
 
 Le nombre de jetons tirés (chiffres, 6) et le nombre de lettres tirées
 (lettres, 10) sont fixes eux aussi, non réglables par le joueur.
@@ -236,7 +236,7 @@ joueur au lancement :
   | Assez facile, Émile | 2 | 4 |
   | Ça va encore, Nestor | 3 | 6 |
   | Ça se complique, Monique | 5 (comme le jeu télé) | 10 |
-  | Là c'est sérieux, Mathieu | 5 (comme le jeu télé) | 10 |
+  | C'est du sérieux, Mathieu | 5 (comme le jeu télé) | 10 |
 
 - Les manches alternent chiffres et lettres (retour utilisateur) plutôt que
   d'être regroupées par mode

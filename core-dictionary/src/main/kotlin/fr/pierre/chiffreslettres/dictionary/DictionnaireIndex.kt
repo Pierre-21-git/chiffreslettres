@@ -41,6 +41,23 @@ class DictionnaireIndex(mots: Sequence<String>) {
     }
 
     /**
+     * Tous les mots jouables avec ce tirage d'au moins [longueurMinimale] lettres, toutes
+     * longueurs confondues (contrairement à [rechercher], qui s'arrête à la première longueur
+     * non vide) — pour compter combien de mots distincts d'une longueur donnée un tirage permet
+     * de trouver (retour utilisateur : garantie de faisabilité des défis lettres).
+     */
+    fun rechercherAuMoins(tirage: List<Char>, longueurMinimale: Int): List<String> {
+        val vecteurTirage = vecteurLettres(tirage.joinToString("").uppercase(Locale.FRENCH))
+        val resultat = mutableListOf<String>()
+        for (longueur in 10 downTo longueurMinimale) {
+            motsParLongueur[longueur].orEmpty().forEach {
+                if (estSousEnsemble(it.vecteur, vecteurTirage)) resultat.add(it.mot)
+            }
+        }
+        return resultat
+    }
+
+    /**
      * Le mot proposé par le joueur est-il un mot du dictionnaire ? Pas de vérification du
      * tirage ici : le mot est construit en cliquant sur les tuiles tirées, le sous-ensemble
      * de lettres est donc déjà garanti par construction (retour utilisateur).

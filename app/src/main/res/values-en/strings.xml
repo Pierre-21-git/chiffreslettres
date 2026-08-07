@@ -5,7 +5,7 @@
     <string name="niveau_emile">Assez facile, Émile</string>
     <string name="niveau_nestor">Ça va encore, Nestor</string>
     <string name="niveau_monique">Ça se complique, Monique</string>
-    <string name="niveau_mathieu">Là c\'est sérieux, Mathieu</string>
+    <string name="niveau_mathieu">C\'est du sérieux, Mathieu</string>
 
     <!-- Letters mode alphabet: English Scrabble distribution (98 tiles, no blanks, same
          convention as the French default). No letters excluded per level for now (retour
@@ -63,7 +63,9 @@
     <string name="defi_niveau_duree">%1$s — %2$d min</string>
 
     <string name="apropos_titre">About</string>
+    <string name="apropos_sous_titre_version">Version</string>
     <string name="apropos_version">Numbers &amp; Letters — version %1$s (%2$d)</string>
+    <string name="apropos_sous_titre_licences">Licenses</string>
     <string name="apropos_licence_code">Source code under the GNU GPL-3.0 license.</string>
     <string name="apropos_licence_dictionnaire">French dictionary: Dicollecte (hunspell-fr), MPL-2.0 license.</string>
     <string name="apropos_licence_dictionnaire_en">English dictionary: en_US (SCOWL project, © Kevin Atkinson), permissive BSD-style license.</string>
@@ -130,8 +132,6 @@
     <string name="defi_objectif_mots">%1$d valid words</string>
     <string name="defi_quotidien_aucune_serie">No streak in progress</string>
     <string name="defi_quotidien_serie_en_cours">Current streak: %1$d day(s) in a row</string>
-    <string name="defi_quotidien_prochain_palier">%1$d more day(s) for the \"%2$s\" trophy</string>
-    <string name="defi_quotidien_tous_paliers">All streak milestones unlocked!</string>
     <string name="defi_quotidien_deja_reussi">Today\'s challenge already completed, well done! Come back tomorrow for the next one.</string>
     <string name="defi_quotidien_choisis_niveau">Choose your level</string>
     <string name="trophee_semaine_defi_quotidien">A week of daily challenges</string>
@@ -235,11 +235,11 @@
     <string name="regles_mode_chiffres_texte">6 numbers are drawn (from 1 to 10 in double copies, and 25/50/75/100 in single copies), along with a target to reach. Build your calculation step by step, calculator-style: touch a first number, an operator, then a second number — the result replaces the two numbers used and can be reused. The \"Undo\" and \"Clear\" buttons let you go back. The last result obtained is your proposal: submit as soon as you\'re ready, or let the clock run out if there is one.</string>
     <string name="regles_comptage_points_titre">Scoring</string>
     <string name="regles_chiffres_points_emile_nestor">Assez facile, Émile and Ça va encore, Nestor: 10 points if the count is exact, 5 points for any non-exact proposal.</string>
-    <string name="regles_chiffres_points_monique_mathieu">Ça se complique, Monique and Là c\'est sérieux, Mathieu: 10 points if the count is exact, 7 points for a close count (gap of at most 100 from the target), 0 points beyond that.</string>
+    <string name="regles_chiffres_points_monique_mathieu">Ça se complique, Monique and C\'est du sérieux, Mathieu: 10 points if the count is exact, 7 points for a close count (gap of at most 100 from the target), 0 points beyond that.</string>
     <string name="regles_mode_lettres_titre">Letters mode</string>
     <string name="regles_mode_lettres_texte">Choose the number of vowels you want (2, 3, 4 or 5), then all 10 letters are drawn at once. Build your word by touching the letters in the order you want (each drawn letter can only be used once); the \"Undo\" and \"Clear\" buttons let you go back. Find the longest word possible with these letters, before the clock runs out if there is one.</string>
     <string name="regles_lettres_points_emile_nestor">Assez facile, Émile and Ça va encore, Nestor: 5 points for a word of 2 to 4 letters, 10 points from 5 letters up.</string>
-    <string name="regles_lettres_points_monique_mathieu">Ça se complique, Monique and Là c\'est sérieux, Mathieu: the score equals the number of letters in the validated word.</string>
+    <string name="regles_lettres_points_monique_mathieu">Ça se complique, Monique and C\'est du sérieux, Mathieu: the score equals the number of letters in the validated word.</string>
     <string name="regles_mots_acceptes_titre">Accepted words</string>
     <string name="regles_mots_acceptes_texte">The built-in dictionary excludes proper nouns, acronyms/abbreviations, and purely conjugated verb forms: only the infinitive and present/past participles remain accepted.</string>
     <string name="regles_mode_entrainement_titre">Training mode</string>
@@ -249,7 +249,7 @@
     <string name="regles_partie_solo_emile">Assez facile, Émile (2 rounds per mode) — Numbers: target ≤ 100, addition and subtraction only, solution guaranteed, 120s. Letters: no letters excluded, 110s.</string>
     <string name="regles_partie_solo_nestor">Ça va encore, Nestor (3 rounds per mode) — Numbers: target ≤ 100, all 4 operations, solution guaranteed, 100s. Letters: no letters excluded, 90s.</string>
     <string name="regles_partie_solo_monique">Ça se complique, Monique (4 rounds per mode) — Numbers: target ≤ 500, all 4 operations, no solution guarantee, 60s. Letters: no letters excluded, 50s.</string>
-    <string name="regles_partie_solo_mathieu">Là c\'est sérieux, Mathieu (5 rounds per mode) — Numbers: target between 100 and 999, no solution guarantee, 45s. Letters: no letters excluded, 40s.</string>
+    <string name="regles_partie_solo_mathieu">C\'est du sérieux, Mathieu (5 rounds per mode) — Numbers: target between 100 and 999, no solution guarantee, 45s. Letters: no letters excluded, 40s.</string>
     <string name="regles_mode_partie_duo_titre">Duo game mode</string>
     <string name="regles_partie_duo_intro">Two players on the same phone, taking turns: after choosing the opponent, the level (as in solo) and the scoring mode, each round is played by both players on exactly the same draw (same numbers and target in numbers mode, same letters in letters mode). The starting player changes every round, so the choice of number of vowels doesn\'t always fall to the same person:</string>
     <string name="regles_partie_duo_mode_duo">Duo: each player keeps their own score on every round, just like solo.</string>

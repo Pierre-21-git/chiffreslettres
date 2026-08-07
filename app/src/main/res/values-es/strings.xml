@@ -5,7 +5,7 @@
     <string name="niveau_emile">Assez facile, Émile</string>
     <string name="niveau_nestor">Ça va encore, Nestor</string>
     <string name="niveau_monique">Ça se complique, Monique</string>
-    <string name="niveau_mathieu">Là c\'est sérieux, Mathieu</string>
+    <string name="niveau_mathieu">C\'est du sérieux, Mathieu</string>
 
     <string name="mode_chiffres">Números</string>
     <string name="mode_lettres">Letras</string>
@@ -37,7 +37,9 @@
     <string name="defi_niveau_duree">%1$s — %2$d min</string>
 
     <string name="apropos_titre">Acerca de</string>
+    <string name="apropos_sous_titre_version">Versión</string>
     <string name="apropos_version">Números y Letras — versión %1$s (%2$d)</string>
+    <string name="apropos_sous_titre_licences">Licencias</string>
     <string name="apropos_licence_code">Código fuente bajo licencia GNU GPL-3.0.</string>
     <string name="apropos_licence_dictionnaire">Diccionario francés: Dicollecte (hunspell-fr), licencia MPL-2.0.</string>
     <string name="apropos_licence_dictionnaire_en">Diccionario inglés: en_US (proyecto SCOWL, © Kevin Atkinson), licencia permisiva de tipo BSD.</string>
@@ -104,8 +106,6 @@
     <string name="defi_objectif_mots">%1$d palabras válidas</string>
     <string name="defi_quotidien_aucune_serie">Ninguna racha en curso</string>
     <string name="defi_quotidien_serie_en_cours">Racha actual: %1$d día(s) seguido(s)</string>
-    <string name="defi_quotidien_prochain_palier">%1$d día(s) más para el trofeo \"%2$s\"</string>
-    <string name="defi_quotidien_tous_paliers">¡Todos los niveles de racha desbloqueados!</string>
     <string name="defi_quotidien_deja_reussi">Desafío de hoy ya superado, ¡bien hecho! Vuelve mañana para el siguiente.</string>
     <string name="defi_quotidien_choisis_niveau">Elige tu nivel</string>
     <string name="trophee_semaine_defi_quotidien">Una semana de desafíos diarios</string>
@@ -209,11 +209,11 @@
     <string name="regles_mode_chiffres_texte">Se sortean 6 números (del 1 al 10 por duplicado, y 25/50/75/100 por unidad), junto con un objetivo a alcanzar. Construye tu cálculo paso a paso como con una calculadora: toca un primer número, un operador y luego un segundo número — el resultado sustituye a los dos números usados y puede reutilizarse. Los botones \"Deshacer\" y \"Borrar\" permiten retroceder. El último resultado obtenido es tu propuesta: valida en cuanto estés listo, o deja que el cronómetro se agote si lo hay.</string>
     <string name="regles_comptage_points_titre">Recuento de puntos</string>
     <string name="regles_chiffres_points_emile_nestor">Assez facile, Émile y Ça va encore, Nestor: 10 puntos si el resultado es exacto, 5 puntos por cualquier propuesta no exacta.</string>
-    <string name="regles_chiffres_points_monique_mathieu">Ça se complique, Monique y Là c\'est sérieux, Mathieu: 10 puntos si el resultado es exacto, 7 puntos por un resultado aproximado (diferencia de hasta 100 respecto al objetivo), 0 puntos más allá de eso.</string>
+    <string name="regles_chiffres_points_monique_mathieu">Ça se complique, Monique y C\'est du sérieux, Mathieu: 10 puntos si el resultado es exacto, 7 puntos por un resultado aproximado (diferencia de hasta 100 respecto al objetivo), 0 puntos más allá de eso.</string>
     <string name="regles_mode_lettres_titre">Modo Letras</string>
     <string name="regles_mode_lettres_texte">Elige el número de vocales deseado (2, 3, 4 o 5), y luego se sortean las 10 letras de una vez. Construye tu palabra tocando las letras en el orden que quieras (cada letra sorteada solo puede usarse una vez); los botones \"Deshacer\" y \"Borrar\" permiten retroceder. Encuentra la palabra más larga posible con estas letras, antes de que se agote el cronómetro si lo hay.</string>
     <string name="regles_lettres_points_emile_nestor">Assez facile, Émile y Ça va encore, Nestor: 5 puntos por una palabra de 2 a 4 letras, 10 puntos a partir de 5 letras.</string>
-    <string name="regles_lettres_points_monique_mathieu">Ça se complique, Monique y Là c\'est sérieux, Mathieu: la puntuación corresponde al número de letras de la palabra validada.</string>
+    <string name="regles_lettres_points_monique_mathieu">Ça se complique, Monique y C\'est du sérieux, Mathieu: la puntuación corresponde al número de letras de la palabra validada.</string>
     <string name="regles_mots_acceptes_titre">Palabras aceptadas</string>
     <string name="regles_mots_acceptes_texte">El diccionario incorporado excluye los nombres propios, las siglas/abreviaturas y las formas verbales puramente conjugadas: solo se aceptan el infinitivo y los participios presente/pasado.</string>
     <string name="regles_mode_entrainement_titre">Modo Entrenamiento</string>
@@ -223,7 +223,7 @@
     <string name="regles_partie_solo_emile">Assez facile, Émile (2 rondas por modo) — Números: objetivo ≤ 100, solo suma y resta, solución garantizada, 120s. Letras: X, Y, Z, W, K, Q, H, J excluidas, 110s.</string>
     <string name="regles_partie_solo_nestor">Ça va encore, Nestor (3 rondas por modo) — Números: objetivo ≤ 100, las 4 operaciones, solución garantizada, 100s. Letras: X, Y, Z, W, K, Q excluidas, 90s.</string>
     <string name="regles_partie_solo_monique">Ça se complique, Monique (4 rondas por modo) — Números: objetivo ≤ 500, las 4 operaciones, sin garantía de solución, 60s. Letras: X, Y, Z, W excluidas, 50s.</string>
-    <string name="regles_partie_solo_mathieu">Là c\'est sérieux, Mathieu (5 rondas por modo) — Números: objetivo entre 100 y 999, sin garantía de solución, 45s. Letras: ninguna letra excluida, 40s.</string>
+    <string name="regles_partie_solo_mathieu">C\'est du sérieux, Mathieu (5 rondas por modo) — Números: objetivo entre 100 y 999, sin garantía de solución, 45s. Letras: ninguna letra excluida, 40s.</string>
     <string name="regles_mode_partie_duo_titre">Modo Partida a dúo</string>
     <string name="regles_partie_duo_intro">Dos jugadores en el mismo teléfono, por turnos: tras elegir al rival, el nivel (como en individual) y el modo de puntuación, cada ronda la juegan ambos jugadores con exactamente el mismo sorteo (mismos números y objetivo en números, mismas letras en letras). El jugador que empieza cambia en cada ronda, para que la elección del número de vocales no recaiga siempre en el mismo:</string>
     <string name="regles_partie_duo_mode_duo">Dúo: cada jugador mantiene su propia puntuación en cada ronda, como en individual.</string>

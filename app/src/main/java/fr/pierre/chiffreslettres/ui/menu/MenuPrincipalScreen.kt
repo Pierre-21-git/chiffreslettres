@@ -47,6 +47,8 @@ fun MenuPrincipalScreen(
     onStatistiques: () -> Unit,
     onChangerProfil: () -> Unit,
     onAPropos: () -> Unit,
+    onReglesDuJeu: () -> Unit,
+    onVersions: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize().fondPlateau().padding(24.dp).verticalScroll(rememberScrollState()),
@@ -81,6 +83,8 @@ fun MenuPrincipalScreen(
 
         TuilePrincipale(stringResource(R.string.statistiques_titre_defaut), onClick = onStatistiques)
         TuilePrincipale(stringResource(R.string.apropos_titre), onClick = onAPropos)
+        TuilePrincipale(stringResource(R.string.apropos_bouton_regles_du_jeu), onClick = onReglesDuJeu)
+        TuilePrincipale(stringResource(R.string.apropos_bouton_versions), onClick = onVersions)
 
         // Marge de fin dédiée à la barre système (retour utilisateur : la tuile "À propos"
         // passait encore un peu sous la barre malgré systemBarsPadding() en amont) : réservée en

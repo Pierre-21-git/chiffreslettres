@@ -196,13 +196,13 @@ fun AppNavHost(
                 onStatistiques = { navController.navigate(Routes.statistiquesJoueur(profilId)) },
                 onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
                 onAPropos = { navController.navigate(Routes.A_PROPOS) },
+                onReglesDuJeu = { navController.navigate(Routes.REGLES_DU_JEU) },
+                onVersions = { navController.navigate(Routes.VERSIONS) },
             )
         }
 
         composable(Routes.A_PROPOS) {
             AProposScreen(
-                onReglesDuJeu = { navController.navigate(Routes.REGLES_DU_JEU) },
-                onVersions = { navController.navigate(Routes.VERSIONS) },
                 onRetour = { navController.popBackStack() },
             )
         }
@@ -1223,7 +1223,13 @@ fun AppNavHost(
             } else {
                 val roundVm: LettresRoundViewModel =
                     viewModel(key = "defi-sansfaute-$essaiId") {
-                        LettresRoundViewModel(niveauLettres, dictionnaire, configurationAlphabet, niveauLettres.dureeSecondesPartieStructuree)
+                        LettresRoundViewModel(
+                            niveauLettres,
+                            dictionnaire,
+                            configurationAlphabet,
+                            niveauLettres.dureeSecondesPartieStructuree,
+                            garantieMotSeuil = niveauLettres == NiveauLettres.MONIQUE || niveauLettres == NiveauLettres.MATHIEU,
+                        )
                     }
                 LettresRoundScreen(
                     viewModel = roundVm,
@@ -1396,7 +1402,13 @@ fun AppNavHost(
             // sur le défi chiffres.
             val roundVm: LettresRoundViewModel =
                 viewModel(key = "defi-lettres-$essaiId") {
-                    LettresRoundViewModel(niveau, dictionnaire, configurationAlphabet, niveau.dureeSecondesPartieStructuree)
+                    LettresRoundViewModel(
+                        niveau,
+                        dictionnaire,
+                        configurationAlphabet,
+                        niveau.dureeSecondesPartieStructuree,
+                        garantieMotSeuil = niveau == NiveauLettres.MONIQUE || niveau == NiveauLettres.MATHIEU,
+                    )
                 }
             LettresRoundScreen(
                 viewModel = roundVm,
@@ -1573,12 +1585,12 @@ fun AppNavHost(
                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 progressionManche = "$reussites",
                 libelleProgression = "Réussites",
-                // Comme en défi série : un échec avance seul (pas de confirmation), une
-                // réussite attend le "Continuer" du joueur avant d'enchaîner.
+                // Réussite comme échec attendent le "Continuer" du joueur avant d'enchaîner
+                // (retour utilisateur) : sur un échec, le mot le plus long possible est
+                // affiché dans le panneau de résultat — enchaîner tout de suite sur la manche
+                // suivante (ancien comportement) le faisait disparaître aussitôt affiché.
                 onMancheTerminee = { _, motValide, meilleurMot ->
-                    val reussi = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
-                    derniereMancheReussie = reussi
-                    if (!reussi) defiVm.mancheChronoTerminee(false)
+                    derniereMancheReussie = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
                 },
                 onRetourEntrainement = {
                     val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
@@ -1597,7 +1609,7 @@ fun AppNavHost(
                             },
                         )
                     } else {
-                        Button(onClick = { defiVm.mancheChronoTerminee(true) }, modifier = Modifier.fillMaxWidth()) {
+                        Button(onClick = { defiVm.mancheChronoTerminee(derniereMancheReussie == true) }, modifier = Modifier.fillMaxWidth()) {
                             Text(stringResource(R.string.action_continuer))
                         }
                     }

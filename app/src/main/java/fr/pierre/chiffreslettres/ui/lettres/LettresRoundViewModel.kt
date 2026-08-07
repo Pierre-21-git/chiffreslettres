@@ -8,6 +8,7 @@ import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
 import fr.pierre.chiffreslettres.letters.meilleurMot
+import fr.pierre.chiffreslettres.ui.defi.seuilLongueurDefiLettres
 import kotlin.random.Random
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -37,20 +38,30 @@ data class LettresRoundUiState(
 
 /** Tirage selon le nombre de voyelles choisi (§4.1) puis recherche du mot le plus long (§4.5). */
 class LettresRoundViewModel(
-    niveau: NiveauLettres,
+    private val niveau: NiveauLettres,
     private val dictionnaire: DictionnaireIndex,
-    configurationAlphabet: ConfigurationAlphabetLettres,
+    private val configurationAlphabet: ConfigurationAlphabetLettres,
     dureeSecondes: Int? = null,
     private val nombreLettres: Int = TirageLettres.NOMBRE_LETTRES,
     /** Permet au mode Duo de rejouer exactement le même tirage pour les deux joueurs (même graine, nouvelle instance de Random par joueur ; combiné au même nombreVoyelles forcé côté second joueur). */
     private val random: Random = Random,
+    /**
+     * Défi série/sans faute niveau Monique ou Mathieu uniquement (retour utilisateur) : retire
+     * le tirage jusqu'à ce qu'il contienne un mot d'au moins [seuilLongueurDefiLettres] lettres
+     * pour ce niveau, pour garantir une vraie réussite plutôt que de dépendre de la tolérance
+     * "meilleure approche" de `motEstReussiDefiLettres` (qui laisse un mot plus court compter
+     * comme réussite quand le tirage ne permet objectivement pas d'atteindre le seuil).
+     */
+    private val garantieMotSeuil: Boolean = false,
 ) : ViewModel() {
 
-    private val sac = SacLettres.creer(
+    private fun sacNeuf() = SacLettres.creer(
         configurationAlphabet.distributionBase,
         configurationAlphabet.voyelles,
         configurationAlphabet.lettresExcluesParNiveau.getValue(niveau),
     )
+
+    private var sac = sacNeuf()
     private var timerJob: Job? = null
 
     private val _uiState = MutableStateFlow(
@@ -65,9 +76,25 @@ class LettresRoundViewModel(
     fun choisirNombreVoyelles(nombreVoyelles: Int) {
         val etat = _uiState.value
         if (etat.tirageTermine || etat.termine) return
-        val lettres = TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
+        val lettres = if (garantieMotSeuil) tirerAvecGarantie(nombreVoyelles) else TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
         _uiState.update { it.copy(lettresTirees = lettres, tirageTermine = true, nombreVoyellesChoisi = nombreVoyelles) }
         demarrerChrono()
+    }
+
+    /**
+     * Chaque tentative recrée un sac neuf (le précédent tirage l'a vidé) jusqu'à trouver un
+     * tirage contenant un mot d'au moins [seuilLongueurDefiLettres] lettres, ou abandonne après
+     * [MAX_TENTATIVES_GARANTIE] essais (dictionnaire trop pauvre pour ce tirage de lettres) en
+     * renvoyant le dernier tirage obtenu, pour ne jamais bloquer la partie.
+     */
+    private fun tirerAvecGarantie(nombreVoyelles: Int): List<Char> {
+        val seuil = seuilLongueurDefiLettres(niveau)
+        repeat(MAX_TENTATIVES_GARANTIE - 1) {
+            val tirage = TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
+            if (dictionnaire.rechercherAuMoins(tirage, seuil).isNotEmpty()) return tirage
+            sac = sacNeuf()
+        }
+        return TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
     }
 
     private fun demarrerChrono() {
@@ -122,5 +149,9 @@ class LettresRoundViewModel(
 
     override fun onCleared() {
         timerJob?.cancel()
+    }
+
+    private companion object {
+        const val MAX_TENTATIVES_GARANTIE = 300
     }
 }

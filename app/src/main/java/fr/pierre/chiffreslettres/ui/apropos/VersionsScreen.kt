@@ -19,6 +19,31 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.82",
+        date = "2026-08-07",
+        changements = listOf(
+            "Écran \"À propos\" scindé en deux sous-titres (\"Version\"/\"Licences\") ; les " +
+                "boutons \"Règles du jeu\" et \"Versions\" sont maintenant sur l'écran d'accueil " +
+                "(retour utilisateur), au même style que les autres tuiles.",
+            "Défi quotidien : retrait de la phrase \"Encore x jour(s) pour le trophée...\" " +
+                "(retour utilisateur).",
+            "Trophées : le nom complet des niveaux (ex. \"Ça se complique, Monique\") est " +
+                "utilisé partout où ils sont cités (retour utilisateur).",
+            "Renommage du niveau \"Là c'est sérieux, Mathieu\" en \"C'est du sérieux, Mathieu\" " +
+                "(retour utilisateur).",
+            "Catégorie de trophées \"Défi\" renommée \"Défi série\", par cohérence avec \"Défi " +
+                "chrono\"/\"Défi mots\"/\"Défi sans faute\"/\"Défi quotidien\" (retour utilisateur).",
+            "Défi chrono lettres : correction d'un bug où le mot le plus long possible " +
+                "s'affichait puis disparaissait aussitôt après un mot faux — la manche suivante " +
+                "attend maintenant le bouton \"Continuer\" comme en cas de réussite.",
+            "Défi mots (niveau Monique/Mathieu), défi série et défi sans faute (niveau " +
+                "Monique/Mathieu) : le tirage de lettres garantit désormais respectivement au " +
+                "moins 10 mots (défi mots) ou au moins 1 mot (série/sans faute) d'au moins 6 ou " +
+                "7 lettres, pour que les trophées Platine/Diamant restent atteignables plutôt " +
+                "que dépendants d'un tirage favorable.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.81",
         date = "2026-08-05",
         changements = listOf(

@@ -23,7 +23,6 @@ import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
-import fr.pierre.chiffreslettres.ui.theme.TextMuted
 import fr.pierre.chiffreslettres.ui.theme.libelle
 
 @Composable
@@ -37,11 +36,6 @@ fun DefiQuotidienScreen(
     onRetour: (() -> Unit)? = null,
     couleurRang: Color? = null,
 ) {
-    // Paliers de trophées de série de jours (cf. CatalogueTrophees), pour l'affichage de la progression.
-    val paliersSerieJours = listOf(
-        7 to stringResource(R.string.trophee_semaine_defi_quotidien),
-        30 to stringResource(R.string.trophee_mois_defi_quotidien),
-    )
     val nomMode = stringResource(if (tirage.mode == ModeJeu.CHIFFRES) R.string.mode_chiffres else R.string.mode_lettres)
     val nomType = stringResource(if (tirage.type == TypeDefi.SERIE) R.string.defi_type_serie else R.string.defi_type_chrono)
     val natureObjectif = when {
@@ -50,7 +44,6 @@ fun DefiQuotidienScreen(
         tirage.type == TypeDefi.SERIE -> stringResource(R.string.defi_objectif_mots_serie, tirage.objectif)
         else -> stringResource(R.string.defi_objectif_mots, tirage.objectif)
     }
-    val prochainPalier = paliersSerieJours.firstOrNull { it.first > serieActuelle }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
@@ -70,16 +63,6 @@ fun DefiQuotidienScreen(
             },
             style = MaterialTheme.typography.bodyMedium,
         )
-        Text(
-            if (prochainPalier != null) {
-                stringResource(R.string.defi_quotidien_prochain_palier, prochainPalier.first - serieActuelle, prochainPalier.second)
-            } else {
-                stringResource(R.string.defi_quotidien_tous_paliers)
-            },
-            style = MaterialTheme.typography.labelLarge,
-            color = TextMuted,
-        )
-
         if (dejaReussiAujourdhui) {
             Text(
                 stringResource(R.string.defi_quotidien_deja_reussi),

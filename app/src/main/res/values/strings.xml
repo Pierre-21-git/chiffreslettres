@@ -7,7 +7,7 @@
     <string name="niveau_emile">Assez facile, Émile</string>
     <string name="niveau_nestor">Ça va encore, Nestor</string>
     <string name="niveau_monique">Ça se complique, Monique</string>
-    <string name="niveau_mathieu">Là c\'est sérieux, Mathieu</string>
+    <string name="niveau_mathieu">C\'est du sérieux, Mathieu</string>
 
     <!-- Alphabet du mode Lettres (retour utilisateur : externalisé pour permettre une
          déclinaison par langue). alphabet_lettres/alphabet_comptes sont deux tableaux
@@ -74,7 +74,9 @@
 
     <!-- ui/apropos/AProposScreen -->
     <string name="apropos_titre">À propos</string>
+    <string name="apropos_sous_titre_version">Version</string>
     <string name="apropos_version">Chiffres &amp; Lettres — version %1$s (%2$d)</string>
+    <string name="apropos_sous_titre_licences">Licences</string>
     <string name="apropos_licence_code">Code source sous licence GNU GPL-3.0.</string>
     <string name="apropos_licence_dictionnaire">Dictionnaire français : Dicollecte (hunspell-fr), licence MPL-2.0.</string>
     <string name="apropos_licence_dictionnaire_en">Dictionnaire anglais : en_US (projet SCOWL, © Kevin Atkinson), licence permissive de type BSD.</string>
@@ -149,8 +151,6 @@
     <string name="defi_objectif_mots">%1$d mots valides</string>
     <string name="defi_quotidien_aucune_serie">Aucune série en cours</string>
     <string name="defi_quotidien_serie_en_cours">Série en cours : %1$d jour(s) d\'affilée</string>
-    <string name="defi_quotidien_prochain_palier">Encore %1$d jour(s) pour le trophée \"%2$s\"</string>
-    <string name="defi_quotidien_tous_paliers">Tous les paliers de série débloqués !</string>
     <string name="defi_quotidien_deja_reussi">Défi du jour déjà réussi, bravo ! Reviens demain pour le prochain.</string>
     <string name="defi_quotidien_choisis_niveau">Choisis ton niveau</string>
     <string name="trophee_semaine_defi_quotidien">Une semaine de défi quotidien</string>
@@ -266,11 +266,11 @@
     <string name="regles_mode_chiffres_texte">6 nombres sont tirés (parmi 1 à 10 en double exemplaire, et 25/50/75/100 en simple exemplaire), ainsi qu\'une cible à atteindre. Construisez votre calcul pas à pas façon calculatrice : touchez un premier nombre, un opérateur, puis un second nombre — le résultat remplace les deux nombres utilisés et peut resservir. Les boutons \"Annuler\" et \"Effacer\" permettent de revenir en arrière. Le dernier résultat obtenu est votre proposition : validez dès que vous êtes prêt, ou laissez le chrono s\'écouler s\'il y en a un.</string>
     <string name="regles_comptage_points_titre">Comptage des points</string>
     <string name="regles_chiffres_points_emile_nestor">Assez facile (Émile) et Ça va encore (Nestor) : 10 points si le compte est exact, 5 points pour toute proposition non exacte.</string>
-    <string name="regles_chiffres_points_monique_mathieu">Ça se complique (Monique) et Là c\'est sérieux (Mathieu) : 10 points si le compte est exact, 7 points pour un compte approchant (écart d\'au plus 100 avec la cible), 0 point au-delà.</string>
+    <string name="regles_chiffres_points_monique_mathieu">Ça se complique (Monique) et C\'est du sérieux (Mathieu) : 10 points si le compte est exact, 7 points pour un compte approchant (écart d\'au plus 100 avec la cible), 0 point au-delà.</string>
     <string name="regles_mode_lettres_titre">Mode Lettres</string>
     <string name="regles_mode_lettres_texte">Choisissez le nombre de voyelles souhaité (2, 3, 4 ou 5 ; le Y compte comme une voyelle), puis les 10 lettres sont tirées d\'un coup. Construisez ensuite votre mot en touchant les lettres dans l\'ordre voulu (chaque lettre tirée ne peut être utilisée qu\'une fois) ; les boutons \"Annuler\" et \"Effacer\" permettent de revenir en arrière. Trouvez le mot le plus long possible avec ces lettres, avant la fin du chrono s\'il y en a un.</string>
     <string name="regles_lettres_points_emile_nestor">Assez facile (Émile) et Ça va encore (Nestor) : 5 points pour un mot de 2 à 4 lettres, 10 points à partir de 5 lettres.</string>
-    <string name="regles_lettres_points_monique_mathieu">Ça se complique (Monique) et Là c\'est sérieux (Mathieu) : le score correspond au nombre de lettres du mot validé.</string>
+    <string name="regles_lettres_points_monique_mathieu">Ça se complique (Monique) et C\'est du sérieux (Mathieu) : le score correspond au nombre de lettres du mot validé.</string>
     <string name="regles_mots_acceptes_titre">Mots acceptés</string>
     <string name="regles_mots_acceptes_texte">Le dictionnaire embarqué exclut les noms propres, les sigles/abréviations, et les formes de verbes purement conjuguées : seuls l\'infinitif et les participes présent/passé restent acceptés (\"aimer\", \"aimant\", \"aimé\" sont valides, pas \"aimerait\" ni \"aimons\").</string>
     <string name="regles_mode_entrainement_titre">Mode Entraînement</string>
@@ -280,7 +280,7 @@
     <string name="regles_partie_solo_emile">Assez facile, Émile (2 manches par mode) — Chiffres : cible ≤ 100, addition et soustraction seulement, solution garantie, 120s. Lettres : X, Y, Z, W, K, Q, H, J exclues, 110s.</string>
     <string name="regles_partie_solo_nestor">Ça va encore, Nestor (3 manches par mode) — Chiffres : cible ≤ 100, les 4 opérations, solution garantie, 100s. Lettres : X, Y, Z, W, K, Q exclues, 90s.</string>
     <string name="regles_partie_solo_monique">Ça se complique, Monique (4 manches par mode) — Chiffres : cible ≤ 500, les 4 opérations, pas de garantie de solution, 60s. Lettres : X, Y, Z, W exclues, 50s.</string>
-    <string name="regles_partie_solo_mathieu">Là c\'est sérieux, Mathieu (5 manches par mode) — Chiffres : cible entre 100 et 999, pas de garantie de solution, 45s. Lettres : aucune lettre exclue, 40s.</string>
+    <string name="regles_partie_solo_mathieu">C\'est du sérieux, Mathieu (5 manches par mode) — Chiffres : cible entre 100 et 999, pas de garantie de solution, 45s. Lettres : aucune lettre exclue, 40s.</string>
     <string name="regles_mode_partie_duo_titre">Mode Partie duo</string>
     <string name="regles_partie_duo_intro">Deux joueurs sur le même téléphone, en tour par tour : après avoir choisi l\'adversaire, le niveau (comme en solo) et le mode de calcul des points, chaque manche est jouée par les deux joueurs sur exactement le même tirage (mêmes nombres et cible en chiffres, mêmes lettres en lettres). Le joueur qui commence change à chaque manche, pour que le choix du nombre de voyelles ne revienne pas toujours au même :</string>
     <string name="regles_partie_duo_mode_duo">Duo : chaque joueur garde son propre score sur chaque manche, comme en solo.</string>
