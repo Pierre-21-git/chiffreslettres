@@ -1,6 +1,7 @@
 package fr.pierre.chiffreslettres.ui.defi
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -37,6 +38,9 @@ import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
 import fr.pierre.chiffreslettres.ui.theme.fondPlateau
 
 private const val LETTRES_PAR_LIGNE = 5
+private const val COLONNES_MOTS = 3
+/** 3 colonnes × 4 lignes = 12 emplacements, pour l'objectif de 10 mots des trophées Platine/Diamant (retour utilisateur). */
+private const val LIGNES_MOTS_TROUVES = 4
 
 /**
  * Défi mots max (retour utilisateur) : contrairement à `LettresRoundScreen`, un seul écran
@@ -144,7 +148,10 @@ fun DefiMotsMaxScreen(
 
         if (etat.motsTrouves.isNotEmpty()) {
             PanneauResultat {
-                for (mot in etat.motsTrouves) {
+                // Emplacements réservés pour 4 lignes (retour utilisateur), pas seulement les
+                // mots déjà trouvés : la grille garde une taille stable pendant la recherche,
+                // pour l'objectif de 10 mots des trophées Platine/Diamant.
+                GrilleMots(mots = etat.motsTrouves, lignesReservees = LIGNES_MOTS_TROUVES) { mot ->
                     Text(mot, color = TextMuted, fontSize = 13.sp)
                 }
             }
@@ -174,7 +181,7 @@ fun DefiMotsMaxScreen(
             if (etat.motsPossibles.isNotEmpty()) {
                 PanneauResultat {
                     Text(stringResource(R.string.defi_mots_max_mots_possibles_titre), color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
-                    for (mot in etat.motsPossibles) {
+                    GrilleMots(mots = etat.motsPossibles) { mot ->
                         val trouve = mot in etat.motsTrouves
                         Text(
                             if (trouve) stringResource(R.string.defi_mots_max_mot_possible_trouve, mot) else mot,
@@ -185,6 +192,30 @@ fun DefiMotsMaxScreen(
                 }
             }
             actionsFin()
+        }
+    }
+}
+
+/**
+ * Grille de mots sur [COLONNES_MOTS] colonnes alignées (retour utilisateur) : chaque cellule se
+ * partage la largeur à parts égales (`Modifier.weight`), donc les colonnes restent alignées d'une
+ * ligne à l'autre quelle que soit la longueur des mots. Si [lignesReservees] est fourni, la
+ * grille réserve toujours ce nombre de lignes (cellules vides au-delà de [mots]) pour ne pas
+ * changer de taille au fil de la recherche ; sinon elle s'arrête au dernier mot.
+ */
+@Composable
+private fun GrilleMots(mots: List<String>, lignesReservees: Int? = null, rendu: @Composable (String) -> Unit) {
+    val nombreLignes = lignesReservees ?: ((mots.size + COLONNES_MOTS - 1) / COLONNES_MOTS)
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        for (ligne in 0 until nombreLignes) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                for (colonne in 0 until COLONNES_MOTS) {
+                    val mot = mots.getOrNull(ligne * COLONNES_MOTS + colonne)
+                    Box(modifier = Modifier.weight(1f)) {
+                        if (mot != null) rendu(mot)
+                    }
+                }
+            }
         }
     }
 }

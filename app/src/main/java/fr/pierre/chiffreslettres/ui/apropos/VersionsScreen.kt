@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.84",
+        date = "2026-08-07",
+        changements = listOf(
+            "Défi mots : la liste des mots trouvés (4 lignes réservées, objectif de 10) et " +
+                "celle des mots possibles en fin de défi s'affichent maintenant sur 3 colonnes " +
+                "alignées (retour utilisateur).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.83",
         date = "2026-08-07",
         changements = listOf(
