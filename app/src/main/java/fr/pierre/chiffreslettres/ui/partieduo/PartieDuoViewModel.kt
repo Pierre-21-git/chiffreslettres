@@ -22,9 +22,9 @@ enum class TourDuo { JOUEUR1, JOUEUR2 }
  * en lettres — la comparaison s'y fait sur la longueur du mot), et [detail] à afficher sur
  * l'écran de transition (le calcul effectué en chiffres, le mot joué en lettres).
  *
- * [meilleurMot]/[solutionPossible] : la meilleure réponse possible sur ce tirage (mode Lettres/
- * Chiffres respectivement, l'autre restant null), affichée une seule fois par manche sur l'écran
- * de transition, pas par joueur, puisque les deux joueurs jouent le même tirage. [solutionPossible]
+ * [dixMeilleursMots]/[solutionPossible] : la meilleure réponse possible sur ce tirage (mode Lettres/
+ * Chiffres respectivement, l'autre restant vide/null), affichée une seule fois par manche sur
+ * l'écran de transition, pas par joueur, puisque les deux joueurs jouent le même tirage. [solutionPossible]
  * garde l'[Expression] complète (pas juste son texte) pour pouvoir afficher le détail étape par
  * étape, comme en solo. Calculées localement par chaque téléphone (pas transmises sur le réseau) :
  * déterministes à partir du même tirage, donc identiques des deux côtés.
@@ -33,7 +33,8 @@ data class ResultatDuoManche(
     val resultat: ResultatManche,
     val ecartCible: Int? = null,
     val detail: String = "",
-    val meilleurMot: String? = null,
+    /** Les 10 meilleurs mots jouables sur ce tirage (mode Lettres uniquement), affichés une seule fois par manche sur l'écran de transition (retour utilisateur : le tirage est commun aux deux joueurs). */
+    val dixMeilleursMots: List<String> = emptyList(),
     val solutionPossible: Expression? = null,
 )
 

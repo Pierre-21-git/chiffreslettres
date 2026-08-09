@@ -23,6 +23,7 @@ import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.numbers.Expression
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
+import fr.pierre.chiffreslettres.ui.theme.GrilleMotsGroupee
 import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
@@ -56,8 +57,8 @@ fun TransitionJoueurScreen(
     onPret: () -> Unit,
     /** Mode de la manche qui vient de se terminer ; null si [resultats] est vide. */
     mode: ModeJeu? = null,
-    /** Meilleur mot possible sur le tirage de cette manche (mode Lettres uniquement), affiché une seule fois (retour utilisateur : même tirage pour les deux joueurs). */
-    meilleurMot: String? = null,
+    /** Les 10 meilleurs mots jouables sur ce tirage (mode Lettres uniquement), affichés une seule fois (retour utilisateur : même tirage pour les deux joueurs). */
+    dixMeilleursMots: List<String> = emptyList(),
     /** Solution possible sur le tirage de cette manche (mode Chiffres uniquement), affichée une seule fois, détail étape par étape comme en solo. */
     solutionPossible: Expression? = null,
 ) {
@@ -97,7 +98,7 @@ fun TransitionJoueurScreen(
                 }
             }
             if (mode != null) {
-                PanneauMeilleureReponse(mode, meilleurMot, solutionPossible)
+                PanneauMeilleureReponse(mode, dixMeilleursMots, solutionPossible)
             }
         }
     }
@@ -116,18 +117,26 @@ private fun messageVainqueur(resultats: List<ResultatAffichage>): String {
  * comme en solo.
  */
 @Composable
-internal fun PanneauMeilleureReponse(mode: ModeJeu, meilleurMot: String?, solutionPossible: Expression?) {
+internal fun PanneauMeilleureReponse(mode: ModeJeu, dixMeilleursMots: List<String>, solutionPossible: Expression?) {
     PanneauResultat {
         when (mode) {
-            ModeJeu.LETTRES -> Text(
-                stringResource(
-                    R.string.lettres_meilleur_mot_trouve,
-                    meilleurMot?.let { stringResource(R.string.lettres_meilleur_mot_detail, it, it.length) }
-                        ?: stringResource(R.string.lettres_meilleur_mot_aucun),
-                ),
-                color = TextMuted,
-                fontSize = 13.sp,
-            )
+            ModeJeu.LETTRES -> if (dixMeilleursMots.isNotEmpty()) {
+                Text(
+                    stringResource(R.string.lettres_meilleurs_mots_titre),
+                    color = TextMuted,
+                    fontSize = 11.sp,
+                    letterSpacing = 1.sp,
+                )
+                GrilleMotsGroupee(mots = dixMeilleursMots) { mot ->
+                    Text(mot, color = Ivory, fontSize = 13.sp)
+                }
+            } else {
+                Text(
+                    stringResource(R.string.lettres_meilleur_mot_trouve, stringResource(R.string.lettres_meilleur_mot_aucun)),
+                    color = TextMuted,
+                    fontSize = 13.sp,
+                )
+            }
             ModeJeu.CHIFFRES -> {
                 val etapesSolution = solutionPossible?.etapes().orEmpty()
                 if (etapesSolution.isEmpty()) {

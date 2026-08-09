@@ -38,8 +38,8 @@ fun RevelationMancheReseauScreen(
     dernierManche: Boolean,
     onSuivant: () -> Unit,
     mode: ModeJeu,
-    /** Meilleur mot possible sur le tirage de cette manche (mode Lettres uniquement). */
-    meilleurMot: String? = null,
+    /** Les 10 meilleurs mots jouables sur ce tirage (mode Lettres uniquement). */
+    dixMeilleursMots: List<String> = emptyList(),
     /** Solution possible sur le tirage de cette manche (mode Chiffres uniquement), détail étape par étape comme en solo. */
     solutionPossible: Expression? = null,
 ) {
@@ -54,7 +54,7 @@ fun RevelationMancheReseauScreen(
                 ColonneResultat(resultat, modifier = Modifier.weight(1f))
             }
         }
-        PanneauMeilleureReponse(mode, meilleurMot, solutionPossible)
+        PanneauMeilleureReponse(mode, dixMeilleursMots, solutionPossible)
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Afficheur(label = pseudoMoi, valeur = "$scoreMoi", modifier = Modifier.weight(1f), centre = true)
             Afficheur(label = pseudoAdversaire, valeur = "$scoreAdversaire", modifier = Modifier.weight(1f), centre = true)

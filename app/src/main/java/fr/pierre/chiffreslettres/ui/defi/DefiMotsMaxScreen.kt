@@ -211,7 +211,9 @@ private fun GrilleMots(mots: List<String>, lignesReservees: Int? = null, rendu: 
         for (ligne in 0 until nombreLignes) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 for (colonne in 0 until COLONNES_MOTS) {
-                    val mot = mots.getOrNull(ligne * COLONNES_MOTS + colonne)
+                    // Colonne par colonne (retour utilisateur), pas ligne par ligne : la 1ère
+                    // colonne se remplit entièrement avant la 2e, comme GrilleMotsGroupee.
+                    val mot = mots.getOrNull(colonne * nombreLignes + ligne)
                     Box(modifier = Modifier.weight(1f)) {
                         if (mot != null) rendu(mot)
                     }

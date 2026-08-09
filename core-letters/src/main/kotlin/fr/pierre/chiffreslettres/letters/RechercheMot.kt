@@ -21,5 +21,5 @@ fun meilleurMot(tirage: List<Char>, dictionnaire: DictionnaireIndex): String? =
 fun dixMeilleursMots(tirage: List<Char>, dictionnaire: DictionnaireIndex, limite: Int = LIMITE_DIX_MEILLEURS_MOTS): List<String> =
     dictionnaire.rechercherAuMoins(tirage, LONGUEUR_MINIMALE_DICTIONNAIRE)
         .distinct()
-        .sortedWith(compareByDescending<String> { it.length }.thenBy { it })
+        .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
         .take(limite)

@@ -1,5 +1,6 @@
 package fr.pierre.chiffreslettres.dictionary
 
+import java.text.Collator
 import java.text.Normalizer
 import java.util.Locale
 
@@ -89,6 +90,17 @@ class DictionnaireIndex(mots: Sequence<String>) {
                 if (vecteurMot[i] > vecteurTirage[i]) return false
             }
             return true
+        }
+
+        /**
+         * Comparateur alphabétique français (retour utilisateur) : un tri par ordre naturel des
+         * `String` place les lettres accentuées (ex. "élire") après "z" au lieu de trier avec leur
+         * lettre de base, car leur point de code Unicode est plus élevé. Nouvelle instance à
+         * chaque appel : `Collator` n'est pas garanti thread-safe en cas d'usage concurrent.
+         */
+        fun comparateurAlphabetiqueFrancais(): Comparator<String> {
+            val collator = Collator.getInstance(Locale.FRENCH)
+            return Comparator { a, b -> collator.compare(a, b) }
         }
     }
 }
