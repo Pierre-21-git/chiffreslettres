@@ -24,3 +24,9 @@ local.properties
 # Keystore de signature release et ses identifiants (secrets, jamais commités)
 /release-keystore.jks
 /keystore.properties
+
+# Notes de travail personnelles à la racine (non liées au code, jamais commitées)
+/CLAUDE.md
+/LOT_D_PROPOSITION_TROPHEES.md
+/NOUVEAUX_TROPHEES_V1_74.md
+/TOUS_LES_TROPHEES_V1_74.md
