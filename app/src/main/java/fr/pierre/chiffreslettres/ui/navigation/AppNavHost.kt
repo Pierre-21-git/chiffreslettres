@@ -22,7 +22,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,10 +47,8 @@ import fr.pierre.chiffreslettres.data.ResultatManche
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TropheeStats
 import fr.pierre.chiffreslettres.data.TypeDefi
-import fr.pierre.chiffreslettres.data.TypePartie
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
-import fr.pierre.chiffreslettres.widget.DefiQuotidienWidgetProvider
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.apropos.AProposScreen
 import fr.pierre.chiffreslettres.ui.apropos.ReglesDuJeuScreen
@@ -93,8 +90,6 @@ import fr.pierre.chiffreslettres.ui.partieduo.VainqueurManche
 import fr.pierre.chiffreslettres.ui.partieduo.premierJoueurManche
 import fr.pierre.chiffreslettres.ui.partieduo.vainqueurMancheChiffres
 import fr.pierre.chiffreslettres.ui.partieduo.vainqueurMancheLettres
-import fr.pierre.chiffreslettres.ui.partieduo.versTypePartie
-import fr.pierre.chiffreslettres.ui.partieduo.versTypePartieReseau
 import fr.pierre.chiffreslettres.ui.partiereseau.AttenteHoteScreen
 import fr.pierre.chiffreslettres.ui.partiereseau.AttenteReseauScreen
 import fr.pierre.chiffreslettres.ui.partiereseau.ChoixRoleReseauScreen
@@ -112,7 +107,6 @@ import fr.pierre.chiffreslettres.ui.theme.couleurRangJoueur
 import fr.pierre.chiffreslettres.ui.trophees.TropheesScreen
 import java.time.LocalDate
 import kotlin.random.Random
-import kotlinx.coroutines.launch
 
 @Composable
 private fun entrainementViewModel(
@@ -126,15 +120,27 @@ private fun entrainementViewModel(
 }
 
 @Composable
-private fun partieViewModel(navController: NavHostController, backStackEntry: NavBackStackEntry): PartieStructureeViewModel {
+private fun partieViewModel(
+    navController: NavHostController,
+    backStackEntry: NavBackStackEntry,
+    historiqueRepository: HistoriqueRepository,
+    tropheeRepository: TropheeRepository,
+    profilId: Long,
+): PartieStructureeViewModel {
     val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Routes.PARTIE_GRAPH) }
-    return viewModel(parentEntry)
+    return viewModel(parentEntry) { PartieStructureeViewModel(historiqueRepository, tropheeRepository, profilId) }
 }
 
 @Composable
-private fun partieDuoViewModel(navController: NavHostController, backStackEntry: NavBackStackEntry): PartieDuoViewModel {
+private fun partieDuoViewModel(
+    navController: NavHostController,
+    backStackEntry: NavBackStackEntry,
+    historiqueRepository: HistoriqueRepository,
+    tropheeRepository: TropheeRepository,
+    profilId: Long,
+): PartieDuoViewModel {
     val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Routes.PARTIE_DUO_GRAPH) }
-    return viewModel(parentEntry)
+    return viewModel(parentEntry) { PartieDuoViewModel(historiqueRepository, tropheeRepository, profilId) }
 }
 
 @Composable
@@ -144,9 +150,12 @@ private fun partieReseauViewModel(
     context: Context,
     pseudo: String,
     avatar: String,
+    historiqueRepository: HistoriqueRepository,
+    tropheeRepository: TropheeRepository,
+    profilId: Long,
 ): PartieReseauViewModel {
     val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Routes.RESEAU_GRAPH) }
-    return viewModel(parentEntry) { PartieReseauViewModel(context, pseudo, avatar) }
+    return viewModel(parentEntry) { PartieReseauViewModel(context, pseudo, avatar, historiqueRepository, tropheeRepository, profilId) }
 }
 
 @Composable
@@ -373,7 +382,7 @@ fun AppNavHost(
 
         navigation(startDestination = Routes.CONFIGURATION_PARTIE, route = Routes.PARTIE_GRAPH) {
             composable(Routes.CONFIGURATION_PARTIE) { backStackEntry ->
-                val partieVm = partieViewModel(navController, backStackEntry)
+                val partieVm = partieViewModel(navController, backStackEntry, historiqueRepository, tropheeRepository, profilId)
                 ConfigurationPartieScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                     couleurRang = couleurRangJoueur(profilId, tropheeRepository),
@@ -386,7 +395,7 @@ fun AppNavHost(
             }
 
             composable(Routes.JEU_PARTIE) { backStackEntry ->
-                val partieVm = partieViewModel(navController, backStackEntry)
+                val partieVm = partieViewModel(navController, backStackEntry, historiqueRepository, tropheeRepository, profilId)
                 val sequence by partieVm.sequence.collectAsState()
                 val index by partieVm.index.collectAsState()
                 val resultats by partieVm.resultats.collectAsState()
@@ -455,22 +464,14 @@ fun AppNavHost(
             }
 
             composable(Routes.RECAP_PARTIE) { backStackEntry ->
-                val partieVm = partieViewModel(navController, backStackEntry)
+                val partieVm = partieViewModel(navController, backStackEntry, historiqueRepository, tropheeRepository, profilId)
                 val resultats by partieVm.resultats.collectAsState()
-                val scope = rememberCoroutineScope()
                 RecapPartieScreen(
                     resultats = resultats,
-                    onTerminer = {
-                        // Navigation à l'intérieur de la coroutine, après l'enregistrement (et non
-                        // juste après son lancement) : un popBackStack immédiat dispose la
-                        // composition et annule ce rememberCoroutineScope avant que l'écriture en
-                        // base n'ait eu lieu, perdant silencieusement la partie et ses trophées.
-                        scope.launch {
-                            historiqueRepository.enregistrerSession(profilId, TypePartie.STRUCTUREE, resultats)
-                            tropheeRepository.reevaluer(profilId)
-                            navController.popBackStack(Routes.MENU, inclusive = false)
-                        }
-                    },
+                    // La partie est déjà enregistrée en base dès la dernière manche jouée (voir
+                    // PartieStructureeViewModel.enregistrerResultat) : ce bouton ne fait plus que
+                    // naviguer, il ne peut donc plus perdre la partie en cas de retour arrière.
+                    onTerminer = { navController.popBackStack(Routes.MENU, inclusive = false) },
                     onRetour = { navController.popBackStack() },
                 )
             }
@@ -478,7 +479,7 @@ fun AppNavHost(
 
         navigation(startDestination = Routes.CONFIGURATION_PARTIE_DUO, route = Routes.PARTIE_DUO_GRAPH) {
             composable(Routes.CONFIGURATION_PARTIE_DUO) { backStackEntry ->
-                val duoVm = partieDuoViewModel(navController, backStackEntry)
+                val duoVm = partieDuoViewModel(navController, backStackEntry, historiqueRepository, tropheeRepository, profilId)
                 ConfigurationPartieDuoScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                     couleurRang = couleurRangJoueur(profilId, tropheeRepository),
@@ -492,7 +493,7 @@ fun AppNavHost(
             }
 
             composable(Routes.JEU_PARTIE_DUO) { backStackEntry ->
-                val duoVm = partieDuoViewModel(navController, backStackEntry)
+                val duoVm = partieDuoViewModel(navController, backStackEntry, historiqueRepository, tropheeRepository, profilId)
                 val sequence by duoVm.sequence.collectAsState()
                 val seeds by duoVm.seeds.collectAsState()
                 val index by duoVm.index.collectAsState()
@@ -686,31 +687,18 @@ fun AppNavHost(
             }
 
             composable(Routes.RECAP_PARTIE_DUO) { backStackEntry ->
-                val duoVm = partieDuoViewModel(navController, backStackEntry)
+                val duoVm = partieDuoViewModel(navController, backStackEntry, historiqueRepository, tropheeRepository, profilId)
                 val profil2 = profils.find { it.id == duoVm.profil2Id }
-                val scope = rememberCoroutineScope()
                 val (resultats1, resultats2) = duoVm.resultatsFinaux()
                 RecapPartieDuoScreen(
                     pseudo1 = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "Joueur 1",
                     pseudo2 = profil2?.let { "${it.avatar} ${it.pseudo}" } ?: "Joueur 2",
                     resultats1 = resultats1,
                     resultats2 = resultats2,
-                    onTerminer = {
-                        val total1 = resultats1.sumOf { it.score }
-                        val total2 = resultats2.sumOf { it.score }
-                        val type = duoVm.mode.versTypePartie()
-                        // Une égalité compte comme gagnée pour les deux joueurs, pas comme une
-                        // défaite mutuelle (retour utilisateur).
-                        scope.launch {
-                            historiqueRepository.enregistrerSession(profilId, type, resultats1, total1 >= total2)
-                            if (profil2 != null) {
-                                historiqueRepository.enregistrerSession(profil2.id, type, resultats2, total2 >= total1)
-                            }
-                            tropheeRepository.reevaluer(profilId)
-                            if (profil2 != null) tropheeRepository.reevaluer(profil2.id)
-                            navController.popBackStack(Routes.MENU, inclusive = false)
-                        }
-                    },
+                    // La partie est déjà enregistrée en base pour les deux joueurs dès que les
+                    // deux ont joué la dernière manche (voir PartieDuoViewModel.enregistrerResultat) :
+                    // ce bouton ne fait plus que naviguer.
+                    onTerminer = { navController.popBackStack(Routes.MENU, inclusive = false) },
                     onRetour = { navController.popBackStack() },
                 )
             }
@@ -722,6 +710,9 @@ fun AppNavHost(
                     navController, backStackEntry, context,
                     pseudo = profilActif?.pseudo ?: "",
                     avatar = profilActif?.avatar ?: "",
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
                 )
                 ChoixRoleReseauScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
@@ -743,6 +734,9 @@ fun AppNavHost(
                     navController, backStackEntry, context,
                     pseudo = profilActif?.pseudo ?: "",
                     avatar = profilActif?.avatar ?: "",
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
                 )
                 val etat by reseauVm.etat.collectAsState()
                 LaunchedEffect(etat) {
@@ -772,6 +766,9 @@ fun AppNavHost(
                     navController, backStackEntry, context,
                     pseudo = profilActif?.pseudo ?: "",
                     avatar = profilActif?.avatar ?: "",
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
                 )
                 val etat by reseauVm.etat.collectAsState()
                 val parties by reseauVm.partiesTrouvees.collectAsState()
@@ -804,6 +801,9 @@ fun AppNavHost(
                     navController, backStackEntry, context,
                     pseudo = profilActif?.pseudo ?: "",
                     avatar = profilActif?.avatar ?: "",
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
                 )
                 val etat by reseauVm.etat.collectAsState()
                 val etatConnecte = etat as? EtatPartieReseau.Connecte
@@ -826,6 +826,9 @@ fun AppNavHost(
                     navController, backStackEntry, context,
                     pseudo = profilActif?.pseudo ?: "",
                     avatar = profilActif?.avatar ?: "",
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
                 )
                 ConfigurationPartieReseauScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
@@ -842,6 +845,9 @@ fun AppNavHost(
                     navController, backStackEntry, context,
                     pseudo = profilActif?.pseudo ?: "",
                     avatar = profilActif?.avatar ?: "",
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
                 )
                 val etatConnexion by reseauVm.etat.collectAsState()
                 val profilDistant = (etatConnexion as? EtatPartieReseau.Connecte)?.profilDistant
@@ -1059,10 +1065,12 @@ fun AppNavHost(
                     navController, backStackEntry, context,
                     pseudo = profilActif?.pseudo ?: "",
                     avatar = profilActif?.avatar ?: "",
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
                 )
                 val etatConnexion by reseauVm.etat.collectAsState()
                 val profilDistant = (etatConnexion as? EtatPartieReseau.Connecte)?.profilDistant
-                val scope = rememberCoroutineScope()
                 val (finaux1, finaux2) = reseauVm.resultatsFinaux()
                 val (mesResultats, resultatsAdversaire) = if (reseauVm.monTourDuo == TourDuo.JOUEUR1) {
                     finaux1 to finaux2
@@ -1074,17 +1082,13 @@ fun AppNavHost(
                     pseudo2 = profilDistant?.let { "${it.avatar} ${it.pseudo}" } ?: "Adversaire",
                     resultats1 = mesResultats,
                     resultats2 = resultatsAdversaire,
+                    // Ma partie est déjà enregistrée en base dès que mon résultat et celui de
+                    // l'adversaire sont connus pour toutes les manches (voir
+                    // PartieReseauViewModel.enregistrerResultat) : ce bouton ne fait plus que
+                    // fermer la connexion et naviguer.
                     onTerminer = {
-                        val monTotal = mesResultats.sumOf { it.score }
-                        val sonTotal = resultatsAdversaire.sumOf { it.score }
-                        val type = reseauVm.mode.versTypePartieReseau()
-                        // Une égalité compte comme gagnée (retour utilisateur, même règle que le duo local).
-                        scope.launch {
-                            historiqueRepository.enregistrerSession(profilId, type, mesResultats, monTotal >= sonTotal)
-                            tropheeRepository.reevaluer(profilId)
-                            reseauVm.annulerEtRevenirAuChoix()
-                            navController.popBackStack(Routes.MENU, inclusive = false)
-                        }
+                        reseauVm.annulerEtRevenirAuChoix()
+                        navController.popBackStack(Routes.MENU, inclusive = false)
                     },
                 )
             }
@@ -1296,7 +1300,10 @@ fun AppNavHost(
             val objectifQuotidien = backStackEntry.arguments!!.getInt(Routes.ARG_OBJECTIF_QUOTIDIEN)
             val jourQuotidien = backStackEntry.arguments!!.getString(Routes.ARG_JOUR_QUOTIDIEN)
             val defiVm: DefiViewModel = viewModel(backStackEntry) {
-                DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.CHIFFRES, niveau.name, TypeDefi.SERIE)
+                DefiViewModel(
+                    defiRepository, tropheeRepository, profilId, ModeJeu.CHIFFRES, niveau.name, TypeDefi.SERIE,
+                    defiQuotidienRepository = defiQuotidienRepository, jourQuotidien = jourQuotidien, context = context,
+                )
             }
             val index by defiVm.index.collectAsState()
             val essaiId by defiVm.essaiId.collectAsState()
@@ -1314,13 +1321,11 @@ fun AppNavHost(
             val objectifAtteint = jourQuotidien != null &&
                 (if (termine) index else if (derniereMancheReussie == true) index + 1 else index) >= objectifQuotidien
             if (jourQuotidien != null) {
+                // La réussite du jour et la mise à jour du widget sont enregistrées à l'intérieur
+                // de DefiViewModel.objectifQuotidienAtteint() (viewModelScope), pas ici : un
+                // retour arrière juste après ne peut donc plus les interrompre.
                 LaunchedEffect(objectifAtteint) {
-                    if (objectifAtteint) {
-                        defiVm.objectifQuotidienAtteint()
-                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveau.name)
-                        tropheeRepository.reevaluer(profilId)
-                        DefiQuotidienWidgetProvider.demanderMiseAJour(context)
-                    }
+                    if (objectifAtteint) defiVm.objectifQuotidienAtteint()
                 }
             }
             // Solution exacte toujours garantie en défi série, même sur Monique/Mathieu
@@ -1378,7 +1383,10 @@ fun AppNavHost(
             val objectifQuotidien = backStackEntry.arguments!!.getInt(Routes.ARG_OBJECTIF_QUOTIDIEN)
             val jourQuotidien = backStackEntry.arguments!!.getString(Routes.ARG_JOUR_QUOTIDIEN)
             val defiVm: DefiViewModel = viewModel(backStackEntry) {
-                DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.LETTRES, niveau.name, TypeDefi.SERIE)
+                DefiViewModel(
+                    defiRepository, tropheeRepository, profilId, ModeJeu.LETTRES, niveau.name, TypeDefi.SERIE,
+                    defiQuotidienRepository = defiQuotidienRepository, jourQuotidien = jourQuotidien, context = context,
+                )
             }
             val index by defiVm.index.collectAsState()
             val essaiId by defiVm.essaiId.collectAsState()
@@ -1390,13 +1398,10 @@ fun AppNavHost(
             val objectifAtteint = jourQuotidien != null &&
                 (if (termine) index else if (derniereMancheReussie == true) index + 1 else index) >= objectifQuotidien
             if (jourQuotidien != null) {
+                // La réussite du jour et la mise à jour du widget sont enregistrées à l'intérieur
+                // de DefiViewModel.objectifQuotidienAtteint() (viewModelScope), pas ici.
                 LaunchedEffect(objectifAtteint) {
-                    if (objectifAtteint) {
-                        defiVm.objectifQuotidienAtteint()
-                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveau.name)
-                        tropheeRepository.reevaluer(profilId)
-                        DefiQuotidienWidgetProvider.demanderMiseAJour(context)
-                    }
+                    if (objectifAtteint) defiVm.objectifQuotidienAtteint()
                 }
             }
             // Clé sur essaiId (jamais réutilisé), pas index : cf. commentaire équivalent
@@ -1467,6 +1472,9 @@ fun AppNavHost(
                     niveau.name,
                     TypeDefi.CHRONO,
                     budgetSecondesDefiChrono(niveau),
+                    defiQuotidienRepository = defiQuotidienRepository,
+                    jourQuotidien = jourQuotidien,
+                    context = context,
                 )
             }
             val reussites by defiVm.reussites.collectAsState()
@@ -1478,13 +1486,10 @@ fun AppNavHost(
             val objectifAtteint = jourQuotidien != null &&
                 (if (termine) reussites else if (derniereMancheReussie == true) reussites + 1 else reussites) >= objectifQuotidien
             if (jourQuotidien != null) {
+                // La réussite du jour et la mise à jour du widget sont enregistrées à l'intérieur
+                // de DefiViewModel.objectifQuotidienAtteint() (viewModelScope), pas ici.
                 LaunchedEffect(objectifAtteint) {
-                    if (objectifAtteint) {
-                        defiVm.objectifQuotidienAtteint()
-                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveau.name)
-                        tropheeRepository.reevaluer(profilId)
-                        DefiQuotidienWidgetProvider.demanderMiseAJour(context)
-                    }
+                    if (objectifAtteint) defiVm.objectifQuotidienAtteint()
                 }
             }
             // Chaque manche démarre avec le temps restant du budget global (retour
@@ -1555,6 +1560,9 @@ fun AppNavHost(
                     niveau.name,
                     TypeDefi.CHRONO,
                     budgetSecondesDefiChrono(niveau),
+                    defiQuotidienRepository = defiQuotidienRepository,
+                    jourQuotidien = jourQuotidien,
+                    context = context,
                 )
             }
             val reussites by defiVm.reussites.collectAsState()
@@ -1567,13 +1575,10 @@ fun AppNavHost(
             val objectifAtteint = jourQuotidien != null &&
                 (if (termine) reussites else if (derniereMancheReussie == true) reussites + 1 else reussites) >= objectifQuotidien
             if (jourQuotidien != null) {
+                // La réussite du jour et la mise à jour du widget sont enregistrées à l'intérieur
+                // de DefiViewModel.objectifQuotidienAtteint() (viewModelScope), pas ici.
                 LaunchedEffect(objectifAtteint) {
-                    if (objectifAtteint) {
-                        defiVm.objectifQuotidienAtteint()
-                        defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveau.name)
-                        tropheeRepository.reevaluer(profilId)
-                        DefiQuotidienWidgetProvider.demanderMiseAJour(context)
-                    }
+                    if (objectifAtteint) defiVm.objectifQuotidienAtteint()
                 }
             }
             val roundVm: LettresRoundViewModel =

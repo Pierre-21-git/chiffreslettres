@@ -1,14 +1,18 @@
 package fr.pierre.chiffreslettres.ui.partieduo
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ResultatManche
+import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.numbers.Expression
 import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
 import kotlin.random.Random
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 /** Qui joue actuellement une manche donnée du duo. */
 enum class TourDuo { JOUEUR1, JOUEUR2 }
@@ -48,7 +52,11 @@ fun premierJoueurManche(index: Int): TourDuo =
  * `index` de manche partagé (contrairement au solo, les deux joueurs jouent la même manche
  * avant de passer à la suivante) ; [tour] indique lequel des deux joue actuellement.
  */
-class PartieDuoViewModel : ViewModel() {
+class PartieDuoViewModel(
+    private val historiqueRepository: HistoriqueRepository,
+    private val tropheeRepository: TropheeRepository,
+    private val profilId: Long,
+) : ViewModel() {
 
     private val _sequence = MutableStateFlow<List<ManchePlanifiee>>(emptyList())
     val sequence: StateFlow<List<ManchePlanifiee>> = _sequence.asStateFlow()
@@ -78,6 +86,8 @@ class PartieDuoViewModel : ViewModel() {
     var mode: ModeScoreDuo = ModeScoreDuo.DUO
         private set
 
+    private var enregistre = false
+
     fun demarrer(profil2Id: Long, sequence: List<ManchePlanifiee>, mode: ModeScoreDuo) {
         this.profil2Id = profil2Id
         this.mode = mode
@@ -87,12 +97,19 @@ class PartieDuoViewModel : ViewModel() {
         _tour.value = premierJoueurManche(0)
         _resultatsJoueur1.value = emptyList()
         _resultatsJoueur2.value = emptyList()
+        enregistre = false
         // Écran de transition affiché avant même la 1ère manche, pour annoncer le premier joueur
         // (retour utilisateur) — voir le cas particulier dans confirmerTransition().
         _enTransition.value = true
     }
 
-    /** Appelé dès qu'un joueur termine sa manche : enregistre son résultat et bascule sur l'écran de transition/révélation. */
+    /**
+     * Appelé dès qu'un joueur termine sa manche : enregistre son résultat et bascule sur l'écran
+     * de transition/révélation. Dès que les deux joueurs ont joué la dernière manche, sauvegarde
+     * la partie en base immédiatement pour les deux profils — sans attendre l'écran récap ni un
+     * clic "Terminer" (retour utilisateur : un retour arrière intempestif à ce moment-là ne perd
+     * plus la partie).
+     */
     fun enregistrerResultat(resultat: ResultatDuoManche) {
         if (_tour.value == TourDuo.JOUEUR1) {
             _resultatsJoueur1.value = _resultatsJoueur1.value + resultat
@@ -100,6 +117,25 @@ class PartieDuoViewModel : ViewModel() {
             _resultatsJoueur2.value = _resultatsJoueur2.value + resultat
         }
         _enTransition.value = true
+        val tailleAttendue = _sequence.value.size
+        if (_resultatsJoueur1.value.size == tailleAttendue && _resultatsJoueur2.value.size == tailleAttendue) {
+            enregistrerSessionSiNecessaire()
+        }
+    }
+
+    private fun enregistrerSessionSiNecessaire() {
+        if (enregistre) return
+        enregistre = true
+        val (finaux1, finaux2) = resultatsFinaux()
+        val total1 = finaux1.sumOf { it.score }
+        val total2 = finaux2.sumOf { it.score }
+        val type = mode.versTypePartie()
+        viewModelScope.launch {
+            historiqueRepository.enregistrerSession(profilId, type, finaux1, total1 >= total2)
+            historiqueRepository.enregistrerSession(profil2Id, type, finaux2, total2 >= total1)
+            tropheeRepository.reevaluer(profilId)
+            tropheeRepository.reevaluer(profil2Id)
+        }
     }
 
     /** Clic sur "Prêt" de l'écran de transition : passe au second joueur de la manche, ou à la manche suivante si les deux ont fini. */

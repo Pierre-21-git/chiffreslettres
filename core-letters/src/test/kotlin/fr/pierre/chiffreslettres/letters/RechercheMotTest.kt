@@ -20,4 +20,16 @@ class RechercheMotTest {
     fun `meilleurMot renvoie null si rien n'est jouable`() {
         assertNull(meilleurMot("BXYQWK".toList(), dictionnaire))
     }
+
+    @Test
+    fun `dixMeilleursMots trie par longueur decroissante puis ordre alphabetique`() {
+        val dico = DictionnaireIndex(sequenceOf("art", "rat", "as", "at", "arts"))
+        assertEquals(listOf("arts", "art", "rat", "as", "at"), dixMeilleursMots("ARTS".toList(), dico))
+    }
+
+    @Test
+    fun `dixMeilleursMots respecte la limite demandee`() {
+        val dico = DictionnaireIndex(sequenceOf("art", "rat", "as", "at", "arts"))
+        assertEquals(listOf("arts", "art", "rat"), dixMeilleursMots("ARTS".toList(), dico, limite = 3))
+    }
 }

@@ -29,6 +29,7 @@ import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.GrilleMotsGroupee
 import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
@@ -181,7 +182,7 @@ fun DefiMotsMaxScreen(
             if (etat.motsPossibles.isNotEmpty()) {
                 PanneauResultat {
                     Text(stringResource(R.string.defi_mots_max_mots_possibles_titre), color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
-                    GrilleMots(mots = etat.motsPossibles) { mot ->
+                    GrilleMotsGroupee(mots = etat.motsPossibles) { mot ->
                         val trouve = mot in etat.motsTrouves
                         Text(
                             if (trouve) stringResource(R.string.defi_mots_max_mot_possible_trouve, mot) else mot,

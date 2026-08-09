@@ -184,7 +184,7 @@ class DefiMotsMaxViewModel(
         timerJob?.cancel()
         val motsPossibles = dictionnaire.rechercherAuMoins(_uiState.value.lettresTirees, seuilLongueur)
             .distinct()
-            .sortedByDescending { it.length }
+            .sortedWith(compareByDescending<String> { it.length }.thenBy { it })
         _uiState.update { it.copy(termine = true, raisonFin = raison, motRejete = motRejete, motsPossibles = motsPossibles) }
         if (enregistre) return
         enregistre = true

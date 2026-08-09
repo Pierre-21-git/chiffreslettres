@@ -19,6 +19,31 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.85",
+        date = "2026-08-09",
+        changements = listOf(
+            "Dictionnaire : retrait de \"démenotta\" (retour utilisateur).",
+            "Trophées défis série/chrono/sans faute : nouveau barème 3/5/8 (Bronze/Argent/Or), " +
+                "puis 10 (Platine, niveau Monique ou plus) et 12 (Diamant, niveau Mathieu). " +
+                "Défi mots : 3/5/10 (Bronze/Argent/Or), puis 15 (Platine) et 20 (Diamant), même " +
+                "logique de niveau (retour utilisateur).",
+            "Parties (chiffres/lettres solo, duo même téléphone, duo réseau) et défi quotidien : " +
+                "la partie est désormais enregistrée dès le dernier coup joué, plus seulement au " +
+                "clic sur \"Terminer\" de l'écran récap — un retour arrière intempestif juste " +
+                "après la fin d'une partie ne la fait plus perdre (retour utilisateur, audit " +
+                "complet des points d'enregistrement en base).",
+            "Fin de manche de lettres : affichage des 10 meilleurs mots jouables sur le tirage, " +
+                "au lieu du seul meilleur mot (retour utilisateur).",
+            "Mots possibles sur ce tirage (défi mots) et 10 meilleurs mots (lettres) : affichage " +
+                "sur 3 colonnes remplies colonne par colonne, groupé par nombre de lettres avec " +
+                "un titre \"Mots de X lettres\", trié par longueur puis ordre alphabétique " +
+                "(retour utilisateur).",
+            "Règles du jeu : ajout des sections \"Défi mots\" et \"Défi sans faute\", mention du " +
+                "mode \"Partie réseau\" dans la section Duo, et correction du nombre de trophées " +
+                "du défi quotidien (retour utilisateur).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.84",
         date = "2026-08-07",
         changements = listOf(

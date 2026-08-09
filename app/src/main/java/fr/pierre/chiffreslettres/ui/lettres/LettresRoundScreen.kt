@@ -30,6 +30,8 @@ import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.GrilleMotsGroupee
+import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
@@ -192,15 +194,19 @@ fun LettresRoundScreen(
                             fontSize = 13.sp,
                         )
                     }
-                    Text(
-                        stringResource(
-                            R.string.lettres_meilleur_mot_trouve,
-                            etat.meilleurMot?.let { stringResource(R.string.lettres_meilleur_mot_detail, it, it.length) }
-                                ?: stringResource(R.string.lettres_meilleur_mot_aucun),
-                        ),
-                        color = TextMuted,
-                        fontSize = 13.sp,
-                    )
+                }
+                if (etat.dixMeilleursMots.isNotEmpty()) {
+                    PanneauResultat {
+                        Text(
+                            stringResource(R.string.lettres_meilleurs_mots_titre),
+                            color = TextMuted,
+                            fontSize = 11.sp,
+                            letterSpacing = 1.sp,
+                        )
+                        GrilleMotsGroupee(mots = etat.dixMeilleursMots) { mot ->
+                            Text(mot, color = Ivory, fontSize = 13.sp)
+                        }
+                    }
                 }
             }
             actionsFinManche()

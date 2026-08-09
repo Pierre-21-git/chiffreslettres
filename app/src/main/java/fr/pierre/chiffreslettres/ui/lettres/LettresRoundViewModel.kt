@@ -7,6 +7,7 @@ import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
+import fr.pierre.chiffreslettres.letters.dixMeilleursMots
 import fr.pierre.chiffreslettres.letters.meilleurMot
 import fr.pierre.chiffreslettres.ui.defi.seuilLongueurDefiLettres
 import kotlin.random.Random
@@ -30,6 +31,8 @@ data class LettresRoundUiState(
     val tempsRestantSecondes: Int?,
     val termine: Boolean = false,
     val meilleurMot: String? = null,
+    /** Les 10 meilleurs mots jouables sur ce tirage, affichés en fin de manche (retour utilisateur). */
+    val dixMeilleursMots: List<String> = emptyList(),
     val motJoueurValide: Boolean? = null,
     val scoreObtenu: Int? = null,
     /** Nombre de voyelles choisi pour ce tirage, null tant qu'il n'a pas été choisi — permet au mode Duo de forcer le même choix pour le second joueur d'une manche (retour utilisateur : mêmes lettres pour les deux). */
@@ -141,9 +144,16 @@ class LettresRoundViewModel(
         val etat = _uiState.value
         val motValide = etat.motSaisi.isNotBlank() && dictionnaire.estJouable(etat.motSaisi)
         val meilleur = meilleurMot(etat.lettresTirees, dictionnaire)
+        val dixMeilleurs = dixMeilleursMots(etat.lettresTirees, dictionnaire)
         val score = if (motValide) etat.motSaisi.trim().length else 0
         _uiState.update {
-            it.copy(termine = true, meilleurMot = meilleur, motJoueurValide = motValide, scoreObtenu = score)
+            it.copy(
+                termine = true,
+                meilleurMot = meilleur,
+                dixMeilleursMots = dixMeilleurs,
+                motJoueurValide = motValide,
+                scoreObtenu = score,
+            )
         }
     }
 

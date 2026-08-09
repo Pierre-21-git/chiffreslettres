@@ -77,6 +77,7 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
                 stringResource(R.string.regles_partie_duo_mode_duo),
                 stringResource(R.string.regles_partie_duo_mode_confrontation),
             )
+            Text(stringResource(R.string.regles_partie_duo_reseau), style = MaterialTheme.typography.bodyMedium)
         }
 
         SectionRegle(stringResource(R.string.regles_mode_defi_serie_titre)) {
@@ -106,6 +107,28 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
                 stringResource(R.string.regles_seuil_mathieu),
             )
             Text(stringResource(R.string.regles_defi_chrono_detail), style = MaterialTheme.typography.bodyMedium)
+        }
+
+        SectionRegle(stringResource(R.string.regles_mode_defi_mots_titre)) {
+            Text(stringResource(R.string.regles_defi_mots_intro), style = MaterialTheme.typography.bodyMedium)
+            ListeAPuces(
+                stringResource(R.string.regles_seuil_emile),
+                stringResource(R.string.regles_seuil_nestor),
+                stringResource(R.string.regles_seuil_monique),
+                stringResource(R.string.regles_seuil_mathieu),
+            )
+            Text(stringResource(R.string.regles_defi_mots_detail), style = MaterialTheme.typography.bodyMedium)
+        }
+
+        SectionRegle(stringResource(R.string.regles_mode_defi_sans_faute_titre)) {
+            Text(stringResource(R.string.regles_defi_sans_faute_intro), style = MaterialTheme.typography.bodyMedium)
+            ListeAPuces(
+                stringResource(R.string.regles_seuil_emile),
+                stringResource(R.string.regles_seuil_nestor),
+                stringResource(R.string.regles_seuil_monique),
+                stringResource(R.string.regles_seuil_mathieu),
+            )
+            Text(stringResource(R.string.regles_defi_sans_faute_detail), style = MaterialTheme.typography.bodyMedium)
         }
 
         SectionRegle(stringResource(R.string.regles_mode_defi_quotidien_titre)) {

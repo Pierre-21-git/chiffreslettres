@@ -3,8 +3,10 @@ package fr.pierre.chiffreslettres.network
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ResultatManche
+import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
@@ -16,6 +18,7 @@ import fr.pierre.chiffreslettres.ui.partieduo.VainqueurManche
 import fr.pierre.chiffreslettres.ui.partieduo.premierJoueurManche
 import fr.pierre.chiffreslettres.ui.partieduo.vainqueurMancheChiffres
 import fr.pierre.chiffreslettres.ui.partieduo.vainqueurMancheLettres
+import fr.pierre.chiffreslettres.ui.partieduo.versTypePartieReseau
 import kotlin.random.Random
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -80,6 +83,9 @@ class PartieReseauViewModel(
     context: Context,
     private val pseudo: String,
     private val avatar: String,
+    private val historiqueRepository: HistoriqueRepository,
+    private val tropheeRepository: TropheeRepository,
+    private val profilId: Long,
 ) : ViewModel() {
 
     private val hoteReseau = HoteReseau(context.applicationContext)
@@ -143,6 +149,8 @@ class PartieReseauViewModel(
         private set
     var mode: ModeScoreDuo = ModeScoreDuo.DUO
         private set
+
+    private var enregistre = false
 
     fun choisirHote(transport: TransportReseau) {
         jobRole?.cancel()
@@ -249,6 +257,7 @@ class PartieReseauViewModel(
         _seeds.value = seeds
         _index.value = 0
         _tour.value = premierJoueurManche(0)
+        enregistre = false
         recalculerEtatManche()
     }
 
@@ -327,6 +336,28 @@ class PartieReseauViewModel(
             _resultatsJoueur2.value = _resultatsJoueur2.value + (index to resultat)
         }
         recalculerEtatManche()
+        // Dès que mon résultat ET celui de l'adversaire sont connus pour toutes les manches (dans
+        // n'importe quel ordre d'arrivée des messages), la partie est terminée pour de bon :
+        // sauvegarde immédiate, sans attendre l'écran récap ni un clic "Terminer" (retour
+        // utilisateur : un retour arrière intempestif à ce moment-là ne perd plus la partie).
+        val manchesCompletes = _resultatsJoueur1.value.keys.intersect(_resultatsJoueur2.value.keys)
+        if (_sequence.value.isNotEmpty() && manchesCompletes.size == _sequence.value.size) {
+            enregistrerSessionSiNecessaire()
+        }
+    }
+
+    private fun enregistrerSessionSiNecessaire() {
+        if (enregistre) return
+        enregistre = true
+        val (finaux1, finaux2) = resultatsFinaux()
+        val (mesResultats, resultatsAdversaire) = if (monTourDuo == TourDuo.JOUEUR1) finaux1 to finaux2 else finaux2 to finaux1
+        val monTotal = mesResultats.sumOf { it.score }
+        val sonTotal = resultatsAdversaire.sumOf { it.score }
+        val type = mode.versTypePartieReseau()
+        viewModelScope.launch {
+            historiqueRepository.enregistrerSession(profilId, type, mesResultats, monTotal >= sonTotal)
+            tropheeRepository.reevaluer(profilId)
+        }
     }
 
     /** Clic sur "Manche suivante"/"Voir les résultats" de l'écran de révélation. */

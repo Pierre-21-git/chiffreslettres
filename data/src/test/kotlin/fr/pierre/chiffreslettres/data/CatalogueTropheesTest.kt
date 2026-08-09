@@ -117,33 +117,34 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `serie de defi a un bareme unifie 3 bronze, 5 argent, 10 or`() {
-        val stats = statsVides().copy(meilleuresSeriesDefi = mapOf("LETTRES" to 10))
-        assertTrue(trophee("defi_serie_lettres_10").estDebloque(stats))
+    fun `serie de defi a un bareme 3 bronze, 5 argent, 8 or`() {
+        val stats = statsVides().copy(meilleuresSeriesDefi = mapOf("LETTRES" to 8))
+        assertTrue(trophee("defi_serie_lettres_8").estDebloque(stats))
         assertEquals(Palier.BRONZE, trophee("defi_serie_lettres_3").palier)
         assertEquals(Palier.ARGENT, trophee("defi_serie_lettres_5").palier)
-        assertEquals(Palier.OR, trophee("defi_serie_lettres_10").palier)
+        assertEquals(Palier.OR, trophee("defi_serie_lettres_8").palier)
     }
 
     @Test
-    fun `serie de defi a 10 reussites gagne platine ou diamant selon le niveau atteint`() {
-        // Une série de 10 tous niveaux confondus ne suffit pas aux jalons niveau-gatés.
+    fun `serie de defi gagne platine a 10 reussites niveau Monique et diamant a 12 niveau Mathieu`() {
+        // Une série tous niveaux confondus ne suffit pas aux jalons niveau-gatés.
         val stats = statsVides().copy(
-            meilleuresSeriesDefi = mapOf("CHIFFRES" to 10),
+            meilleuresSeriesDefi = mapOf("CHIFFRES" to 12),
             meilleuresSeriesDefiNiveauMonique = emptyMap(),
             meilleuresSeriesDefiNiveauMathieu = emptyMap(),
         )
         assertFalse(trophee("defi_serie_chiffres_10_monique").estDebloque(stats))
-        assertFalse(trophee("defi_serie_chiffres_10_mathieu").estDebloque(stats))
+        assertFalse(trophee("defi_serie_chiffres_12_mathieu").estDebloque(stats))
 
         val statsMonique = stats.copy(meilleuresSeriesDefiNiveauMonique = mapOf("CHIFFRES" to 10))
         assertTrue(trophee("defi_serie_chiffres_10_monique").estDebloque(statsMonique))
-        assertFalse(trophee("defi_serie_chiffres_10_mathieu").estDebloque(statsMonique))
+        assertFalse(trophee("defi_serie_chiffres_12_mathieu").estDebloque(statsMonique))
 
-        val statsMathieu = statsMonique.copy(meilleuresSeriesDefiNiveauMathieu = mapOf("CHIFFRES" to 10))
-        assertTrue(trophee("defi_serie_chiffres_10_mathieu").estDebloque(statsMathieu))
+        val statsMathieu = statsMonique.copy(meilleuresSeriesDefiNiveauMathieu = mapOf("CHIFFRES" to 12))
+        assertFalse(trophee("defi_serie_chiffres_12_mathieu").estDebloque(statsMathieu.copy(meilleuresSeriesDefiNiveauMathieu = mapOf("CHIFFRES" to 11))))
+        assertTrue(trophee("defi_serie_chiffres_12_mathieu").estDebloque(statsMathieu))
         assertEquals(Palier.PLATINE, trophee("defi_serie_chiffres_10_monique").palier)
-        assertEquals(Palier.DIAMANT, trophee("defi_serie_chiffres_10_mathieu").palier)
+        assertEquals(Palier.DIAMANT, trophee("defi_serie_chiffres_12_mathieu").palier)
     }
 
     @Test
@@ -166,41 +167,43 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `defi chrono a le meme bareme unifie que defi serie`() {
-        val stats = statsVides().copy(meilleuresReussitesDefiChrono = mapOf("LETTRES" to 10))
-        assertTrue(trophee("defi_chrono_lettres_10").estDebloque(stats))
-        assertEquals(Palier.OR, trophee("defi_chrono_lettres_10").palier)
+    fun `defi chrono a le meme bareme que defi serie`() {
+        val stats = statsVides().copy(meilleuresReussitesDefiChrono = mapOf("LETTRES" to 8))
+        assertTrue(trophee("defi_chrono_lettres_8").estDebloque(stats))
+        assertEquals(Palier.OR, trophee("defi_chrono_lettres_8").palier)
 
-        val statsMathieu = statsVides().copy(meilleuresReussitesDefiChronoNiveauMathieu = mapOf("LETTRES" to 10))
-        assertTrue(trophee("defi_chrono_lettres_10_mathieu").estDebloque(statsMathieu))
+        val statsMathieu = statsVides().copy(meilleuresReussitesDefiChronoNiveauMathieu = mapOf("LETTRES" to 12))
+        assertTrue(trophee("defi_chrono_lettres_12_mathieu").estDebloque(statsMathieu))
         assertFalse(trophee("defi_chrono_lettres_10_monique").estDebloque(statsVides()))
         assertEquals(Palier.PLATINE, trophee("defi_chrono_lettres_10_monique").palier)
-        assertEquals(Palier.DIAMANT, trophee("defi_chrono_lettres_10_mathieu").palier)
+        assertEquals(Palier.DIAMANT, trophee("defi_chrono_lettres_12_mathieu").palier)
     }
 
     @Test
-    fun `defi mots max a le bareme unifie 3 bronze, 5 argent, 10 or, plus 2 jalons niveau`() {
+    fun `defi mots max a le bareme 3 bronze, 5 argent, 10 or, plus 2 jalons niveau a 15 et 20`() {
         assertTrue(trophee("defi_mots_max_3").estDebloque(statsVides().copy(meilleurScoreDefiMotsMax = 3)))
         assertFalse(trophee("defi_mots_max_5").estDebloque(statsVides().copy(meilleurScoreDefiMotsMax = 3)))
         assertEquals(Palier.BRONZE, trophee("defi_mots_max_3").palier)
         assertEquals(Palier.ARGENT, trophee("defi_mots_max_5").palier)
         assertEquals(Palier.OR, trophee("defi_mots_max_10").palier)
-        assertEquals(Palier.PLATINE, trophee("defi_mots_max_10_monique").palier)
-        assertEquals(Palier.DIAMANT, trophee("defi_mots_max_10_mathieu").palier)
-        assertTrue(trophee("defi_mots_max_10_monique").estDebloque(statsVides().copy(meilleurScoreDefiMotsMaxNiveauMonique = 10)))
-        assertFalse(trophee("defi_mots_max_10_mathieu").estDebloque(statsVides().copy(meilleurScoreDefiMotsMaxNiveauMonique = 10)))
+        assertEquals(Palier.PLATINE, trophee("defi_mots_max_15_monique").palier)
+        assertEquals(Palier.DIAMANT, trophee("defi_mots_max_20_mathieu").palier)
+        assertTrue(trophee("defi_mots_max_15_monique").estDebloque(statsVides().copy(meilleurScoreDefiMotsMaxNiveauMonique = 15)))
+        assertFalse(trophee("defi_mots_max_20_mathieu").estDebloque(statsVides().copy(meilleurScoreDefiMotsMaxNiveauMathieu = 19)))
+        assertTrue(trophee("defi_mots_max_20_mathieu").estDebloque(statsVides().copy(meilleurScoreDefiMotsMaxNiveauMathieu = 20)))
     }
 
     @Test
-    fun `defi sans faute a le bareme unifie 3 bronze, 5 argent, 10 or, plus 2 jalons niveau`() {
+    fun `defi sans faute a le bareme 3 bronze, 5 argent, 8 or, plus 2 jalons niveau a 10 et 12`() {
         assertTrue(trophee("defi_sans_faute_3").estDebloque(statsVides().copy(meilleureSerieSansFaute = 3)))
         assertFalse(trophee("defi_sans_faute_5").estDebloque(statsVides().copy(meilleureSerieSansFaute = 3)))
         assertEquals(Palier.BRONZE, trophee("defi_sans_faute_3").palier)
         assertEquals(Palier.ARGENT, trophee("defi_sans_faute_5").palier)
-        assertEquals(Palier.OR, trophee("defi_sans_faute_10").palier)
+        assertEquals(Palier.OR, trophee("defi_sans_faute_8").palier)
         assertEquals(Palier.PLATINE, trophee("defi_sans_faute_10_monique").palier)
-        assertEquals(Palier.DIAMANT, trophee("defi_sans_faute_10_mathieu").palier)
-        assertTrue(trophee("defi_sans_faute_10_mathieu").estDebloque(statsVides().copy(meilleureSerieSansFauteNiveauMathieu = 10)))
+        assertEquals(Palier.DIAMANT, trophee("defi_sans_faute_12_mathieu").palier)
+        assertTrue(trophee("defi_sans_faute_12_mathieu").estDebloque(statsVides().copy(meilleureSerieSansFauteNiveauMathieu = 12)))
+        assertFalse(trophee("defi_sans_faute_12_mathieu").estDebloque(statsVides().copy(meilleureSerieSansFauteNiveauMathieu = 11)))
     }
 
     @Test

@@ -119,6 +119,7 @@
     <string name="defi_mots_max_fin_temps_ecoule">¡Se acabó el tiempo!</string>
     <string name="defi_mots_max_mots_possibles_titre">Palabras posibles con este sorteo</string>
     <string name="defi_mots_max_mot_possible_trouve">%1$s (encontrada)</string>
+    <string name="grille_mots_titre_longueur">Palabras de %1$d letras</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
     <string name="defi_sans_faute_libelle_progression">Racha</string>
@@ -181,6 +182,7 @@
     <string name="lettres_meilleur_mot_trouve">Mejor palabra encontrada: %1$s</string>
     <string name="lettres_meilleur_mot_detail">%1$s (%2$d letras)</string>
     <string name="lettres_meilleur_mot_aucun">ninguna</string>
+    <string name="lettres_meilleurs_mots_titre">Mejores palabras para este sorteo</string>
     <string name="lettres_mot_trop_court">Palabra válida, pero demasiado corta para este nivel: hacían falta al menos %1$d letras — esta ronda no cuenta como un éxito.</string>
     <string name="lettres_mot_trop_court_tolere">Palabra válida, demasiado corta para este nivel (harían falta %1$d letras), pero es la palabra más larga posible con este sorteo: la ronda cuenta igualmente como un éxito.</string>
 
@@ -235,6 +237,7 @@
     <string name="regles_partie_duo_intro">Dos jugadores en el mismo teléfono, por turnos: tras elegir al rival, el nivel (como en individual) y el modo de puntuación, cada ronda la juegan ambos jugadores con exactamente el mismo sorteo (mismos números y objetivo en números, mismas letras en letras). El jugador que empieza cambia en cada ronda, para que la elección del número de vocales no recaiga siempre en el mismo:</string>
     <string name="regles_partie_duo_mode_duo">Dúo: cada jugador mantiene su propia puntuación en cada ronda, como en individual.</string>
     <string name="regles_partie_duo_mode_confrontation">Enfrentamiento: en cada ronda, solo el jugador más cercano al objetivo (o con la palabra más larga) suma puntos; en caso de empate, ambos los conservan.</string>
+    <string name="regles_partie_duo_reseau">El modo «Partida en red» aplica exactamente las mismas reglas (Duo o Enfrentamiento, mismo sorteo para ambos jugadores), pero en dos teléfonos separados conectados por Wifi o Bluetooth, en lugar de pasarse el mismo teléfono.</string>
     <string name="regles_mode_defi_serie_titre">Modo Desafío de racha</string>
     <string name="regles_defi_serie_intro">Elige un modo (números o letras) y un nivel, y encadena rondas para acumular la mayor cantidad de éxitos seguidos posible, con el mismo cronómetro que en una partida individual de ese nivel. Un éxito es un resultado exacto en números, o una palabra válida de al menos una longitud mínima en letras:</string>
     <string name="regles_seuil_emile">Émile: 4 letras</string>
@@ -250,9 +253,15 @@
     <string name="regles_defi_chrono_budget_mathieu">Mathieu: 5 minutos</string>
     <string name="regles_defi_chrono_seuil_intro">Un éxito es un resultado exacto en números, o una palabra válida de al menos una longitud mínima en letras (la misma que en el desafío de racha):</string>
     <string name="regles_defi_chrono_detail">El objetivo es acumular la mayor cantidad de éxitos posible antes de que se agote el tiempo. A diferencia del desafío de racha, un error no termina el desafío: simplemente cuenta como cero, y la siguiente ronda empieza de inmediato con el tiempo restante. La ronda en curso puede interrumpirse a la mitad si se agota el tiempo. Las reglas del nivel elegido se aplican con normalidad (objetivo y operaciones en números, letras excluidas en letras, sin garantía de solución forzada en Monique y Mathieu). El número de éxitos obtenido se guarda en tus estadísticas.</string>
+    <string name="regles_mode_defi_mots_titre">Modo Desafío de palabras</string>
+    <string name="regles_defi_mots_intro">Un único sorteo de letras para toda la ronda, con 5 minutos para encontrar el mayor número de palabras distintas posible. Cada palabra válida libera enseguida las letras para buscar una nueva con el mismo sorteo. Una palabra solo cuenta si alcanza una longitud mínima, como en el desafío de racha y el contrarreloj:</string>
+    <string name="regles_defi_mots_detail">Una palabra demasiado corta, una palabra inválida, o validar sin nada escrito, termina el desafío — como un primer fallo en el desafío de racha. Una palabra ya encontrada se señala pero no suma un punto extra, sin terminar el desafío. En los niveles Monique y Mathieu, el sorteo garantiza al menos 10 palabras válidas. El número de palabras distintas encontradas se registra en las estadísticas.</string>
+    <string name="regles_mode_defi_sans_faute_titre">Modo Desafío sin fallos</string>
+    <string name="regles_defi_sans_faute_intro">Un único nivel para ambos modos: números y letras se alternan estrictamente (números primero), con el mismo cronómetro que en una partida solo de ese nivel. El desafío se detiene en el primer fallo, como el desafío de racha. En letras, una palabra solo cuenta si alcanza la misma longitud mínima que en el desafío de racha y el contrarreloj:</string>
+    <string name="regles_defi_sans_faute_detail">En números, una solución exacta está siempre garantizada, incluso en Monique y Mathieu. La racha de éxitos obtenida, en todas las rondas (números y letras combinados), se registra en las estadísticas.</string>
     <string name="regles_mode_defi_quotidien_titre">Modo Desafío diario</string>
     <string name="regles_defi_quotidien_texte1">Cada día se sortea al azar un desafío de racha o contrarreloj, en números o letras, con un objetivo a alcanzar (número de éxitos, o de éxitos seguidos según el tipo sorteado); el sorteo es el mismo todo el día, pero distinto de un perfil a otro. El nivel queda libre: él solo determina la dificultad para alcanzar el objetivo.</string>
-    <string name="regles_defi_quotidien_texte2">Una vez alcanzado el objetivo del día, el desafío se bloquea hasta el día siguiente; si fallas antes de alcanzarlo, puedes volver a intentarlo el mismo día. Dos trofeos recompensan una racha de días consecutivos superados (7 y 30 días).</string>
+    <string name="regles_defi_quotidien_texte2">Una vez alcanzado el objetivo del día, el desafío se bloquea hasta el día siguiente; si fallas antes de alcanzarlo, puedes volver a intentarlo el mismo día. Varios trofeos recompensan una racha de días consecutivos superados: niveles a los 7, 14 y 30 días, más dos niveles adicionales a los 30 días según el nivel jugado (Monique o superior, Mathieu).</string>
 
     <string name="versions_titre">Versiones</string>
 

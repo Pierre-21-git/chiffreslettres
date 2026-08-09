@@ -164,6 +164,7 @@
     <string name="defi_mots_max_fin_temps_ecoule">Temps écoulé !</string>
     <string name="defi_mots_max_mots_possibles_titre">Mots possibles sur ce tirage</string>
     <string name="defi_mots_max_mot_possible_trouve">%1$s (trouvé)</string>
+    <string name="grille_mots_titre_longueur">Mots de %1$d lettres</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
     <string name="defi_sans_faute_libelle_progression">Série</string>
@@ -236,6 +237,7 @@
     <string name="lettres_meilleur_mot_trouve">Meilleur mot trouvé : %1$s</string>
     <string name="lettres_meilleur_mot_detail">%1$s (%2$d lettres)</string>
     <string name="lettres_meilleur_mot_aucun">aucun</string>
+    <string name="lettres_meilleurs_mots_titre">Meilleurs mots sur ce tirage</string>
     <string name="lettres_mot_trop_court">Mot valide, mais trop court pour ce niveau : il fallait au moins %1$d lettres — la manche ne compte pas comme une réussite.</string>
     <string name="lettres_mot_trop_court_tolere">Mot valide, trop court pour ce niveau (il faudrait %1$d lettres), mais c\'est le plus long mot possible sur ce tirage : la manche compte quand même comme une réussite.</string>
 
@@ -292,6 +294,7 @@
     <string name="regles_partie_duo_intro">Deux joueurs sur le même téléphone, en tour par tour : après avoir choisi l\'adversaire, le niveau (comme en solo) et le mode de calcul des points, chaque manche est jouée par les deux joueurs sur exactement le même tirage (mêmes nombres et cible en chiffres, mêmes lettres en lettres). Le joueur qui commence change à chaque manche, pour que le choix du nombre de voyelles ne revienne pas toujours au même :</string>
     <string name="regles_partie_duo_mode_duo">Duo : chaque joueur garde son propre score sur chaque manche, comme en solo.</string>
     <string name="regles_partie_duo_mode_confrontation">Confrontation : sur chaque manche, seul le joueur le plus proche de la cible (ou avec le mot le plus long) marque les points ; à égalité, les deux les gardent.</string>
+    <string name="regles_partie_duo_reseau">Le mode « Partie réseau » applique exactement les mêmes règles (Duo ou Confrontation, même tirage pour les deux joueurs), mais sur deux téléphones séparés connectés en Wifi ou Bluetooth, au lieu de se passer le même téléphone.</string>
     <string name="regles_mode_defi_serie_titre">Mode Défi série</string>
     <string name="regles_defi_serie_intro">Choisissez un mode (chiffres ou lettres) et un niveau, puis enchaînez les manches pour aligner le plus de réussites possible d\'affilée, avec le même chrono qu\'en partie solo pour ce niveau. Une réussite, c\'est un compte exact en chiffres, ou un mot valide d\'au moins une longueur minimale en lettres :</string>
     <string name="regles_seuil_emile">Émile : 4 lettres</string>
@@ -307,9 +310,15 @@
     <string name="regles_defi_chrono_budget_mathieu">Mathieu : 5 minutes</string>
     <string name="regles_defi_chrono_seuil_intro">Une réussite, c\'est un compte exact en chiffres, ou un mot valide d\'au moins une longueur minimale en lettres (la même qu\'en défi série) :</string>
     <string name="regles_defi_chrono_detail">L\'objectif est d\'aligner le plus de réussites possible avant que le temps ne soit épuisé. Contrairement au défi série, une erreur ne met pas fin au défi : elle compte simplement pour zéro, et la manche suivante démarre aussitôt avec le temps restant. La manche en cours peut être coupée en plein milieu si le temps s\'épuise. Les règles du niveau choisi s\'appliquent normalement (cible et opérations en chiffres, lettres exclues en lettres, sans garantie de solution forcée sur Monique et Mathieu). Le nombre de réussites obtenu est enregistré dans les statistiques.</string>
+    <string name="regles_mode_defi_mots_titre">Mode Défi mots</string>
+    <string name="regles_defi_mots_intro">Un seul tirage de lettres pour toute la manche, avec 5 minutes pour trouver le plus de mots distincts possible. Chaque mot valide libère aussitôt les lettres pour en chercher un nouveau sur le même tirage. Un mot ne compte que s\'il atteint une longueur minimale, comme en défi série et chrono :</string>
+    <string name="regles_defi_mots_detail">Un mot trop court, un mot invalide, ou une validation à vide, met fin au défi — comme un premier échec en défi série. Un mot déjà trouvé est signalé mais ne compte pas de point supplémentaire, sans mettre fin au défi. Sur les niveaux Monique et Mathieu, le tirage est garanti pour offrir au moins 10 mots valides. Le nombre de mots distincts trouvés est enregistré dans les statistiques.</string>
+    <string name="regles_mode_defi_sans_faute_titre">Mode Défi sans faute</string>
+    <string name="regles_defi_sans_faute_intro">Un seul niveau pour les deux modes : chiffres et lettres s\'enchaînent en alternance stricte (chiffres en premier), avec le même chrono qu\'en partie solo pour ce niveau. Le défi s\'arrête à la première erreur, comme le défi série. En lettres, un mot ne compte que s\'il atteint la même longueur minimale qu\'en défi série et chrono :</string>
+    <string name="regles_defi_sans_faute_detail">En chiffres, une solution exacte est toujours garantie, même sur Monique et Mathieu. La série de réussites obtenue, toutes manches confondues (chiffres et lettres), est enregistrée dans les statistiques.</string>
     <string name="regles_mode_defi_quotidien_titre">Mode Défi quotidien</string>
     <string name="regles_defi_quotidien_texte1">Un défi série ou chrono, en chiffres ou en lettres, est tiré au sort chaque jour avec un objectif à atteindre (nombre de réussites, ou de réussites d\'affilée selon le type tiré) ; le tirage est le même toute la journée, mais différent d\'un profil à l\'autre. Le niveau reste libre : lui seul détermine la difficulté pour atteindre l\'objectif.</string>
-    <string name="regles_defi_quotidien_texte2">Une fois l\'objectif du jour atteint, le défi se verrouille jusqu\'au lendemain ; en cas d\'échec avant de l\'atteindre, il reste retentable le même jour. Deux trophées récompensent une série de jours consécutifs réussie (7 et 30 jours).</string>
+    <string name="regles_defi_quotidien_texte2">Une fois l\'objectif du jour atteint, le défi se verrouille jusqu\'au lendemain ; en cas d\'échec avant de l\'atteindre, il reste retentable le même jour. Plusieurs trophées récompensent une série de jours consécutifs réussie : des paliers à 7, 14 et 30 jours, puis deux paliers supplémentaires à 30 jours selon le niveau joué (Monique ou plus, Mathieu).</string>
 
     <!-- ui/apropos/VersionsScreen (uniquement le titre : le changelog historique reste en dur, cf. commentaire dans le fichier) -->
     <string name="versions_titre">Versions</string>

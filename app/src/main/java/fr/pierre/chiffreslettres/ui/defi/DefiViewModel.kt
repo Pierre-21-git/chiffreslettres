@@ -1,11 +1,14 @@
 package fr.pierre.chiffreslettres.ui.defi
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.pierre.chiffreslettres.data.DefiQuotidienRepository
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TypeDefi
+import fr.pierre.chiffreslettres.widget.DefiQuotidienWidgetProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,7 +38,13 @@ class DefiViewModel(
     private val niveauCode: String,
     private val type: TypeDefi = TypeDefi.SERIE,
     private val budgetSecondes: Int = 0,
+    /** Non nuls seulement quand cette manche fait partie du défi quotidien (retour utilisateur). */
+    private val defiQuotidienRepository: DefiQuotidienRepository? = null,
+    private val jourQuotidien: String? = null,
+    context: Context? = null,
 ) : ViewModel() {
+
+    private val appContext = context?.applicationContext
 
     private val _index = MutableStateFlow(0)
     val index: StateFlow<Int> = _index.asStateFlow()
@@ -122,6 +131,13 @@ class DefiViewModel(
         viewModelScope.launch {
             defiRepository.enregistrer(profilId, mode, niveauCode, type, valeurFinale)
             tropheeRepository.reevaluer(profilId)
+            // Dans la même coroutine liée au ViewModel (pas au composable) : un retour arrière
+            // intempestif juste après ne peut plus interrompre l'enregistrement de la réussite du
+            // jour ni la mise à jour du widget (retour utilisateur).
+            if (defiQuotidienRepository != null && jourQuotidien != null) {
+                defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveauCode)
+                appContext?.let { DefiQuotidienWidgetProvider.demanderMiseAJour(it) }
+            }
         }
     }
 

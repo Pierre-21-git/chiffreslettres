@@ -119,6 +119,7 @@
     <string name="defi_mots_max_fin_temps_ecoule">Zeit abgelaufen!</string>
     <string name="defi_mots_max_mots_possibles_titre">Mit dieser Ziehung mögliche Wörter</string>
     <string name="defi_mots_max_mot_possible_trouve">%1$s (gefunden)</string>
+    <string name="grille_mots_titre_longueur">Wörter mit %1$d Buchstaben</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
     <string name="defi_sans_faute_libelle_progression">Serie</string>
@@ -181,6 +182,7 @@
     <string name="lettres_meilleur_mot_trouve">Bestes gefundenes Wort: %1$s</string>
     <string name="lettres_meilleur_mot_detail">%1$s (%2$d Buchstaben)</string>
     <string name="lettres_meilleur_mot_aucun">keines</string>
+    <string name="lettres_meilleurs_mots_titre">Beste Wörter für diese Ziehung</string>
     <string name="lettres_mot_trop_court">Gültiges Wort, aber zu kurz für diese Stufe: mindestens %1$d Buchstaben wären nötig gewesen — diese Runde zählt nicht als Erfolg.</string>
     <string name="lettres_mot_trop_court_tolere">Gültiges Wort, zu kurz für diese Stufe (%1$d Buchstaben nötig), aber das längstmögliche Wort bei dieser Ziehung: die Runde zählt trotzdem als Erfolg.</string>
 
@@ -235,6 +237,7 @@
     <string name="regles_partie_duo_intro">Zwei Spieler am selben Telefon, abwechselnd: nach Wahl des Gegners, des Levels (wie im Solo-Modus) und des Punktemodus wird jede Runde von beiden Spielern mit genau demselben Zug gespielt (gleiche Zahlen und Zielzahl im Zahlen-Modus, gleiche Buchstaben im Buchstaben-Modus). Der beginnende Spieler wechselt bei jeder Runde, damit die Wahl der Vokalanzahl nicht immer demselben zufällt:</string>
     <string name="regles_partie_duo_mode_duo">Duo: jeder Spieler behält seine eigene Punktzahl in jeder Runde, wie im Solo-Modus.</string>
     <string name="regles_partie_duo_mode_confrontation">Duell: in jeder Runde erhält nur der Spieler Punkte, der dem Zielwert am nächsten kommt (oder das längste Wort hat); bei Gleichstand behalten beide ihre Punkte.</string>
+    <string name="regles_partie_duo_reseau">Der Modus „Netzwerkspiel“ verwendet genau dieselben Regeln (Duo oder Duell, derselbe Tageszug für beide Spieler), aber auf zwei getrennten, per Wifi oder Bluetooth verbundenen Telefonen, statt sich dasselbe Telefon hin- und herzugeben.</string>
     <string name="regles_mode_defi_serie_titre">Serien-Herausforderungsmodus</string>
     <string name="regles_defi_serie_intro">Wähle einen Modus (Zahlen oder Buchstaben) und ein Level, und reihe dann Runden aneinander, um möglichst viele Erfolge in Folge zu erzielen, mit derselben Zeit wie in einem Solospiel dieses Levels. Ein Erfolg ist ein exaktes Ergebnis bei Zahlen oder ein gültiges Wort mit mindestens einer Mindestlänge bei Buchstaben:</string>
     <string name="regles_seuil_emile">Émile: 4 Buchstaben</string>
@@ -250,9 +253,15 @@
     <string name="regles_defi_chrono_budget_mathieu">Mathieu: 5 Minuten</string>
     <string name="regles_defi_chrono_seuil_intro">Ein Erfolg ist ein exaktes Ergebnis bei Zahlen oder ein gültiges Wort mit mindestens einer Mindestlänge bei Buchstaben (dieselbe wie bei der Serien-Herausforderung):</string>
     <string name="regles_defi_chrono_detail">Das Ziel ist es, möglichst viele Erfolge zu erzielen, bevor die Zeit abläuft. Anders als bei der Serien-Herausforderung beendet ein Fehler die Herausforderung nicht: er zählt einfach als null, und die nächste Runde beginnt sofort mit der verbleibenden Zeit. Die laufende Runde kann mittendrin abgebrochen werden, wenn die Zeit abläuft. Die Regeln des gewählten Levels gelten normal (Zielzahl und Operationen bei Zahlen, ausgeschlossene Buchstaben bei Buchstaben, ohne erzwungene Lösungsgarantie bei Monique und Mathieu). Die Anzahl der erzielten Erfolge wird in deinen Statistiken gespeichert.</string>
+    <string name="regles_mode_defi_mots_titre">Modus Wörter-Herausforderung</string>
+    <string name="regles_defi_mots_intro">Ein einziger Buchstabenzug für die ganze Runde, mit 5 Minuten Zeit, um so viele verschiedene Wörter wie möglich zu finden. Jedes gültige Wort gibt die Buchstaben sofort wieder frei, um ein neues auf demselben Zug zu suchen. Ein Wort zählt nur, wenn es eine Mindestlänge erreicht, wie bei der Serien- und der Zeit-Herausforderung:</string>
+    <string name="regles_defi_mots_detail">Ein zu kurzes Wort, ein ungültiges Wort oder eine leere Eingabe beendet die Herausforderung — wie ein erster Fehlversuch bei der Serien-Herausforderung. Ein bereits gefundenes Wort wird angezeigt, zählt aber keinen zusätzlichen Punkt und beendet die Herausforderung nicht. Auf den Stufen Monique und Mathieu ist garantiert, dass der Zug mindestens 10 gültige Wörter bietet. Die Anzahl der gefundenen unterschiedlichen Wörter wird in der Statistik erfasst.</string>
+    <string name="regles_mode_defi_sans_faute_titre">Modus Fehlerfrei-Herausforderung</string>
+    <string name="regles_defi_sans_faute_intro">Eine einzige Stufe für beide Modi: Zahlen und Buchstaben wechseln sich streng ab (zuerst Zahlen), mit derselben Zeit wie in einer Solo-Partie dieser Stufe. Die Herausforderung endet beim ersten Fehler, wie bei der Serien-Herausforderung. Bei Buchstaben zählt ein Wort nur, wenn es dieselbe Mindestlänge wie bei der Serien- und der Zeit-Herausforderung erreicht:</string>
+    <string name="regles_defi_sans_faute_detail">Bei Zahlen ist eine exakte Lösung immer garantiert, auch bei Monique und Mathieu. Die erzielte Erfolgsserie über alle Runden hinweg (Zahlen und Buchstaben zusammen) wird in der Statistik erfasst.</string>
     <string name="regles_mode_defi_quotidien_titre">Modus tägliche Herausforderung</string>
     <string name="regles_defi_quotidien_texte1">Jeden Tag wird zufällig eine Serien- oder Zeit-Herausforderung in Zahlen oder Buchstaben mit einem zu erreichenden Ziel ausgelost (Anzahl der Erfolge oder Erfolge in Folge, je nach gezogenem Typ); der Tageszug ist den ganzen Tag über gleich, aber von Profil zu Profil unterschiedlich. Das Level bleibt frei wählbar: es allein bestimmt die Schwierigkeit, das Ziel zu erreichen.</string>
-    <string name="regles_defi_quotidien_texte2">Sobald das Tagesziel erreicht ist, wird die Herausforderung bis zum nächsten Tag gesperrt; bei einem Fehlversuch davor kann man es am selben Tag erneut versuchen. Zwei Trophäen belohnen eine Serie aufeinanderfolgender erfolgreicher Tage (7 und 30 Tage).</string>
+    <string name="regles_defi_quotidien_texte2">Sobald das Tagesziel erreicht ist, wird die Herausforderung bis zum nächsten Tag gesperrt; bei einem Fehlversuch davor kann man es am selben Tag erneut versuchen. Mehrere Trophäen belohnen eine Serie aufeinanderfolgender erfolgreicher Tage: Stufen bei 7, 14 und 30 Tagen, plus zwei weitere Stufen bei 30 Tagen je nach gespieltem Level (Monique oder höher, Mathieu).</string>
 
     <string name="versions_titre">Versionen</string>
 
