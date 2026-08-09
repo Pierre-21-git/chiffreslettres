@@ -19,6 +19,14 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.86",
+        date = "2026-08-09",
+        changements = listOf(
+            "Retrait du plugin Gradle foojay-resolver-convention, inutilisé et incompatible " +
+                "avec les exigences de reproductibilité de F-Droid (préparation de la soumission).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.85",
         date = "2026-08-09",
         changements = listOf(
