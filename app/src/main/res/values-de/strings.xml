@@ -265,8 +265,10 @@
 
     <string name="versions_titre">Versionen</string>
 
+    <string name="quitter_partie_titre">Spiel verlassen?</string>
     <string name="quitter_partie_duo_titre">Duo-Spiel verlassen?</string>
     <string name="quitter_partie_reseau_titre">Online-Spiel verlassen?</string>
+    <string name="quitter_defi_titre">Herausforderung verlassen?</string>
     <string name="quitter_partie_message">Das laufende Spiel geht verloren, wenn du jetzt aufhörst. Fortfahren?</string>
     <string name="retour_au_menu">Zurück zum Menü</string>
     <string name="defi_quotidien_remporte">Tägliche Herausforderung gewonnen!</string>

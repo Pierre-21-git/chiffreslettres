@@ -265,8 +265,10 @@
 
     <string name="versions_titre">Versiones</string>
 
+    <string name="quitter_partie_titre">¿Salir de la partida?</string>
     <string name="quitter_partie_duo_titre">¿Salir de la partida a dúo?</string>
     <string name="quitter_partie_reseau_titre">¿Salir de la partida en red?</string>
+    <string name="quitter_defi_titre">¿Salir del desafío?</string>
     <string name="quitter_partie_message">La partida en curso se perderá si sales ahora. ¿Continuar?</string>
     <string name="retour_au_menu">Volver al menú</string>
     <string name="defi_quotidien_remporte">¡Desafío diario superado!</string>

@@ -400,6 +400,8 @@ fun AppNavHost(
                 val index by partieVm.index.collectAsState()
                 val resultats by partieVm.resultats.collectAsState()
                 val manche = sequence.getOrNull(index)
+                var demanderConfirmationRetour by remember { mutableStateOf(false) }
+                val onRetourAvecConfirmation = { demanderConfirmationRetour = true }
 
                 if (manche == null) {
                     LaunchedEffect(Unit) {
@@ -430,9 +432,7 @@ fun AppNavHost(
                                 onMancheTerminee = { obtenu ->
                                     partieVm.enregistrerResultat(ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu))
                                 },
-                                onRetourEntrainement = {
-                                    navController.popBackStack(Routes.CONFIGURATION_PARTIE, inclusive = false)
-                                },
+                                onRetourEntrainement = onRetourAvecConfirmation,
                                 progressionManche = progressionManche,
                                 actionsFinManche = actionsFinManche,
                             )
@@ -452,14 +452,29 @@ fun AppNavHost(
                                         ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
                                     )
                                 },
-                                onRetourEntrainement = {
-                                    navController.popBackStack(Routes.CONFIGURATION_PARTIE, inclusive = false)
-                                },
+                                onRetourEntrainement = onRetourAvecConfirmation,
                                 progressionManche = progressionManche,
                                 actionsFinManche = actionsFinManche,
                             )
                         }
                     }
+                }
+
+                if (demanderConfirmationRetour) {
+                    AlertDialog(
+                        onDismissRequest = { demanderConfirmationRetour = false },
+                        title = { Text(stringResource(R.string.quitter_partie_titre)) },
+                        text = { Text(stringResource(R.string.quitter_partie_message)) },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                demanderConfirmationRetour = false
+                                navController.popBackStack(Routes.CONFIGURATION_PARTIE, inclusive = false)
+                            }) { Text(stringResource(R.string.action_quitter)) }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
+                        },
+                    )
                 }
             }
 
@@ -1142,11 +1157,19 @@ fun AppNavHost(
             val defiVm: DefiMotsMaxViewModel = viewModel(backStackEntry) {
                 DefiMotsMaxViewModel(niveau, dictionnaire, configurationAlphabet, defiRepository, tropheeRepository, profilId)
             }
+            val etat by defiVm.uiState.collectAsState()
+            var demanderConfirmationRetour by remember { mutableStateOf(false) }
             DefiMotsMaxScreen(
                 viewModel = defiVm,
                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                onRetour = { navController.popBackStack(Routes.CHOIX_DEFI_MOTS_MAX, inclusive = false) },
+                onRetour = {
+                    if (etat.termine) {
+                        navController.popBackStack(Routes.CHOIX_DEFI_MOTS_MAX, inclusive = false)
+                    } else {
+                        demanderConfirmationRetour = true
+                    }
+                },
                 actionsFin = {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Button(onClick = { defiVm.recommencer() }, modifier = Modifier.fillMaxWidth()) {
@@ -1159,6 +1182,22 @@ fun AppNavHost(
                     }
                 },
             )
+            if (demanderConfirmationRetour) {
+                AlertDialog(
+                    onDismissRequest = { demanderConfirmationRetour = false },
+                    title = { Text(stringResource(R.string.quitter_defi_titre)) },
+                    text = { Text(stringResource(R.string.quitter_partie_message)) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            demanderConfirmationRetour = false
+                            navController.popBackStack(Routes.CHOIX_DEFI_MOTS_MAX, inclusive = false)
+                        }) { Text(stringResource(R.string.action_quitter)) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
+                    },
+                )
+            }
         }
 
         // Un seul niveau pour les deux modes (retour utilisateur) : cf. doc de ChoixDefiSansFauteScreen.
@@ -1190,6 +1229,14 @@ fun AppNavHost(
             val libelleProgression = stringResource(R.string.defi_sans_faute_libelle_progression)
             val pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" }
             val couleurRang = couleurRangJoueur(profilId, tropheeRepository)
+            var demanderConfirmationRetour by remember { mutableStateOf(false) }
+            val onRetourAvecConfirmation: () -> Unit = {
+                if (termine) {
+                    navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false)
+                } else {
+                    demanderConfirmationRetour = true
+                }
+            }
 
             val actionsFinManche: @Composable () -> Unit = {
                 if (termine) {
@@ -1221,7 +1268,7 @@ fun AppNavHost(
                     progressionManche = "$index",
                     libelleProgression = libelleProgression,
                     onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.echec() },
-                    onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false) },
+                    onRetourEntrainement = onRetourAvecConfirmation,
                     actionsFinManche = actionsFinManche,
                 )
             } else {
@@ -1246,9 +1293,26 @@ fun AppNavHost(
                         val reussi = motValide != null && motEstReussiDefiLettres(niveauLettres, motValide, seuilLettres, meilleurMot)
                         if (!reussi) defiVm.echec()
                     },
-                    onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false) },
+                    onRetourEntrainement = onRetourAvecConfirmation,
                     actionsFinManche = actionsFinManche,
                     seuilRequis = seuilLettres,
+                )
+            }
+
+            if (demanderConfirmationRetour) {
+                AlertDialog(
+                    onDismissRequest = { demanderConfirmationRetour = false },
+                    title = { Text(stringResource(R.string.quitter_defi_titre)) },
+                    text = { Text(stringResource(R.string.quitter_partie_message)) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            demanderConfirmationRetour = false
+                            navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false)
+                        }) { Text(stringResource(R.string.action_quitter)) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
+                    },
                 )
             }
         }
@@ -1328,6 +1392,11 @@ fun AppNavHost(
                     if (objectifAtteint) defiVm.objectifQuotidienAtteint()
                 }
             }
+            val cibleRetour = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
+            var demanderConfirmationRetour by remember { mutableStateOf(false) }
+            val onRetourAvecConfirmation: () -> Unit = {
+                if (termine) navController.popBackStack(cibleRetour, inclusive = false) else demanderConfirmationRetour = true
+            }
             // Solution exacte toujours garantie en défi série, même sur Monique/Mathieu
             // (retour utilisateur) : la série ne doit s'arrêter que sur une erreur du
             // joueur. Le chrono reste celui de la partie solo pour ce niveau (retour
@@ -1348,10 +1417,7 @@ fun AppNavHost(
                     derniereMancheReussie = obtenu == 10
                     if (obtenu != 10) defiVm.echec()
                 },
-                onRetourEntrainement = {
-                    val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
-                    navController.popBackStack(cible, inclusive = false)
-                },
+                onRetourEntrainement = onRetourAvecConfirmation,
                 actionsFinManche = {
                     if (objectifAtteint) {
                         DefiQuotidienGagne(onTerminer = { navController.popBackStack(Routes.CHOIX_DEFI_QUOTIDIEN, inclusive = false) })
@@ -1359,16 +1425,29 @@ fun AppNavHost(
                         ActionsFinDefi(
                             message = "Série terminée : $index réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
-                            onChangerNiveau = {
-                                val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
-                                navController.popBackStack(cible, inclusive = false)
-                            },
+                            onChangerNiveau = { navController.popBackStack(cibleRetour, inclusive = false) },
                         )
                     } else {
                         Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_continuer)) }
                     }
                 },
             )
+            if (demanderConfirmationRetour) {
+                AlertDialog(
+                    onDismissRequest = { demanderConfirmationRetour = false },
+                    title = { Text(stringResource(R.string.quitter_defi_titre)) },
+                    text = { Text(stringResource(R.string.quitter_partie_message)) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            demanderConfirmationRetour = false
+                            navController.popBackStack(cibleRetour, inclusive = false)
+                        }) { Text(stringResource(R.string.action_quitter)) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
+                    },
+                )
+            }
         }
 
         composable(
@@ -1404,6 +1483,11 @@ fun AppNavHost(
                     if (objectifAtteint) defiVm.objectifQuotidienAtteint()
                 }
             }
+            val cibleRetour = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
+            var demanderConfirmationRetour by remember { mutableStateOf(false) }
+            val onRetourAvecConfirmation: () -> Unit = {
+                if (termine) navController.popBackStack(cibleRetour, inclusive = false) else demanderConfirmationRetour = true
+            }
             // Clé sur essaiId (jamais réutilisé), pas index : cf. commentaire équivalent
             // sur le défi chiffres.
             val roundVm: LettresRoundViewModel =
@@ -1428,10 +1512,7 @@ fun AppNavHost(
                     derniereMancheReussie = reussi
                     if (!reussi) defiVm.echec()
                 },
-                onRetourEntrainement = {
-                    val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
-                    navController.popBackStack(cible, inclusive = false)
-                },
+                onRetourEntrainement = onRetourAvecConfirmation,
                 actionsFinManche = {
                     if (objectifAtteint) {
                         DefiQuotidienGagne(onTerminer = { navController.popBackStack(Routes.CHOIX_DEFI_QUOTIDIEN, inclusive = false) })
@@ -1439,10 +1520,7 @@ fun AppNavHost(
                         ActionsFinDefi(
                             message = "Série terminée : $index réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
-                            onChangerNiveau = {
-                                val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_SERIE
-                                navController.popBackStack(cible, inclusive = false)
-                            },
+                            onChangerNiveau = { navController.popBackStack(cibleRetour, inclusive = false) },
                         )
                     } else {
                         Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_continuer)) }
@@ -1450,6 +1528,22 @@ fun AppNavHost(
                 },
                 seuilRequis = seuil,
             )
+            if (demanderConfirmationRetour) {
+                AlertDialog(
+                    onDismissRequest = { demanderConfirmationRetour = false },
+                    title = { Text(stringResource(R.string.quitter_defi_titre)) },
+                    text = { Text(stringResource(R.string.quitter_partie_message)) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            demanderConfirmationRetour = false
+                            navController.popBackStack(cibleRetour, inclusive = false)
+                        }) { Text(stringResource(R.string.action_quitter)) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
+                    },
+                )
+            }
         }
 
         composable(
@@ -1492,6 +1586,11 @@ fun AppNavHost(
                     if (objectifAtteint) defiVm.objectifQuotidienAtteint()
                 }
             }
+            val cibleRetour = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
+            var demanderConfirmationRetour by remember { mutableStateOf(false) }
+            val onRetourAvecConfirmation: () -> Unit = {
+                if (termine) navController.popBackStack(cibleRetour, inclusive = false) else demanderConfirmationRetour = true
+            }
             // Chaque manche démarre avec le temps restant du budget global (retour
             // utilisateur : le défi chrono continue même après une erreur, seul
             // l'épuisement du temps l'arrête) ; les règles du niveau (cible, opérations,
@@ -1515,10 +1614,7 @@ fun AppNavHost(
                     derniereMancheReussie = obtenu == 10
                     if (obtenu != 10) defiVm.mancheChronoTerminee(false)
                 },
-                onRetourEntrainement = {
-                    val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
-                    navController.popBackStack(cible, inclusive = false)
-                },
+                onRetourEntrainement = onRetourAvecConfirmation,
                 actionsFinManche = {
                     if (objectifAtteint) {
                         DefiQuotidienGagne(onTerminer = { navController.popBackStack(Routes.CHOIX_DEFI_QUOTIDIEN, inclusive = false) })
@@ -1526,10 +1622,7 @@ fun AppNavHost(
                         ActionsFinDefi(
                             message = "Défi terminé : $reussites réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
-                            onChangerNiveau = {
-                                val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
-                                navController.popBackStack(cible, inclusive = false)
-                            },
+                            onChangerNiveau = { navController.popBackStack(cibleRetour, inclusive = false) },
                         )
                     } else {
                         Button(onClick = { defiVm.mancheChronoTerminee(true) }, modifier = Modifier.fillMaxWidth()) {
@@ -1538,6 +1631,22 @@ fun AppNavHost(
                     }
                 },
             )
+            if (demanderConfirmationRetour) {
+                AlertDialog(
+                    onDismissRequest = { demanderConfirmationRetour = false },
+                    title = { Text(stringResource(R.string.quitter_defi_titre)) },
+                    text = { Text(stringResource(R.string.quitter_partie_message)) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            demanderConfirmationRetour = false
+                            navController.popBackStack(cibleRetour, inclusive = false)
+                        }) { Text(stringResource(R.string.action_quitter)) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
+                    },
+                )
+            }
         }
 
         composable(
@@ -1581,6 +1690,11 @@ fun AppNavHost(
                     if (objectifAtteint) defiVm.objectifQuotidienAtteint()
                 }
             }
+            val cibleRetour = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
+            var demanderConfirmationRetour by remember { mutableStateOf(false) }
+            val onRetourAvecConfirmation: () -> Unit = {
+                if (termine) navController.popBackStack(cibleRetour, inclusive = false) else demanderConfirmationRetour = true
+            }
             val roundVm: LettresRoundViewModel =
                 viewModel(key = "defi-chrono-lettres-$essaiId") {
                     LettresRoundViewModel(niveau, dictionnaire, configurationAlphabet, defiVm.dureeProchaineManche())
@@ -1599,10 +1713,7 @@ fun AppNavHost(
                 onMancheTerminee = { _, motValide, meilleurMot, _ ->
                     derniereMancheReussie = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
                 },
-                onRetourEntrainement = {
-                    val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
-                    navController.popBackStack(cible, inclusive = false)
-                },
+                onRetourEntrainement = onRetourAvecConfirmation,
                 actionsFinManche = {
                     if (objectifAtteint) {
                         DefiQuotidienGagne(onTerminer = { navController.popBackStack(Routes.CHOIX_DEFI_QUOTIDIEN, inclusive = false) })
@@ -1610,10 +1721,7 @@ fun AppNavHost(
                         ActionsFinDefi(
                             message = "Défi terminé : $reussites réussite(s)",
                             onRecommencer = { defiVm.recommencer() },
-                            onChangerNiveau = {
-                                val cible = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_CHRONO
-                                navController.popBackStack(cible, inclusive = false)
-                            },
+                            onChangerNiveau = { navController.popBackStack(cibleRetour, inclusive = false) },
                         )
                     } else {
                         Button(onClick = { defiVm.mancheChronoTerminee(derniereMancheReussie == true) }, modifier = Modifier.fillMaxWidth()) {
@@ -1623,6 +1731,22 @@ fun AppNavHost(
                 },
                 seuilRequis = seuil,
             )
+            if (demanderConfirmationRetour) {
+                AlertDialog(
+                    onDismissRequest = { demanderConfirmationRetour = false },
+                    title = { Text(stringResource(R.string.quitter_defi_titre)) },
+                    text = { Text(stringResource(R.string.quitter_partie_message)) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            demanderConfirmationRetour = false
+                            navController.popBackStack(cibleRetour, inclusive = false)
+                        }) { Text(stringResource(R.string.action_quitter)) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
+                    },
+                )
+            }
         }
     }
 }

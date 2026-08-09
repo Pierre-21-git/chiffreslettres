@@ -324,8 +324,10 @@
     <string name="versions_titre">Versions</string>
 
     <!-- ui/navigation/AppNavHost -->
+    <string name="quitter_partie_titre">Quitter la partie ?</string>
     <string name="quitter_partie_duo_titre">Quitter la partie duo ?</string>
     <string name="quitter_partie_reseau_titre">Quitter la partie réseau ?</string>
+    <string name="quitter_defi_titre">Quitter le défi ?</string>
     <string name="quitter_partie_message">La partie en cours sera perdue si vous quittez maintenant. Continuer ?</string>
     <string name="retour_au_menu">Retour au menu</string>
     <string name="defi_quotidien_remporte">Défi quotidien remporté !</string>

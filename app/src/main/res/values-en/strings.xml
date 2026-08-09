@@ -291,8 +291,10 @@
 
     <string name="versions_titre">Versions</string>
 
+    <string name="quitter_partie_titre">Quit the game?</string>
     <string name="quitter_partie_duo_titre">Quit the duo game?</string>
     <string name="quitter_partie_reseau_titre">Quit the online game?</string>
+    <string name="quitter_defi_titre">Quit the challenge?</string>
     <string name="quitter_partie_message">The current game will be lost if you quit now. Continue?</string>
     <string name="retour_au_menu">Back to menu</string>
     <string name="defi_quotidien_remporte">Daily challenge won!</string>
