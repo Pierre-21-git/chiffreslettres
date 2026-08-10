@@ -1,0 +1,19 @@
+Zahlen & Buchstaben ist ein Kopfrechen- und Wortschatzspiel, im Geiste der bekannten französischen Fernsehshow mit demselben Prinzip, ohne jegliche Verbindung zu dieser.
+
+Zwei Spielmodi:
+
+* Zahlen: 6 Zahlen und eine Zielzahl werden gezogen. Bauen Sie Ihre Rechnung Schritt für Schritt wie mit einem Taschenrechner auf, indem Sie die Zahlen mit den 4 Grundrechenarten kombinieren.
+* Buchstaben: 10 Buchstaben werden gezogen. Finden Sie das längstmögliche Wort mit diesen Buchstaben, bevor die Zeit abläuft.
+
+Mehrere Spielarten:
+
+* Solospiel mit 4 Schwierigkeitsstufen (Emile, Nestor, Monique, Mathieu), abwechselnd Zahlen- und Buchstabenrunden.
+* Duospiel für zwei Spieler auf demselben Telefon, mit einem Duo-Modus (jeder behält seine eigene Punktzahl) oder einem Konfrontationsmodus (nur ein Gewinner pro Runde).
+* Netzwerkspiel, dasselbe Duospiel, aber auf zwei getrennten Telefonen, verbunden über WLAN oder Bluetooth.
+* Tägliche Herausforderung mit einem täglich neu ausgelosten Ziel und Trophäen für Serien erfolgreicher Tage.
+* Serien-, Zeit-, Wort- und Fehlerfrei-Herausforderungen, um im eigenen Tempo voranzukommen.
+* Freies Trainingsmodus ohne Zeit- oder Rundenbegrenzung.
+
+Die App speichert Ihre Statistiken, belohnt Ihren Fortschritt mit Trophäen, bietet ein helles oder dunkles Design und funktioniert vollständig offline: keine Werbung, keine Tracker, keine Netzwerkverbindung erforderlich (außer für das Netzwerkspiel).
+
+Freie und quelloffene Software unter der GNU-GPL-3.0-Lizenz.

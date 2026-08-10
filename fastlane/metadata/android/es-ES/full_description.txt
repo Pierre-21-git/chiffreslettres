@@ -1,0 +1,19 @@
+Números y Letras es un juego de cálculo mental y vocabulario, inspirado en el conocido concurso televisivo francés del mismo principio, sin ninguna afiliación con él.
+
+Dos modos de juego:
+
+* Números: se sortean 6 números y una cifra objetivo. Construye tu cálculo paso a paso, como con una calculadora, combinando los números con las 4 operaciones básicas.
+* Letras: se sortean 10 letras. Encuentra la palabra más larga posible con esas letras antes de que se acabe el tiempo.
+
+Varias formas de jugar:
+
+* Partida en solitario, con 4 niveles de dificultad creciente (Emile, Nestor, Monique, Mathieu), alternando rondas de números y de letras.
+* Partida a dos, para dos jugadores en el mismo teléfono, con un modo Dúo (cada uno con su propia puntuación) o de Enfrentamiento (un solo ganador por ronda).
+* Partida en red, la misma partida a dos pero en dos teléfonos separados, conectados por Wifi o Bluetooth.
+* Reto diario, con un objetivo sorteado cada día y trofeos por rachas de días conseguidos.
+* Retos de racha, contrarreloj, de palabras y sin fallos, para progresar a tu propio ritmo.
+* Modo de entrenamiento libre, sin límite de tiempo ni de rondas.
+
+La aplicación guarda tus estadísticas, recompensa tu progreso con trofeos, ofrece un tema claro u oscuro, y funciona completamente sin conexión: sin anuncios, sin rastreadores, sin necesidad de conexión de red (salvo para jugar en red).
+
+Software libre bajo licencia GNU GPL-3.0.

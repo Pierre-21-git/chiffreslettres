@@ -1,0 +1,1 @@
+Correcciones menores y preparación técnica para la publicación en F-Droid.
