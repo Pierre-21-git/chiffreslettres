@@ -137,6 +137,20 @@
     <string name="configuration_duo_contre_qui">Contre qui ?</string>
     <string name="configuration_duo_demarrer">Démarrer le duel</string>
 
+    <string name="duel_mots_titre">Duel mots</string>
+    <string name="duel_mots_choisir_sous_mode">Quel sous-mode ?</string>
+    <string name="duel_mots_sous_mode_duo">Duo (5 minutes, comparaison à la fin)</string>
+    <string name="duel_mots_sous_mode_confrontation">Confrontation (course en direct)</string>
+    <string name="duel_mots_choisir_objectif">Objectif (Confrontation)</string>
+    <string name="duel_mots_objectif_mots">%1$d mots</string>
+    <string name="duel_mots_objectif_mots_progression">%1$d / %2$d mots</string>
+    <string name="duel_mots_en_attente_configuration">En attente que l\'hôte choisisse le sous-mode et le niveau…</string>
+    <string name="duel_mots_en_attente_adversaire">En attente du résultat de l\'adversaire…</string>
+    <string name="duel_mots_victoire">Vous avez gagné !</string>
+    <string name="duel_mots_defaite">Vous avez perdu.</string>
+    <string name="duel_mots_moi">Moi</string>
+    <string name="duel_mots_deja_pris">« %1$s » a déjà été pris par l\'adversaire.</string>
+
     <!-- ui/defi/DefiQuotidienScreen -->
     <string name="defi_quotidien_titre">Défi quotidien</string>
     <string name="defi_quotidien_aujourdhui">Aujourd\'hui : %1$s %2$s</string>
@@ -319,6 +333,10 @@
     <string name="regles_mode_defi_quotidien_titre">Mode Défi quotidien</string>
     <string name="regles_defi_quotidien_texte1">Un défi série ou chrono, en chiffres ou en lettres, est tiré au sort chaque jour avec un objectif à atteindre (nombre de réussites, ou de réussites d\'affilée selon le type tiré) ; le tirage est le même toute la journée, mais différent d\'un profil à l\'autre. Le niveau reste libre : lui seul détermine la difficulté pour atteindre l\'objectif.</string>
     <string name="regles_defi_quotidien_texte2">Une fois l\'objectif du jour atteint, le défi se verrouille jusqu\'au lendemain ; en cas d\'échec avant de l\'atteindre, il reste retentable le même jour. Plusieurs trophées récompensent une série de jours consécutifs réussie : des paliers à 7, 14 et 30 jours, puis deux paliers supplémentaires à 30 jours selon le niveau joué (Monique ou plus, Mathieu).</string>
+    <string name="regles_mode_duel_mots_titre">Mode Duel mots</string>
+    <string name="regles_duel_mots_intro">Jeu de recherche de mots à deux, 100 % réseau (2 téléphones séparés) : un seul tirage de lettres, partagé par les deux joueurs. Un mot invalide, trop court ou déjà pris est simplement signalé, sans jamais faire perdre. Deux sous-modes au choix :</string>
+    <string name="regles_duel_mots_mode_duo">Duo : chacun 5 minutes sur le même tirage, à l\'aveugle de l\'autre. À la fin, les deux listes de mots trouvés sont comparées côte à côte ; le plus grand nombre de mots gagne (égalité = victoire pour les deux).</string>
+    <string name="regles_duel_mots_mode_confrontation">Confrontation : course au premier à atteindre l\'objectif de mots choisi avant la partie (5 à 10). Les mots trouvés apparaissent en direct dans deux colonnes ; un mot déjà pris par l\'adversaire ne peut plus être proposé.</string>
 
     <!-- ui/apropos/VersionsScreen (uniquement le titre : le changelog historique reste en dur, cf. commentaire dans le fichier) -->
     <string name="versions_titre">Versions</string>

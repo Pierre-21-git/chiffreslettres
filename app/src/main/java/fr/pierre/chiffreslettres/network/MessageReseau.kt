@@ -129,6 +129,77 @@ sealed interface MessageReseau {
         }
     }
 
+    /**
+     * Envoyée une fois par l'hôte pour démarrer un "duel mots" (retour utilisateur, jeu 100 %
+     * réseau) : une seule graine (un seul tirage partagé, pas une liste de manches comme
+     * [Configuration]). [objectifMots] n'est utilisé qu'en sous-mode Confrontation (course au
+     * premier à N mots), null en sous-mode Duo (chacun ses 5 minutes, comparés à la fin).
+     */
+    data class ConfigurationDuelMots(
+        val sousMode: String,
+        val niveauCode: String,
+        val seed: Long,
+        val objectifMots: Int?,
+    ) : MessageReseau {
+        override fun versJson(): JSONObject = JSONObject().apply {
+            put(CLE_TYPE, TYPE)
+            put("sousMode", sousMode)
+            put("niveauCode", niveauCode)
+            put("seed", seed)
+            put("objectifMots", objectifMots)
+        }
+        companion object {
+            const val TYPE = "configurationDuelMots"
+        }
+    }
+
+    /**
+     * Duel mots, sous-mode Confrontation uniquement : diffusé par chaque téléphone dès qu'il
+     * valide un nouveau mot, pour que l'adversaire le retire de ses mots encore disponibles et
+     * mette à jour sa colonne en direct.
+     */
+    data class MotTrouve(val mot: String, val longueur: Int) : MessageReseau {
+        override fun versJson(): JSONObject = JSONObject().apply {
+            put(CLE_TYPE, TYPE)
+            put("mot", mot)
+            put("longueur", longueur)
+        }
+        companion object {
+            const val TYPE = "motTrouve"
+        }
+    }
+
+    /**
+     * Duel mots, sous-mode Duo uniquement : envoyé une fois par chaque téléphone à la fin de ses
+     * 5 minutes, avec la liste complète de ses mots trouvés — l'adversaire ne les découvre qu'à
+     * ce moment-là (retour utilisateur : à l'aveugle pendant la partie, comparaison à la fin).
+     */
+    data class ResultatDuelMotsDuo(val motsTrouves: List<String>) : MessageReseau {
+        override fun versJson(): JSONObject = JSONObject().apply {
+            put(CLE_TYPE, TYPE)
+            put("motsTrouves", JSONArray(motsTrouves))
+        }
+        companion object {
+            const val TYPE = "resultatDuelMotsDuo"
+        }
+    }
+
+    /**
+     * Duel mots, sous-mode Confrontation uniquement : envoyé par le téléphone qui détecte le
+     * premier avoir atteint l'objectif de mots, pour que les deux côtés terminent la partie sur
+     * le même vainqueur (retour utilisateur : simple "premier message reçu gagne", suffisant
+     * pour un jeu familial, pas de résolution de quasi-simultanéité plus fine).
+     */
+    data class FinDuelMots(val gagnantEstExpediteur: Boolean) : MessageReseau {
+        override fun versJson(): JSONObject = JSONObject().apply {
+            put(CLE_TYPE, TYPE)
+            put("gagnantEstExpediteur", gagnantEstExpediteur)
+        }
+        companion object {
+            const val TYPE = "finDuelMots"
+        }
+    }
+
     companion object {
         fun depuisJson(ligne: String): MessageReseau? = runCatching {
             val json = JSONObject(ligne)
@@ -159,6 +230,18 @@ sealed interface MessageReseau {
                 ChoixVoyelles.TYPE -> ChoixVoyelles(index = json.getInt("index"), nombre = json.getInt("nombre"))
                 DemarrerManche.TYPE -> DemarrerManche(index = json.getInt("index"))
                 PretPourManche.TYPE -> PretPourManche(index = json.getInt("index"))
+                ConfigurationDuelMots.TYPE -> ConfigurationDuelMots(
+                    sousMode = json.getString("sousMode"),
+                    niveauCode = json.getString("niveauCode"),
+                    seed = json.getLong("seed"),
+                    objectifMots = if (json.isNull("objectifMots")) null else json.getInt("objectifMots"),
+                )
+                MotTrouve.TYPE -> MotTrouve(mot = json.getString("mot"), longueur = json.getInt("longueur"))
+                ResultatDuelMotsDuo.TYPE -> {
+                    val motsJson = json.getJSONArray("motsTrouves")
+                    ResultatDuelMotsDuo(motsTrouves = List(motsJson.length()) { motsJson.getString(it) })
+                }
+                FinDuelMots.TYPE -> FinDuelMots(gagnantEstExpediteur = json.getBoolean("gagnantEstExpediteur"))
                 else -> null
             }
         }.getOrNull()

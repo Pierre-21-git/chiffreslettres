@@ -119,6 +119,20 @@
     <string name="configuration_duo_contre_qui">Against whom?</string>
     <string name="configuration_duo_demarrer">Start the duel</string>
 
+    <string name="duel_mots_titre">Word duel</string>
+    <string name="duel_mots_choisir_sous_mode">Which sub-mode?</string>
+    <string name="duel_mots_sous_mode_duo">Duo (5 minutes, compared at the end)</string>
+    <string name="duel_mots_sous_mode_confrontation">Head-to-head (live race)</string>
+    <string name="duel_mots_choisir_objectif">Target (Head-to-head)</string>
+    <string name="duel_mots_objectif_mots">%1$d words</string>
+    <string name="duel_mots_objectif_mots_progression">%1$d / %2$d words</string>
+    <string name="duel_mots_en_attente_configuration">Waiting for the host to choose the sub-mode and level…</string>
+    <string name="duel_mots_en_attente_adversaire">Waiting for the opponent\'s result…</string>
+    <string name="duel_mots_victoire">You won!</string>
+    <string name="duel_mots_defaite">You lost.</string>
+    <string name="duel_mots_moi">Me</string>
+    <string name="duel_mots_deja_pris">"%1$s" was already taken by the opponent.</string>
+
     <string name="defi_quotidien_titre">Daily challenge</string>
     <string name="defi_quotidien_aujourdhui">Today: %1$s %2$s</string>
     <string name="defi_type_serie">Streak challenge</string>
@@ -288,6 +302,10 @@
     <string name="regles_mode_defi_quotidien_titre">Daily challenge mode</string>
     <string name="regles_defi_quotidien_texte1">A streak or timed challenge, in numbers or letters, is drawn at random each day with a goal to reach (number of successes, or successes in a row depending on the type drawn); the draw is the same all day, but different from one profile to another. The level remains free: it alone determines the difficulty of reaching the goal.</string>
     <string name="regles_defi_quotidien_texte2">Once the day\'s goal is reached, the challenge locks until the next day; if you fail before reaching it, you can retry the same day. Several trophies reward a streak of consecutive successful days: tiers at 7, 14 and 30 days, plus two further tiers at 30 days depending on the level played (Monique or above, Mathieu).</string>
+    <string name="regles_mode_duel_mots_titre">Word duel mode</string>
+    <string name="regles_duel_mots_intro">Two-player word-finding game, fully remote (2 separate phones): a single letter draw, shared by both players. An invalid, too-short, or already-taken word is simply flagged, never a loss. Two sub-modes to choose from:</string>
+    <string name="regles_duel_mots_mode_duo">Duo: each player gets 5 minutes on the same draw, blind to the other. At the end, both word lists are compared side by side; the most words wins (a tie counts as a win for both).</string>
+    <string name="regles_duel_mots_mode_confrontation">Head-to-head: a race to reach the chosen word target first (5 to 10, picked before the game). Words found appear live in two columns; a word already taken by the opponent can no longer be proposed.</string>
 
     <string name="versions_titre">Versions</string>
 

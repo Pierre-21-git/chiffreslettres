@@ -30,6 +30,8 @@
     <!-- Untertitel zur visuellen Gruppierung -->
     <string name="soustitre_duo">Duo</string>
     <string name="soustitre_confrontation">Duell</string>
+    <string name="soustitre_duel_mots">Wortduell</string>
+    <string name="soustitre_duel_mots_confrontation">Wortduell (Duell)</string>
     <string name="soustitre_chiffres">Zahlen</string>
     <string name="soustitre_lettres">Buchstaben</string>
 
@@ -65,6 +67,12 @@
     <string name="trophee_titre_confrontation_1">Erstes gespieltes Duell</string>
     <string name="trophee_titre_confrontation_gagnee_1">Erstes gewonnenes Duell</string>
     <string name="trophee_titre_confrontation_gagnee_10">Zehntes gewonnenes Duell</string>
+    <string name="trophee_titre_duel_mots_1">Erste gespielte Wortduell-Partie</string>
+    <string name="trophee_titre_duel_mots_gagnee_1">Erste gewonnene Wortduell-Partie</string>
+    <string name="trophee_titre_duel_mots_gagnee_10">Zehnte gewonnene Wortduell-Partie</string>
+    <string name="trophee_titre_duel_mots_confrontation_1">Erstes gespieltes Wortduell-Duell</string>
+    <string name="trophee_titre_duel_mots_confrontation_gagnee_1">Erstes gewonnenes Wortduell-Duell</string>
+    <string name="trophee_titre_duel_mots_confrontation_gagnee_10">Zehntes gewonnenes Wortduell-Duell</string>
     <string name="trophee_titre_defi_1">Erste beendete Herausforderung</string>
     <string name="trophee_titre_defi_serie">%1$d in Folge in der %2$s-Herausforderung</string>
     <string name="trophee_titre_defi_serie_niveau_monique">%1$d in Folge in der %2$s-Herausforderung, Stufe Ça se complique, Monique oder höher</string>
@@ -109,6 +117,12 @@
     <string name="trophee_desc_confrontation_1">Eine Partie im Duell-Modus beenden, gleiches Telefon oder aus der Ferne, alle Stufen.</string>
     <string name="trophee_desc_confrontation_gagnee_1">Eine Partie im Duell-Modus gewinnen, gleiches Telefon oder aus der Ferne.</string>
     <string name="trophee_desc_confrontation_gagnee_10">10 Partien im Duell-Modus gewinnen, gleiches Telefon oder aus der Ferne.</string>
+    <string name="trophee_desc_duel_mots_1">Eine Partie im Wortduell-Modus (Duo) aus der Ferne beenden, alle Stufen.</string>
+    <string name="trophee_desc_duel_mots_gagnee_1">Eine Partie im Wortduell-Modus (Duo) aus der Ferne gewinnen.</string>
+    <string name="trophee_desc_duel_mots_gagnee_10">10 Partien im Wortduell-Modus (Duo) aus der Ferne gewinnen.</string>
+    <string name="trophee_desc_duel_mots_confrontation_1">Eine Partie im Wortduell-Modus (Duell) aus der Ferne beenden, alle Stufen.</string>
+    <string name="trophee_desc_duel_mots_confrontation_gagnee_1">Eine Partie im Wortduell-Modus (Duell) aus der Ferne gewinnen.</string>
+    <string name="trophee_desc_duel_mots_confrontation_gagnee_10">10 Partien im Wortduell-Modus (Duell) aus der Ferne gewinnen.</string>
     <string name="trophee_desc_defi_1">Eine Herausforderung bis zum Ende durchspielen (Zahlen oder Buchstaben, alle Stufen).</string>
     <string name="trophee_desc_defi_serie">%1$d oder mehr Erfolge in Folge in derselben %2$s-Herausforderung erzielen.</string>
     <string name="trophee_desc_defi_serie_niveau_monique">%1$d oder mehr Erfolge in Folge in derselben %2$s-Herausforderung erzielen, auf Stufe Ça se complique, Monique oder C\'est du sérieux, Mathieu.</string>

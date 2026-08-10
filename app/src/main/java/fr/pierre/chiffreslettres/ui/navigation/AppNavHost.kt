@@ -49,6 +49,9 @@ import fr.pierre.chiffreslettres.data.TropheeStats
 import fr.pierre.chiffreslettres.data.TypeDefi
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
+import fr.pierre.chiffreslettres.letters.SacLettres
+import fr.pierre.chiffreslettres.letters.TirageLettres
+import fr.pierre.chiffreslettres.letters.dixMeilleursMots
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.apropos.AProposScreen
 import fr.pierre.chiffreslettres.ui.apropos.ReglesDuJeuScreen
@@ -72,10 +75,16 @@ import fr.pierre.chiffreslettres.ui.entrainement.ChoixNiveauEntrainementScreen
 import fr.pierre.chiffreslettres.ui.entrainement.EntrainementLibreViewModel
 import fr.pierre.chiffreslettres.ui.lettres.LettresRoundScreen
 import fr.pierre.chiffreslettres.ui.lettres.LettresRoundViewModel
+import fr.pierre.chiffreslettres.network.DuelMotsReseauViewModel
 import fr.pierre.chiffreslettres.network.EtatManche
 import fr.pierre.chiffreslettres.network.EtatPartieReseau
+import fr.pierre.chiffreslettres.network.NOMBRE_VOYELLES_DUEL_MOTS
 import fr.pierre.chiffreslettres.network.PartieReseauViewModel
 import fr.pierre.chiffreslettres.network.RoleReseau
+import fr.pierre.chiffreslettres.network.SousModeDuelMots
+import fr.pierre.chiffreslettres.ui.duelmots.ChoixModeDuelMotsScreen
+import fr.pierre.chiffreslettres.ui.duelmots.DuelMotsConfrontationScreen
+import fr.pierre.chiffreslettres.ui.duelmots.DuelMotsResultatsScreen
 import fr.pierre.chiffreslettres.ui.menu.MenuPrincipalScreen
 import fr.pierre.chiffreslettres.ui.partie.ConfigurationPartieScreen
 import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
@@ -162,6 +171,25 @@ private fun partieReseauViewModel(
 }
 
 @Composable
+private fun duelMotsReseauViewModel(
+    navController: NavHostController,
+    backStackEntry: NavBackStackEntry,
+    context: Context,
+    pseudo: String,
+    avatar: String,
+    dictionnaire: DictionnaireIndex,
+    configurationAlphabet: ConfigurationAlphabetLettres,
+    historiqueRepository: HistoriqueRepository,
+    tropheeRepository: TropheeRepository,
+    profilId: Long,
+): DuelMotsReseauViewModel {
+    val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Routes.RESEAU_GRAPH) }
+    return viewModel(parentEntry) {
+        DuelMotsReseauViewModel(context, pseudo, avatar, dictionnaire, configurationAlphabet, historiqueRepository, tropheeRepository, profilId)
+    }
+}
+
+@Composable
 fun AppNavHost(
     dictionnaire: DictionnaireIndex,
     configurationAlphabet: ConfigurationAlphabetLettres,
@@ -200,6 +228,7 @@ fun AppNavHost(
                 onPartieStructuree = { navController.navigate(Routes.PARTIE_GRAPH) },
                 onPartieDuo = { navController.navigate(Routes.PARTIE_DUO_GRAPH) },
                 onPartieReseau = { navController.navigate(Routes.RESEAU_GRAPH) },
+                onDuelMots = { navController.navigate(Routes.CHOIX_ROLE_DUEL_MOTS) },
                 onDefiSerie = { navController.navigate(Routes.CHOIX_DEFI_SERIE) },
                 onDefiChrono = { navController.navigate(Routes.CHOIX_DEFI_CHRONO) },
                 onDefiMotsMax = { navController.navigate(Routes.CHOIX_DEFI_MOTS_MAX) },
@@ -1106,6 +1135,283 @@ fun AppNavHost(
                     // fermer la connexion et naviguer.
                     onTerminer = {
                         reseauVm.annulerEtRevenirAuChoix()
+                        navController.popBackStack(Routes.MENU, inclusive = false)
+                    },
+                )
+            }
+
+            // Duel mots (retour utilisateur, 100 % réseau) : même pattern de connexion que
+            // ci-dessus, avec son propre ViewModel (DuelMotsReseauViewModel) mais les mêmes
+            // écrans réutilisables (ChoixRoleReseauScreen, AttenteHoteScreen,
+            // RechercheInviteScreen, ConfirmationConnexionScreen).
+            composable(Routes.CHOIX_ROLE_DUEL_MOTS) { backStackEntry ->
+                val duelMotsVm = duelMotsReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                    dictionnaire = dictionnaire,
+                    configurationAlphabet = configurationAlphabet,
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
+                )
+                ChoixRoleReseauScreen(
+                    pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                    onHeberger = { transport ->
+                        duelMotsVm.choisirHote(transport)
+                        navController.navigate(Routes.HOTE_ATTENTE_DUEL_MOTS)
+                    },
+                    onRejoindre = { transport ->
+                        duelMotsVm.choisirInvite(transport)
+                        navController.navigate(Routes.INVITE_RECHERCHE_DUEL_MOTS)
+                    },
+                    onRetour = { navController.popBackStack() },
+                )
+            }
+
+            composable(Routes.HOTE_ATTENTE_DUEL_MOTS) { backStackEntry ->
+                val duelMotsVm = duelMotsReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                    dictionnaire = dictionnaire,
+                    configurationAlphabet = configurationAlphabet,
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
+                )
+                val etat by duelMotsVm.etat.collectAsState()
+                LaunchedEffect(etat) {
+                    if (etat is EtatPartieReseau.Connecte) {
+                        navController.navigate(Routes.DUEL_MOTS_CONNEXION) {
+                            popUpTo(Routes.CHOIX_ROLE_DUEL_MOTS) { inclusive = false }
+                        }
+                    }
+                }
+                val etatActuel = etat
+                AttenteHoteScreen(
+                    nomServiceAffiche = (etatActuel as? EtatPartieReseau.AttenteHote)?.nomServiceAffiche,
+                    erreur = (etatActuel as? EtatPartieReseau.Erreur)?.message,
+                    onAnnulerErreur = {
+                        duelMotsVm.annulerEtRevenirAuChoix()
+                        navController.popBackStack(Routes.CHOIX_ROLE_DUEL_MOTS, inclusive = false)
+                    },
+                    onAnnuler = {
+                        duelMotsVm.annulerEtRevenirAuChoix()
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable(Routes.INVITE_RECHERCHE_DUEL_MOTS) { backStackEntry ->
+                val duelMotsVm = duelMotsReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                    dictionnaire = dictionnaire,
+                    configurationAlphabet = configurationAlphabet,
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
+                )
+                val etat by duelMotsVm.etat.collectAsState()
+                val parties by duelMotsVm.partiesTrouvees.collectAsState()
+                LaunchedEffect(etat) {
+                    if (etat is EtatPartieReseau.Connecte) {
+                        navController.navigate(Routes.DUEL_MOTS_CONNEXION) {
+                            popUpTo(Routes.CHOIX_ROLE_DUEL_MOTS) { inclusive = false }
+                        }
+                    }
+                }
+                val etatActuel = etat
+                RechercheInviteScreen(
+                    parties = parties,
+                    connexionEnCours = etatActuel is EtatPartieReseau.ConnexionEnCours,
+                    erreur = (etatActuel as? EtatPartieReseau.Erreur)?.message,
+                    onSelectionner = { duelMotsVm.rejoindre(it) },
+                    onAnnulerErreur = {
+                        duelMotsVm.annulerEtRevenirAuChoix()
+                        navController.popBackStack(Routes.CHOIX_ROLE_DUEL_MOTS, inclusive = false)
+                    },
+                    onAnnuler = {
+                        duelMotsVm.annulerEtRevenirAuChoix()
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable(Routes.DUEL_MOTS_CONNEXION) { backStackEntry ->
+                val duelMotsVm = duelMotsReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                    dictionnaire = dictionnaire,
+                    configurationAlphabet = configurationAlphabet,
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
+                )
+                val etat by duelMotsVm.etat.collectAsState()
+                val etatConnecte = etat as? EtatPartieReseau.Connecte
+                if (etatConnecte != null) {
+                    ConfirmationConnexionScreen(
+                        profilDistant = etatConnecte.profilDistant,
+                        onContinuer = {
+                            if (etatConnecte.role == RoleReseau.HOTE) {
+                                navController.navigate(Routes.CHOIX_MODE_DUEL_MOTS)
+                            } else {
+                                navController.navigate(Routes.JEU_DUEL_MOTS)
+                            }
+                        },
+                    )
+                }
+            }
+
+            composable(Routes.CHOIX_MODE_DUEL_MOTS) { backStackEntry ->
+                val duelMotsVm = duelMotsReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                    dictionnaire = dictionnaire,
+                    configurationAlphabet = configurationAlphabet,
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
+                )
+                ChoixModeDuelMotsScreen(
+                    pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                    onDemarrer = { sousMode, niveau, objectifMots ->
+                        duelMotsVm.demarrerCommeHote(sousMode, niveau, objectifMots)
+                        navController.navigate(Routes.JEU_DUEL_MOTS)
+                    },
+                    onRetour = { navController.popBackStack() },
+                )
+            }
+
+            composable(Routes.JEU_DUEL_MOTS) { backStackEntry ->
+                val duelMotsVm = duelMotsReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                    dictionnaire = dictionnaire,
+                    configurationAlphabet = configurationAlphabet,
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
+                )
+                val tirageTermine by duelMotsVm.tirageTermine.collectAsState()
+                val seedActuel by duelMotsVm.seed.collectAsState()
+                val onRetourMenu: () -> Unit = {
+                    duelMotsVm.annulerEtRevenirAuChoix()
+                    navController.popBackStack(Routes.MENU, inclusive = false)
+                }
+                val seedValue = seedActuel
+                if (!tirageTermine || seedValue == null) {
+                    AttenteReseauScreen(stringResource(R.string.duel_mots_en_attente_configuration))
+                } else if (duelMotsVm.sousMode == SousModeDuelMots.CONFRONTATION) {
+                    val lettresTirees by duelMotsVm.lettresTirees.collectAsState()
+                    val indicesUtilises by duelMotsVm.indicesUtilises.collectAsState()
+                    val motSaisi by duelMotsVm.motSaisi.collectAsState()
+                    val motRejete by duelMotsVm.motRejete.collectAsState()
+                    val raisonRejet by duelMotsVm.raisonRejet.collectAsState()
+                    val motsTrouvesMoi by duelMotsVm.motsTrouvesMoi.collectAsState()
+                    val motsTrouvesAdversaire by duelMotsVm.motsTrouvesAdversaire.collectAsState()
+                    val gagnant by duelMotsVm.gagnant.collectAsState()
+                    val etatConnexion by duelMotsVm.etat.collectAsState()
+                    val profilDistant = (etatConnexion as? EtatPartieReseau.Connecte)?.profilDistant
+                    DuelMotsConfrontationScreen(
+                        pseudoMoi = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                        pseudoAdversaire = profilDistant?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                        couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                        lettresTirees = lettresTirees,
+                        indicesUtilises = indicesUtilises,
+                        motSaisi = motSaisi,
+                        motRejete = motRejete,
+                        raisonRejet = raisonRejet,
+                        seuilRequis = seuilLongueurDefiLettres(duelMotsVm.niveau),
+                        objectifMots = duelMotsVm.objectifMots,
+                        motsTrouvesMoi = motsTrouvesMoi,
+                        motsTrouvesAdversaire = motsTrouvesAdversaire,
+                        gagnant = gagnant,
+                        onCliquerLettre = duelMotsVm::cliquerLettreConfrontation,
+                        onAnnulerLettre = duelMotsVm::annulerLettreConfrontation,
+                        onEffacerMot = duelMotsVm::effacerMotConfrontation,
+                        onValider = duelMotsVm::validerMotConfrontation,
+                        onRetour = onRetourMenu,
+                    )
+                } else {
+                    val niveauDuo = duelMotsVm.niveau
+                    val defiVm: DefiMotsMaxViewModel = viewModel(key = "duelmots-duo-$seedValue") {
+                        DefiMotsMaxViewModel(
+                            niveauDuo, dictionnaire, configurationAlphabet, defiRepository, tropheeRepository, profilId,
+                            random = Random(seedValue), enregistrerResultat = false,
+                        )
+                    }
+                    val etatRound by defiVm.uiState.collectAsState()
+                    LaunchedEffect(Unit) {
+                        if (!etatRound.tirageTermine) defiVm.choisirNombreVoyelles(NOMBRE_VOYELLES_DUEL_MOTS)
+                    }
+                    LaunchedEffect(etatRound.termine) {
+                        if (etatRound.termine) {
+                            duelMotsVm.envoyerResultatDuo(etatRound.motsTrouves)
+                            navController.navigate(Routes.RESULTATS_DUEL_MOTS_DUO) {
+                                popUpTo(Routes.JEU_DUEL_MOTS) { inclusive = true }
+                            }
+                        }
+                    }
+                    DefiMotsMaxScreen(
+                        viewModel = defiVm,
+                        pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                        couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                        onRetour = onRetourMenu,
+                        actionsFin = {},
+                    )
+                }
+            }
+
+            composable(Routes.RESULTATS_DUEL_MOTS_DUO) { backStackEntry ->
+                val duelMotsVm = duelMotsReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                    dictionnaire = dictionnaire,
+                    configurationAlphabet = configurationAlphabet,
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
+                )
+                val motsTrouvesMoi by duelMotsVm.motsTrouvesMoi.collectAsState()
+                val motsTrouvesAdversaire by duelMotsVm.motsTrouvesAdversaire.collectAsState()
+                val resultatAdversaireRecu by duelMotsVm.resultatAdversaireDuoRecu.collectAsState()
+                val seedValue by duelMotsVm.seed.collectAsState()
+                val niveauDuo = duelMotsVm.niveau
+                val etatConnexion by duelMotsVm.etat.collectAsState()
+                val profilDistant = (etatConnexion as? EtatPartieReseau.Connecte)?.profilDistant
+                val motsPossibles = remember(seedValue, niveauDuo) {
+                    val s = seedValue
+                    if (s == null) {
+                        emptyList()
+                    } else {
+                        val sac = SacLettres.creer(
+                            configurationAlphabet.distributionBase,
+                            configurationAlphabet.voyelles,
+                            configurationAlphabet.lettresExcluesParNiveau.getValue(niveauDuo),
+                        )
+                        val tirage = TirageLettres.tirer(sac, NOMBRE_VOYELLES_DUEL_MOTS, TirageLettres.NOMBRE_LETTRES, Random(s))
+                        dixMeilleursMots(tirage, dictionnaire)
+                    }
+                }
+                DuelMotsResultatsScreen(
+                    pseudoMoi = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: stringResource(R.string.duel_mots_moi),
+                    pseudoAdversaire = profilDistant?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    motsTrouvesMoi = motsTrouvesMoi,
+                    motsTrouvesAdversaire = motsTrouvesAdversaire,
+                    resultatAdversaireRecu = resultatAdversaireRecu,
+                    motsPossibles = motsPossibles,
+                    onRetour = {
+                        duelMotsVm.annulerEtRevenirAuChoix()
                         navController.popBackStack(Routes.MENU, inclusive = false)
                     },
                 )

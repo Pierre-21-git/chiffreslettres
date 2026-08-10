@@ -19,6 +19,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.88",
+        date = "2026-08-10",
+        changements = listOf(
+            "Nouveau : \"Duel mots\" (accueil), jeu de recherche de mots à deux 100 % réseau (2 " +
+                "téléphones séparés, Wifi ou Bluetooth). Deux sous-modes : Duo (5 minutes chacun " +
+                "sur le même tirage, comparaison des deux listes à la fin) et Confrontation " +
+                "(course en direct au premier à 5-10 mots, colonnes live, un mot pris par " +
+                "l'adversaire n'est plus proposable). Un mot invalide, trop court ou déjà pris " +
+                "est signalé sans jamais faire perdre. 6 nouveaux trophées (3 paliers pour Duo, " +
+                "3 pour Confrontation).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.87",
         date = "2026-08-10",
         changements = listOf(

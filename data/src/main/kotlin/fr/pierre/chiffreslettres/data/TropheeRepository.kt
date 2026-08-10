@@ -46,6 +46,16 @@ class TropheeRepository(
             profilId,
             listOf(TypePartie.DUO_CONFRONTATION.name, TypePartie.DUO_CONFRONTATION_RESEAU.name),
         ),
+        partiesDuelMotsJouees = historiqueDao.compterPartiesParTypes(profilId, listOf(TypePartie.DUEL_MOTS_RESEAU.name)),
+        partiesDuelMotsGagnees = historiqueDao.compterPartiesGagneesParTypes(profilId, listOf(TypePartie.DUEL_MOTS_RESEAU.name)),
+        partiesDuelMotsConfrontationJouees = historiqueDao.compterPartiesParTypes(
+            profilId,
+            listOf(TypePartie.DUEL_MOTS_CONFRONTATION_RESEAU.name),
+        ),
+        partiesDuelMotsConfrontationGagnees = historiqueDao.compterPartiesGagneesParTypes(
+            profilId,
+            listOf(TypePartie.DUEL_MOTS_CONFRONTATION_RESEAU.name),
+        ),
         defisTotal = defiDao.compterDefisTotal(profilId),
         meilleuresSeriesDefi = defiDao.meilleuresSeriesDefiParMode(profilId)
             .associate { it.mode.name to it.meilleur },

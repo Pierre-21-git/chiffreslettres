@@ -46,6 +46,7 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
         ReglesModeDefiMots()
         ReglesModeDefiSansFaute()
         ReglesModeDefiQuotidien()
+        ReglesModeDuelMots()
     }
 }
 
@@ -180,6 +181,17 @@ fun ReglesModeDefiQuotidien() {
     SectionRegle(stringResource(R.string.regles_mode_defi_quotidien_titre)) {
         Text(stringResource(R.string.regles_defi_quotidien_texte1), style = MaterialTheme.typography.bodyMedium)
         Text(stringResource(R.string.regles_defi_quotidien_texte2), style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+fun ReglesModeDuelMots() {
+    SectionRegle(stringResource(R.string.regles_mode_duel_mots_titre)) {
+        Text(stringResource(R.string.regles_duel_mots_intro), style = MaterialTheme.typography.bodyMedium)
+        ListeAPuces(
+            stringResource(R.string.regles_duel_mots_mode_duo),
+            stringResource(R.string.regles_duel_mots_mode_confrontation),
+        )
     }
 }
 

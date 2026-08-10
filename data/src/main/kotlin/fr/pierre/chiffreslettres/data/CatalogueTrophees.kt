@@ -26,6 +26,12 @@ data class TropheeStats(
     /** Parties Confrontation, même téléphone ou à distance confondus. */
     val partiesConfrontationJouees: Int,
     val partiesConfrontationGagnees: Int,
+    /** Parties Duel mots, sous-mode Duo (100 % réseau, pas de variante même téléphone). */
+    val partiesDuelMotsJouees: Int,
+    val partiesDuelMotsGagnees: Int,
+    /** Parties Duel mots, sous-mode Confrontation (100 % réseau). */
+    val partiesDuelMotsConfrontationJouees: Int,
+    val partiesDuelMotsConfrontationGagnees: Int,
     val defisTotal: Int,
     /** Clé = nom du [ModeJeu] (ex. "CHIFFRES"), valeur = meilleure série en défi série, tous niveaux confondus. */
     val meilleuresSeriesDefi: Map<String, Int>,
@@ -464,6 +470,78 @@ object CatalogueTrophees {
                 objectif = 10,
                 progression = { it.partiesConfrontationGagnees },
             ) { it.partiesConfrontationGagnees >= 10 },
+        )
+        add(
+            Trophee(
+                "duel_mots_1",
+                titreRes = R.string.trophee_titre_duel_mots_1,
+                descriptionRes = R.string.trophee_desc_duel_mots_1,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.ARGENT,
+                sousTitreRes = R.string.soustitre_duel_mots,
+                objectif = 1,
+                progression = { it.partiesDuelMotsJouees },
+            ) { it.partiesDuelMotsJouees >= 1 },
+        )
+        add(
+            Trophee(
+                "duel_mots_gagnee_1",
+                titreRes = R.string.trophee_titre_duel_mots_gagnee_1,
+                descriptionRes = R.string.trophee_desc_duel_mots_gagnee_1,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.OR,
+                sousTitreRes = R.string.soustitre_duel_mots,
+                objectif = 1,
+                progression = { it.partiesDuelMotsGagnees },
+            ) { it.partiesDuelMotsGagnees >= 1 },
+        )
+        add(
+            Trophee(
+                "duel_mots_gagnee_10",
+                titreRes = R.string.trophee_titre_duel_mots_gagnee_10,
+                descriptionRes = R.string.trophee_desc_duel_mots_gagnee_10,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.PLATINE,
+                sousTitreRes = R.string.soustitre_duel_mots,
+                objectif = 10,
+                progression = { it.partiesDuelMotsGagnees },
+            ) { it.partiesDuelMotsGagnees >= 10 },
+        )
+        add(
+            Trophee(
+                "duel_mots_confrontation_1",
+                titreRes = R.string.trophee_titre_duel_mots_confrontation_1,
+                descriptionRes = R.string.trophee_desc_duel_mots_confrontation_1,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.ARGENT,
+                sousTitreRes = R.string.soustitre_duel_mots_confrontation,
+                objectif = 1,
+                progression = { it.partiesDuelMotsConfrontationJouees },
+            ) { it.partiesDuelMotsConfrontationJouees >= 1 },
+        )
+        add(
+            Trophee(
+                "duel_mots_confrontation_gagnee_1",
+                titreRes = R.string.trophee_titre_duel_mots_confrontation_gagnee_1,
+                descriptionRes = R.string.trophee_desc_duel_mots_confrontation_gagnee_1,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.OR,
+                sousTitreRes = R.string.soustitre_duel_mots_confrontation,
+                objectif = 1,
+                progression = { it.partiesDuelMotsConfrontationGagnees },
+            ) { it.partiesDuelMotsConfrontationGagnees >= 1 },
+        )
+        add(
+            Trophee(
+                "duel_mots_confrontation_gagnee_10",
+                titreRes = R.string.trophee_titre_duel_mots_confrontation_gagnee_10,
+                descriptionRes = R.string.trophee_desc_duel_mots_confrontation_gagnee_10,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.PLATINE,
+                sousTitreRes = R.string.soustitre_duel_mots_confrontation,
+                objectif = 10,
+                progression = { it.partiesDuelMotsConfrontationGagnees },
+            ) { it.partiesDuelMotsConfrontationGagnees >= 10 },
         )
 
         add(

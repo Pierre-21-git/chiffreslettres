@@ -93,6 +93,20 @@
     <string name="configuration_duo_contre_qui">¿Contra quién?</string>
     <string name="configuration_duo_demarrer">Iniciar el duelo</string>
 
+    <string name="duel_mots_titre">Duelo de palabras</string>
+    <string name="duel_mots_choisir_sous_mode">¿Qué submodo?</string>
+    <string name="duel_mots_sous_mode_duo">Dúo (5 minutos, comparación al final)</string>
+    <string name="duel_mots_sous_mode_confrontation">Enfrentamiento (carrera en directo)</string>
+    <string name="duel_mots_choisir_objectif">Objetivo (Enfrentamiento)</string>
+    <string name="duel_mots_objectif_mots">%1$d palabras</string>
+    <string name="duel_mots_objectif_mots_progression">%1$d / %2$d palabras</string>
+    <string name="duel_mots_en_attente_configuration">Esperando a que el anfitrión elija el submodo y el nivel…</string>
+    <string name="duel_mots_en_attente_adversaire">Esperando el resultado del adversario…</string>
+    <string name="duel_mots_victoire">¡Has ganado!</string>
+    <string name="duel_mots_defaite">Has perdido.</string>
+    <string name="duel_mots_moi">Yo</string>
+    <string name="duel_mots_deja_pris">«%1$s» ya ha sido tomada por el adversario.</string>
+
     <string name="defi_quotidien_titre">Desafío diario</string>
     <string name="defi_quotidien_aujourdhui">Hoy: %1$s %2$s</string>
     <string name="defi_type_serie">Desafío de racha</string>
@@ -262,6 +276,10 @@
     <string name="regles_mode_defi_quotidien_titre">Modo Desafío diario</string>
     <string name="regles_defi_quotidien_texte1">Cada día se sortea al azar un desafío de racha o contrarreloj, en números o letras, con un objetivo a alcanzar (número de éxitos, o de éxitos seguidos según el tipo sorteado); el sorteo es el mismo todo el día, pero distinto de un perfil a otro. El nivel queda libre: él solo determina la dificultad para alcanzar el objetivo.</string>
     <string name="regles_defi_quotidien_texte2">Una vez alcanzado el objetivo del día, el desafío se bloquea hasta el día siguiente; si fallas antes de alcanzarlo, puedes volver a intentarlo el mismo día. Varios trofeos recompensan una racha de días consecutivos superados: niveles a los 7, 14 y 30 días, más dos niveles adicionales a los 30 días según el nivel jugado (Monique o superior, Mathieu).</string>
+    <string name="regles_mode_duel_mots_titre">Modo Duelo de palabras</string>
+    <string name="regles_duel_mots_intro">Juego de búsqueda de palabras a dos, totalmente a distancia (2 teléfonos separados): un único sorteo de letras, compartido por ambos jugadores. Una palabra inválida, demasiado corta o ya tomada simplemente se señala, sin hacer perder nunca. Dos submodos a elegir:</string>
+    <string name="regles_duel_mots_mode_duo">Dúo: cada jugador dispone de 5 minutos con el mismo sorteo, a ciegas del otro. Al final, ambas listas de palabras encontradas se comparan una al lado de la otra; gana quien encuentre más palabras (empate = victoria para ambos).</string>
+    <string name="regles_duel_mots_mode_confrontation">Enfrentamiento: carrera por alcanzar primero el objetivo de palabras elegido (de 5 a 10, fijado antes de la partida). Las palabras encontradas aparecen en directo en dos columnas; una palabra ya tomada por el adversario ya no puede proponerse.</string>
 
     <string name="versions_titre">Versiones</string>
 

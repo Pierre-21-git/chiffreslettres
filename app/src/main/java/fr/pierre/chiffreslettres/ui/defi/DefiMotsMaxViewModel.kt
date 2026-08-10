@@ -70,6 +70,12 @@ class DefiMotsMaxViewModel(
     private val profilId: Long,
     private val nombreLettres: Int = TirageLettres.NOMBRE_LETTRES,
     private val random: Random = Random,
+    /**
+     * Faux pour le round "duel mots" (réseau), qui réutilise ce moteur mais enregistre lui-même
+     * sa propre session/trophées (`TypePartie.DUEL_MOTS_RESEAU`) — sans ce garde-fou, chaque
+     * partie de duel mots compterait aussi, à tort, comme un défi mots max solo.
+     */
+    private val enregistrerResultat: Boolean = true,
 ) : ViewModel() {
 
     private fun sacNeuf() = SacLettres.creer(
@@ -196,7 +202,7 @@ class DefiMotsMaxViewModel(
             .distinct()
             .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
         _uiState.update { it.copy(termine = true, raisonFin = raison, motsPossibles = motsPossibles) }
-        if (enregistre) return
+        if (enregistre || !enregistrerResultat) return
         enregistre = true
         val score = _uiState.value.motsTrouves.size
         viewModelScope.launch {

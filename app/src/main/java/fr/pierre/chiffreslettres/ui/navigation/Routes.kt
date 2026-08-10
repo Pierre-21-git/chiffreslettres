@@ -46,6 +46,16 @@ object Routes {
     const val JEU_PARTIE_RESEAU = "reseau/jeu"
     const val RECAP_PARTIE_RESEAU = "reseau/recap"
 
+    // Duel mots : 100 % réseau, nichées dans RESEAU_GRAPH plutôt qu'un graphe séparé, puisque
+    // tout passe par la même connexion (retour utilisateur, voir le plan du 2026-08-10).
+    const val CHOIX_ROLE_DUEL_MOTS = "reseau/duelMots/choixRole"
+    const val HOTE_ATTENTE_DUEL_MOTS = "reseau/duelMots/hote/attente"
+    const val INVITE_RECHERCHE_DUEL_MOTS = "reseau/duelMots/invite/recherche"
+    const val DUEL_MOTS_CONNEXION = "reseau/duelMots/connexion"
+    const val CHOIX_MODE_DUEL_MOTS = "reseau/duelMots/choixMode"
+    const val JEU_DUEL_MOTS = "reseau/duelMots/jeu"
+    const val RESULTATS_DUEL_MOTS_DUO = "reseau/duelMots/resultatsDuo"
+
     const val CHOIX_DEFI_SERIE = "defi/choixNiveauSerie"
     const val CHOIX_DEFI_CHRONO = "defi/choixNiveauChrono"
     const val CHOIX_DEFI_MOTS_MAX = "defi/choixNiveauMotsMax"

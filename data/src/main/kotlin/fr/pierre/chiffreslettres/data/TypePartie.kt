@@ -7,5 +7,18 @@ package fr.pierre.chiffreslettres.data
  *
  * DUO_RESEAU / DUO_CONFRONTATION_RESEAU : mêmes règles que DUO/DUO_CONFRONTATION, mais jouées
  * sur 2 téléphones séparés (synchronisées par réseau) plutôt que sur le même appareil.
+ *
+ * DUEL_MOTS_RESEAU / DUEL_MOTS_CONFRONTATION_RESEAU : jeu "duel mots" (retour utilisateur, le
+ * plus de mots trouvés en 5 minutes / le premier à N mots trouvés), 100 % réseau — pas de
+ * variante sur le même téléphone, contrairement à DUO/DUO_CONFRONTATION.
  */
-enum class TypePartie { LIBRE, STRUCTUREE, DUO, DUO_CONFRONTATION, DUO_RESEAU, DUO_CONFRONTATION_RESEAU }
+enum class TypePartie {
+    LIBRE,
+    STRUCTUREE,
+    DUO,
+    DUO_CONFRONTATION,
+    DUO_RESEAU,
+    DUO_CONFRONTATION_RESEAU,
+    DUEL_MOTS_RESEAU,
+    DUEL_MOTS_CONFRONTATION_RESEAU,
+}
