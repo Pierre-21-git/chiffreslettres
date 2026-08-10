@@ -19,6 +19,29 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.89",
+        date = "2026-08-10",
+        changements = listOf(
+            "Duel mots (Confrontation) : limite de 5 minutes, comme les autres modes chronométrés. " +
+                "En fin de partie, affichage de tous les mots possibles du tirage (triés par " +
+                "longueur puis ordre alphabétique), avec ceux déjà trouvés par l'un ou l'autre " +
+                "joueur signalés. Fin de partie anticipée, avec explication, si tous ces mots ont " +
+                "été trouvés à eux deux avant l'écoulement du temps — la même règle s'applique " +
+                "désormais aussi au défi mots solo.",
+            "Duel mots : le message \"mot déjà pris\" distingue maintenant si c'est vous ou " +
+                "l'adversaire qui l'aviez déjà trouvé, et un cadre entoure les colonnes de mots de " +
+                "chaque joueur.",
+            "Duel mots et partie réseau classique : bouton \"Rejouer\" en fin de partie, qui relance " +
+                "une manche sur la connexion déjà établie sans refaire l'appairage Wifi/Bluetooth.",
+            "Lien \"Règles du jeu\" ajouté sur le tout premier écran (choix héberger/rejoindre) des " +
+                "parties réseau et Duel mots.",
+            "Défi quotidien : correction du libellé et des règles affichées quand le tirage du jour " +
+                "est \"Défi mots\" ou \"Défi sans faute\" (affichait à tort \"Défi chrono\").",
+            "Page \"Règles du jeu\" : ajout d'un bloc de présentation générale de l'application, en " +
+                "haut de la liste des règles par mode.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.88",
         date = "2026-08-10",
         changements = listOf(

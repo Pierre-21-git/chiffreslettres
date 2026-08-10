@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /** Raison de fin du défi (retour utilisateur) : affichée à l'écran pour expliquer l'arrêt. */
-enum class RaisonFinDefiMotsMax { VOLONTAIRE, TEMPS_ECOULE }
+enum class RaisonFinDefiMotsMax { VOLONTAIRE, TEMPS_ECOULE, TOUS_MOTS_TROUVES }
 
 /**
  * Raison du rejet d'un mot qui ne met pas fin au défi (retour utilisateur : un mot invalide ou
@@ -95,6 +95,8 @@ class DefiMotsMaxViewModel(
     private val garantieDixMots = niveau == NiveauLettres.MONIQUE || niveau == NiveauLettres.MATHIEU
     private var timerJob: Job? = null
     private var enregistre = false
+    /** Calculés une fois le tirage connu (retour utilisateur : permet de détecter en cours de partie que tous les mots possibles ont été trouvés, sans attendre la fin). */
+    private var motsPossiblesCalcules: List<String> = emptyList()
 
     private val _uiState = MutableStateFlow(DefiMotsMaxUiState(niveau = niveau, nombreLettres = nombreLettres))
     val uiState: StateFlow<DefiMotsMaxUiState> = _uiState.asStateFlow()
@@ -104,6 +106,9 @@ class DefiMotsMaxViewModel(
         if (etat.tirageTermine || etat.termine) return
         val lettres = if (garantieDixMots) tirerAvecGarantie(nombreVoyelles) else TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
         _uiState.update { it.copy(lettresTirees = lettres, tirageTermine = true, nombreVoyellesChoisi = nombreVoyelles) }
+        motsPossiblesCalcules = dictionnaire.rechercherAuMoins(lettres, seuilLongueur)
+            .distinct()
+            .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
         demarrerChrono()
     }
 
@@ -187,6 +192,9 @@ class DefiMotsMaxViewModel(
         _uiState.update {
             it.copy(motsTrouves = it.motsTrouves + mot, indicesUtilises = emptyList(), motSaisi = "", motRejeteTransitoire = null, raisonRejetTransitoire = null)
         }
+        if (motsPossiblesCalcules.isNotEmpty() && _uiState.value.motsTrouves.toSet().containsAll(motsPossiblesCalcules)) {
+            terminer(RaisonFinDefiMotsMax.TOUS_MOTS_TROUVES)
+        }
     }
 
     private fun rejeterMot(mot: String, raison: RaisonRejetMotDefiMotsMax) {
@@ -198,10 +206,7 @@ class DefiMotsMaxViewModel(
     private fun terminer(raison: RaisonFinDefiMotsMax) {
         if (_uiState.value.termine) return
         timerJob?.cancel()
-        val motsPossibles = dictionnaire.rechercherAuMoins(_uiState.value.lettresTirees, seuilLongueur)
-            .distinct()
-            .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
-        _uiState.update { it.copy(termine = true, raisonFin = raison, motsPossibles = motsPossibles) }
+        _uiState.update { it.copy(termine = true, raisonFin = raison, motsPossibles = motsPossiblesCalcules) }
         if (enregistre || !enregistrerResultat) return
         enregistre = true
         val score = _uiState.value.motsTrouves.size
@@ -214,6 +219,7 @@ class DefiMotsMaxViewModel(
     fun recommencer() {
         timerJob?.cancel()
         enregistre = false
+        motsPossiblesCalcules = emptyList()
         sac = sacNeuf()
         _uiState.update { DefiMotsMaxUiState(niveau = it.niveau, nombreLettres = nombreLettres) }
     }

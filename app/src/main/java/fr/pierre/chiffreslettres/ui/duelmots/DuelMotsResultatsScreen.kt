@@ -26,6 +26,7 @@ import fr.pierre.chiffreslettres.ui.theme.GrilleMotsGroupee
 import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
+import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
 
 private fun trie(mots: List<String>): List<String> =
     mots.distinct().sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
@@ -43,7 +44,9 @@ fun DuelMotsResultatsScreen(
     motsTrouvesAdversaire: List<String>,
     resultatAdversaireRecu: Boolean,
     motsPossibles: List<String>,
+    peutRejouer: Boolean,
     onRetour: () -> Unit,
+    onRejouer: () -> Unit,
 ) {
     val moiTries = trie(motsTrouvesMoi)
     val adversaireTries = trie(motsTrouvesAdversaire)
@@ -55,11 +58,11 @@ fun DuelMotsResultatsScreen(
         EnTeteEcran(stringResource(R.string.duel_mots_titre))
 
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            PanneauResultat(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text("$pseudoMoi (${moiTries.size})", style = MaterialTheme.typography.titleMedium)
                 GrilleMotsGroupee(mots = moiTries, colonnes = 1) { mot -> Text(mot, color = TextMuted, fontSize = 13.sp) }
             }
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            PanneauResultat(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 if (resultatAdversaireRecu) {
                     Text("$pseudoAdversaire (${adversaireTries.size})", style = MaterialTheme.typography.titleMedium)
                     GrilleMotsGroupee(mots = adversaireTries, colonnes = 1) { mot -> Text(mot, color = TextMuted, fontSize = 13.sp) }
@@ -88,6 +91,11 @@ fun DuelMotsResultatsScreen(
                         Text(mot, color = if (trouve) TextMuted else Ivory, fontSize = 13.sp)
                     }
                 }
+            }
+            if (peutRejouer) {
+                TuilePrincipale(stringResource(R.string.action_rejouer), onClick = onRejouer)
+            } else {
+                Text(stringResource(R.string.reseau_attente_nouvelle_partie), color = TextMuted, fontSize = 13.sp)
             }
             BoutonSecondaireContour(stringResource(R.string.action_retour), onClick = onRetour, modifier = Modifier.fillMaxWidth())
         }

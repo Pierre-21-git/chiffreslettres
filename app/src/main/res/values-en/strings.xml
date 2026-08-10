@@ -43,6 +43,7 @@
     <string name="action_retour">Back</string>
     <string name="action_recommencer">Restart</string>
     <string name="action_rejouer">Play again</string>
+    <string name="reseau_attente_nouvelle_partie">Waiting for the host to start a new game…</string>
     <string name="action_effacer">Clear</string>
     <string name="action_fermer">Close</string>
     <string name="libelle_manche">Round</string>
@@ -132,6 +133,7 @@
     <string name="duel_mots_defaite">You lost.</string>
     <string name="duel_mots_moi">Me</string>
     <string name="duel_mots_deja_pris">"%1$s" was already taken by the opponent.</string>
+    <string name="duel_mots_deja_pris_moi">"%1$s" — you already found that one.</string>
 
     <string name="defi_quotidien_titre">Daily challenge</string>
     <string name="defi_quotidien_aujourdhui">Today: %1$s %2$s</string>
@@ -157,6 +159,7 @@
     <string name="defi_mots_max_fin_mot_invalide">"%1$s" is not a dictionary word.</string>
     <string name="defi_mots_max_fin_mot_trop_court">"%1$s" is a valid word, but too short for this level: at least %2$d letters were needed.</string>
     <string name="defi_mots_max_fin_temps_ecoule">Time\'s up!</string>
+    <string name="defi_mots_max_fin_tous_mots_trouves">All possible words have been found!</string>
     <string name="defi_mots_max_mots_possibles_titre">Words possible with this draw</string>
     <string name="defi_mots_max_mot_possible_trouve">%1$s (found)</string>
     <string name="grille_mots_titre_longueur">%1$d-letter words</string>
@@ -254,6 +257,11 @@
     <string name="type_partie_confrontation_distance">Remote head-to-head</string>
 
     <string name="regles_titre">Game rules</string>
+    <string name="regles_intro_titre">Numbers &amp; Letters</string>
+    <string name="regles_intro_texte_1">Numbers &amp; Letters is a mental arithmetic and vocabulary game, in the spirit of the well-known French TV game show of the same principle, with no affiliation to it.</string>
+    <string name="regles_intro_texte_2">Two challenges: Numbers, where you reach a target by combining six randomly drawn numbers, and Letters, where you find the longest possible word from ten randomly drawn letters.</string>
+    <string name="regles_intro_texte_3">Play solo across four difficulty levels, two-player on the same phone, or over the network (Wi-Fi/Bluetooth) with Word duel or a duo game. Take on the daily challenge, progress with the streak, timed, word and flawless challenges, or train freely.</string>
+    <string name="regles_intro_texte_4">The app keeps track of your statistics, rewards your progress with trophies, and works entirely offline: no ads, no trackers, no network connection required (except to play a network game).</string>
     <string name="regles_mode_chiffres_titre">Numbers mode</string>
     <string name="regles_mode_chiffres_texte">6 numbers are drawn (from 1 to 10 in double copies, and 25/50/75/100 in single copies), along with a target to reach. Build your calculation step by step, calculator-style: touch a first number, an operator, then a second number — the result replaces the two numbers used and can be reused. The \"Undo\" and \"Clear\" buttons let you go back. The last result obtained is your proposal: submit as soon as you\'re ready, or let the clock run out if there is one.</string>
     <string name="regles_comptage_points_titre">Scoring</string>

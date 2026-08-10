@@ -20,11 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
+import fr.pierre.chiffreslettres.network.RaisonFinConfrontation
 import fr.pierre.chiffreslettres.network.RaisonRejetMotDuelMots
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
+import fr.pierre.chiffreslettres.ui.theme.GrilleMotsGroupee
+import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
@@ -57,11 +60,16 @@ fun DuelMotsConfrontationScreen(
     motsTrouvesMoi: List<String>,
     motsTrouvesAdversaire: List<String>,
     gagnant: Boolean?,
+    tempsRestantSecondes: Int,
+    motsPossibles: List<String>,
+    raisonFin: RaisonFinConfrontation?,
+    peutRejouer: Boolean,
     onCliquerLettre: (Int) -> Unit,
     onAnnulerLettre: () -> Unit,
     onEffacerMot: () -> Unit,
     onValider: () -> Unit,
     onRetour: () -> Unit,
+    onRejouer: () -> Unit,
 ) {
     val termine = gagnant != null
     Column(
@@ -87,6 +95,12 @@ fun DuelMotsConfrontationScreen(
         }
 
         if (!termine) {
+            Afficheur(
+                stringResource(R.string.afficheur_temps),
+                stringResource(R.string.afficheur_temps_valeur, tempsRestantSecondes),
+                modifier = Modifier.fillMaxWidth(),
+                centre = true,
+            )
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
@@ -115,7 +129,8 @@ fun DuelMotsConfrontationScreen(
                 val message = when (raisonRejet) {
                     RaisonRejetMotDuelMots.INVALIDE -> stringResource(R.string.defi_mots_max_fin_mot_invalide, motRejete)
                     RaisonRejetMotDuelMots.TROP_COURT -> stringResource(R.string.defi_mots_max_fin_mot_trop_court, motRejete, seuilRequis)
-                    RaisonRejetMotDuelMots.DEJA_PRIS -> stringResource(R.string.duel_mots_deja_pris, motRejete)
+                    RaisonRejetMotDuelMots.DEJA_PRIS_MOI -> stringResource(R.string.duel_mots_deja_pris_moi, motRejete)
+                    RaisonRejetMotDuelMots.DEJA_PRIS_ADVERSAIRE -> stringResource(R.string.duel_mots_deja_pris, motRejete)
                     null -> null
                 }
                 if (message != null) {
@@ -152,6 +167,32 @@ fun DuelMotsConfrontationScreen(
                     color = BrassBright,
                     style = MaterialTheme.typography.titleMedium,
                 )
+                val explication = when (raisonFin) {
+                    RaisonFinConfrontation.TEMPS_ECOULE -> stringResource(R.string.defi_mots_max_fin_temps_ecoule)
+                    RaisonFinConfrontation.TOUS_MOTS_TROUVES -> stringResource(R.string.defi_mots_max_fin_tous_mots_trouves)
+                    RaisonFinConfrontation.OBJECTIF_ATTEINT, null -> null
+                }
+                if (explication != null) {
+                    Text(explication, color = TextMuted, fontSize = 13.sp)
+                }
+            }
+            if (motsPossibles.isNotEmpty()) {
+                PanneauResultat {
+                    Text(stringResource(R.string.defi_mots_max_mots_possibles_titre), color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
+                    GrilleMotsGroupee(mots = motsPossibles) { mot ->
+                        val trouve = mot in motsTrouvesMoi || mot in motsTrouvesAdversaire
+                        Text(
+                            if (trouve) stringResource(R.string.defi_mots_max_mot_possible_trouve, mot) else mot,
+                            color = if (trouve) TextMuted else Ivory,
+                            fontSize = 13.sp,
+                        )
+                    }
+                }
+            }
+            if (peutRejouer) {
+                TuilePrincipale(stringResource(R.string.action_rejouer), onClick = onRejouer)
+            } else {
+                Text(stringResource(R.string.reseau_attente_nouvelle_partie), color = TextMuted, fontSize = 13.sp)
             }
             BoutonSecondaireContour(stringResource(R.string.action_retour), onClick = onRetour, modifier = Modifier.fillMaxWidth())
         }
@@ -160,7 +201,7 @@ fun DuelMotsConfrontationScreen(
 
 @Composable
 private fun ColonneMots(pseudo: String, mots: List<String>, modifier: Modifier) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    PanneauResultat(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(pseudo, style = MaterialTheme.typography.labelLarge, color = TextMuted)
         for (mot in trie(mots)) {
             Text(mot, color = TextMuted, fontSize = 13.sp)

@@ -274,7 +274,11 @@ fun BoutonOperateur(
 }
 
 @Composable
-fun PanneauResultat(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+fun PanneauResultat(
+    modifier: Modifier = Modifier,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    content: @Composable ColumnScope.() -> Unit,
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -282,6 +286,7 @@ fun PanneauResultat(modifier: Modifier = Modifier, content: @Composable ColumnSc
             .background(PanelDeep)
             .border(1.dp, BrassBright.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
             .padding(16.dp),
+        verticalArrangement = verticalArrangement,
         content = content,
     )
 }

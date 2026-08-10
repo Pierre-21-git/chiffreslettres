@@ -36,6 +36,12 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         EnTeteEcran(stringResource(R.string.regles_titre), onRetour)
+        SectionRegle(stringResource(R.string.regles_intro_titre)) {
+            Text(stringResource(R.string.regles_intro_texte_1), style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(R.string.regles_intro_texte_2), style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(R.string.regles_intro_texte_3), style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(R.string.regles_intro_texte_4), style = MaterialTheme.typography.bodyMedium)
+        }
         ReglesModeChiffres()
         ReglesModeLettres()
         ReglesModeEntrainement()

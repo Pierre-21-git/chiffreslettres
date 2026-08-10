@@ -152,6 +152,8 @@ class PartieReseauViewModel(
         private set
 
     private var enregistre = false
+    /** Retenu pour "Rejouer" (retour utilisateur) : relance une partie sur la connexion déjà établie, avec le même niveau. */
+    private var dernierNiveau: Niveau? = null
 
     fun choisirHote(transport: TransportReseau) {
         jobRole?.cancel()
@@ -258,6 +260,14 @@ class PartieReseauViewModel(
         _seeds.value = seeds
         _index.value = 0
         _tour.value = premierJoueurManche(0)
+        // Réinitialisation systématique (retour utilisateur : sans effet sur la 1ère partie, déjà
+        // vides — indispensable pour que "Rejouer" reparte sans manches "fantômes" de la partie
+        // précédente).
+        _resultatsJoueur1.value = emptyMap()
+        _resultatsJoueur2.value = emptyMap()
+        _manchesDeclenchees.value = emptySet()
+        _choixVoyellesRecu.value = emptyMap()
+        _adversairePretPourManche.value = emptySet()
         enregistre = false
         recalculerEtatManche()
     }
@@ -281,6 +291,7 @@ class PartieReseauViewModel(
 
     fun demarrerCommeHote(niveau: Niveau, mode: ModeScoreDuo) {
         this.mode = mode
+        dernierNiveau = niveau
         val niveauLettres = NiveauLettres.valueOf(niveau.name)
         val sequence = sequenceAlternee(niveau.manchesParMode, niveauLettres, niveau.manchesParMode, niveau)
         val seeds = List(sequence.size) { Random.nextLong() }
@@ -430,6 +441,18 @@ class PartieReseauViewModel(
             }
         }
         return finaux1 to finaux2
+    }
+
+    /**
+     * Relance une partie sur la connexion déjà établie, sans refaire l'appairage (retour
+     * utilisateur). Hôte uniquement : si l'invité l'appelait aussi, les deux téléphones tireraient
+     * des graines différentes et désynchroniseraient la partie — l'invité repart automatiquement
+     * dès réception de la nouvelle configuration ([demarrerEcouteJeu] écoute en continu).
+     */
+    fun rejouer() {
+        val niveau = dernierNiveau ?: return
+        if (monTourDuo != TourDuo.JOUEUR1) return
+        demarrerCommeHote(niveau, mode)
     }
 
     fun annulerEtRevenirAuChoix() {

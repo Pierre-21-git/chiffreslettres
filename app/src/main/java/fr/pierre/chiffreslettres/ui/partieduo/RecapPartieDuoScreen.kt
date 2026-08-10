@@ -29,6 +29,8 @@ fun RecapPartieDuoScreen(
     resultats2: List<ResultatManche>,
     onTerminer: () -> Unit,
     onRetour: (() -> Unit)? = null,
+    onRejouer: (() -> Unit)? = null,
+    afficherAttenteRejouer: Boolean = false,
 ) {
     val total1 = resultats1.sumOf { it.score }
     val total2 = resultats2.sumOf { it.score }
@@ -49,6 +51,11 @@ fun RecapPartieDuoScreen(
         HorizontalDivider()
         BlocJoueur(pseudo2, total2, resultats2)
 
+        if (onRejouer != null) {
+            Button(onClick = onRejouer, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_rejouer)) }
+        } else if (afficherAttenteRejouer) {
+            Text(stringResource(R.string.reseau_attente_nouvelle_partie), style = MaterialTheme.typography.bodySmall)
+        }
         Button(onClick = onTerminer, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.action_terminer)) }
     }
 }

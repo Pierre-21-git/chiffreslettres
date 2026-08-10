@@ -186,14 +186,16 @@ sealed interface MessageReseau {
 
     /**
      * Duel mots, sous-mode Confrontation uniquement : envoyé par le téléphone qui détecte le
-     * premier avoir atteint l'objectif de mots, pour que les deux côtés terminent la partie sur
-     * le même vainqueur (retour utilisateur : simple "premier message reçu gagne", suffisant
-     * pour un jeu familial, pas de résolution de quasi-simultanéité plus fine).
+     * premier la fin de la partie (objectif atteint, temps écoulé ou tous les mots possibles
+     * trouvés), pour que les deux côtés terminent sur le même vainqueur (retour utilisateur :
+     * simple "premier message reçu gagne", suffisant pour un jeu familial, pas de résolution de
+     * quasi-simultanéité plus fine). [raison] est le nom d'une valeur de `RaisonFinConfrontation`.
      */
-    data class FinDuelMots(val gagnantEstExpediteur: Boolean) : MessageReseau {
+    data class FinDuelMots(val gagnantEstExpediteur: Boolean, val raison: String) : MessageReseau {
         override fun versJson(): JSONObject = JSONObject().apply {
             put(CLE_TYPE, TYPE)
             put("gagnantEstExpediteur", gagnantEstExpediteur)
+            put("raison", raison)
         }
         companion object {
             const val TYPE = "finDuelMots"
@@ -241,7 +243,10 @@ sealed interface MessageReseau {
                     val motsJson = json.getJSONArray("motsTrouves")
                     ResultatDuelMotsDuo(motsTrouves = List(motsJson.length()) { motsJson.getString(it) })
                 }
-                FinDuelMots.TYPE -> FinDuelMots(gagnantEstExpediteur = json.getBoolean("gagnantEstExpediteur"))
+                FinDuelMots.TYPE -> FinDuelMots(
+                    gagnantEstExpediteur = json.getBoolean("gagnantEstExpediteur"),
+                    raison = json.optString("raison", "OBJECTIF_ATTEINT"),
+                )
                 else -> null
             }
         }.getOrNull()

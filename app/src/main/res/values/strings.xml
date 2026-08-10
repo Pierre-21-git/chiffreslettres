@@ -50,6 +50,7 @@
     <string name="action_retour">Retour</string>
     <string name="action_recommencer">Recommencer</string>
     <string name="action_rejouer">Rejouer</string>
+    <string name="reseau_attente_nouvelle_partie">En attente que l\'hôte relance une partie…</string>
     <string name="action_effacer">Effacer</string>
     <string name="action_fermer">Fermer</string>
     <string name="libelle_manche">Manche</string>
@@ -150,6 +151,7 @@
     <string name="duel_mots_defaite">Vous avez perdu.</string>
     <string name="duel_mots_moi">Moi</string>
     <string name="duel_mots_deja_pris">« %1$s » a déjà été pris par l\'adversaire.</string>
+    <string name="duel_mots_deja_pris_moi">« %1$s » — vous l\'avez déjà trouvé.</string>
 
     <!-- ui/defi/DefiQuotidienScreen -->
     <string name="defi_quotidien_titre">Défi quotidien</string>
@@ -176,6 +178,7 @@
     <string name="defi_mots_max_fin_mot_invalide">« %1$s » n\'est pas un mot du dictionnaire.</string>
     <string name="defi_mots_max_fin_mot_trop_court">« %1$s » est un mot valide, mais trop court pour ce niveau : il fallait au moins %2$d lettres.</string>
     <string name="defi_mots_max_fin_temps_ecoule">Temps écoulé !</string>
+    <string name="defi_mots_max_fin_tous_mots_trouves">Tous les mots possibles ont été trouvés !</string>
     <string name="defi_mots_max_mots_possibles_titre">Mots possibles sur ce tirage</string>
     <string name="defi_mots_max_mot_possible_trouve">%1$s (trouvé)</string>
     <string name="grille_mots_titre_longueur">Mots de %1$d lettres</string>
@@ -285,6 +288,11 @@
 
     <!-- ui/apropos/ReglesDuJeuScreen -->
     <string name="regles_titre">Règles du jeu</string>
+    <string name="regles_intro_titre">Chiffres &amp; Lettres</string>
+    <string name="regles_intro_texte_1">Chiffres &amp; Lettres est un jeu de calcul mental et de vocabulaire, dans l\'esprit du célèbre jeu télévisé français du même principe, sans aucune affiliation avec celui-ci.</string>
+    <string name="regles_intro_texte_2">Deux épreuves : les Chiffres, où il faut atteindre une cible en combinant six nombres tirés au sort, et les Lettres, où il faut trouver le mot le plus long avec dix lettres tirées au sort.</string>
+    <string name="regles_intro_texte_3">Jouez seul sur quatre niveaux de difficulté, à deux sur le même téléphone, ou en réseau (Wifi/Bluetooth) avec le Duel mots ou une partie duo. Relevez le défi quotidien, progressez avec les défis série, chrono, mots et sans faute, ou entraînez-vous librement.</string>
+    <string name="regles_intro_texte_4">L\'application garde vos statistiques, récompense votre progression par des trophées, et fonctionne entièrement hors ligne : aucune publicité, aucun traqueur, aucune connexion réseau requise (sauf pour jouer en réseau).</string>
     <string name="regles_mode_chiffres_titre">Mode Chiffres</string>
     <string name="regles_mode_chiffres_texte">6 nombres sont tirés (parmi 1 à 10 en double exemplaire, et 25/50/75/100 en simple exemplaire), ainsi qu\'une cible à atteindre. Construisez votre calcul pas à pas façon calculatrice : touchez un premier nombre, un opérateur, puis un second nombre — le résultat remplace les deux nombres utilisés et peut resservir. Les boutons \"Annuler\" et \"Effacer\" permettent de revenir en arrière. Le dernier résultat obtenu est votre proposition : validez dès que vous êtes prêt, ou laissez le chrono s\'écouler s\'il y en a un.</string>
     <string name="regles_comptage_points_titre">Comptage des points</string>

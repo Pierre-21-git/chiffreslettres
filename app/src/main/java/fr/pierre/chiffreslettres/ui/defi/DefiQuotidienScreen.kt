@@ -23,7 +23,9 @@ import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.apropos.LienReglesDuJeu
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiChrono
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiMots
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiQuotidien
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSansFaute
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSerie
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
@@ -41,7 +43,14 @@ fun DefiQuotidienScreen(
     couleurRang: Color? = null,
 ) {
     val nomMode = stringResource(if (tirage.mode == ModeJeu.CHIFFRES) R.string.mode_chiffres else R.string.mode_lettres)
-    val nomType = stringResource(if (tirage.type == TypeDefi.SERIE) R.string.defi_type_serie else R.string.defi_type_chrono)
+    val nomType = stringResource(
+        when (tirage.type) {
+            TypeDefi.SERIE -> R.string.defi_type_serie
+            TypeDefi.CHRONO -> R.string.defi_type_chrono
+            TypeDefi.MOTS_MAX -> R.string.defi_type_mots_max
+            TypeDefi.SANS_FAUTE -> R.string.defi_type_sans_faute
+        },
+    )
     val natureObjectif = when {
         tirage.mode == ModeJeu.CHIFFRES && tirage.type == TypeDefi.SERIE -> stringResource(R.string.defi_objectif_comptes_serie, tirage.objectif)
         tirage.mode == ModeJeu.CHIFFRES -> stringResource(R.string.defi_objectif_comptes, tirage.objectif)
@@ -57,7 +66,12 @@ fun DefiQuotidienScreen(
         PucePseudo(pseudoActif, couleurRang = couleurRang)
         LienReglesDuJeu {
             ReglesModeDefiQuotidien()
-            if (tirage.type == TypeDefi.SERIE) ReglesModeDefiSerie() else ReglesModeDefiChrono()
+            when (tirage.type) {
+                TypeDefi.SERIE -> ReglesModeDefiSerie()
+                TypeDefi.CHRONO -> ReglesModeDefiChrono()
+                TypeDefi.MOTS_MAX -> ReglesModeDefiMots()
+                TypeDefi.SANS_FAUTE -> ReglesModeDefiSansFaute()
+            }
         }
 
         Text(stringResource(R.string.defi_quotidien_aujourdhui, nomType, nomMode), style = MaterialTheme.typography.titleMedium)

@@ -17,6 +17,7 @@
     <string name="action_retour">Zurück</string>
     <string name="action_recommencer">Neu starten</string>
     <string name="action_rejouer">Nochmal spielen</string>
+    <string name="reseau_attente_nouvelle_partie">Warten, bis der Gastgeber eine neue Partie startet…</string>
     <string name="action_effacer">Löschen</string>
     <string name="action_fermer">Schließen</string>
     <string name="libelle_manche">Runde</string>
@@ -106,6 +107,7 @@
     <string name="duel_mots_defaite">Verloren.</string>
     <string name="duel_mots_moi">Ich</string>
     <string name="duel_mots_deja_pris">„%1$s“ wurde bereits vom Gegner vergeben.</string>
+    <string name="duel_mots_deja_pris_moi">„%1$s“ — das hast du schon gefunden.</string>
 
     <string name="defi_quotidien_titre">Tägliche Herausforderung</string>
     <string name="defi_quotidien_aujourdhui">Heute: %1$s %2$s</string>
@@ -131,6 +133,7 @@
     <string name="defi_mots_max_fin_mot_invalide">„%1$s“ ist kein Wörterbuchwort.</string>
     <string name="defi_mots_max_fin_mot_trop_court">„%1$s“ ist ein gültiges Wort, aber zu kurz für diese Stufe: mindestens %2$d Buchstaben wären nötig gewesen.</string>
     <string name="defi_mots_max_fin_temps_ecoule">Zeit abgelaufen!</string>
+    <string name="defi_mots_max_fin_tous_mots_trouves">Alle möglichen Wörter wurden gefunden!</string>
     <string name="defi_mots_max_mots_possibles_titre">Mit dieser Ziehung mögliche Wörter</string>
     <string name="defi_mots_max_mot_possible_trouve">%1$s (gefunden)</string>
     <string name="grille_mots_titre_longueur">Wörter mit %1$d Buchstaben</string>
@@ -228,6 +231,11 @@
     <string name="type_partie_confrontation_distance">Duell aus der Ferne</string>
 
     <string name="regles_titre">Spielregeln</string>
+    <string name="regles_intro_titre">Zahlen &amp; Buchstaben</string>
+    <string name="regles_intro_texte_1">Zahlen &amp; Buchstaben ist ein Kopfrechen- und Wortschatzspiel, im Geiste der bekannten französischen Fernsehshow mit demselben Prinzip, ohne jegliche Verbindung zu dieser.</string>
+    <string name="regles_intro_texte_2">Zwei Disziplinen: Zahlen, bei denen du eine Zielzahl erreichst, indem du sechs zufällig gezogene Zahlen kombinierst, und Buchstaben, bei denen du mit zehn zufällig gezogenen Buchstaben das längste Wort findest.</string>
+    <string name="regles_intro_texte_3">Spiele allein auf vier Schwierigkeitsstufen, zu zweit auf demselben Telefon oder im Netzwerk (WLAN/Bluetooth) im Wortduell oder in einem Duo-Spiel. Nimm die tägliche Herausforderung an, verbessere dich mit der Serien-, Zeit-, Wörter- und Fehlerfreien Herausforderung, oder trainiere frei.</string>
+    <string name="regles_intro_texte_4">Die App speichert deine Statistiken, belohnt deinen Fortschritt mit Trophäen und funktioniert vollständig offline: keine Werbung, keine Tracker, keine Netzwerkverbindung erforderlich (außer für das Netzwerkspiel).</string>
     <string name="regles_mode_chiffres_titre">Zahlen-Modus</string>
     <string name="regles_mode_chiffres_texte">Es werden 6 Zahlen gezogen (1 bis 10 jeweils doppelt, sowie 25/50/75/100 einfach), zusammen mit einer zu erreichenden Zielzahl. Baue deine Rechnung Schritt für Schritt wie mit einem Taschenrechner auf: berühre eine erste Zahl, einen Operator, dann eine zweite Zahl — das Ergebnis ersetzt die beiden verwendeten Zahlen und kann weiterverwendet werden. Die Schaltflächen \"Rückgängig\" und \"Löschen\" erlauben es, einen Schritt zurückzugehen. Das zuletzt erhaltene Ergebnis ist dein Vorschlag: bestätige, sobald du bereit bist, oder lass die Zeit ablaufen, falls es eine gibt.</string>
     <string name="regles_comptage_points_titre">Punktezählung</string>

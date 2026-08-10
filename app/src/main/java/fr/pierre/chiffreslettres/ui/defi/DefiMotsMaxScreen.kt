@@ -181,6 +181,8 @@ fun DefiMotsMaxScreen(
                 val explication = when (etat.raisonFin) {
                     RaisonFinDefiMotsMax.TEMPS_ECOULE ->
                         stringResource(R.string.defi_mots_max_fin_temps_ecoule)
+                    RaisonFinDefiMotsMax.TOUS_MOTS_TROUVES ->
+                        stringResource(R.string.defi_mots_max_fin_tous_mots_trouves)
                     RaisonFinDefiMotsMax.VOLONTAIRE, null -> null
                 }
                 if (explication != null) {

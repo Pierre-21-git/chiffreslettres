@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.network.TransportReseau
+import fr.pierre.chiffreslettres.ui.apropos.LienReglesDuJeu
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
@@ -51,6 +53,7 @@ fun ChoixRoleReseauScreen(
     onRejoindre: (TransportReseau) -> Unit,
     onRetour: () -> Unit,
     couleurRang: Color? = null,
+    contenuRegles: @Composable ColumnScope.() -> Unit,
 ) {
     val context = LocalContext.current
     var transport by remember { mutableStateOf(TransportReseau.WIFI) }
@@ -124,6 +127,7 @@ fun ChoixRoleReseauScreen(
     ) {
         EnTeteEcran(stringResource(R.string.role_reseau_titre), onRetour)
         PucePseudo(pseudoActif, couleurRang = couleurRang)
+        LienReglesDuJeu(contenu = contenuRegles)
         Text(
             stringResource(R.string.role_reseau_intro),
             style = MaterialTheme.typography.bodyMedium,

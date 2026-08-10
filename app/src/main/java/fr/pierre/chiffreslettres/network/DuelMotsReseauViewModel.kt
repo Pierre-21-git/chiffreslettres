@@ -13,9 +13,11 @@ import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
+import fr.pierre.chiffreslettres.ui.defi.DUREE_SECONDES_DEFI_MOTS_MAX
 import fr.pierre.chiffreslettres.ui.defi.seuilLongueurDefiLettres
 import kotlin.random.Random
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,7 +36,10 @@ import kotlinx.coroutines.withTimeoutOrNull
 enum class SousModeDuelMots { DUO, CONFRONTATION }
 
 /** Raison du rejet d'un mot en sous-mode Confrontation (retour utilisateur : jamais une perte, juste signalé, cf. `DefiMotsMaxViewModel`). */
-enum class RaisonRejetMotDuelMots { INVALIDE, TROP_COURT, DEJA_PRIS }
+enum class RaisonRejetMotDuelMots { INVALIDE, TROP_COURT, DEJA_PRIS_MOI, DEJA_PRIS_ADVERSAIRE }
+
+/** Raison de fin de partie en sous-mode Confrontation (retour utilisateur : affichée à l'écran). */
+enum class RaisonFinConfrontation { OBJECTIF_ATTEINT, TEMPS_ECOULE, TOUS_MOTS_TROUVES }
 
 private fun SousModeDuelMots.versTypePartie(): TypePartie = when (this) {
     SousModeDuelMots.DUO -> TypePartie.DUEL_MOTS_RESEAU
@@ -120,6 +125,13 @@ class DuelMotsReseauViewModel(
     val motRejete: StateFlow<String?> = _motRejete.asStateFlow()
     private val _raisonRejet = MutableStateFlow<RaisonRejetMotDuelMots?>(null)
     val raisonRejet: StateFlow<RaisonRejetMotDuelMots?> = _raisonRejet.asStateFlow()
+    private val _tempsRestantSecondes = MutableStateFlow(DUREE_SECONDES_DEFI_MOTS_MAX)
+    val tempsRestantSecondes: StateFlow<Int> = _tempsRestantSecondes.asStateFlow()
+    private val _motsPossiblesConfrontation = MutableStateFlow<List<String>>(emptyList())
+    val motsPossiblesConfrontation: StateFlow<List<String>> = _motsPossiblesConfrontation.asStateFlow()
+    private val _raisonFinConfrontation = MutableStateFlow<RaisonFinConfrontation?>(null)
+    val raisonFinConfrontation: StateFlow<RaisonFinConfrontation?> = _raisonFinConfrontation.asStateFlow()
+    private var timerJobConfrontation: Job? = null
 
     // --- Résultats (les deux sous-modes) ---
     private val _motsTrouvesMoi = MutableStateFlow<List<String>>(emptyList())
@@ -218,7 +230,10 @@ class DuelMotsReseauViewModel(
                     }
                     is MessageReseau.MotTrouve -> recevoirMotAdversaire(message.mot)
                     is MessageReseau.ResultatDuelMotsDuo -> recevoirResultatDuoAdversaire(message.motsTrouves)
-                    is MessageReseau.FinDuelMots -> terminerConfrontation(jaiGagne = !message.gagnantEstExpediteur)
+                    is MessageReseau.FinDuelMots -> terminerConfrontation(
+                        raison = RaisonFinConfrontation.valueOf(message.raison),
+                        gagnantEstExpediteur = message.gagnantEstExpediteur,
+                    )
                     else -> {}
                 }
             }
@@ -246,15 +261,46 @@ class DuelMotsReseauViewModel(
 
     private fun demarrerTirage(graine: Long) {
         _seed.value = graine
+        // Réinitialisation systématique (retour utilisateur : sans effet sur la 1ère partie, déjà
+        // à ces valeurs par défaut — indispensable pour que "Rejouer" reparte sur un état propre).
+        _motsTrouvesMoi.value = emptyList()
+        _motsTrouvesAdversaire.value = emptyList()
+        enregistre = false
         if (sousMode == SousModeDuelMots.CONFRONTATION) {
+            timerJobConfrontation?.cancel()
             val sac = SacLettres.creer(
                 configurationAlphabet.distributionBase,
                 configurationAlphabet.voyelles,
                 configurationAlphabet.lettresExcluesParNiveau.getValue(niveau),
             )
             _lettresTirees.value = TirageLettres.tirer(sac, NOMBRE_VOYELLES_DUEL_MOTS, TirageLettres.NOMBRE_LETTRES, Random(graine))
+            _motsPossiblesConfrontation.value = dictionnaire.rechercherAuMoins(_lettresTirees.value, seuilLongueurDefiLettres(niveau))
+                .distinct()
+                .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
+            _indicesUtilises.value = emptyList()
+            _motSaisi.value = ""
+            _motRejete.value = null
+            _raisonRejet.value = null
+            _gagnant.value = null
+            _raisonFinConfrontation.value = null
+            _tempsRestantSecondes.value = DUREE_SECONDES_DEFI_MOTS_MAX
+            demarrerChronoConfrontation()
+        } else {
+            monResultatDuoEnvoye = false
+            _resultatAdversaireDuoRecu.value = false
         }
         _tirageTermine.value = true
+    }
+
+    private fun demarrerChronoConfrontation() {
+        timerJobConfrontation = viewModelScope.launch {
+            while (_tempsRestantSecondes.value > 0) {
+                delay(1000)
+                if (_gagnant.value != null) return@launch
+                _tempsRestantSecondes.update { it - 1 }
+            }
+            terminerLocalementConfrontation(RaisonFinConfrontation.TEMPS_ECOULE)
+        }
     }
 
     // --- Sous-mode Confrontation ---
@@ -297,7 +343,8 @@ class DuelMotsReseauViewModel(
         val raison = when {
             !dictionnaire.estJouable(mot) -> RaisonRejetMotDuelMots.INVALIDE
             mot.length < seuil -> RaisonRejetMotDuelMots.TROP_COURT
-            mot in _motsTrouvesMoi.value || mot in _motsTrouvesAdversaire.value -> RaisonRejetMotDuelMots.DEJA_PRIS
+            mot in _motsTrouvesMoi.value -> RaisonRejetMotDuelMots.DEJA_PRIS_MOI
+            mot in _motsTrouvesAdversaire.value -> RaisonRejetMotDuelMots.DEJA_PRIS_ADVERSAIRE
             else -> null
         }
         if (raison != null) {
@@ -314,20 +361,64 @@ class DuelMotsReseauViewModel(
         _raisonRejet.value = null
         viewModelScope.launch { connexionActive?.envoyer(MessageReseau.MotTrouve(mot, mot.length)) }
         if (_motsTrouvesMoi.value.size >= objectifMots) {
+            timerJobConfrontation?.cancel()
+            _raisonFinConfrontation.value = RaisonFinConfrontation.OBJECTIF_ATTEINT
             _gagnant.value = true
-            viewModelScope.launch { connexionActive?.envoyer(MessageReseau.FinDuelMots(gagnantEstExpediteur = true)) }
+            viewModelScope.launch {
+                connexionActive?.envoyer(
+                    MessageReseau.FinDuelMots(gagnantEstExpediteur = true, raison = RaisonFinConfrontation.OBJECTIF_ATTEINT.name),
+                )
+            }
             enregistrerSessionSiNecessaire()
+        } else {
+            verifierTousMotsTrouvesConfrontation()
         }
     }
 
     private fun recevoirMotAdversaire(mot: String) {
         if (_gagnant.value != null) return
         _motsTrouvesAdversaire.update { it + mot }
+        verifierTousMotsTrouvesConfrontation()
     }
 
-    private fun terminerConfrontation(jaiGagne: Boolean) {
+    /**
+     * Fin de partie détectée localement (temps écoulé ou tous les mots possibles trouvés) : à la
+     * différence de l'objectif atteint (le premier arrivé gagne forcément), ce cas peut être une
+     * vraie égalité — chaque côté calcule donc son propre vainqueur à partir de ses mots trouvés
+     * déjà synchronisés en direct (`MotTrouve`), plutôt que d'inverser le booléen reçu du réseau
+     * (qui afficherait à tort "perdu" chez l'un des deux en cas d'égalité, cf. règle habituelle
+     * "égalité comptée comme gagnée pour les deux", [enregistrerSessionSiNecessaire]).
+     */
+    private fun terminerLocalementConfrontation(raison: RaisonFinConfrontation) {
         if (_gagnant.value != null) return
+        timerJobConfrontation?.cancel()
+        val jaiGagne = _motsTrouvesMoi.value.size >= _motsTrouvesAdversaire.value.size
+        _raisonFinConfrontation.value = raison
         _gagnant.value = jaiGagne
+        viewModelScope.launch {
+            connexionActive?.envoyer(MessageReseau.FinDuelMots(gagnantEstExpediteur = jaiGagne, raison = raison.name))
+        }
+        enregistrerSessionSiNecessaire()
+    }
+
+    private fun verifierTousMotsTrouvesConfrontation() {
+        if (_gagnant.value != null) return
+        val possibles = _motsPossiblesConfrontation.value
+        if (possibles.isEmpty()) return
+        if ((_motsTrouvesMoi.value + _motsTrouvesAdversaire.value).toSet().containsAll(possibles)) {
+            terminerLocalementConfrontation(RaisonFinConfrontation.TOUS_MOTS_TROUVES)
+        }
+    }
+
+    private fun terminerConfrontation(raison: RaisonFinConfrontation, gagnantEstExpediteur: Boolean) {
+        if (_gagnant.value != null) return
+        timerJobConfrontation?.cancel()
+        _raisonFinConfrontation.value = raison
+        _gagnant.value = when (raison) {
+            RaisonFinConfrontation.OBJECTIF_ATTEINT -> !gagnantEstExpediteur
+            RaisonFinConfrontation.TEMPS_ECOULE, RaisonFinConfrontation.TOUS_MOTS_TROUVES ->
+                _motsTrouvesMoi.value.size >= _motsTrouvesAdversaire.value.size
+        }
         enregistrerSessionSiNecessaire()
     }
 
@@ -373,6 +464,17 @@ class DuelMotsReseauViewModel(
         }
     }
 
+    /**
+     * Relance une partie sur la connexion déjà établie, sans refaire l'appairage (retour
+     * utilisateur). Hôte uniquement : si l'invité l'appelait aussi, les deux téléphones tireraient
+     * des graines différentes et désynchroniseraient la partie — l'invité repart automatiquement
+     * dès réception de la nouvelle configuration ([demarrerEcouteJeu] écoute en continu).
+     */
+    fun rejouer() {
+        if (role != RoleReseau.HOTE) return
+        demarrerCommeHote(sousMode, niveau, objectifMots.takeIf { sousMode == SousModeDuelMots.CONFRONTATION })
+    }
+
     fun annulerEtRevenirAuChoix() {
         jobRole?.cancel()
         connexionActive?.fermer()
@@ -383,6 +485,7 @@ class DuelMotsReseauViewModel(
 
     override fun onCleared() {
         jobRole?.cancel()
+        timerJobConfrontation?.cancel()
         connexionActive?.fermer()
     }
 }

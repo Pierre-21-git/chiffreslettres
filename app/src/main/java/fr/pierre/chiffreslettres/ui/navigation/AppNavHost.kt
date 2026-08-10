@@ -51,13 +51,15 @@ import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
-import fr.pierre.chiffreslettres.letters.dixMeilleursMots
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.apropos.AProposScreen
 import fr.pierre.chiffreslettres.ui.apropos.ReglesDuJeuScreen
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiChrono
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiMots
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSansFaute
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSerie
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDuelMots
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModePartieDuo
 import fr.pierre.chiffreslettres.ui.apropos.VersionsScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundViewModel
@@ -773,6 +775,7 @@ fun AppNavHost(
                         navController.navigate(Routes.INVITE_RECHERCHE_RESEAU)
                     },
                     onRetour = { navController.popBackStack() },
+                    contenuRegles = { ReglesModePartieDuo() },
                 )
             }
 
@@ -1118,6 +1121,15 @@ fun AppNavHost(
                 )
                 val etatConnexion by reseauVm.etat.collectAsState()
                 val profilDistant = (etatConnexion as? EtatPartieReseau.Connecte)?.profilDistant
+                val seedsValue by reseauVm.seeds.collectAsState()
+                val seedsAuDemarrage = remember { seedsValue }
+                LaunchedEffect(seedsValue) {
+                    if (seedsValue.isNotEmpty() && seedsValue != seedsAuDemarrage) {
+                        navController.navigate(Routes.JEU_PARTIE_RESEAU) {
+                            popUpTo(Routes.RECAP_PARTIE_RESEAU) { inclusive = true }
+                        }
+                    }
+                }
                 val (finaux1, finaux2) = reseauVm.resultatsFinaux()
                 val (mesResultats, resultatsAdversaire) = if (reseauVm.monTourDuo == TourDuo.JOUEUR1) {
                     finaux1 to finaux2
@@ -1137,6 +1149,8 @@ fun AppNavHost(
                         reseauVm.annulerEtRevenirAuChoix()
                         navController.popBackStack(Routes.MENU, inclusive = false)
                     },
+                    onRejouer = if (reseauVm.monTourDuo == TourDuo.JOUEUR1) reseauVm::rejouer else null,
+                    afficherAttenteRejouer = reseauVm.monTourDuo != TourDuo.JOUEUR1,
                 )
             }
 
@@ -1167,6 +1181,7 @@ fun AppNavHost(
                         navController.navigate(Routes.INVITE_RECHERCHE_DUEL_MOTS)
                     },
                     onRetour = { navController.popBackStack() },
+                    contenuRegles = { ReglesModeDuelMots() },
                 )
             }
 
@@ -1319,6 +1334,9 @@ fun AppNavHost(
                     val motsTrouvesMoi by duelMotsVm.motsTrouvesMoi.collectAsState()
                     val motsTrouvesAdversaire by duelMotsVm.motsTrouvesAdversaire.collectAsState()
                     val gagnant by duelMotsVm.gagnant.collectAsState()
+                    val tempsRestantSecondes by duelMotsVm.tempsRestantSecondes.collectAsState()
+                    val motsPossiblesConfrontation by duelMotsVm.motsPossiblesConfrontation.collectAsState()
+                    val raisonFinConfrontation by duelMotsVm.raisonFinConfrontation.collectAsState()
                     val etatConnexion by duelMotsVm.etat.collectAsState()
                     val profilDistant = (etatConnexion as? EtatPartieReseau.Connecte)?.profilDistant
                     DuelMotsConfrontationScreen(
@@ -1335,11 +1353,16 @@ fun AppNavHost(
                         motsTrouvesMoi = motsTrouvesMoi,
                         motsTrouvesAdversaire = motsTrouvesAdversaire,
                         gagnant = gagnant,
+                        tempsRestantSecondes = tempsRestantSecondes,
+                        motsPossibles = motsPossiblesConfrontation,
+                        raisonFin = raisonFinConfrontation,
+                        peutRejouer = duelMotsVm.role == RoleReseau.HOTE,
                         onCliquerLettre = duelMotsVm::cliquerLettreConfrontation,
                         onAnnulerLettre = duelMotsVm::annulerLettreConfrontation,
                         onEffacerMot = duelMotsVm::effacerMotConfrontation,
                         onValider = duelMotsVm::validerMotConfrontation,
                         onRetour = onRetourMenu,
+                        onRejouer = duelMotsVm::rejouer,
                     )
                 } else {
                     val niveauDuo = duelMotsVm.niveau
@@ -1389,6 +1412,14 @@ fun AppNavHost(
                 val niveauDuo = duelMotsVm.niveau
                 val etatConnexion by duelMotsVm.etat.collectAsState()
                 val profilDistant = (etatConnexion as? EtatPartieReseau.Connecte)?.profilDistant
+                val seedAuDemarrage = remember { seedValue }
+                LaunchedEffect(seedValue) {
+                    if (seedValue != null && seedValue != seedAuDemarrage) {
+                        navController.navigate(Routes.JEU_DUEL_MOTS) {
+                            popUpTo(Routes.RESULTATS_DUEL_MOTS_DUO) { inclusive = true }
+                        }
+                    }
+                }
                 val motsPossibles = remember(seedValue, niveauDuo) {
                     val s = seedValue
                     if (s == null) {
@@ -1400,7 +1431,9 @@ fun AppNavHost(
                             configurationAlphabet.lettresExcluesParNiveau.getValue(niveauDuo),
                         )
                         val tirage = TirageLettres.tirer(sac, NOMBRE_VOYELLES_DUEL_MOTS, TirageLettres.NOMBRE_LETTRES, Random(s))
-                        dixMeilleursMots(tirage, dictionnaire)
+                        dictionnaire.rechercherAuMoins(tirage, seuilLongueurDefiLettres(niveauDuo))
+                            .distinct()
+                            .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
                     }
                 }
                 DuelMotsResultatsScreen(
@@ -1410,10 +1443,12 @@ fun AppNavHost(
                     motsTrouvesAdversaire = motsTrouvesAdversaire,
                     resultatAdversaireRecu = resultatAdversaireRecu,
                     motsPossibles = motsPossibles,
+                    peutRejouer = duelMotsVm.role == RoleReseau.HOTE,
                     onRetour = {
                         duelMotsVm.annulerEtRevenirAuChoix()
                         navController.popBackStack(Routes.MENU, inclusive = false)
                     },
+                    onRejouer = duelMotsVm::rejouer,
                 )
             }
         }

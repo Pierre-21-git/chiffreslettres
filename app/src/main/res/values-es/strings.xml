@@ -17,6 +17,7 @@
     <string name="action_retour">Volver</string>
     <string name="action_recommencer">Reiniciar</string>
     <string name="action_rejouer">Jugar de nuevo</string>
+    <string name="reseau_attente_nouvelle_partie">Esperando a que el anfitrión inicie una nueva partida…</string>
     <string name="action_effacer">Borrar</string>
     <string name="action_fermer">Cerrar</string>
     <string name="libelle_manche">Ronda</string>
@@ -106,6 +107,7 @@
     <string name="duel_mots_defaite">Has perdido.</string>
     <string name="duel_mots_moi">Yo</string>
     <string name="duel_mots_deja_pris">«%1$s» ya ha sido tomada por el adversario.</string>
+    <string name="duel_mots_deja_pris_moi">«%1$s» — ya la habías encontrado tú.</string>
 
     <string name="defi_quotidien_titre">Desafío diario</string>
     <string name="defi_quotidien_aujourdhui">Hoy: %1$s %2$s</string>
@@ -131,6 +133,7 @@
     <string name="defi_mots_max_fin_mot_invalide">«%1$s» no es una palabra del diccionario.</string>
     <string name="defi_mots_max_fin_mot_trop_court">«%1$s» es una palabra válida, pero demasiado corta para este nivel: hacían falta al menos %2$d letras.</string>
     <string name="defi_mots_max_fin_temps_ecoule">¡Se acabó el tiempo!</string>
+    <string name="defi_mots_max_fin_tous_mots_trouves">¡Se han encontrado todas las palabras posibles!</string>
     <string name="defi_mots_max_mots_possibles_titre">Palabras posibles con este sorteo</string>
     <string name="defi_mots_max_mot_possible_trouve">%1$s (encontrada)</string>
     <string name="grille_mots_titre_longueur">Palabras de %1$d letras</string>
@@ -228,6 +231,11 @@
     <string name="type_partie_confrontation_distance">Enfrentamiento a distancia</string>
 
     <string name="regles_titre">Reglas del juego</string>
+    <string name="regles_intro_titre">Números y Letras</string>
+    <string name="regles_intro_texte_1">Números y Letras es un juego de cálculo mental y vocabulario, inspirado en el conocido concurso televisivo francés del mismo principio, sin ninguna afiliación con él.</string>
+    <string name="regles_intro_texte_2">Dos pruebas: Números, donde debes alcanzar un objetivo combinando seis números sorteados al azar, y Letras, donde debes encontrar la palabra más larga con diez letras sorteadas al azar.</string>
+    <string name="regles_intro_texte_3">Juega solo en cuatro niveles de dificultad, a dos en el mismo teléfono, o en red (Wifi/Bluetooth) con el Duelo de palabras o una partida a dúo. Supera el desafío diario, progresa con los desafíos de racha, contrarreloj, de palabras y sin fallos, o entrénate libremente.</string>
+    <string name="regles_intro_texte_4">La aplicación guarda tus estadísticas, recompensa tu progreso con trofeos, y funciona completamente sin conexión: sin anuncios, sin rastreadores, sin necesidad de conexión de red (salvo para jugar en red).</string>
     <string name="regles_mode_chiffres_titre">Modo Números</string>
     <string name="regles_mode_chiffres_texte">Se sortean 6 números (del 1 al 10 por duplicado, y 25/50/75/100 por unidad), junto con un objetivo a alcanzar. Construye tu cálculo paso a paso como con una calculadora: toca un primer número, un operador y luego un segundo número — el resultado sustituye a los dos números usados y puede reutilizarse. Los botones \"Deshacer\" y \"Borrar\" permiten retroceder. El último resultado obtenido es tu propuesta: valida en cuanto estés listo, o deja que el cronómetro se agote si lo hay.</string>
     <string name="regles_comptage_points_titre">Recuento de puntos</string>
