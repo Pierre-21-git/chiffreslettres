@@ -22,14 +22,19 @@ class RechercheMotTest {
     }
 
     @Test
-    fun `dixMeilleursMots trie par longueur decroissante puis ordre alphabetique`() {
+    fun `dixMeilleursMots ne retient que les deux plus grandes longueurs, triees par longueur decroissante puis ordre alphabetique`() {
         val dico = DictionnaireIndex(sequenceOf("art", "rat", "as", "at", "arts"))
-        assertEquals(listOf("arts", "art", "rat", "as", "at"), dixMeilleursMots("ARTS".toList(), dico))
+        // "as"/"at" (2 lettres) sont une 3e longueur, écartée : seules les longueurs 4 et 3 sont gardées.
+        assertEquals(listOf("arts", "art", "rat"), dixMeilleursMots("ARTS".toList(), dico))
     }
 
     @Test
-    fun `dixMeilleursMots respecte la limite demandee`() {
-        val dico = DictionnaireIndex(sequenceOf("art", "rat", "as", "at", "arts"))
-        assertEquals(listOf("arts", "art", "rat"), dixMeilleursMots("ARTS".toList(), dico, limite = 3))
+    fun `dixMeilleursMots n'a plus de plafond fixe, meme au-dela de 10 mots`() {
+        val motsLongueur4 = listOf(
+            "aaaa", "aaab", "aaba", "aabb", "abaa", "abab", "abba", "abbb", "baaa", "baab", "baba",
+        )
+        val motsLongueur3 = listOf("aab", "abb")
+        val dico = DictionnaireIndex((motsLongueur4 + motsLongueur3).asSequence())
+        assertEquals(motsLongueur4 + motsLongueur3, dixMeilleursMots("AAAAAABBBB".toList(), dico))
     }
 }

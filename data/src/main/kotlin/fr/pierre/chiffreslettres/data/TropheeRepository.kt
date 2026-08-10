@@ -86,6 +86,10 @@ class TropheeRepository(
                 tropheeDao.debloquerSiAbsent(TropheeEntity(profilId, trophee.id, System.currentTimeMillis()))
             }
         }
+        // Retire les trophées débloqués sous un ancien id que les refontes de seuils ont
+        // renommé (retour utilisateur : sinon ils restent comptés dans "x/y débloquées" sans
+        // exister nulle part dans le catalogue actuel).
+        tropheeDao.supprimerOrphelins(profilId, CatalogueTrophees.TOUS.map { it.id })
     }
 
     suspend fun reinitialiserJoueur(profilId: Long) = tropheeDao.reinitialiserJoueur(profilId)

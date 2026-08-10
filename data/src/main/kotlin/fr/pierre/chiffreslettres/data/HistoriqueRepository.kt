@@ -7,6 +7,8 @@ data class ResultatManche(
     val niveauCode: String,
     val score: Int,
     val motJoue: String? = null,
+    /** Longueur du mot soumis quand il était invalide (mode Lettres, parties duo/confrontation uniquement), pour le bonus de score de l'adversaire. */
+    val longueurMotInvalide: Int? = null,
 )
 
 class HistoriqueRepository(private val dao: HistoriqueDao) {

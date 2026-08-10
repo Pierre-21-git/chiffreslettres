@@ -19,6 +19,29 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.87",
+        date = "2026-08-10",
+        changements = listOf(
+            "Widget \"Défi du jour\" : rafraîchissement immédiat à chaque ouverture de l'app, en " +
+                "plus du rafraîchissement planifié à minuit (retour utilisateur : pouvait rester " +
+                "affiché sur le statut de la veille bien après minuit, retardé par le système).",
+            "Défi chrono chiffres : le panneau de résultat sur un compte faux ne disparaît plus " +
+                "aussitôt affiché, comme le défi chrono lettres depuis la 1.82.",
+            "Trophées : correction du compteur \"x/y débloquées\", faussé pour les joueurs de " +
+                "longue date par des trophées débloqués sous un ancien id renommé lors des " +
+                "refontes de seuils (1.74 et 1.85).",
+            "Défi mots : un mot invalide, trop court, ou déjà trouvé est désormais signalé sans " +
+                "mettre fin au défi (retour utilisateur).",
+            "Lettres : la liste des mots possibles en fin de manche affiche désormais tous les " +
+                "mots des deux plus grandes longueurs du tirage, au lieu d'un plafond fixe de 10.",
+            "Lien \"Règles du jeu\" (dialogue) ajouté sur tous les écrans de choix de niveau " +
+                "(entraînement, solo, duo, réseau, défis série/chrono/mots/sans faute/quotidien).",
+            "Parties duo et confrontation (lettres) : un mot invalide plus long que le mot de " +
+                "l'adversaire lui fait désormais marquer cette longueur en points (retour " +
+                "utilisateur).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.86",
         date = "2026-08-09",
         changements = listOf(

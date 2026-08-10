@@ -36,105 +36,150 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         EnTeteEcran(stringResource(R.string.regles_titre), onRetour)
+        ReglesModeChiffres()
+        ReglesModeLettres()
+        ReglesModeEntrainement()
+        ReglesModePartieSolo()
+        ReglesModePartieDuo()
+        ReglesModeDefiSerie()
+        ReglesModeDefiChrono()
+        ReglesModeDefiMots()
+        ReglesModeDefiSansFaute()
+        ReglesModeDefiQuotidien()
+    }
+}
 
-        SectionRegle(stringResource(R.string.regles_mode_chiffres_titre)) {
-            Text(stringResource(R.string.regles_mode_chiffres_texte), style = MaterialTheme.typography.bodyMedium)
-            SousTitreRegle(stringResource(R.string.regles_comptage_points_titre))
-            ListeAPuces(
-                stringResource(R.string.regles_chiffres_points_emile_nestor),
-                stringResource(R.string.regles_chiffres_points_monique_mathieu),
-            )
-        }
+/**
+ * Sections des règles extraites en composables individuels (retour utilisateur : réutilisées à
+ * la fois dans [ReglesDuJeuScreen] et dans le dialogue "Règles du jeu" de chaque écran de choix
+ * de niveau, via `ReglesDialog`/`LienReglesDuJeu`).
+ */
+@Composable
+fun ReglesModeChiffres() {
+    SectionRegle(stringResource(R.string.regles_mode_chiffres_titre)) {
+        Text(stringResource(R.string.regles_mode_chiffres_texte), style = MaterialTheme.typography.bodyMedium)
+        SousTitreRegle(stringResource(R.string.regles_comptage_points_titre))
+        ListeAPuces(
+            stringResource(R.string.regles_chiffres_points_emile_nestor),
+            stringResource(R.string.regles_chiffres_points_monique_mathieu),
+        )
+    }
+}
 
-        SectionRegle(stringResource(R.string.regles_mode_lettres_titre)) {
-            Text(stringResource(R.string.regles_mode_lettres_texte), style = MaterialTheme.typography.bodyMedium)
-            SousTitreRegle(stringResource(R.string.regles_comptage_points_titre))
-            ListeAPuces(
-                stringResource(R.string.regles_lettres_points_emile_nestor),
-                stringResource(R.string.regles_lettres_points_monique_mathieu),
-            )
-            SousTitreRegle(stringResource(R.string.regles_mots_acceptes_titre))
-            Text(stringResource(R.string.regles_mots_acceptes_texte), style = MaterialTheme.typography.bodyMedium)
-        }
+@Composable
+fun ReglesModeLettres() {
+    SectionRegle(stringResource(R.string.regles_mode_lettres_titre)) {
+        Text(stringResource(R.string.regles_mode_lettres_texte), style = MaterialTheme.typography.bodyMedium)
+        SousTitreRegle(stringResource(R.string.regles_comptage_points_titre))
+        ListeAPuces(
+            stringResource(R.string.regles_lettres_points_emile_nestor),
+            stringResource(R.string.regles_lettres_points_monique_mathieu),
+        )
+        SousTitreRegle(stringResource(R.string.regles_mots_acceptes_titre))
+        Text(stringResource(R.string.regles_mots_acceptes_texte), style = MaterialTheme.typography.bodyMedium)
+    }
+}
 
-        SectionRegle(stringResource(R.string.regles_mode_entrainement_titre)) {
-            Text(stringResource(R.string.regles_mode_entrainement_texte), style = MaterialTheme.typography.bodyMedium)
-        }
+@Composable
+fun ReglesModeEntrainement() {
+    SectionRegle(stringResource(R.string.regles_mode_entrainement_titre)) {
+        Text(stringResource(R.string.regles_mode_entrainement_texte), style = MaterialTheme.typography.bodyMedium)
+    }
+}
 
-        SectionRegle(stringResource(R.string.regles_mode_partie_solo_titre)) {
-            Text(stringResource(R.string.regles_partie_solo_intro), style = MaterialTheme.typography.bodyMedium)
-            ListeAPuces(
-                stringResource(R.string.regles_partie_solo_emile),
-                stringResource(R.string.regles_partie_solo_nestor),
-                stringResource(R.string.regles_partie_solo_monique),
-                stringResource(R.string.regles_partie_solo_mathieu),
-            )
-        }
+@Composable
+fun ReglesModePartieSolo() {
+    SectionRegle(stringResource(R.string.regles_mode_partie_solo_titre)) {
+        Text(stringResource(R.string.regles_partie_solo_intro), style = MaterialTheme.typography.bodyMedium)
+        ListeAPuces(
+            stringResource(R.string.regles_partie_solo_emile),
+            stringResource(R.string.regles_partie_solo_nestor),
+            stringResource(R.string.regles_partie_solo_monique),
+            stringResource(R.string.regles_partie_solo_mathieu),
+        )
+    }
+}
 
-        SectionRegle(stringResource(R.string.regles_mode_partie_duo_titre)) {
-            Text(stringResource(R.string.regles_partie_duo_intro), style = MaterialTheme.typography.bodyMedium)
-            ListeAPuces(
-                stringResource(R.string.regles_partie_duo_mode_duo),
-                stringResource(R.string.regles_partie_duo_mode_confrontation),
-            )
-            Text(stringResource(R.string.regles_partie_duo_reseau), style = MaterialTheme.typography.bodyMedium)
-        }
+@Composable
+fun ReglesModePartieDuo() {
+    SectionRegle(stringResource(R.string.regles_mode_partie_duo_titre)) {
+        Text(stringResource(R.string.regles_partie_duo_intro), style = MaterialTheme.typography.bodyMedium)
+        ListeAPuces(
+            stringResource(R.string.regles_partie_duo_mode_duo),
+            stringResource(R.string.regles_partie_duo_mode_confrontation),
+        )
+        Text(stringResource(R.string.regles_partie_duo_reseau), style = MaterialTheme.typography.bodyMedium)
+    }
+}
 
-        SectionRegle(stringResource(R.string.regles_mode_defi_serie_titre)) {
-            Text(stringResource(R.string.regles_defi_serie_intro), style = MaterialTheme.typography.bodyMedium)
-            ListeAPuces(
-                stringResource(R.string.regles_seuil_emile),
-                stringResource(R.string.regles_seuil_nestor),
-                stringResource(R.string.regles_seuil_monique),
-                stringResource(R.string.regles_seuil_mathieu),
-            )
-            Text(stringResource(R.string.regles_defi_serie_chiffres_note), style = MaterialTheme.typography.bodyMedium)
-        }
+@Composable
+fun ReglesModeDefiSerie() {
+    SectionRegle(stringResource(R.string.regles_mode_defi_serie_titre)) {
+        Text(stringResource(R.string.regles_defi_serie_intro), style = MaterialTheme.typography.bodyMedium)
+        ListeAPuces(
+            stringResource(R.string.regles_seuil_emile),
+            stringResource(R.string.regles_seuil_nestor),
+            stringResource(R.string.regles_seuil_monique),
+            stringResource(R.string.regles_seuil_mathieu),
+        )
+        Text(stringResource(R.string.regles_defi_serie_chiffres_note), style = MaterialTheme.typography.bodyMedium)
+    }
+}
 
-        SectionRegle(stringResource(R.string.regles_mode_defi_chrono_titre)) {
-            Text(stringResource(R.string.regles_defi_chrono_intro), style = MaterialTheme.typography.bodyMedium)
-            ListeAPuces(
-                stringResource(R.string.regles_defi_chrono_budget_emile),
-                stringResource(R.string.regles_defi_chrono_budget_nestor),
-                stringResource(R.string.regles_defi_chrono_budget_monique),
-                stringResource(R.string.regles_defi_chrono_budget_mathieu),
-            )
-            Text(stringResource(R.string.regles_defi_chrono_seuil_intro), style = MaterialTheme.typography.bodyMedium)
-            ListeAPuces(
-                stringResource(R.string.regles_seuil_emile),
-                stringResource(R.string.regles_seuil_nestor),
-                stringResource(R.string.regles_seuil_monique),
-                stringResource(R.string.regles_seuil_mathieu),
-            )
-            Text(stringResource(R.string.regles_defi_chrono_detail), style = MaterialTheme.typography.bodyMedium)
-        }
+@Composable
+fun ReglesModeDefiChrono() {
+    SectionRegle(stringResource(R.string.regles_mode_defi_chrono_titre)) {
+        Text(stringResource(R.string.regles_defi_chrono_intro), style = MaterialTheme.typography.bodyMedium)
+        ListeAPuces(
+            stringResource(R.string.regles_defi_chrono_budget_emile),
+            stringResource(R.string.regles_defi_chrono_budget_nestor),
+            stringResource(R.string.regles_defi_chrono_budget_monique),
+            stringResource(R.string.regles_defi_chrono_budget_mathieu),
+        )
+        Text(stringResource(R.string.regles_defi_chrono_seuil_intro), style = MaterialTheme.typography.bodyMedium)
+        ListeAPuces(
+            stringResource(R.string.regles_seuil_emile),
+            stringResource(R.string.regles_seuil_nestor),
+            stringResource(R.string.regles_seuil_monique),
+            stringResource(R.string.regles_seuil_mathieu),
+        )
+        Text(stringResource(R.string.regles_defi_chrono_detail), style = MaterialTheme.typography.bodyMedium)
+    }
+}
 
-        SectionRegle(stringResource(R.string.regles_mode_defi_mots_titre)) {
-            Text(stringResource(R.string.regles_defi_mots_intro), style = MaterialTheme.typography.bodyMedium)
-            ListeAPuces(
-                stringResource(R.string.regles_seuil_emile),
-                stringResource(R.string.regles_seuil_nestor),
-                stringResource(R.string.regles_seuil_monique),
-                stringResource(R.string.regles_seuil_mathieu),
-            )
-            Text(stringResource(R.string.regles_defi_mots_detail), style = MaterialTheme.typography.bodyMedium)
-        }
+@Composable
+fun ReglesModeDefiMots() {
+    SectionRegle(stringResource(R.string.regles_mode_defi_mots_titre)) {
+        Text(stringResource(R.string.regles_defi_mots_intro), style = MaterialTheme.typography.bodyMedium)
+        ListeAPuces(
+            stringResource(R.string.regles_seuil_emile),
+            stringResource(R.string.regles_seuil_nestor),
+            stringResource(R.string.regles_seuil_monique),
+            stringResource(R.string.regles_seuil_mathieu),
+        )
+        Text(stringResource(R.string.regles_defi_mots_detail), style = MaterialTheme.typography.bodyMedium)
+    }
+}
 
-        SectionRegle(stringResource(R.string.regles_mode_defi_sans_faute_titre)) {
-            Text(stringResource(R.string.regles_defi_sans_faute_intro), style = MaterialTheme.typography.bodyMedium)
-            ListeAPuces(
-                stringResource(R.string.regles_seuil_emile),
-                stringResource(R.string.regles_seuil_nestor),
-                stringResource(R.string.regles_seuil_monique),
-                stringResource(R.string.regles_seuil_mathieu),
-            )
-            Text(stringResource(R.string.regles_defi_sans_faute_detail), style = MaterialTheme.typography.bodyMedium)
-        }
+@Composable
+fun ReglesModeDefiSansFaute() {
+    SectionRegle(stringResource(R.string.regles_mode_defi_sans_faute_titre)) {
+        Text(stringResource(R.string.regles_defi_sans_faute_intro), style = MaterialTheme.typography.bodyMedium)
+        ListeAPuces(
+            stringResource(R.string.regles_seuil_emile),
+            stringResource(R.string.regles_seuil_nestor),
+            stringResource(R.string.regles_seuil_monique),
+            stringResource(R.string.regles_seuil_mathieu),
+        )
+        Text(stringResource(R.string.regles_defi_sans_faute_detail), style = MaterialTheme.typography.bodyMedium)
+    }
+}
 
-        SectionRegle(stringResource(R.string.regles_mode_defi_quotidien_titre)) {
-            Text(stringResource(R.string.regles_defi_quotidien_texte1), style = MaterialTheme.typography.bodyMedium)
-            Text(stringResource(R.string.regles_defi_quotidien_texte2), style = MaterialTheme.typography.bodyMedium)
-        }
+@Composable
+fun ReglesModeDefiQuotidien() {
+    SectionRegle(stringResource(R.string.regles_mode_defi_quotidien_titre)) {
+        Text(stringResource(R.string.regles_defi_quotidien_texte1), style = MaterialTheme.typography.bodyMedium)
+        Text(stringResource(R.string.regles_defi_quotidien_texte2), style = MaterialTheme.typography.bodyMedium)
     }
 }
 

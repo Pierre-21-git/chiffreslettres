@@ -52,6 +52,9 @@ import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.apropos.AProposScreen
 import fr.pierre.chiffreslettres.ui.apropos.ReglesDuJeuScreen
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiChrono
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiMots
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSerie
 import fr.pierre.chiffreslettres.ui.apropos.VersionsScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundViewModel
@@ -364,7 +367,7 @@ fun AppNavHost(
                     scoreCumule = null,
                     pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                     couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                    onMancheTerminee = { obtenu, motValide, _, _ -> entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide) },
+                    onMancheTerminee = { obtenu, motValide, _, _, _ -> entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide) },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
                         Button(
@@ -447,7 +450,7 @@ fun AppNavHost(
                                 scoreCumule = scoreCumule,
                                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                                onMancheTerminee = { obtenu, motValide, _, _ ->
+                                onMancheTerminee = { obtenu, motValide, _, _, _ ->
                                     partieVm.enregistrerResultat(
                                         ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
                                     )
@@ -666,10 +669,10 @@ fun AppNavHost(
                                 pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
                                 couleurRang = joueurActif?.let { couleurRangJoueur(it.id, tropheeRepository) },
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots ->
+                                onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots, longueurMotInvalide ->
                                     duoVm.enregistrerResultat(
                                         ResultatDuoManche(
-                                            ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
+                                            ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide),
                                             detail = motValide ?: texteAucunMot,
                                             dixMeilleursMots = dixMeilleursMots,
                                         ),
@@ -1039,10 +1042,10 @@ fun AppNavHost(
                                 scoreCumule = null,
                                 pseudo = null,
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots ->
+                                onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots, longueurMotInvalide ->
                                     reseauVm.enregistrerMonResultat(
                                         ResultatDuoManche(
-                                            ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
+                                            ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide),
                                             detail = motValide ?: texteAucunMot,
                                             dixMeilleursMots = dixMeilleursMots,
                                         ),
@@ -1120,6 +1123,7 @@ fun AppNavHost(
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChiffres(niveau)) },
                 onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiLettres(niveau)) },
                 onRetour = { navController.popBackStack() },
+                contenuRegles = { ReglesModeDefiSerie() },
             )
         }
 
@@ -1132,6 +1136,7 @@ fun AppNavHost(
                 onNiveauChiffresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoChiffres(niveau)) },
                 onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiChronoLettres(niveau)) },
                 onRetour = { navController.popBackStack() },
+                contenuRegles = { ReglesModeDefiChrono() },
             )
         }
 
@@ -1146,6 +1151,7 @@ fun AppNavHost(
                 onNiveauChiffresChoisi = null,
                 onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiMotsMax(niveau)) },
                 onRetour = { navController.popBackStack() },
+                contenuRegles = { ReglesModeDefiMots() },
             )
         }
 
@@ -1289,7 +1295,7 @@ fun AppNavHost(
                     couleurRang = couleurRang,
                     progressionManche = "$index",
                     libelleProgression = libelleProgression,
-                    onMancheTerminee = { _, motValide, meilleurMot, _ ->
+                    onMancheTerminee = { _, motValide, meilleurMot, _, _ ->
                         val reussi = motValide != null && motEstReussiDefiLettres(niveauLettres, motValide, seuilLettres, meilleurMot)
                         if (!reussi) defiVm.echec()
                     },
@@ -1507,7 +1513,7 @@ fun AppNavHost(
                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 progressionManche = "$index",
                 libelleProgression = "Série",
-                onMancheTerminee = { _, motValide, meilleurMot, _ ->
+                onMancheTerminee = { _, motValide, meilleurMot, _, _ ->
                     val reussi = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
                     derniereMancheReussie = reussi
                     if (!reussi) defiVm.echec()
@@ -1607,12 +1613,12 @@ fun AppNavHost(
                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 progressionManche = "$reussites",
                 libelleProgression = "Réussites",
-                // Comme en défi série : un échec avance seul (pas de confirmation), une
-                // réussite attend le "Continuer" du joueur avant d'enchaîner (retour
-                // utilisateur, cohérence avec le défi série existant).
+                // Réussite comme échec attendent le "Continuer" du joueur avant d'enchaîner
+                // (retour utilisateur) : sur un échec, le panneau de résultat (compte obtenu)
+                // est affiché — enchaîner tout de suite sur la manche suivante (ancien
+                // comportement) le faisait disparaître aussitôt affiché.
                 onMancheTerminee = { obtenu ->
                     derniereMancheReussie = obtenu == 10
-                    if (obtenu != 10) defiVm.mancheChronoTerminee(false)
                 },
                 onRetourEntrainement = onRetourAvecConfirmation,
                 actionsFinManche = {
@@ -1625,7 +1631,7 @@ fun AppNavHost(
                             onChangerNiveau = { navController.popBackStack(cibleRetour, inclusive = false) },
                         )
                     } else {
-                        Button(onClick = { defiVm.mancheChronoTerminee(true) }, modifier = Modifier.fillMaxWidth()) {
+                        Button(onClick = { defiVm.mancheChronoTerminee(derniereMancheReussie == true) }, modifier = Modifier.fillMaxWidth()) {
                             Text(stringResource(R.string.action_continuer))
                         }
                     }
@@ -1710,7 +1716,7 @@ fun AppNavHost(
                 // (retour utilisateur) : sur un échec, le mot le plus long possible est
                 // affiché dans le panneau de résultat — enchaîner tout de suite sur la manche
                 // suivante (ancien comportement) le faisait disparaître aussitôt affiché.
-                onMancheTerminee = { _, motValide, meilleurMot, _ ->
+                onMancheTerminee = { _, motValide, meilleurMot, _, _ ->
                     derniereMancheReussie = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
                 },
                 onRetourEntrainement = onRetourAvecConfirmation,

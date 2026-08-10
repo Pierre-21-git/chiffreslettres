@@ -112,8 +112,20 @@ fun DefiMotsMaxScreen(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        if (etat.motDejaTrouve != null && !etat.termine) {
-            Text(stringResource(R.string.defi_mots_max_deja_trouve, etat.motDejaTrouve ?: ""), color = TextMuted, fontSize = 13.sp)
+        val motRejete = etat.motRejeteTransitoire
+        if (motRejete != null && !etat.termine) {
+            val message = when (etat.raisonRejetTransitoire) {
+                RaisonRejetMotDefiMotsMax.DEJA_TROUVE ->
+                    stringResource(R.string.defi_mots_max_deja_trouve, motRejete)
+                RaisonRejetMotDefiMotsMax.INVALIDE ->
+                    stringResource(R.string.defi_mots_max_fin_mot_invalide, motRejete)
+                RaisonRejetMotDefiMotsMax.TROP_COURT ->
+                    stringResource(R.string.defi_mots_max_fin_mot_trop_court, motRejete, seuilLongueurDefiLettres(etat.niveau))
+                null -> null
+            }
+            if (message != null) {
+                Text(message, color = TextMuted, fontSize = 13.sp)
+            }
         }
 
         if (!etat.tirageTermine) {
@@ -167,10 +179,6 @@ fun DefiMotsMaxScreen(
                     fontSize = 18.sp,
                 )
                 val explication = when (etat.raisonFin) {
-                    RaisonFinDefiMotsMax.MOT_INVALIDE ->
-                        stringResource(R.string.defi_mots_max_fin_mot_invalide, etat.motRejete)
-                    RaisonFinDefiMotsMax.MOT_TROP_COURT ->
-                        stringResource(R.string.defi_mots_max_fin_mot_trop_court, etat.motRejete, seuilLongueurDefiLettres(etat.niveau))
                     RaisonFinDefiMotsMax.TEMPS_ECOULE ->
                         stringResource(R.string.defi_mots_max_fin_temps_ecoule)
                     RaisonFinDefiMotsMax.VOLONTAIRE, null -> null

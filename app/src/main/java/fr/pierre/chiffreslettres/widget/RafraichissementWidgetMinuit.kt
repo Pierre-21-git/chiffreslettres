@@ -17,6 +17,11 @@ private const val NOM_TRAVAIL_PERIODIQUE = "rafraichissement_widget_minuit"
  * Planifie un rafraîchissement du widget à minuit pile (retour utilisateur : le widget affiche
  * le statut du défi "du jour", qui change à minuit — la seule mise à jour périodique toutes les
  * 30 min n'est pas fiable pour ça, Android la retarde souvent de plusieurs heures en pratique).
+ *
+ * `UPDATE` (pas `KEEP`) : réancre le calcul sur le prochain minuit à chaque appel (donc à chaque
+ * ouverture de l'app, cf. MainActivity.onCreate) au lieu de rester figé sur le minuit qui suivait
+ * le tout premier lancement — sans ça, un décalage pris une fois (Doze/App Standby) ne se
+ * rattrapait jamais.
  */
 fun planifierRafraichissementWidgetMinuit(context: Context) {
     val maintenant = LocalDateTime.now()
@@ -28,7 +33,7 @@ fun planifierRafraichissementWidgetMinuit(context: Context) {
         .build()
 
     WorkManager.getInstance(context)
-        .enqueueUniquePeriodicWork(NOM_TRAVAIL_PERIODIQUE, ExistingPeriodicWorkPolicy.KEEP, requete)
+        .enqueueUniquePeriodicWork(NOM_TRAVAIL_PERIODIQUE, ExistingPeriodicWorkPolicy.UPDATE, requete)
 }
 
 class RafraichissementWidgetMinuitWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {

@@ -2,6 +2,7 @@ package fr.pierre.chiffreslettres.ui.defi
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
+import fr.pierre.chiffreslettres.ui.apropos.LienReglesDuJeu
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.libelle
@@ -38,6 +40,7 @@ fun ChoixDefiScreen(
     onNiveauLettresChoisi: (NiveauLettres) -> Unit,
     onRetour: (() -> Unit)? = null,
     couleurRang: Color? = null,
+    contenuRegles: @Composable ColumnScope.() -> Unit = {},
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
@@ -45,6 +48,7 @@ fun ChoixDefiScreen(
     ) {
         EnTeteEcran(titre, onRetour)
         PucePseudo(pseudoActif, couleurRang = couleurRang)
+        LienReglesDuJeu(contenu = contenuRegles)
 
         if (onNiveauChiffresChoisi != null) {
             Text(stringResource(R.string.mode_chiffres), style = MaterialTheme.typography.titleMedium)

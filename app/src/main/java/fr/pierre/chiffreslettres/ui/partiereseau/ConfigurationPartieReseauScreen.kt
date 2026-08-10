@@ -22,6 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.numbers.Niveau
+import fr.pierre.chiffreslettres.ui.apropos.LienReglesDuJeu
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModePartieDuo
 import fr.pierre.chiffreslettres.ui.partieduo.ModeScoreDuo
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
@@ -44,6 +46,7 @@ fun ConfigurationPartieReseauScreen(
     ) {
         EnTeteEcran(stringResource(R.string.configuration_partie_titre))
         PucePseudo(pseudoActif, couleurRang = couleurRang)
+        LienReglesDuJeu { ReglesModePartieDuo() }
 
         Text(stringResource(R.string.configuration_quel_niveau), style = MaterialTheme.typography.titleMedium)
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {

@@ -21,7 +21,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /** Raison de fin du défi (retour utilisateur) : affichée à l'écran pour expliquer l'arrêt. */
-enum class RaisonFinDefiMotsMax { VOLONTAIRE, MOT_INVALIDE, MOT_TROP_COURT, TEMPS_ECOULE }
+enum class RaisonFinDefiMotsMax { VOLONTAIRE, TEMPS_ECOULE }
+
+/**
+ * Raison du rejet d'un mot qui ne met pas fin au défi (retour utilisateur : un mot invalide ou
+ * trop court ne doit pas faire perdre la partie en cours, seulement être signalé).
+ */
+enum class RaisonRejetMotDefiMotsMax { DEJA_TROUVE, INVALIDE, TROP_COURT }
 
 data class DefiMotsMaxUiState(
     val niveau: NiveauLettres,
@@ -34,13 +40,12 @@ data class DefiMotsMaxUiState(
     val termine: Boolean = false,
     /** Mots distincts déjà validés sur ce tirage, dans l'ordre de découverte. */
     val motsTrouves: List<String> = emptyList(),
-    /** Dernier mot revalidé alors qu'il était déjà trouvé (retour utilisateur : signalé au joueur, sans point ni arrêt), remis à null au clic suivant. */
-    val motDejaTrouve: String? = null,
+    /** Dernier mot refusé sur cette saisie (déjà trouvé, invalide, ou trop court) — retour utilisateur : signalé au joueur, sans point ni arrêt du défi, remis à null au clic suivant. */
+    val motRejeteTransitoire: String? = null,
+    val raisonRejetTransitoire: RaisonRejetMotDefiMotsMax? = null,
     val nombreVoyellesChoisi: Int? = null,
-    /** Pourquoi le défi s'est arrêté (retour utilisateur : explique un mot valide mais trop court, ou invalide), null tant qu'il n'est pas terminé. */
+    /** Pourquoi le défi s'est arrêté (retour utilisateur), null tant qu'il n'est pas terminé. */
     val raisonFin: RaisonFinDefiMotsMax? = null,
-    /** Mot qui a mis fin au défi (retour utilisateur, cf. [raisonFin]), vide si arrêt volontaire ou temps écoulé. */
-    val motRejete: String = "",
     /** Tous les mots d'au moins [seuilLongueurDefiLettres] lettres jouables sur ce tirage (retour utilisateur : révélés en fin de défi), triés du plus long au plus court. */
     val motsPossibles: List<String> = emptyList(),
 )
@@ -142,17 +147,16 @@ class DefiMotsMaxViewModel(
     private fun mettreAJourMot(indicesUtilises: List<Int>) {
         val etat = _uiState.value
         val mot = indicesUtilises.map { etat.lettresTirees[it] }.joinToString("")
-        _uiState.update { it.copy(indicesUtilises = indicesUtilises, motSaisi = mot, motDejaTrouve = null) }
+        _uiState.update { it.copy(indicesUtilises = indicesUtilises, motSaisi = mot, motRejeteTransitoire = null, raisonRejetTransitoire = null) }
     }
 
     /**
-     * Valide le mot en cours (retour utilisateur) : vide → arrêt volontaire ; hors dictionnaire →
-     * arrêt (mot invalide) ; valide mais plus court que le seuil du niveau (cf.
-     * [seuilLongueurDefiLettres]) → arrêt (mot trop court) — comme le défi série, une erreur y
-     * met fin, mais chaque cas est distingué ([RaisonFinDefiMotsMax]) pour l'expliquer au joueur
-     * (retour utilisateur : "mot valide" sans plus de précision ne disait pas pourquoi il ne
-     * comptait pas) ; déjà trouvé → signalé, lettres dégrisées, le défi continue sans point ;
-     * nouveau → +1, lettres dégrisées, le défi continue.
+     * Valide le mot en cours (retour utilisateur) : vide → arrêt volontaire (seul cas qui met fin
+     * au défi, c'est le mécanisme prévu pour arrêter volontairement) ; hors dictionnaire, trop
+     * court pour le niveau (cf. [seuilLongueurDefiLettres]), ou déjà trouvé → simplement signalé
+     * au joueur ([RaisonRejetMotDefiMotsMax]), lettres dégrisées, le défi continue sans point (un
+     * mot raté ne doit pas faire perdre la partie en cours) ; nouveau mot valide → +1, lettres
+     * dégrisées, le défi continue.
      */
     fun valider() {
         val etat = _uiState.value
@@ -163,29 +167,35 @@ class DefiMotsMaxViewModel(
             return
         }
         if (!dictionnaire.estJouable(mot)) {
-            terminer(RaisonFinDefiMotsMax.MOT_INVALIDE, mot)
+            rejeterMot(mot, RaisonRejetMotDefiMotsMax.INVALIDE)
             return
         }
         if (mot.length < seuilLongueur) {
-            terminer(RaisonFinDefiMotsMax.MOT_TROP_COURT, mot)
+            rejeterMot(mot, RaisonRejetMotDefiMotsMax.TROP_COURT)
             return
         }
         if (mot in etat.motsTrouves) {
-            _uiState.update { it.copy(indicesUtilises = emptyList(), motSaisi = "", motDejaTrouve = mot) }
+            rejeterMot(mot, RaisonRejetMotDefiMotsMax.DEJA_TROUVE)
             return
         }
         _uiState.update {
-            it.copy(motsTrouves = it.motsTrouves + mot, indicesUtilises = emptyList(), motSaisi = "", motDejaTrouve = null)
+            it.copy(motsTrouves = it.motsTrouves + mot, indicesUtilises = emptyList(), motSaisi = "", motRejeteTransitoire = null, raisonRejetTransitoire = null)
         }
     }
 
-    private fun terminer(raison: RaisonFinDefiMotsMax, motRejete: String = "") {
+    private fun rejeterMot(mot: String, raison: RaisonRejetMotDefiMotsMax) {
+        _uiState.update {
+            it.copy(indicesUtilises = emptyList(), motSaisi = "", motRejeteTransitoire = mot, raisonRejetTransitoire = raison)
+        }
+    }
+
+    private fun terminer(raison: RaisonFinDefiMotsMax) {
         if (_uiState.value.termine) return
         timerJob?.cancel()
         val motsPossibles = dictionnaire.rechercherAuMoins(_uiState.value.lettresTirees, seuilLongueur)
             .distinct()
             .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
-        _uiState.update { it.copy(termine = true, raisonFin = raison, motRejete = motRejete, motsPossibles = motsPossibles) }
+        _uiState.update { it.copy(termine = true, raisonFin = raison, motsPossibles = motsPossibles) }
         if (enregistre) return
         enregistre = true
         val score = _uiState.value.motsTrouves.size

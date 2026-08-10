@@ -161,39 +161,49 @@ class PartieDuoViewModel(
     /**
      * Résultats finaux prêts à être enregistrés : en mode Confrontation, le score de chaque
      * manche est écrasé à 0 pour le perdant (le gagnant garde le sien ; égalité → chacun garde
-     * le sien). En mode Duo, les scores individuels ne sont jamais modifiés. Dans les deux
-     * modes, une manche n'est comptée qu'une fois les deux joueurs passés (retour utilisateur :
-     * le score affiché en cours de partie ne doit pas avancer dès le premier joueur, comme en
-     * Confrontation où c'est déjà le cas par construction).
+     * le sien). En mode Duo, les scores individuels ne sont jamais modifiés autrement. Dans les
+     * deux modes, une manche n'est comptée qu'une fois les deux joueurs passés (retour
+     * utilisateur : le score affiché en cours de partie ne doit pas avancer dès le premier
+     * joueur, comme en Confrontation où c'est déjà le cas par construction), et
+     * [appliquerBonusMotInvalide] s'applique avant tout calcul de vainqueur (retour utilisateur :
+     * un mot invalide plus long que le mot de l'adversaire lui fait marquer cette longueur).
      */
     fun resultatsFinaux(): Pair<List<ResultatManche>, List<ResultatManche>> {
         val r1 = _resultatsJoueur1.value
         val r2 = _resultatsJoueur2.value
+        val manchesCompletes = minOf(r1.size, r2.size)
         if (mode != ModeScoreDuo.CONFRONTATION) {
-            val manchesCompletes = minOf(r1.size, r2.size)
-            return r1.take(manchesCompletes).map { it.resultat } to r2.take(manchesCompletes).map { it.resultat }
+            val finaux1 = mutableListOf<ResultatManche>()
+            val finaux2 = mutableListOf<ResultatManche>()
+            for (i in 0 until manchesCompletes) {
+                val (a, b) = appliquerBonusMotInvalide(r1[i].resultat, r2[i].resultat)
+                finaux1 += a
+                finaux2 += b
+            }
+            return finaux1 to finaux2
         }
         val finaux1 = mutableListOf<ResultatManche>()
         val finaux2 = mutableListOf<ResultatManche>()
-        for (i in r1.indices) {
+        for (i in 0 until manchesCompletes) {
             val a = r1[i]
-            val b = r2.getOrNull(i) ?: continue
+            val b = r2[i]
+            val (resultatA, resultatB) = appliquerBonusMotInvalide(a.resultat, b.resultat)
             val vainqueur = when (a.resultat.mode) {
                 ModeJeu.CHIFFRES -> vainqueurMancheChiffres(a.ecartCible, b.ecartCible)
                 ModeJeu.LETTRES -> vainqueurMancheLettres(a.resultat.motJoue, b.resultat.motJoue)
             }
             when (vainqueur) {
                 VainqueurManche.JOUEUR1 -> {
-                    finaux1 += a.resultat
-                    finaux2 += b.resultat.copy(score = 0)
+                    finaux1 += resultatA
+                    finaux2 += resultatB.copy(score = 0)
                 }
                 VainqueurManche.JOUEUR2 -> {
-                    finaux1 += a.resultat.copy(score = 0)
-                    finaux2 += b.resultat
+                    finaux1 += resultatA.copy(score = 0)
+                    finaux2 += resultatB
                 }
                 VainqueurManche.EGALITE -> {
-                    finaux1 += a.resultat
-                    finaux2 += b.resultat
+                    finaux1 += resultatA
+                    finaux2 += resultatB
                 }
             }
         }

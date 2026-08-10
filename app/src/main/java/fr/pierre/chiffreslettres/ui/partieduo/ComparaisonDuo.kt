@@ -1,5 +1,8 @@
 package fr.pierre.chiffreslettres.ui.partieduo
 
+import fr.pierre.chiffreslettres.data.ModeJeu
+import fr.pierre.chiffreslettres.data.ResultatManche
+
 /** Résultat de la comparaison d'une manche entre les deux joueurs du mode duo. */
 enum class VainqueurManche { JOUEUR1, JOUEUR2, EGALITE }
 
@@ -23,4 +26,20 @@ fun vainqueurMancheLettres(motJoueur1: String?, motJoueur2: String?): VainqueurM
         l1 > l2 -> VainqueurManche.JOUEUR1
         else -> VainqueurManche.JOUEUR2
     }
+}
+
+/**
+ * Manche lettres uniquement (retour utilisateur, parties duo et confrontation) : si le mot
+ * soumis par un joueur était invalide mais plus long que le mot valide de l'autre, ce dernier
+ * marque un score égal au nombre de lettres du mot invalide — un remplacement, pas un bonus
+ * ajouté à son propre score (ex. A invalide 8 lettres, B valide 7 lettres → B marque 8, pas 15).
+ * Sans effet en chiffres (pas de notion de "mot invalide" hors lettres).
+ */
+fun appliquerBonusMotInvalide(a: ResultatManche, b: ResultatManche): Pair<ResultatManche, ResultatManche> {
+    if (a.mode != ModeJeu.LETTRES) return a to b
+    var resultatA = a
+    var resultatB = b
+    a.longueurMotInvalide?.let { longueur -> if (longueur > resultatB.score) resultatB = resultatB.copy(score = longueur) }
+    b.longueurMotInvalide?.let { longueur -> if (longueur > resultatA.score) resultatA = resultatA.copy(score = longueur) }
+    return resultatA to resultatB
 }

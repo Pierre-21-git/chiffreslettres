@@ -18,6 +18,10 @@ import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
+import fr.pierre.chiffreslettres.ui.apropos.LienReglesDuJeu
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeChiffres
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeEntrainement
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeLettres
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.libelle
@@ -37,6 +41,11 @@ fun ChoixNiveauEntrainementScreen(
     ) {
         EnTeteEcran(stringResource(R.string.entrainement_titre), onRetour)
         PucePseudo(pseudoActif, couleurRang = couleurRang)
+        LienReglesDuJeu {
+            ReglesModeEntrainement()
+            ReglesModeChiffres()
+            ReglesModeLettres()
+        }
 
         Text(stringResource(R.string.mode_chiffres), style = MaterialTheme.typography.titleMedium)
         for (niveau in Niveau.entries) {

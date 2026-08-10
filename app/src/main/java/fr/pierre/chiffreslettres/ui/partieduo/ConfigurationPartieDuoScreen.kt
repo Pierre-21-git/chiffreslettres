@@ -24,6 +24,8 @@ import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.ProfilEntity
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
+import fr.pierre.chiffreslettres.ui.apropos.LienReglesDuJeu
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModePartieDuo
 import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
 import fr.pierre.chiffreslettres.ui.partie.sequenceAlternee
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
@@ -54,6 +56,7 @@ fun ConfigurationPartieDuoScreen(
     ) {
         EnTeteEcran(stringResource(R.string.configuration_duo_titre), onRetour)
         PucePseudo(pseudoActif, couleurRang = couleurRang)
+        LienReglesDuJeu { ReglesModePartieDuo() }
 
         if (autresProfils.isEmpty()) {
             Text(

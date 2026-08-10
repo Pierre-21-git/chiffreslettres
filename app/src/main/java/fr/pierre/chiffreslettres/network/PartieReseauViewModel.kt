@@ -13,6 +13,7 @@ import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
 import fr.pierre.chiffreslettres.ui.partie.sequenceAlternee
 import fr.pierre.chiffreslettres.ui.partieduo.ModeScoreDuo
 import fr.pierre.chiffreslettres.ui.partieduo.ResultatDuoManche
+import fr.pierre.chiffreslettres.ui.partieduo.appliquerBonusMotInvalide
 import fr.pierre.chiffreslettres.ui.partieduo.TourDuo
 import fr.pierre.chiffreslettres.ui.partieduo.VainqueurManche
 import fr.pierre.chiffreslettres.ui.partieduo.premierJoueurManche
@@ -323,6 +324,7 @@ class PartieReseauViewModel(
                     motJoue = resultat.resultat.motJoue,
                     ecartCible = resultat.ecartCible,
                     detail = resultat.detail,
+                    longueurMotInvalide = resultat.resultat.longueurMotInvalide,
                 ),
             )
         }
@@ -372,7 +374,13 @@ class PartieReseauViewModel(
     private fun autre(role: TourDuo): TourDuo = if (role == TourDuo.JOUEUR1) TourDuo.JOUEUR2 else TourDuo.JOUEUR1
 
     private fun versResultatDuoManche(message: MessageReseau.ResultatDeManche): ResultatDuoManche = ResultatDuoManche(
-        resultat = ResultatManche(ModeJeu.valueOf(message.modeJeu), message.niveauCode, message.score, message.motJoue),
+        resultat = ResultatManche(
+            ModeJeu.valueOf(message.modeJeu),
+            message.niveauCode,
+            message.score,
+            message.motJoue,
+            message.longueurMotInvalide,
+        ),
         ecartCible = message.ecartCible,
         detail = message.detail,
     )
@@ -387,29 +395,37 @@ class PartieReseauViewModel(
         val r2 = _resultatsJoueur2.value
         val manchesCompletes = r1.keys.intersect(r2.keys).sorted()
         if (mode != ModeScoreDuo.CONFRONTATION) {
-            return manchesCompletes.map { r1.getValue(it).resultat } to manchesCompletes.map { r2.getValue(it).resultat }
+            val finaux1 = mutableListOf<ResultatManche>()
+            val finaux2 = mutableListOf<ResultatManche>()
+            for (i in manchesCompletes) {
+                val (a, b) = appliquerBonusMotInvalide(r1.getValue(i).resultat, r2.getValue(i).resultat)
+                finaux1 += a
+                finaux2 += b
+            }
+            return finaux1 to finaux2
         }
         val finaux1 = mutableListOf<ResultatManche>()
         val finaux2 = mutableListOf<ResultatManche>()
         for (i in manchesCompletes) {
             val a = r1.getValue(i)
             val b = r2.getValue(i)
+            val (resultatA, resultatB) = appliquerBonusMotInvalide(a.resultat, b.resultat)
             val vainqueur = when (a.resultat.mode) {
                 ModeJeu.CHIFFRES -> vainqueurMancheChiffres(a.ecartCible, b.ecartCible)
                 ModeJeu.LETTRES -> vainqueurMancheLettres(a.resultat.motJoue, b.resultat.motJoue)
             }
             when (vainqueur) {
                 VainqueurManche.JOUEUR1 -> {
-                    finaux1 += a.resultat
-                    finaux2 += b.resultat.copy(score = 0)
+                    finaux1 += resultatA
+                    finaux2 += resultatB.copy(score = 0)
                 }
                 VainqueurManche.JOUEUR2 -> {
-                    finaux1 += a.resultat.copy(score = 0)
-                    finaux2 += b.resultat
+                    finaux1 += resultatA.copy(score = 0)
+                    finaux2 += resultatB
                 }
                 VainqueurManche.EGALITE -> {
-                    finaux1 += a.resultat
-                    finaux2 += b.resultat
+                    finaux1 += resultatA
+                    finaux2 += resultatB
                 }
             }
         }

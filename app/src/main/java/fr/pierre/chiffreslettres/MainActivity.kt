@@ -40,6 +40,7 @@ import fr.pierre.chiffreslettres.ui.navigation.AppNavHost
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
 import fr.pierre.chiffreslettres.ui.theme.ChiffresLettresTheme
+import fr.pierre.chiffreslettres.widget.DefiQuotidienWidgetProvider
 import fr.pierre.chiffreslettres.widget.planifierRafraichissementWidgetMinuit
 
 class MainActivity : ComponentActivity() {
@@ -53,6 +54,11 @@ class MainActivity : ComponentActivity() {
         creerCanalNotificationRappel(this)
         planifierRappelQuotidien(this)
         planifierRafraichissementWidgetMinuit(this)
+        // Rafraîchissement immédiat à chaque ouverture de l'app (retour utilisateur : le widget
+        // reconstruit ses vues à partir de la date du jour, donc cet appel est sans effet s'il
+        // est déjà à jour) — filet de sécurité si le passage à minuit planifié ci-dessus a été
+        // retardé par le système (Doze/App Standby), cf. RafraichissementWidgetMinuit.kt.
+        DefiQuotidienWidgetProvider.demanderMiseAJour(this)
         setContent {
             ChiffresLettresTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {

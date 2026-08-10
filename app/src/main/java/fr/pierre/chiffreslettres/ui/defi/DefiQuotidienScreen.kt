@@ -21,6 +21,10 @@ import fr.pierre.chiffreslettres.data.TirageDefiQuotidien
 import fr.pierre.chiffreslettres.data.TypeDefi
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
+import fr.pierre.chiffreslettres.ui.apropos.LienReglesDuJeu
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiChrono
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiQuotidien
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSerie
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.libelle
@@ -51,6 +55,10 @@ fun DefiQuotidienScreen(
     ) {
         EnTeteEcran(stringResource(R.string.defi_quotidien_titre), onRetour)
         PucePseudo(pseudoActif, couleurRang = couleurRang)
+        LienReglesDuJeu {
+            ReglesModeDefiQuotidien()
+            if (tirage.type == TypeDefi.SERIE) ReglesModeDefiSerie() else ReglesModeDefiChrono()
+        }
 
         Text(stringResource(R.string.defi_quotidien_aujourdhui, nomType, nomMode), style = MaterialTheme.typography.titleMedium)
         Text(stringResource(R.string.defi_objectif, natureObjectif), style = MaterialTheme.typography.bodyMedium)

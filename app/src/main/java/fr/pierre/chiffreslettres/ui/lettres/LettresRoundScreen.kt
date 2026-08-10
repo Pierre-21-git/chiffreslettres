@@ -45,7 +45,7 @@ private const val LETTRES_PAR_LIGNE = 5
 fun LettresRoundScreen(
     viewModel: LettresRoundViewModel,
     scoreCumule: Int?,
-    onMancheTerminee: (score: Int, motValide: String?, meilleurMot: String?, dixMeilleursMots: List<String>) -> Unit,
+    onMancheTerminee: (score: Int, motValide: String?, meilleurMot: String?, dixMeilleursMots: List<String>, longueurMotInvalide: Int?) -> Unit,
     actionsFinManche: @Composable () -> Unit,
     onRetourEntrainement: (() -> Unit)? = null,
     pseudo: String? = null,
@@ -70,7 +70,11 @@ fun LettresRoundScreen(
     LaunchedEffect(etat.termine) {
         if (etat.termine) {
             val motValide = if (etat.motJoueurValide == true) etat.motSaisi else null
-            onMancheTerminee(etat.scoreObtenu ?: 0, motValide, etat.meilleurMot, etat.dixMeilleursMots)
+            // Longueur du mot invalide non vide (retour utilisateur, parties duo/confrontation) :
+            // sert de score de remplacement pour l'adversaire s'il est plus long que le sien,
+            // cf. `appliquerBonusMotInvalide`. Null si le mot était valide ou vide (rien tenté).
+            val longueurMotInvalide = if (etat.motJoueurValide == false) etat.motSaisi.length.takeIf { it > 0 } else null
+            onMancheTerminee(etat.scoreObtenu ?: 0, motValide, etat.meilleurMot, etat.dixMeilleursMots, longueurMotInvalide)
         }
     }
 

@@ -16,6 +16,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.numbers.Niveau
+import fr.pierre.chiffreslettres.ui.apropos.LienReglesDuJeu
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSansFaute
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.libelle
@@ -39,6 +41,7 @@ fun ChoixDefiSansFauteScreen(
     ) {
         EnTeteEcran(stringResource(R.string.defi_type_sans_faute), onRetour)
         PucePseudo(pseudoActif, couleurRang = couleurRang)
+        LienReglesDuJeu { ReglesModeDefiSansFaute() }
 
         for (niveau in Niveau.entries) {
             Button(onClick = { onNiveauChoisi(niveau) }, modifier = Modifier.fillMaxWidth()) {

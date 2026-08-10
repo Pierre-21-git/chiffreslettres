@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
+import fr.pierre.chiffreslettres.ui.apropos.LienReglesDuJeu
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModePartieSolo
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.libelle
@@ -38,6 +40,7 @@ fun ConfigurationPartieScreen(
     ) {
         EnTeteEcran(stringResource(R.string.configuration_partie_solo_titre), onRetour)
         PucePseudo(pseudoActif, couleurRang = couleurRang)
+        LienReglesDuJeu { ReglesModePartieSolo() }
         Text(stringResource(R.string.configuration_choisir_niveau), style = MaterialTheme.typography.titleMedium)
 
         for (niveau in Niveau.entries) {

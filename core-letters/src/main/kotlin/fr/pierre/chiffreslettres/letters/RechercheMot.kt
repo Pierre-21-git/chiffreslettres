@@ -2,8 +2,9 @@ package fr.pierre.chiffreslettres.letters
 
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 
-private const val LIMITE_DIX_MEILLEURS_MOTS = 10
 private const val LONGUEUR_MINIMALE_DICTIONNAIRE = 2
+/** Nombre de longueurs distinctes (les plus grandes) retenues dans [dixMeilleursMots]. */
+private const val NOMBRE_LONGUEURS_RETENUES = 2
 
 /** Tous les mots de longueur maximale jouables avec ce tirage (spec §4.3). */
 fun meilleursMots(tirage: List<Char>, dictionnaire: DictionnaireIndex): List<String> =
@@ -14,12 +15,18 @@ fun meilleurMot(tirage: List<Char>, dictionnaire: DictionnaireIndex): String? =
     meilleursMots(tirage, dictionnaire).firstOrNull()
 
 /**
- * Les [limite] meilleurs mots jouables sur ce tirage (retour utilisateur : affichés à la fin
- * d'une manche de lettres, à la place du seul meilleur mot), toutes longueurs confondues et pas
- * seulement la longueur maximale — triés par longueur décroissante puis ordre alphabétique.
+ * Tous les mots jouables sur ce tirage aux [NOMBRE_LONGUEURS_RETENUES] plus grandes longueurs
+ * présentes (retour utilisateur : affichés à la fin d'une manche de lettres, à la place du seul
+ * meilleur mot) — par exemple tous les mots de 9 lettres puis tous ceux de 8 lettres s'il y a des
+ * mots de 9 lettres, sans plafond fixe sur leur nombre. Triés par longueur décroissante puis
+ * ordre alphabétique français.
  */
-fun dixMeilleursMots(tirage: List<Char>, dictionnaire: DictionnaireIndex, limite: Int = LIMITE_DIX_MEILLEURS_MOTS): List<String> =
-    dictionnaire.rechercherAuMoins(tirage, LONGUEUR_MINIMALE_DICTIONNAIRE)
+fun dixMeilleursMots(tirage: List<Char>, dictionnaire: DictionnaireIndex): List<String> {
+    val motsParLongueur = dictionnaire.rechercherAuMoins(tirage, LONGUEUR_MINIMALE_DICTIONNAIRE)
         .distinct()
-        .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
-        .take(limite)
+        .groupBy { it.length }
+    val comparateur = DictionnaireIndex.comparateurAlphabetiqueFrancais()
+    return motsParLongueur.keys.sortedDescending()
+        .take(NOMBRE_LONGUEURS_RETENUES)
+        .flatMap { longueur -> motsParLongueur.getValue(longueur).sortedWith(comparateur) }
+}
