@@ -308,6 +308,7 @@ fun AppNavHost(
                 profilId = profilIdArg,
                 historiqueRepository = historiqueRepository,
                 defiRepository = defiRepository,
+                defiQuotidienRepository = defiQuotidienRepository,
                 profilRepository = profilRepository,
                 tropheeRepository = tropheeRepository,
                 onMesStatistiques = { navController.navigate(Routes.mesStatistiques(profilIdArg)) },

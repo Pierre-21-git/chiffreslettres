@@ -22,6 +22,10 @@ interface DefiQuotidienDao {
     @Query("SELECT jour FROM DefiQuotidienEntity WHERE profilId = :profilId AND niveau IN (:niveaux) ORDER BY jour DESC")
     suspend fun joursReussisNiveaux(profilId: Long, niveaux: List<String>): List<String>
 
+    /** Toutes les réussites d'un profil, entités complètes — "Exporter mes statistiques". */
+    @Query("SELECT * FROM DefiQuotidienEntity WHERE profilId = :profilId")
+    suspend fun reussitesDuJoueur(profilId: Long): List<DefiQuotidienEntity>
+
     @Query("DELETE FROM DefiQuotidienEntity WHERE profilId = :profilId")
     suspend fun reinitialiserJoueur(profilId: Long)
 }

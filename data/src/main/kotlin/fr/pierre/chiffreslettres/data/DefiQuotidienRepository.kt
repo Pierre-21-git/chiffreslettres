@@ -45,6 +45,16 @@ class DefiQuotidienRepository(private val dao: DefiQuotidienDao) {
 
     suspend fun reinitialiserJoueur(profilId: Long) = dao.reinitialiserJoueur(profilId)
 
+    /** Toutes les réussites brutes d'un joueur — "Exporter mes statistiques". */
+    suspend fun exporterReussites(profilId: Long): List<DefiQuotidienEntity> = dao.reussitesDuJoueur(profilId)
+
+    /** Réinsère des réussites pour un profil cible — "Importer mes statistiques" (id d'origine ignoré). */
+    suspend fun importerReussites(profilId: Long, reussites: List<DefiQuotidienEntity>) {
+        for (reussite in reussites) {
+            dao.enregistrerReussite(reussite.copy(profilId = profilId))
+        }
+    }
+
     suspend fun meilleureSerieJours(profilId: Long): Int = plusLongueSerieDeJours(joursTries(profilId))
 
     suspend fun serieActuelle(profilId: Long, aujourdHui: LocalDate = LocalDate.now()): Int =

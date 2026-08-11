@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.91",
+        date = "2026-08-11",
+        changements = listOf(
+            "Widget défi quotidien : correction pour permettre de le redimensionner en une seule " +
+                "ligne (5x1), auparavant limité à 5x2 minimum.",
+            "Export/import des statistiques : le défi quotidien (jours réussis, série) est " +
+                "désormais inclus, il n'était pas sauvegardé auparavant.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.90",
         date = "2026-08-11",
         changements = listOf(

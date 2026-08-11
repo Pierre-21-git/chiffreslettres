@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.R
+import fr.pierre.chiffreslettres.data.DefiQuotidienRepository
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.ExportStatistiques
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
@@ -87,6 +88,7 @@ fun StatistiquesJoueurScreen(
     profilId: Long,
     historiqueRepository: HistoriqueRepository,
     defiRepository: DefiRepository,
+    defiQuotidienRepository: DefiQuotidienRepository,
     profilRepository: ProfilRepository,
     tropheeRepository: TropheeRepository,
     onMesStatistiques: () -> Unit,
@@ -117,6 +119,7 @@ fun StatistiquesJoueurScreen(
                     val export = ExportStatistiques(
                         sessions = historiqueRepository.exporterSessions(profilId),
                         defis = defiRepository.exporterDefis(profilId),
+                        defisQuotidiens = defiQuotidienRepository.exporterReussites(profilId),
                         trophees = tropheeRepository.exporterTrophees(profilId),
                     )
                     val json = StatistiquesExport.versJson(export)
@@ -194,6 +197,7 @@ fun StatistiquesJoueurScreen(
                     scope.launch {
                         historiqueRepository.reinitialiserHistoriqueJoueur(profilId)
                         defiRepository.reinitialiserJoueur(profilId)
+                        defiQuotidienRepository.reinitialiserJoueur(profilId)
                         tropheeRepository.reinitialiserJoueur(profilId)
                     }
                     confirmationReinitialisation = false
@@ -224,9 +228,11 @@ fun StatistiquesJoueurScreen(
                             val export = StatistiquesExport.depuisJson(json)
                             historiqueRepository.reinitialiserHistoriqueJoueur(profilId)
                             defiRepository.reinitialiserJoueur(profilId)
+                            defiQuotidienRepository.reinitialiserJoueur(profilId)
                             tropheeRepository.reinitialiserJoueur(profilId)
                             historiqueRepository.importerSessions(profilId, export.sessions)
                             defiRepository.importerDefis(profilId, export.defis)
+                            defiQuotidienRepository.importerReussites(profilId, export.defisQuotidiens)
                             tropheeRepository.importerTrophees(profilId, export.trophees)
                             tropheeRepository.reevaluer(profilId)
                         } catch (e: IllegalArgumentException) {

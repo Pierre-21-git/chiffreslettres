@@ -8,10 +8,11 @@ private const val FORMAT_APPLICATION = "chiffreslettres"
 private const val FORMAT_TYPE = "statistiques"
 private const val FORMAT_VERSION = 1
 
-/** Contenu exportable/importable des statistiques d'un joueur (historique + défis + trophées). */
+/** Contenu exportable/importable des statistiques d'un joueur (historique + défis + défi quotidien + trophées). */
 data class ExportStatistiques(
     val sessions: List<SessionAvecManches>,
     val defis: List<DefiEntity>,
+    val defisQuotidiens: List<DefiQuotidienEntity>,
     val trophees: List<TropheeEntity>,
 )
 
@@ -62,6 +63,17 @@ object StatistiquesExport {
             )
         }
         racine.put("defis", defis)
+
+        val defisQuotidiens = JSONArray()
+        for (defiQuotidien in export.defisQuotidiens) {
+            defisQuotidiens.put(
+                JSONObject()
+                    .put("jour", defiQuotidien.jour)
+                    .put("dateReussite", defiQuotidien.dateReussite)
+                    .put("niveau", defiQuotidien.niveau ?: JSONObject.NULL),
+            )
+        }
+        racine.put("defisQuotidiens", defisQuotidiens)
 
         val trophees = JSONArray()
         for (trophee in export.trophees) {
@@ -130,6 +142,18 @@ object StatistiquesExport {
                 )
             }
 
+            val defisQuotidiens = mutableListOf<DefiQuotidienEntity>()
+            val defisQuotidiensJson = racine.optJSONArray("defisQuotidiens") ?: JSONArray()
+            for (i in 0 until defisQuotidiensJson.length()) {
+                val d = defisQuotidiensJson.getJSONObject(i)
+                defisQuotidiens += DefiQuotidienEntity(
+                    profilId = 0,
+                    jour = d.getString("jour"),
+                    dateReussite = d.getLong("dateReussite"),
+                    niveau = if (d.isNull("niveau")) null else d.getString("niveau"),
+                )
+            }
+
             val trophees = mutableListOf<TropheeEntity>()
             val tropheesJson = racine.optJSONArray("trophees") ?: JSONArray()
             for (i in 0 until tropheesJson.length()) {
@@ -141,7 +165,7 @@ object StatistiquesExport {
                 )
             }
 
-            return ExportStatistiques(sessions, defis, trophees)
+            return ExportStatistiques(sessions, defis, defisQuotidiens, trophees)
         } catch (e: JSONException) {
             throw IllegalArgumentException("Fichier illisible : ce n'est pas un JSON valide.", e)
         } catch (e: IllegalArgumentException) {
