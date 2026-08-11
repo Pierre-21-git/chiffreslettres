@@ -29,9 +29,7 @@
 
     <!-- Subtítulos de agrupación visual -->
     <string name="soustitre_duo">Dúo</string>
-    <string name="soustitre_confrontation">Enfrentamiento</string>
     <string name="soustitre_duel_mots">Duelo de palabras</string>
-    <string name="soustitre_duel_mots_confrontation">Duelo de palabras (Enfrentamiento)</string>
     <string name="soustitre_chiffres">Números</string>
     <string name="soustitre_lettres">Letras</string>
 
@@ -64,15 +62,9 @@
     <string name="trophee_titre_duo_1">Primera partida dúo jugada</string>
     <string name="trophee_titre_duo_gagnee_1">Primera partida dúo ganada</string>
     <string name="trophee_titre_duo_gagnee_10">Décima partida dúo ganada</string>
-    <string name="trophee_titre_confrontation_1">Primer enfrentamiento jugado</string>
-    <string name="trophee_titre_confrontation_gagnee_1">Primer enfrentamiento ganado</string>
-    <string name="trophee_titre_confrontation_gagnee_10">Décimo enfrentamiento ganado</string>
     <string name="trophee_titre_duel_mots_1">Primera partida de duelo de palabras jugada</string>
     <string name="trophee_titre_duel_mots_gagnee_1">Primera partida de duelo de palabras ganada</string>
     <string name="trophee_titre_duel_mots_gagnee_10">Décima partida de duelo de palabras ganada</string>
-    <string name="trophee_titre_duel_mots_confrontation_1">Primer enfrentamiento de duelo de palabras jugado</string>
-    <string name="trophee_titre_duel_mots_confrontation_gagnee_1">Primer enfrentamiento de duelo de palabras ganado</string>
-    <string name="trophee_titre_duel_mots_confrontation_gagnee_10">Décimo enfrentamiento de duelo de palabras ganado</string>
     <string name="trophee_titre_defi_1">Primer desafío terminado</string>
     <string name="trophee_titre_defi_serie">Racha de %1$d en el desafío de %2$s</string>
     <string name="trophee_titre_defi_serie_niveau_monique">Racha de %1$d en el desafío de %2$s, nivel Ça se complique, Monique o superior</string>
@@ -111,18 +103,12 @@
     <string name="trophee_desc_parties_50">Terminar 50 partidas (individual, dúo o enfrentamiento), cualquier nivel.</string>
     <string name="trophee_desc_parties_100">Terminar 100 partidas (individual, dúo o enfrentamiento), cualquier nivel.</string>
     <string name="trophee_desc_parties_200">Terminar 200 partidas (individual, dúo o enfrentamiento), cualquier nivel.</string>
-    <string name="trophee_desc_duo_1">Terminar una partida en modo Dúo, mismo teléfono o a distancia, cualquier nivel.</string>
-    <string name="trophee_desc_duo_gagnee_1">Ganar una partida en modo Dúo, mismo teléfono o a distancia.</string>
-    <string name="trophee_desc_duo_gagnee_10">Ganar 10 partidas en modo Dúo, mismo teléfono o a distancia.</string>
-    <string name="trophee_desc_confrontation_1">Terminar una partida en modo Enfrentamiento, mismo teléfono o a distancia, cualquier nivel.</string>
-    <string name="trophee_desc_confrontation_gagnee_1">Ganar una partida en modo Enfrentamiento, mismo teléfono o a distancia.</string>
-    <string name="trophee_desc_confrontation_gagnee_10">Ganar 10 partidas en modo Enfrentamiento, mismo teléfono o a distancia.</string>
-    <string name="trophee_desc_duel_mots_1">Terminar una partida en modo Duelo de palabras (Dúo), a distancia, cualquier nivel.</string>
-    <string name="trophee_desc_duel_mots_gagnee_1">Ganar una partida en modo Duelo de palabras (Dúo), a distancia.</string>
-    <string name="trophee_desc_duel_mots_gagnee_10">Ganar 10 partidas en modo Duelo de palabras (Dúo), a distancia.</string>
-    <string name="trophee_desc_duel_mots_confrontation_1">Terminar una partida en modo Duelo de palabras (Enfrentamiento), a distancia, cualquier nivel.</string>
-    <string name="trophee_desc_duel_mots_confrontation_gagnee_1">Ganar una partida en modo Duelo de palabras (Enfrentamiento), a distancia.</string>
-    <string name="trophee_desc_duel_mots_confrontation_gagnee_10">Ganar 10 partidas en modo Duelo de palabras (Enfrentamiento), a distancia.</string>
+    <string name="trophee_desc_duo_1">Terminar una partida en modo Dúo o Enfrentamiento, mismo teléfono o a distancia, cualquier nivel.</string>
+    <string name="trophee_desc_duo_gagnee_1">Ganar una partida en modo Dúo o Enfrentamiento, mismo teléfono o a distancia.</string>
+    <string name="trophee_desc_duo_gagnee_10">Ganar 10 partidas en modo Dúo o Enfrentamiento, mismo teléfono o a distancia.</string>
+    <string name="trophee_desc_duel_mots_1">Terminar una partida en modo Duelo de palabras (Dúo o Enfrentamiento), a distancia, cualquier nivel.</string>
+    <string name="trophee_desc_duel_mots_gagnee_1">Ganar una partida en modo Duelo de palabras (Dúo o Enfrentamiento), a distancia.</string>
+    <string name="trophee_desc_duel_mots_gagnee_10">Ganar 10 partidas en modo Duelo de palabras (Dúo o Enfrentamiento), a distancia.</string>
     <string name="trophee_desc_defi_1">Llegar hasta el final de un desafío (números o letras, cualquier nivel).</string>
     <string name="trophee_desc_defi_serie">Encadenar %1$d éxitos o más seguidos en un mismo desafío de %2$s.</string>
     <string name="trophee_desc_defi_serie_niveau_monique">Encadenar %1$d éxitos o más seguidos en un mismo desafío de %2$s, en el nivel Ça se complique, Monique o C\'est du sérieux, Mathieu.</string>

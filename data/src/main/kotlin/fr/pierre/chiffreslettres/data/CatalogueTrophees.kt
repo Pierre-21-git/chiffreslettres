@@ -20,16 +20,24 @@ data class TropheeStats(
     /** Clé = seuil de points (20 à 90), valeur = nombre de parties (solo, duo ou confrontation) atteignant au moins ce seuil. */
     val partiesParSeuilScore: Map<Int, Int>,
     val partiesSoloTotal: Int,
-    /** Parties Duo, même téléphone ou à distance confondus (retour utilisateur : les deux comptent pour les mêmes trophées). */
+    /**
+     * Parties Duo, même téléphone ou à distance confondus (retour utilisateur : les deux comptent
+     * pour les mêmes trophées). Comptées séparément des parties Confrontation ici, mais les
+     * trophées "duo_*" additionnent les deux (retour utilisateur : une seule catégorie de trophée
+     * pour Duo et Confrontation confondus).
+     */
     val partiesDuoJouees: Int,
     val partiesDuoGagnees: Int,
-    /** Parties Confrontation, même téléphone ou à distance confondus. */
+    /** Parties Confrontation, même téléphone ou à distance confondus. Voir [partiesDuoJouees]. */
     val partiesConfrontationJouees: Int,
     val partiesConfrontationGagnees: Int,
-    /** Parties Duel mots, sous-mode Duo (100 % réseau, pas de variante même téléphone). */
+    /**
+     * Parties Duel mots, sous-mode Duo (100 % réseau, pas de variante même téléphone). Comme
+     * [partiesDuoJouees], les trophées "duel_mots_*" additionnent Duo et Confrontation.
+     */
     val partiesDuelMotsJouees: Int,
     val partiesDuelMotsGagnees: Int,
-    /** Parties Duel mots, sous-mode Confrontation (100 % réseau). */
+    /** Parties Duel mots, sous-mode Confrontation (100 % réseau). Voir [partiesDuelMotsJouees]. */
     val partiesDuelMotsConfrontationJouees: Int,
     val partiesDuelMotsConfrontationGagnees: Int,
     val defisTotal: Int,
@@ -408,8 +416,8 @@ object CatalogueTrophees {
                 palier = Palier.ARGENT,
                 sousTitreRes = R.string.soustitre_duo,
                 objectif = 1,
-                progression = { it.partiesDuoJouees },
-            ) { it.partiesDuoJouees >= 1 },
+                progression = { it.partiesDuoJouees + it.partiesConfrontationJouees },
+            ) { it.partiesDuoJouees + it.partiesConfrontationJouees >= 1 },
         )
         add(
             Trophee(
@@ -420,8 +428,8 @@ object CatalogueTrophees {
                 palier = Palier.OR,
                 sousTitreRes = R.string.soustitre_duo,
                 objectif = 1,
-                progression = { it.partiesDuoGagnees },
-            ) { it.partiesDuoGagnees >= 1 },
+                progression = { it.partiesDuoGagnees + it.partiesConfrontationGagnees },
+            ) { it.partiesDuoGagnees + it.partiesConfrontationGagnees >= 1 },
         )
         add(
             Trophee(
@@ -432,44 +440,8 @@ object CatalogueTrophees {
                 palier = Palier.PLATINE,
                 sousTitreRes = R.string.soustitre_duo,
                 objectif = 10,
-                progression = { it.partiesDuoGagnees },
-            ) { it.partiesDuoGagnees >= 10 },
-        )
-        add(
-            Trophee(
-                "confrontation_1",
-                titreRes = R.string.trophee_titre_confrontation_1,
-                descriptionRes = R.string.trophee_desc_confrontation_1,
-                categorie = CategorieTrophee.DUO,
-                palier = Palier.ARGENT,
-                sousTitreRes = R.string.soustitre_confrontation,
-                objectif = 1,
-                progression = { it.partiesConfrontationJouees },
-            ) { it.partiesConfrontationJouees >= 1 },
-        )
-        add(
-            Trophee(
-                "confrontation_gagnee_1",
-                titreRes = R.string.trophee_titre_confrontation_gagnee_1,
-                descriptionRes = R.string.trophee_desc_confrontation_gagnee_1,
-                categorie = CategorieTrophee.DUO,
-                palier = Palier.OR,
-                sousTitreRes = R.string.soustitre_confrontation,
-                objectif = 1,
-                progression = { it.partiesConfrontationGagnees },
-            ) { it.partiesConfrontationGagnees >= 1 },
-        )
-        add(
-            Trophee(
-                "confrontation_gagnee_10",
-                titreRes = R.string.trophee_titre_confrontation_gagnee_10,
-                descriptionRes = R.string.trophee_desc_confrontation_gagnee_10,
-                categorie = CategorieTrophee.DUO,
-                palier = Palier.PLATINE,
-                sousTitreRes = R.string.soustitre_confrontation,
-                objectif = 10,
-                progression = { it.partiesConfrontationGagnees },
-            ) { it.partiesConfrontationGagnees >= 10 },
+                progression = { it.partiesDuoGagnees + it.partiesConfrontationGagnees },
+            ) { it.partiesDuoGagnees + it.partiesConfrontationGagnees >= 10 },
         )
         add(
             Trophee(
@@ -480,8 +452,8 @@ object CatalogueTrophees {
                 palier = Palier.ARGENT,
                 sousTitreRes = R.string.soustitre_duel_mots,
                 objectif = 1,
-                progression = { it.partiesDuelMotsJouees },
-            ) { it.partiesDuelMotsJouees >= 1 },
+                progression = { it.partiesDuelMotsJouees + it.partiesDuelMotsConfrontationJouees },
+            ) { it.partiesDuelMotsJouees + it.partiesDuelMotsConfrontationJouees >= 1 },
         )
         add(
             Trophee(
@@ -492,8 +464,8 @@ object CatalogueTrophees {
                 palier = Palier.OR,
                 sousTitreRes = R.string.soustitre_duel_mots,
                 objectif = 1,
-                progression = { it.partiesDuelMotsGagnees },
-            ) { it.partiesDuelMotsGagnees >= 1 },
+                progression = { it.partiesDuelMotsGagnees + it.partiesDuelMotsConfrontationGagnees },
+            ) { it.partiesDuelMotsGagnees + it.partiesDuelMotsConfrontationGagnees >= 1 },
         )
         add(
             Trophee(
@@ -504,44 +476,8 @@ object CatalogueTrophees {
                 palier = Palier.PLATINE,
                 sousTitreRes = R.string.soustitre_duel_mots,
                 objectif = 10,
-                progression = { it.partiesDuelMotsGagnees },
-            ) { it.partiesDuelMotsGagnees >= 10 },
-        )
-        add(
-            Trophee(
-                "duel_mots_confrontation_1",
-                titreRes = R.string.trophee_titre_duel_mots_confrontation_1,
-                descriptionRes = R.string.trophee_desc_duel_mots_confrontation_1,
-                categorie = CategorieTrophee.DUO,
-                palier = Palier.ARGENT,
-                sousTitreRes = R.string.soustitre_duel_mots_confrontation,
-                objectif = 1,
-                progression = { it.partiesDuelMotsConfrontationJouees },
-            ) { it.partiesDuelMotsConfrontationJouees >= 1 },
-        )
-        add(
-            Trophee(
-                "duel_mots_confrontation_gagnee_1",
-                titreRes = R.string.trophee_titre_duel_mots_confrontation_gagnee_1,
-                descriptionRes = R.string.trophee_desc_duel_mots_confrontation_gagnee_1,
-                categorie = CategorieTrophee.DUO,
-                palier = Palier.OR,
-                sousTitreRes = R.string.soustitre_duel_mots_confrontation,
-                objectif = 1,
-                progression = { it.partiesDuelMotsConfrontationGagnees },
-            ) { it.partiesDuelMotsConfrontationGagnees >= 1 },
-        )
-        add(
-            Trophee(
-                "duel_mots_confrontation_gagnee_10",
-                titreRes = R.string.trophee_titre_duel_mots_confrontation_gagnee_10,
-                descriptionRes = R.string.trophee_desc_duel_mots_confrontation_gagnee_10,
-                categorie = CategorieTrophee.DUO,
-                palier = Palier.PLATINE,
-                sousTitreRes = R.string.soustitre_duel_mots_confrontation,
-                objectif = 10,
-                progression = { it.partiesDuelMotsConfrontationGagnees },
-            ) { it.partiesDuelMotsConfrontationGagnees >= 10 },
+                progression = { it.partiesDuelMotsGagnees + it.partiesDuelMotsConfrontationGagnees },
+            ) { it.partiesDuelMotsGagnees + it.partiesDuelMotsConfrontationGagnees >= 10 },
         )
 
         add(

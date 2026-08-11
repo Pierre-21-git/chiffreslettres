@@ -19,6 +19,18 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.90",
+        date = "2026-08-11",
+        changements = listOf(
+            "Trophées \"partie duo\" et \"Duel mots\" : les paliers Duo et Confrontation sont " +
+                "désormais regroupés (une seule série de trophées pour les deux, au lieu de deux " +
+                "séries séparées) — les parties en mode Confrontation comptent maintenant pour les " +
+                "mêmes trophées que le mode Duo.",
+            "Défi quotidien : le \"Défi sans faute\" n'est plus tiré au sort pour le défi du jour ; " +
+                "il reste jouable à la demande depuis le menu principal, avec ses trophées inchangés.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.89",
         date = "2026-08-10",
         changements = listOf(

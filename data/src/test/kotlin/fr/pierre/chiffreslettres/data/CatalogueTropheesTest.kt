@@ -44,8 +44,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `94 trophees au total`() {
-        assertEquals(94, CatalogueTrophees.TOUS.size)
+    fun `88 trophees au total`() {
+        assertEquals(88, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -239,21 +239,27 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `trophees duo independants des trophees confrontation`() {
-        val stats = statsVides().copy(partiesDuoJouees = 1, partiesDuoGagnees = 10)
+    fun `trophees duo comptent aussi les parties confrontation`() {
+        // Retour utilisateur : Duo et Confrontation partagent les mêmes trophées "duo_*".
+        val stats = statsVides().copy(partiesConfrontationJouees = 1, partiesConfrontationGagnees = 10)
         assertTrue(trophee("duo_1").estDebloque(stats))
         assertTrue(trophee("duo_gagnee_1").estDebloque(stats))
         assertTrue(trophee("duo_gagnee_10").estDebloque(stats))
-        assertFalse(trophee("confrontation_1").estDebloque(stats))
-        assertFalse(trophee("confrontation_gagnee_1").estDebloque(stats))
     }
 
     @Test
-    fun `dixieme partie confrontation gagnee necessite bien 10 victoires, palier platine`() {
-        val stats = statsVides().copy(partiesConfrontationJouees = 15, partiesConfrontationGagnees = 9)
-        assertTrue(trophee("confrontation_1").estDebloque(stats))
-        assertTrue(trophee("confrontation_gagnee_1").estDebloque(stats))
-        assertFalse(trophee("confrontation_gagnee_10").estDebloque(stats))
-        assertEquals(Palier.PLATINE, trophee("confrontation_gagnee_10").palier)
+    fun `dixieme partie duo gagnee cumule victoires duo et confrontation, palier platine`() {
+        val stats = statsVides().copy(partiesDuoGagnees = 6, partiesConfrontationGagnees = 3)
+        assertFalse(trophee("duo_gagnee_10").estDebloque(stats))
+        assertTrue(trophee("duo_gagnee_10").estDebloque(stats.copy(partiesConfrontationGagnees = 4)))
+        assertEquals(Palier.PLATINE, trophee("duo_gagnee_10").palier)
+    }
+
+    @Test
+    fun `trophees duel mots cumulent duo et confrontation`() {
+        val stats = statsVides().copy(partiesDuelMotsGagnees = 6, partiesDuelMotsConfrontationGagnees = 3)
+        assertFalse(trophee("duel_mots_gagnee_10").estDebloque(stats))
+        assertTrue(trophee("duel_mots_gagnee_10").estDebloque(stats.copy(partiesDuelMotsConfrontationGagnees = 4)))
+        assertEquals(Palier.PLATINE, trophee("duel_mots_gagnee_10").palier)
     }
 }

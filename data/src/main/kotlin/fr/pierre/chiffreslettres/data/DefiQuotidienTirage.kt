@@ -19,11 +19,14 @@ object DefiQuotidienTirage {
     /** Toujours 3 en lettres (retour utilisateur) : trouver des mots valides est plus dur que les chiffres, un objectif tiré au-delà rend le défi trop difficile. */
     private const val OBJECTIF_LETTRES = 3
 
+    /** Types tirables pour le défi quotidien (retour utilisateur : sans faute retiré du tirage — reste jouable en défi libre depuis le menu). */
+    private val TYPES_TIRABLES = TypeDefi.entries.filter { it != TypeDefi.SANS_FAUTE }
+
     /** [jour] au format ISO (yyyy-MM-dd, cf. `LocalDate.toString()`). */
     fun pour(profilId: Long, jour: String): TirageDefiQuotidien {
         val rng = Random("$profilId-$jour".hashCode().toLong())
         val mode = ModeJeu.entries[rng.nextInt(ModeJeu.entries.size)]
-        val type = TypeDefi.entries[rng.nextInt(TypeDefi.entries.size)]
+        val type = TYPES_TIRABLES[rng.nextInt(TYPES_TIRABLES.size)]
         val objectif = when {
             mode == ModeJeu.LETTRES -> OBJECTIF_LETTRES
             type == TypeDefi.SERIE -> rng.nextInt(OBJECTIF_MIN_SERIE, OBJECTIF_MAX_SERIE + 1)

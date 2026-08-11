@@ -1,6 +1,7 @@
 package fr.pierre.chiffreslettres.data
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -33,6 +34,17 @@ class DefiQuotidienTirageTest {
                 assertEquals(3, tirage.objectif)
             } else {
                 assertTrue("objectif=${tirage.objectif}", tirage.objectif in 3..5)
+            }
+        }
+    }
+
+    @Test
+    fun `le defi sans faute n'est jamais tire pour le defi quotidien`() {
+        // Retour utilisateur : reste jouable en défi libre depuis le menu, mais plus dans le tirage quotidien.
+        for (profilId in 1L..50L) {
+            for (jour in 1..28) {
+                val tirage = DefiQuotidienTirage.pour(profilId, jour = "2026-0${1 + jour % 9}-${"%02d".format(jour)}")
+                assertFalse(tirage.type == TypeDefi.SANS_FAUTE)
             }
         }
     }
