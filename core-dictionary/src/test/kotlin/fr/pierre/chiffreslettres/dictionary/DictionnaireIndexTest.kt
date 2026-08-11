@@ -87,4 +87,22 @@ class DictionnaireIndexTest {
         assertTrue(idx.estJouable("ecran"))
         assertTrue(idx.estJouable("écran"))
     }
+
+    @Test
+    fun `normaliser rejette les lettres modificatives Unicode au lieu de les supprimer silencieusement`() {
+        // Régression : "iiᵉˢ" (abréviation d'ordinal "2es") contient de vraies lettres en exposant
+        // Unicode (ᵉ, ˢ) qui ne se décomposent pas en NFD. Un filtre naïf `in 'A'..'Z'` les
+        // supprimait silencieusement, donnant "II" (2 lettres) au lieu de rejeter le mot entier —
+        // ce qui le rendait jouable avec un tirage ne contenant que deux "I".
+        assertEquals(null, DictionnaireIndex.normaliser("iiᵉˢ"))
+        assertEquals(null, DictionnaireIndex.normaliser("xᵉ"))
+    }
+
+    @Test
+    fun `un mot avec lettre modificative Unicode n'est jouable avec aucun tirage`() {
+        val idx = DictionnaireIndex((motsFixture + "iiᵉˢ").asSequence())
+        assertFalse(idx.estJouable("iiᵉˢ"))
+        val resultats = idx.rechercher("IIXYZ".toList())
+        assertFalse(resultats.any { it == "iiᵉˢ" })
+    }
 }

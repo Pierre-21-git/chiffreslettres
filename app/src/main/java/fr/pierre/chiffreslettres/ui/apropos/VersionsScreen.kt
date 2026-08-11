@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.92",
+        date = "2026-08-12",
+        changements = listOf(
+            "Dictionnaire : suppression de 104 entrées invalides (abréviations d'ordinaux " +
+                "romains avec lettres en exposant, ex. \"iiᵉˢ\") qui s'affichaient de façon " +
+                "corrompue dans la liste des meilleurs mots et étaient jouables à tort avec " +
+                "très peu de lettres.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.91",
         date = "2026-08-11",
         changements = listOf(

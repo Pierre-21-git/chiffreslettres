@@ -69,12 +69,29 @@ class DictionnaireIndex(mots: Sequence<String>) {
     }
 
     companion object {
-        /** Majuscule, sans accents ; renvoie null si le mot contient autre chose que des lettres. */
+        /**
+         * Majuscule, sans accents ; renvoie null si le mot contient autre chose que des lettres.
+         *
+         * Rejette explicitement tout caractère qui, après décomposition NFD, ne se résout ni en
+         * A-Z ni en marque diacritique combinante (accent) : certaines entrées du dictionnaire
+         * source (Hunspell) sont des abréviations d'ordinaux avec de vraies lettres modificatives
+         * Unicode (ex. "iiᵉˢ" pour "2es"). Ces caractères passent `isLetter()` mais n'ont pas de
+         * décomposition NFD (il faudrait NFKD), donc un simple filtre `in 'A'..'Z'` les supprime
+         * silencieusement au lieu de les rejeter — "iiᵉˢ" se normalisait alors en "II" (2 lettres)
+         * au lieu d'être écarté, faussant le vecteur de lettres requis pour jouer ce "mot".
+         */
         fun normaliser(mot: String): String? {
             if (mot.isEmpty() || mot.any { !it.isLetter() }) return null
             val decompose = Normalizer.normalize(mot.uppercase(Locale.FRENCH), Normalizer.Form.NFD)
-            val lettres = decompose.filter { it in 'A'..'Z' }
-            return lettres.ifEmpty { null }
+            val lettres = StringBuilder()
+            for (c in decompose) {
+                when {
+                    c in 'A'..'Z' -> lettres.append(c)
+                    Character.getType(c).toByte() == Character.NON_SPACING_MARK -> Unit
+                    else -> return null
+                }
+            }
+            return lettres.toString().ifEmpty { null }
         }
 
         fun vecteurLettres(mot: String): IntArray {

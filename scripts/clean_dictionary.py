@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import multiprocessing
 import sys
+import unicodedata
 from pathlib import Path
 
 _dictionary = None
@@ -49,7 +50,10 @@ def main() -> None:
     with open(raw_file, encoding="utf-8", errors="ignore") as f:
         for ligne in f:
             mot = ligne.split("/", 1)[0].strip()
-            if mot and all(c.isalpha() for c in mot):
+            # `isalpha()` laisse passer les lettres modificatives Unicode (catégorie "Lm", ex.
+            # ᵉ/ᵈ/ˢ/ʳ des abréviations d'ordinaux "iiᵉˢ"="2es") : on ne garde que les vraies
+            # lettres (Ll/Lu/Lt), seules catégories que la normalisation NFD du jeu sait résoudre.
+            if mot and all(unicodedata.category(c) in ("Ll", "Lu", "Lt") for c in mot):
                 candidats.add(mot)
     print(f"{len(candidats)} candidats uniques à vérifier.", file=sys.stderr)
 
