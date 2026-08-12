@@ -130,7 +130,6 @@ class DefiViewModel(
         val valeurFinale = if (type == TypeDefi.CHRONO) _reussites.value else _index.value
         viewModelScope.launch {
             defiRepository.enregistrer(profilId, mode, niveauCode, type, valeurFinale)
-            tropheeRepository.reevaluer(profilId)
             // Dans la même coroutine liée au ViewModel (pas au composable) : un retour arrière
             // intempestif juste après ne peut plus interrompre l'enregistrement de la réussite du
             // jour ni la mise à jour du widget (retour utilisateur).
@@ -138,6 +137,10 @@ class DefiViewModel(
                 defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveauCode)
                 appContext?.let { DefiQuotidienWidgetProvider.demanderMiseAJour(it) }
             }
+            // Enregistré après la réussite du jour : un seuil de trophée franchi pile à cet
+            // instant (ex. série de 30 jours) est détecté immédiatement, pas au prochain
+            // reevaluer() (bug remonté par l'utilisateur).
+            tropheeRepository.reevaluer(profilId)
         }
     }
 

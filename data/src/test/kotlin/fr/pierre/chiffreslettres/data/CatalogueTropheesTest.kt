@@ -37,6 +37,9 @@ private fun statsVides() = TropheeStats(
     meilleureSerieJoursDefiQuotidien = 0,
     meilleureSerieJoursDefiQuotidienNiveauMonique = 0,
     meilleureSerieJoursDefiQuotidienNiveauMathieu = 0,
+    serieEnCoursJoursDefiQuotidien = 0,
+    serieEnCoursJoursDefiQuotidienNiveauMonique = 0,
+    serieEnCoursJoursDefiQuotidienNiveauMathieu = 0,
 )
 
 class CatalogueTropheesTest {

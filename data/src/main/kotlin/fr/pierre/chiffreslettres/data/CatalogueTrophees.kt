@@ -71,6 +71,17 @@ data class TropheeStats(
     val meilleureSerieJoursDefiQuotidienNiveauMonique: Int,
     /** Comme [meilleureSerieJoursDefiQuotidien], restreint aux jours joués au niveau Mathieu. */
     val meilleureSerieJoursDefiQuotidienNiveauMathieu: Int,
+    /**
+     * Série de jours consécutifs en cours (pas la meilleure série historique) — sert uniquement à
+     * l'affichage de la progression d'un trophée non débloqué (retour utilisateur : afficher "2/30"
+     * après 2 jours d'affilée, pas rester bloqué sur un ancien record dépassé par une interruption).
+     * Le déblocage du trophée continue lui de se baser sur [meilleureSerieJoursDefiQuotidien].
+     */
+    val serieEnCoursJoursDefiQuotidien: Int,
+    /** Comme [serieEnCoursJoursDefiQuotidien], restreint aux jours joués au niveau Monique ou Mathieu. */
+    val serieEnCoursJoursDefiQuotidienNiveauMonique: Int,
+    /** Comme [serieEnCoursJoursDefiQuotidien], restreint aux jours joués au niveau Mathieu. */
+    val serieEnCoursJoursDefiQuotidienNiveauMathieu: Int,
 )
 
 /** Palier de difficulté d'un trophée (retour utilisateur), du plus facile au plus rare. */
@@ -693,7 +704,7 @@ object CatalogueTrophees {
                     categorie = CategorieTrophee.DEFI_QUOTIDIEN,
                     palier = PALIERS_DEFI_QUOTIDIEN.getValue(seuil),
                     objectif = seuil,
-                    progression = { it.meilleureSerieJoursDefiQuotidien },
+                    progression = { it.serieEnCoursJoursDefiQuotidien },
                 ) { it.meilleureSerieJoursDefiQuotidien >= seuil },
             )
         }
@@ -707,7 +718,7 @@ object CatalogueTrophees {
                 categorie = CategorieTrophee.DEFI_QUOTIDIEN,
                 palier = Palier.PLATINE,
                 objectif = SEUIL_DEFI_QUOTIDIEN_NIVEAU,
-                progression = { it.meilleureSerieJoursDefiQuotidienNiveauMonique },
+                progression = { it.serieEnCoursJoursDefiQuotidienNiveauMonique },
             ) { it.meilleureSerieJoursDefiQuotidienNiveauMonique >= SEUIL_DEFI_QUOTIDIEN_NIVEAU },
         )
         add(
@@ -720,7 +731,7 @@ object CatalogueTrophees {
                 categorie = CategorieTrophee.DEFI_QUOTIDIEN,
                 palier = Palier.DIAMANT,
                 objectif = SEUIL_DEFI_QUOTIDIEN_NIVEAU,
-                progression = { it.meilleureSerieJoursDefiQuotidienNiveauMathieu },
+                progression = { it.serieEnCoursJoursDefiQuotidienNiveauMathieu },
             ) { it.meilleureSerieJoursDefiQuotidienNiveauMathieu >= SEUIL_DEFI_QUOTIDIEN_NIVEAU },
         )
     }

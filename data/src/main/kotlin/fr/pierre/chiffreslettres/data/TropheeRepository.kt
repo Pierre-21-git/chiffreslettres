@@ -26,7 +26,7 @@ class TropheeRepository(
     fun tropheesDebloques(profilId: Long): Flow<List<TropheeEntity>> = tropheeDao.tropheesDebloques(profilId)
 
     /** Stats agrégées d'un joueur pour l'évaluation des trophées — aussi utilisé pour afficher la progression ("X / objectif") d'un trophée non débloqué. */
-    suspend fun stats(profilId: Long): TropheeStats = TropheeStats(
+    suspend fun stats(profilId: Long, aujourdHui: LocalDate = LocalDate.now()): TropheeStats = TropheeStats(
         comptesExacts = historiqueDao.compterComptesExacts(profilId),
         motsParLongueur = LONGUEURS_MOTS_TROPHEE.associateWith { historiqueDao.compterMotsLongueur(profilId, it) },
         partieTousComptesExacts = historiqueDao.compterPartiesTousComptesExacts(profilId) >= 1,
@@ -86,6 +86,20 @@ class TropheeRepository(
         meilleureSerieJoursDefiQuotidienNiveauMathieu = plusLongueSerieDeJours(
             defiQuotidienDao.joursReussisNiveaux(profilId, NIVEAUX_MATHIEU)
                 .mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
+        ),
+        serieEnCoursJoursDefiQuotidien = serieEnCoursDeJours(
+            defiQuotidienDao.joursReussis(profilId).mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.toSet(),
+            aujourdHui,
+        ),
+        serieEnCoursJoursDefiQuotidienNiveauMonique = serieEnCoursDeJours(
+            defiQuotidienDao.joursReussisNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)
+                .mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.toSet(),
+            aujourdHui,
+        ),
+        serieEnCoursJoursDefiQuotidienNiveauMathieu = serieEnCoursDeJours(
+            defiQuotidienDao.joursReussisNiveaux(profilId, NIVEAUX_MATHIEU)
+                .mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.toSet(),
+            aujourdHui,
         ),
     )
 

@@ -19,6 +19,20 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.93",
+        date = "2026-08-12",
+        changements = listOf(
+            "Trophées défi quotidien (7/14/30 jours, et paliers niveau Monique/Mathieu) : la " +
+                "progression affichée est maintenant la série de jours consécutifs en cours, plus " +
+                "le meilleur record historique — ce dernier pouvait rester bloqué à une valeur " +
+                "dépassée par une interruption passée, même après un nouveau défi réussi. Le " +
+                "déblocage du trophée continue de se baser sur le meilleur record obtenu.",
+            "Défi quotidien : correction d'un cas où un trophée franchi pile au moment de la " +
+                "réussite du jour pouvait n'être détecté qu'au cycle suivant (partie suivante ou " +
+                "ouverture de l'écran Trophées) au lieu d'être débloqué immédiatement.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.92",
         date = "2026-08-12",
         changements = listOf(
