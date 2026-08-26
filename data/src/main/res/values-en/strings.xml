@@ -12,12 +12,16 @@
     <string name="categorie_defi_mots_max">Word challenge</string>
     <string name="categorie_defi_sans_faute">Flawless challenge</string>
     <string name="categorie_defi_quotidien">Daily challenge</string>
+    <string name="categorie_trophees_speciaux">Special trophies</string>
 
     <!-- Tier labels (full player rank, e.g. "Bronze Player") -->
     <string name="palier_joueur_bronze">Bronze Player</string>
     <string name="palier_joueur_argent">Silver Player</string>
     <string name="palier_joueur_or">Gold Player</string>
     <string name="palier_joueur_platine">Platinum Player</string>
+    <string name="palier_joueur_emeraude">Emerald Player</string>
+    <string name="palier_joueur_saphir">Sapphire Player</string>
+    <string name="palier_joueur_rubis">Ruby Player</string>
     <string name="palier_joueur_diamant">Diamond Player</string>
 
     <!-- Tier labels (short, trophy detail) -->
@@ -25,6 +29,9 @@
     <string name="palier_court_argent">Silver</string>
     <string name="palier_court_or">Gold</string>
     <string name="palier_court_platine">Platinum</string>
+    <string name="palier_court_emeraude">Emerald</string>
+    <string name="palier_court_saphir">Sapphire</string>
+    <string name="palier_court_rubis">Ruby</string>
     <string name="palier_court_diamant">Diamond</string>
 
     <!-- Visual grouping subtitles -->
@@ -47,6 +54,9 @@
     <string name="trophee_titre_compte_exact_50">Fiftieth exact count</string>
     <string name="trophee_titre_compte_exact_100">Hundredth exact count</string>
     <string name="trophee_titre_compte_exact_200">Two-hundredth exact count</string>
+    <string name="trophee_titre_compte_exact_500">Five-hundredth exact count</string>
+    <string name="trophee_titre_compte_exact_1000">Thousandth exact count</string>
+    <string name="trophee_titre_compte_exact_2000">Two-thousandth exact count</string>
     <string name="trophee_titre_mot_1">First %1$d-letter word</string>
     <string name="trophee_titre_mot_10">Tenth %1$d-letter word</string>
     <string name="trophee_titre_partie_parfaite_chiffres">All exact counts in a game</string>
@@ -58,14 +68,24 @@
     <string name="trophee_titre_parties_10">Tenth game completed</string>
     <string name="trophee_titre_parties_50">Fiftieth game completed</string>
     <string name="trophee_titre_parties_100">Hundredth game completed</string>
+    <string name="trophee_titre_parties_150">Hundred-fiftieth game completed</string>
     <string name="trophee_titre_parties_200">Two-hundredth game completed</string>
+    <string name="trophee_titre_parties_250">Two-hundred-fiftieth game completed</string>
+    <string name="trophee_titre_parties_500">Five-hundredth game completed</string>
     <string name="trophee_titre_duo_1">First duo game played</string>
     <string name="trophee_titre_duo_gagnee_1">First duo game won</string>
     <string name="trophee_titre_duo_gagnee_10">Tenth duo game won</string>
+    <string name="trophee_titre_duo_gagnee_25">Twenty-fifth duo game won</string>
+    <string name="trophee_titre_duo_gagnee_50">Fiftieth duo game won</string>
+    <string name="trophee_titre_duo_gagnee_75">Seventy-fifth duo game won</string>
+    <string name="trophee_titre_duo_gagnee_100">Hundredth duo game won</string>
     <string name="trophee_titre_duel_mots_1">First word duel game played</string>
     <string name="trophee_titre_duel_mots_gagnee_1">First word duel game won</string>
     <string name="trophee_titre_duel_mots_gagnee_10">Tenth word duel game won</string>
-    <string name="trophee_titre_defi_1">First challenge completed</string>
+    <string name="trophee_titre_duel_mots_gagnee_25">Twenty-fifth word duel game won</string>
+    <string name="trophee_titre_duel_mots_gagnee_50">Fiftieth word duel game won</string>
+    <string name="trophee_titre_duel_mots_gagnee_75">Seventy-fifth word duel game won</string>
+    <string name="trophee_titre_duel_mots_gagnee_100">Hundredth word duel game won</string>
     <string name="trophee_titre_defi_serie">Streak of %1$d in the %2$s challenge</string>
     <string name="trophee_titre_defi_serie_niveau_monique">Streak of %1$d in the %2$s challenge, Ça se complique, Monique level or above</string>
     <string name="trophee_titre_defi_serie_niveau_mathieu">Streak of %1$d in the %2$s challenge, C\'est du sérieux, Mathieu level</string>
@@ -80,7 +100,7 @@
     <string name="trophee_titre_defi_sans_faute_niveau_mathieu">A flawless streak of %1$d, C\'est du sérieux, Mathieu level</string>
     <string name="trophee_titre_defi_quotidien_semaine">A week of daily challenges</string>
     <string name="trophee_titre_defi_quotidien_deux_semaines">Two weeks of daily challenges</string>
-    <string name="trophee_titre_defi_quotidien_mois">A month of daily challenges</string>
+    <string name="trophee_titre_defi_quotidien_trois_semaines">Three weeks of daily challenge</string>
     <string name="trophee_titre_defi_quotidien_niveau_monique">%1$d days of daily challenges, Ça se complique, Monique level or above</string>
     <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d days of daily challenges, C\'est du sérieux, Mathieu level</string>
 
@@ -90,6 +110,9 @@
     <string name="trophee_desc_compte_exact_50">Get 50 exact counts in numbers, in a game (solo, duo, or head-to-head).</string>
     <string name="trophee_desc_compte_exact_100">Get 100 exact counts in numbers, in a game (solo, duo, or head-to-head).</string>
     <string name="trophee_desc_compte_exact_200">Get 200 exact counts in numbers, in a game (solo, duo, or head-to-head).</string>
+    <string name="trophee_desc_compte_exact_500">Get 500 exact counts in numbers, in a game (solo, duo, or head-to-head).</string>
+    <string name="trophee_desc_compte_exact_1000">Get 1000 exact counts in numbers, in a game (solo, duo, or head-to-head).</string>
+    <string name="trophee_desc_compte_exact_2000">Get 2000 exact counts in numbers, in a game (solo, duo, or head-to-head).</string>
     <string name="trophee_desc_mot_1">Find a %1$d-letter word, in a game (solo, duo, or head-to-head).</string>
     <string name="trophee_desc_mot_1_max">Find a %1$d-letter word (the maximum draw length), in a game (solo, duo, or head-to-head).</string>
     <string name="trophee_desc_mot_10">Find 10 %1$d-letter words, in a game (solo, duo, or head-to-head).</string>
@@ -102,14 +125,24 @@
     <string name="trophee_desc_parties_10">Complete 10 games (solo, duo, or head-to-head), any level.</string>
     <string name="trophee_desc_parties_50">Complete 50 games (solo, duo, or head-to-head), any level.</string>
     <string name="trophee_desc_parties_100">Complete 100 games (solo, duo, or head-to-head), any level.</string>
+    <string name="trophee_desc_parties_150">Complete 150 games (solo, duo, or head-to-head), any level.</string>
     <string name="trophee_desc_parties_200">Complete 200 games (solo, duo, or head-to-head), any level.</string>
+    <string name="trophee_desc_parties_250">Complete 250 games (solo, duo, or head-to-head), any level.</string>
+    <string name="trophee_desc_parties_500">Complete 500 games (solo, duo, or head-to-head), any level.</string>
     <string name="trophee_desc_duo_1">Complete a game in Duo or Head-to-head mode, same phone or remote, any level.</string>
     <string name="trophee_desc_duo_gagnee_1">Win a game in Duo or Head-to-head mode, same phone or remote.</string>
     <string name="trophee_desc_duo_gagnee_10">Win 10 games in Duo or Head-to-head mode, same phone or remote.</string>
+    <string name="trophee_desc_duo_gagnee_25">Win 25 games in Duo or Head-to-head mode, same phone or remote.</string>
+    <string name="trophee_desc_duo_gagnee_50">Win 50 games in Duo or Head-to-head mode, same phone or remote.</string>
+    <string name="trophee_desc_duo_gagnee_75">Win 75 games in Duo or Head-to-head mode, same phone or remote.</string>
+    <string name="trophee_desc_duo_gagnee_100">Win 100 games in Duo or Head-to-head mode, same phone or remote.</string>
     <string name="trophee_desc_duel_mots_1">Complete a game in Word duel (Duo or Head-to-head) mode, remote, any level.</string>
     <string name="trophee_desc_duel_mots_gagnee_1">Win a game in Word duel (Duo or Head-to-head) mode, remote.</string>
     <string name="trophee_desc_duel_mots_gagnee_10">Win 10 games in Word duel (Duo or Head-to-head) mode, remote.</string>
-    <string name="trophee_desc_defi_1">Reach the end of a challenge (numbers or letters, any level).</string>
+    <string name="trophee_desc_duel_mots_gagnee_25">Win 25 games in Word duel (Duo or Head-to-head) mode, remote.</string>
+    <string name="trophee_desc_duel_mots_gagnee_50">Win 50 games in Word duel (Duo or Head-to-head) mode, remote.</string>
+    <string name="trophee_desc_duel_mots_gagnee_75">Win 75 games in Word duel (Duo or Head-to-head) mode, remote.</string>
+    <string name="trophee_desc_duel_mots_gagnee_100">Win 100 games in Word duel (Duo or Head-to-head) mode, remote.</string>
     <string name="trophee_desc_defi_serie">String together %1$d or more successes in a row in the same %2$s challenge.</string>
     <string name="trophee_desc_defi_serie_niveau_monique">String together %1$d or more successes in a row in the same %2$s challenge, at Ça se complique, Monique or C\'est du sérieux, Mathieu level.</string>
     <string name="trophee_desc_defi_serie_niveau_mathieu">String together %1$d or more successes in a row in the same %2$s challenge, at C\'est du sérieux, Mathieu level.</string>
@@ -125,4 +158,85 @@
     <string name="trophee_desc_defi_quotidien">Succeed at the daily challenge %1$d days in a row.</string>
     <string name="trophee_desc_defi_quotidien_niveau_monique">Succeed at the daily challenge %1$d days in a row, at Ça se complique, Monique or C\'est du sérieux, Mathieu level.</string>
     <string name="trophee_desc_defi_quotidien_niveau_mathieu">Succeed at the daily challenge %1$d days in a row, at C\'est du sérieux, Mathieu level.</string>
+    <string name="trophee_titre_section_defi_complete">Master of Challenges</string>
+    <string name="trophee_desc_section_defi_complete">Unlock every trophy in the Challenges section.</string>
+    <string name="trophee_titre_section_partie_complete">Master of Games</string>
+    <string name="trophee_desc_section_partie_complete">Unlock every trophy in the Games section.</string>
+
+    <!-- Easter eggs (refonte 2026-08): group 1, computable from existing data -->
+    <string name="categorie_easter_chiffres">Secrets — Numbers</string>
+    <string name="categorie_easter_lettres">Secrets — Letters</string>
+    <string name="categorie_easter_general">Secrets — General</string>
+    <string name="categorie_easter_ultime">Ultimate trophy</string>
+
+    <string name="trophee_titre_easter_ancien_combattant">Veteran</string>
+    <string name="trophee_desc_easter_ancien_combattant">Have an account active for more than a year.</string>
+    <string name="trophee_titre_easter_multi_niveaux">Multi-level</string>
+    <string name="trophee_desc_easter_multi_niveaux">Have played at least one game at every difficulty level.</string>
+    <string name="trophee_titre_easter_marathon">Marathon</string>
+    <string name="trophee_desc_easter_marathon">Play more than 20 games in the same day.</string>
+    <string name="trophee_titre_easter_ca_ne_sarrete_jamais">It never stops</string>
+    <string name="trophee_desc_easter_ca_ne_sarrete_jamais">Play 5 games in a row in under an hour.</string>
+    <string name="trophee_titre_easter_constance">Consistency</string>
+    <string name="trophee_desc_easter_constance">Play 10 games with less than 10 points between your best and worst.</string>
+    <string name="trophee_titre_easter_polyvalent">Well-rounded</string>
+    <string name="trophee_desc_easter_polyvalent">Get at least one Gold trophy (or higher) in every major category.</string>
+    <string name="trophee_titre_easter_specialiste_complet">Full specialist</string>
+    <string name="trophee_desc_easter_specialiste_complet">Unlock every trophy in a single category, up to the last tier.</string>
+    <string name="trophee_titre_easter_bonjour">Good morning!</string>
+    <string name="trophee_desc_easter_bonjour">Play your first game between 5am and 7am.</string>
+    <string name="trophee_titre_easter_oiseau_de_nuit">Night owl</string>
+    <string name="trophee_desc_easter_oiseau_de_nuit">Play a game between midnight and 5am.</string>
+    <string name="trophee_titre_easter_touche_a_tout">Jack of all trades</string>
+    <string name="trophee_desc_easter_touche_a_tout">Have played at least once in every mode (solo, head-to-head, duo, duel, challenge).</string>
+    <string name="trophee_titre_easter_rituel_dimanche">Sunday ritual</string>
+    <string name="trophee_desc_easter_rituel_dimanche">Play on a Sunday, 4 weeks in a row.</string>
+    <string name="trophee_titre_easter_ex_aequo">Tied</string>
+    <string name="trophee_desc_easter_ex_aequo">Finish a game with exactly the same score as an opponent.</string>
+    <string name="trophee_titre_easter_symetrie">Symmetry</string>
+    <string name="trophee_desc_easter_symetrie">Get the same score twice in solo games.</string>
+    <string name="trophee_titre_easter_noce_de_chene">Oak wedding</string>
+    <string name="trophee_desc_easter_noce_de_chene">Reach your 80th unlocked trophy.</string>
+    <string name="trophee_titre_easter_mot_invalide_dix_lettres">The longest word ever attempted</string>
+    <string name="trophee_desc_easter_mot_invalide_dix_lettres">Submit an invalid 10-letter word.</string>
+    <string name="trophee_titre_easter_mot_rare">Rare word</string>
+    <string name="trophee_desc_easter_mot_rare">Use a word of at least 8 letters containing a Q, X, W, Y, or Z.</string>
+    <string name="trophee_titre_easter_palindrome">Palindrome</string>
+    <string name="trophee_desc_easter_palindrome">Play a palindrome word (e.g. \"kayak\", \"radar\").</string>
+    <string name="trophee_titre_easter_symetrique">Symmetrical</string>
+    <string name="trophee_desc_easter_symetrique">Play a word whose letters are in alphabetical order (e.g. \"chintz\").</string>
+    <string name="trophee_titre_easter_alphabet_complet">Full alphabet</string>
+    <string name="trophee_desc_easter_alphabet_complet">Use, across all your games combined, every letter of the alphabet at least once.</string>
+    <string name="trophee_titre_easter_curieux">Curious</string>
+    <string name="trophee_desc_easter_curieux">Check out the rules of the game page.</string>
+    <string name="trophee_titre_easter_data_lover">Data lover</string>
+    <string name="trophee_desc_easter_data_lover">Check your statistics page 100 times.</string>
+    <string name="trophee_titre_easter_toit_du_monde">Roof of the world</string>
+    <string name="trophee_desc_easter_toit_du_monde">Unlock the other 149 trophies.</string>
+
+    <string name="easter_avant_longue_haleine">A long-haul trophy…</string>
+    <string name="easter_avant_assiduite">Rewards dedication…</string>
+    <string name="easter_avant_exploration">To be discovered by exploring the app…</string>
+    <string name="easter_avant_heure">A matter of timing…</string>
+    <string name="easter_avant_vocabulaire">A secret tied to vocabulary…</string>
+    <string name="easter_avant_invisible">\?\?\?</string>
+    <string name="easter_avant_precision_chiffres">A feat of precision in the numbers challenge…</string>
+    <string name="easter_avant_timing">A matter of timing, against the clock…</string>
+
+    <string name="trophee_titre_easter_nombre_premier">Prime number</string>
+    <string name="trophee_desc_easter_nombre_premier">Find an exact count whose result is a prime number.</string>
+    <string name="trophee_titre_easter_calcul_mental">Mental math</string>
+    <string name="trophee_desc_easter_calcul_mental">Find an exact count where no intermediate step goes above 2 digits.</string>
+    <string name="trophee_titre_easter_chemin_minimal">Minimal path</string>
+    <string name="trophee_desc_easter_chemin_minimal">Find an exact count in a single operation.</string>
+    <string name="trophee_titre_easter_chirurgical">Surgical</string>
+    <string name="trophee_desc_easter_chirurgical">Find an exact count using all 6 drawn numbers.</string>
+    <string name="trophee_titre_easter_speedrun">Speedrun</string>
+    <string name="trophee_desc_easter_speedrun">Find an exact count in under 5 seconds.</string>
+    <string name="trophee_titre_easter_va_tout">All in</string>
+    <string name="trophee_desc_easter_va_tout">Submit a count at the very last second of the clock.</string>
+    <string name="trophee_titre_easter_aucune_idee">No idea</string>
+    <string name="trophee_desc_easter_aucune_idee">Let the clock run out entirely without proposing anything.</string>
+    <string name="trophee_titre_easter_cent_heures">100 hours of play</string>
+    <string name="trophee_desc_easter_cent_heures">Reach 100 hours of play in total.</string>
 </resources>

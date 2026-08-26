@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
+import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TypeDefi
 import fr.pierre.chiffreslettres.data.alphabet.ConfigurationAlphabetLettres
@@ -100,6 +101,14 @@ class DefiMotsMaxViewModel(
 
     private val _uiState = MutableStateFlow(DefiMotsMaxUiState(niveau = niveau, nombreLettres = nombreLettres))
     val uiState: StateFlow<DefiMotsMaxUiState> = _uiState.asStateFlow()
+
+    private val _tropheesDebloques = MutableStateFlow<List<Trophee>>(emptyList())
+    /** Trophées fraîchement débloqués à la fin de ce défi (retour utilisateur : écran dédié). */
+    val tropheesDebloques: StateFlow<List<Trophee>> = _tropheesDebloques.asStateFlow()
+
+    fun effacerTropheesDebloques() {
+        _tropheesDebloques.value = emptyList()
+    }
 
     fun choisirNombreVoyelles(nombreVoyelles: Int) {
         val etat = _uiState.value
@@ -212,7 +221,7 @@ class DefiMotsMaxViewModel(
         val score = _uiState.value.motsTrouves.size
         viewModelScope.launch {
             defiRepository.enregistrer(profilId, ModeJeu.LETTRES, niveauCode, TypeDefi.MOTS_MAX, score)
-            tropheeRepository.reevaluer(profilId)
+            _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
         }
     }
 

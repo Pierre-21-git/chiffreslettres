@@ -21,6 +21,21 @@ import kotlinx.coroutines.launch
 
 data class Jeton(val id: Int, val expression: Expression)
 
+/**
+ * Détail d'une manche chiffres terminée (retour mainteneur, easter eggs "Nombre premier",
+ * "Calcul mental", "Chemin minimal", "Chirurgical", "Speedrun", "Va-tout", "100 heures de jeu") :
+ * calculé une seule fois à la validation, transmis tel quel jusqu'à l'enregistrement en base.
+ */
+data class DetailChiffresManche(
+    val cible: Int,
+    val nombreOperations: Int,
+    /** Résultat intermédiaire le plus élevé parmi les opérations jouées, null si aucune opération. */
+    val maxEtapeIntermediaire: Int?,
+    /** Null si manche non chronométrée (entraînement libre). */
+    val dureeSecondesEcoulees: Int?,
+    val tempsRestantSecondes: Int?,
+)
+
 data class ChiffresRoundUiState(
     val niveau: Niveau,
     val cible: Int,
@@ -35,6 +50,7 @@ data class ChiffresRoundUiState(
     /** Écart avec la cible de la proposition finale, null si rien n'a été proposé — utilisé pour comparer deux joueurs en mode duo confrontation (le score seul ne suffit pas : deux écarts différents peuvent tomber dans le même palier de points). */
     val ecartCible: Int? = null,
     val solutionSolveur: Expression?,
+    val detailFinal: DetailChiffresManche? = null,
 )
 
 private data class Etape(val jetons: List<Jeton>, val operationsEffectuees: List<String>)
@@ -42,7 +58,7 @@ private data class Etape(val jetons: List<Jeton>, val operationsEffectuees: List
 /** Interface calculatrice pas-à-pas du §3.4 : combine deux jetons à la fois. */
 class ChiffresRoundViewModel(
     private val niveau: Niveau,
-    dureeSecondes: Int? = null,
+    private val dureeSecondes: Int? = null,
     nombreJetons: Int = ReservoirChiffres.NOMBRE_JETONS_DEFAUT,
     /** Permet au mode Défi de forcer une solution exacte même sur Monique/Mathieu. */
     garantieSolution: Boolean = niveau.garantieSolution,
@@ -167,7 +183,17 @@ class ChiffresRoundViewModel(
         val meilleurEcartAtteignable = etat.solutionSolveur?.let { abs(etat.cible - it.resultat) } ?: 0
         val score = Bareme.score(niveau, etat.cible, proposition, meilleurEcartAtteignable)
         val ecart = proposition?.let { abs(etat.cible - it) }
-        _uiState.update { it.copy(termine = true, scoreObtenu = score, ecartCible = ecart) }
+        val maxEtapeIntermediaire = etat.operationsEffectuees
+            .mapNotNull { ligne -> ligne.substringAfterLast("= ").toIntOrNull()?.let { abs(it) } }
+            .maxOrNull()
+        val detail = DetailChiffresManche(
+            cible = etat.cible,
+            nombreOperations = etat.operationsEffectuees.size,
+            maxEtapeIntermediaire = maxEtapeIntermediaire,
+            dureeSecondesEcoulees = dureeSecondes?.let { it - (etat.tempsRestantSecondes ?: 0) },
+            tempsRestantSecondes = etat.tempsRestantSecondes,
+        )
+        _uiState.update { it.copy(termine = true, scoreObtenu = score, ecartCible = ecart, detailFinal = detail) }
     }
 
     override fun onCleared() {

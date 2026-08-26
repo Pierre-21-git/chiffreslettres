@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ResultatManche
+import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TypePartie
 import fr.pierre.chiffreslettres.data.alphabet.ConfigurationAlphabetLettres
@@ -145,6 +146,14 @@ class DuelMotsReseauViewModel(
 
     /** Duo uniquement : le résultat final de l'adversaire (5 min écoulées de son côté) est-il déjà reçu ? */
     private val _resultatAdversaireDuoRecu = MutableStateFlow(false)
+
+    private val _tropheesDebloques = MutableStateFlow<List<Trophee>>(emptyList())
+    /** Trophées fraîchement débloqués à la fin de cette partie (retour utilisateur : écran dédié). */
+    val tropheesDebloques: StateFlow<List<Trophee>> = _tropheesDebloques.asStateFlow()
+
+    fun effacerTropheesDebloques() {
+        _tropheesDebloques.value = emptyList()
+    }
     val resultatAdversaireDuoRecu: StateFlow<Boolean> = _resultatAdversaireDuoRecu.asStateFlow()
 
     /** Duo uniquement : mon résultat final (5 min écoulées) déjà envoyé à l'adversaire ? */
@@ -457,10 +466,13 @@ class DuelMotsReseauViewModel(
             SousModeDuelMots.DUO -> _motsTrouvesMoi.value.size >= _motsTrouvesAdversaire.value.size
             SousModeDuelMots.CONFRONTATION -> _gagnant.value == true
         }
+        // Pas de signal d'égalité disponible pour le sous-mode Confrontation (retour mainteneur,
+        // easter egg "Ex-aequo") : `_gagnant` est un simple booléen gagné/perdu.
+        val egalite = if (sousMode == SousModeDuelMots.DUO) _motsTrouvesMoi.value.size == _motsTrouvesAdversaire.value.size else null
         val manche = ResultatManche(ModeJeu.LETTRES, niveau.name, _motsTrouvesMoi.value.size)
         viewModelScope.launch {
-            historiqueRepository.enregistrerSession(profilId, sousMode.versTypePartie(), listOf(manche), jaiGagne)
-            tropheeRepository.reevaluer(profilId)
+            historiqueRepository.enregistrerSession(profilId, sousMode.versTypePartie(), listOf(manche), jaiGagne, egalite)
+            _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
         }
     }
 

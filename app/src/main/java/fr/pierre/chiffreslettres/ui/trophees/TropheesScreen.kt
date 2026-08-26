@@ -38,6 +38,7 @@ import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.data.ArgRes
 import fr.pierre.chiffreslettres.data.CatalogueTrophees
 import fr.pierre.chiffreslettres.data.CategorieTrophee
+import fr.pierre.chiffreslettres.data.NiveauVisibilite
 import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.TropheeStats
 import fr.pierre.chiffreslettres.data.libelleCourtRes
@@ -47,6 +48,7 @@ import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
 import fr.pierre.chiffreslettres.ui.theme.Ivory
 import fr.pierre.chiffreslettres.ui.theme.PanelDeep
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
+import fr.pierre.chiffreslettres.ui.theme.PalierEasterEgg
 import fr.pierre.chiffreslettres.ui.theme.couleurPalier
 
 /**
@@ -56,10 +58,33 @@ import fr.pierre.chiffreslettres.ui.theme.couleurPalier
  */
 /** Résout un titre/description de trophée : substitue les [ArgRes] (nom de mode, etc.) par leur texte avant le format. */
 @Composable
-private fun texteTrophee(res: Int, args: List<Any>): String {
+internal fun texteTrophee(res: Int, args: List<Any>): String {
     val argsResolus = args.map { if (it is ArgRes) stringResource(it.res) else it }
     return stringResource(res, *argsResolus.toTypedArray())
 }
+
+/**
+ * Titre affiché d'un trophée : masqué en "???????" tant qu'un trophée INVISIBLE (5 easter eggs
+ * secrets, retour utilisateur) n'est pas débloqué — y compris en simple consultation du
+ * catalogue, où [debloque] est toujours faux. Une fois débloqué, toujours le vrai titre.
+ */
+@Composable
+internal fun titreAffiche(trophee: Trophee, debloque: Boolean): String =
+    if (!debloque && trophee.niveauVisibilite == NiveauVisibilite.INVISIBLE) {
+        stringResource(R.string.trophee_titre_cache)
+    } else {
+        texteTrophee(trophee.titreRes, trophee.titreArgs)
+    }
+
+/** Un "grand bloc" de l'écran (Parties et duels / Défis / Trophées spéciaux), avant filtrage. */
+private data class GrandBloc(val titreRes: Int, val categories: List<CategorieTrophee>, val meta: Trophee?)
+
+/** Même chose après filtrage (masquerObtenus, catégories vides retirées). */
+private data class BlocAffiche(
+    val titreRes: Int,
+    val categories: List<Pair<CategorieTrophee, List<Trophee>>>,
+    val meta: Trophee?,
+)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -118,41 +143,89 @@ fun TropheesScreen(
             }
         }
 
-        val categoriesAffichees = CategorieTrophee.entries.mapNotNull { categorie ->
-            val tropheesCategorie = CatalogueTrophees.TOUS.filter { it.categorie == categorie }
-                .let { liste ->
-                    if (masquerObtenus && tropheesDebloques != null) {
-                        liste.filterNot { tropheesDebloques.containsKey(it.id) }
-                    } else {
-                        liste
-                    }
+        // Trois "grands blocs" (retour utilisateur) au-dessus des sous-titres de catégorie déjà
+        // existants : Parties et duels, Défis, Trophées spéciaux (easter eggs) — dans cet ordre.
+        // Les méta-trophées "Maître des parties"/"Maître des défis" (catégorie TROPHEES_SPECIAUX,
+        // condition pilotée par TropheeRepository.reevaluer) sont rattachés manuellement en tout
+        // dernier de leur bloc plutôt que rendus via leur propre catégorie.
+        val metaPartie = CatalogueTrophees.TOUS.first { it.id == "section_partie_complete" }
+        val metaDefi = CatalogueTrophees.TOUS.first { it.id == "section_defi_complete" }
+        val grandsBlocs: List<GrandBloc> = listOf(
+            GrandBloc(
+                R.string.trophees_section_parties_duels,
+                CategorieTrophee.entries.filter { it in CatalogueTrophees.CATEGORIES_SECTION_PARTIE },
+                metaPartie,
+            ),
+            GrandBloc(
+                R.string.trophees_section_defis,
+                CategorieTrophee.entries.filter { it in CatalogueTrophees.CATEGORIES_SECTION_DEFI },
+                metaDefi,
+            ),
+            GrandBloc(
+                CategorieTrophee.TROPHEES_SPECIAUX.titreRes,
+                CategorieTrophee.entries.filter {
+                    it !in CatalogueTrophees.CATEGORIES_SECTION_PARTIE &&
+                        it !in CatalogueTrophees.CATEGORIES_SECTION_DEFI &&
+                        it != CategorieTrophee.TROPHEES_SPECIAUX
+                },
+                null,
+            ),
+        )
+
+        fun tropheesAffiches(categorie: CategorieTrophee) = CatalogueTrophees.TOUS.filter { it.categorie == categorie }
+            .let { liste ->
+                if (masquerObtenus && tropheesDebloques != null) {
+                    liste.filterNot { tropheesDebloques.containsKey(it.id) }
+                } else {
+                    liste
                 }
-            if (tropheesCategorie.isEmpty()) null else categorie to tropheesCategorie
+            }
+
+        val blocsAffiches = grandsBlocs.mapNotNull { grandBloc ->
+            val categoriesNonVides = grandBloc.categories.mapNotNull { categorie ->
+                val tropheesCategorie = tropheesAffiches(categorie)
+                if (tropheesCategorie.isEmpty()) null else categorie to tropheesCategorie
+            }
+            val meta = grandBloc.meta
+            val metaAffiche = meta != null && !(masquerObtenus && tropheesDebloques?.containsKey(meta.id) == true)
+            if (categoriesNonVides.isEmpty() && !metaAffiche) null else BlocAffiche(grandBloc.titreRes, categoriesNonVides, if (metaAffiche) meta else null)
         }
-        for ((position, entry) in categoriesAffichees.withIndex()) {
-            val (categorie, tropheesCategorie) = entry
+
+        for ((positionBloc, bloc) in blocsAffiches.withIndex()) {
+            val (titreBlocRes, categoriesNonVides, meta) = bloc
             item {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(stringResource(categorie.titreRes), style = MaterialTheme.typography.titleSmall)
+                Text(stringResource(titreBlocRes), style = MaterialTheme.typography.titleLarge, color = Ivory)
+            }
+            for ((categorie, tropheesCategorie) in categoriesNonVides) {
+                item {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        var sousTitrePrecedentRes: Int? = null
-                        for (trophee in tropheesCategorie) {
-                            val sousTitreRes = trophee.sousTitreRes
-                            if (sousTitreRes != null && sousTitreRes != sousTitrePrecedentRes) {
-                                sousTitrePrecedentRes = sousTitreRes
-                                Text(
-                                    stringResource(sousTitreRes),
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = TextMuted,
-                                )
+                        Text(stringResource(categorie.titreRes), style = MaterialTheme.typography.titleSmall)
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            var sousTitrePrecedentRes: Int? = null
+                            for (trophee in tropheesCategorie) {
+                                val sousTitreRes = trophee.sousTitreRes
+                                if (sousTitreRes != null && sousTitreRes != sousTitrePrecedentRes) {
+                                    sousTitrePrecedentRes = sousTitreRes
+                                    Text(
+                                        stringResource(sousTitreRes),
+                                        style = MaterialTheme.typography.labelLarge,
+                                        color = TextMuted,
+                                    )
+                                }
+                                val debloque = tropheesDebloques?.containsKey(trophee.id) == true
+                                TuileTrophee(trophee, debloque, onClick = { tropheeSelectionne = trophee })
                             }
-                            val debloque = tropheesDebloques?.containsKey(trophee.id) == true
-                            TuileTrophee(trophee, debloque, onClick = { tropheeSelectionne = trophee })
                         }
                     }
                 }
             }
-            if (position != categoriesAffichees.lastIndex) {
+            if (meta != null) {
+                item {
+                    val debloque = tropheesDebloques?.containsKey(meta.id) == true
+                    TuileTrophee(meta, debloque, onClick = { tropheeSelectionne = meta })
+                }
+            }
+            if (positionBloc != blocsAffiches.lastIndex) {
                 item { HorizontalDivider() }
             }
         }
@@ -162,17 +235,31 @@ fun TropheesScreen(
         val date = tropheesDebloques?.get(trophee.id)
         val objectif = trophee.objectif
         val progression = trophee.progression
+        // Description avant déblocage (retour utilisateur, easter eggs) : tant qu'un trophée
+        // SEMI_CACHE/INVISIBLE n'est pas débloqué, on affiche la description vague plutôt que la
+        // vraie (qui dévoilerait le secret). Une fois débloqué, toujours la vraie description.
+        val descriptionAvantDeblocageRes = trophee.descriptionAvantDeblocageRes
+        val afficherDescriptionAvantDeblocage =
+            date == null && trophee.niveauVisibilite != NiveauVisibilite.VISIBLE && descriptionAvantDeblocageRes != null
         AlertDialog(
             onDismissRequest = { tropheeSelectionne = null },
-            title = { Text(texteTrophee(trophee.titreRes, trophee.titreArgs)) },
+            title = { Text(titreAffiche(trophee, date != null)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        stringResource(trophee.palier.libelleCourtRes),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = couleurPalier(trophee.palier),
-                    )
-                    Text(texteTrophee(trophee.descriptionRes, trophee.descriptionArgs))
+                    // Un easter egg (palier == null) n'affiche pas de badge de palier : ce n'est
+                    // pas un jalon de la progression Bronze→Diamant (retour utilisateur).
+                    trophee.palier?.let { palier ->
+                        Text(
+                            stringResource(palier.libelleCourtRes),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = couleurPalier(palier),
+                        )
+                    }
+                    if (afficherDescriptionAvantDeblocage) {
+                        Text(stringResource(descriptionAvantDeblocageRes))
+                    } else {
+                        Text(texteTrophee(trophee.descriptionRes, trophee.descriptionArgs))
+                    }
                     if (date == null && objectif != null && progression != null && stats != null) {
                         Text(
                             stringResource(R.string.trophees_progression, progression(stats).coerceAtMost(objectif), objectif),
@@ -197,7 +284,9 @@ fun TropheesScreen(
 
 @Composable
 private fun TuileTrophee(trophee: Trophee, debloque: Boolean, onClick: () -> Unit) {
-    val couleur = couleurPalier(trophee.palier)
+    // Un easter egg (palier == null) prend une couleur neutre dédiée plutôt qu'une couleur de
+    // palier (retour utilisateur : ce n'est pas un jalon Bronze→Diamant).
+    val couleur = trophee.palier?.let { couleurPalier(it) } ?: PalierEasterEgg
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -218,10 +307,10 @@ private fun TuileTrophee(trophee: Trophee, debloque: Boolean, onClick: () -> Uni
                 .border(2.dp, couleur, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Text("🏆", fontSize = 18.sp)
+            Text(CatalogueTrophees.iconeTrophee(trophee.id), fontSize = 18.sp)
         }
         Text(
-            texteTrophee(trophee.titreRes, trophee.titreArgs),
+            titreAffiche(trophee, debloque),
             color = if (debloque) Ivory else TextMuted,
             fontSize = 13.sp,
             textAlign = TextAlign.Start,

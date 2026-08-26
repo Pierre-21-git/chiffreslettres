@@ -47,6 +47,7 @@ import fr.pierre.chiffreslettres.data.ReglagesStore
 import fr.pierre.chiffreslettres.data.ResultatManche
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TropheeStats
+import fr.pierre.chiffreslettres.data.VisitesEcranStore
 import fr.pierre.chiffreslettres.data.TypeDefi
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
@@ -120,6 +121,7 @@ import fr.pierre.chiffreslettres.ui.statistiques.MesStatistiquesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesGeneralesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesJoueurScreen
 import fr.pierre.chiffreslettres.ui.theme.couleurRangJoueur
+import fr.pierre.chiffreslettres.ui.trophees.TropheesDebloquesDialog
 import fr.pierre.chiffreslettres.ui.trophees.TropheesScreen
 import java.time.LocalDate
 import kotlin.random.Random
@@ -204,6 +206,7 @@ fun AppNavHost(
     defiQuotidienRepository: DefiQuotidienRepository,
     profilActifStore: ProfilActifStore,
     reglagesStore: ReglagesStore,
+    visitesEcranStore: VisitesEcranStore,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -262,6 +265,9 @@ fun AppNavHost(
         }
 
         composable(Routes.REGLES_DU_JEU) {
+            // Easter egg "Curieux" (retour mainteneur) : marque la page comme consultée dès
+            // l'ouverture, pas besoin d'attendre une action particulière sur l'écran.
+            LaunchedEffect(profilId) { if (profilId != -1L) visitesEcranStore.marquerReglesVues(profilId) }
             ReglesDuJeuScreen(onRetour = { navController.popBackStack() })
         }
 
@@ -334,6 +340,8 @@ fun AppNavHost(
             arguments = listOf(navArgument(Routes.ARG_PROFIL_ID) { type = NavType.LongType }),
         ) { backStackEntry ->
             val profilIdArg = backStackEntry.arguments!!.getLong(Routes.ARG_PROFIL_ID)
+            // Easter egg "Data-lover" (retour mainteneur) : compte les ouvertures de cette page.
+            LaunchedEffect(profilIdArg) { visitesEcranStore.incrementerVisitesStats(profilIdArg) }
             MesStatistiquesScreen(
                 profilId = profilIdArg,
                 historiqueRepository = historiqueRepository,
@@ -381,7 +389,7 @@ fun AppNavHost(
                     scoreCumule = null,
                     pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                     couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                    onMancheTerminee = { obtenu -> entrainementVm.enregistrerMancheChiffres(niveau, obtenu) },
+                    onMancheTerminee = { obtenu, _ -> entrainementVm.enregistrerMancheChiffres(niveau, obtenu) },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
                         Button(
@@ -475,8 +483,17 @@ fun AppNavHost(
                                 scoreCumule = scoreCumule,
                                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                                onMancheTerminee = { obtenu ->
-                                    partieVm.enregistrerResultat(ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu))
+                                onMancheTerminee = { obtenu, detail ->
+                                    partieVm.enregistrerResultat(
+                                        ResultatManche(
+                                            ModeJeu.CHIFFRES, manche.niveau.name, obtenu,
+                                            cibleChiffres = detail?.cible,
+                                            nombreOperationsChiffres = detail?.nombreOperations,
+                                            maxEtapeIntermediaireChiffres = detail?.maxEtapeIntermediaire,
+                                            dureeSecondesManche = detail?.dureeSecondesEcoulees,
+                                            tempsRestantSecondesValidation = detail?.tempsRestantSecondes,
+                                        ),
+                                    )
                                 },
                                 onRetourEntrainement = onRetourAvecConfirmation,
                                 progressionManche = progressionManche,
@@ -493,9 +510,12 @@ fun AppNavHost(
                                 scoreCumule = scoreCumule,
                                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                                onMancheTerminee = { obtenu, motValide, _, _, _ ->
+                                onMancheTerminee = { obtenu, motValide, _, _, longueurMotInvalide ->
                                     partieVm.enregistrerResultat(
-                                        ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide),
+                                        ResultatManche(
+                                            ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
+                                            dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
+                                        ),
                                     )
                                 },
                                 onRetourEntrainement = onRetourAvecConfirmation,
@@ -535,6 +555,8 @@ fun AppNavHost(
                     onTerminer = { navController.popBackStack(Routes.MENU, inclusive = false) },
                     onRetour = { navController.popBackStack() },
                 )
+                val tropheesDebloques by partieVm.tropheesDebloques.collectAsState()
+                TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { partieVm.effacerTropheesDebloques() })
             }
         }
 
@@ -656,12 +678,19 @@ fun AppNavHost(
                                 pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
                                 couleurRang = joueurActif?.let { couleurRangJoueur(it.id, tropheeRepository) },
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu ->
+                                onMancheTerminee = { obtenu, detailChiffres ->
                                     val detail = roundVm.uiState.value.operationsEffectuees
                                         .joinToString("\n").ifBlank { "Aucune opération" }
                                     duoVm.enregistrerResultat(
                                         ResultatDuoManche(
-                                            ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu),
+                                            ResultatManche(
+                                                ModeJeu.CHIFFRES, manche.niveau.name, obtenu,
+                                                cibleChiffres = detailChiffres?.cible,
+                                                nombreOperationsChiffres = detailChiffres?.nombreOperations,
+                                                maxEtapeIntermediaireChiffres = detailChiffres?.maxEtapeIntermediaire,
+                                                dureeSecondesManche = detailChiffres?.dureeSecondesEcoulees,
+                                                tempsRestantSecondesValidation = detailChiffres?.tempsRestantSecondes,
+                                            ),
                                             roundVm.uiState.value.ecartCible,
                                             detail,
                                             solutionPossible = roundVm.uiState.value.solutionSolveur,
@@ -715,7 +744,10 @@ fun AppNavHost(
                                 onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots, longueurMotInvalide ->
                                     duoVm.enregistrerResultat(
                                         ResultatDuoManche(
-                                            ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide),
+                                            ResultatManche(
+                                            ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
+                                            dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
+                                        ),
                                             detail = motValide ?: texteAucunMot,
                                             dixMeilleursMots = dixMeilleursMots,
                                         ),
@@ -751,9 +783,11 @@ fun AppNavHost(
                 val duoVm = partieDuoViewModel(navController, backStackEntry, historiqueRepository, tropheeRepository, profilId)
                 val profil2 = profils.find { it.id == duoVm.profil2Id }
                 val (resultats1, resultats2) = duoVm.resultatsFinaux()
+                val pseudo1 = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "Joueur 1"
+                val pseudo2 = profil2?.let { "${it.avatar} ${it.pseudo}" } ?: "Joueur 2"
                 RecapPartieDuoScreen(
-                    pseudo1 = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "Joueur 1",
-                    pseudo2 = profil2?.let { "${it.avatar} ${it.pseudo}" } ?: "Joueur 2",
+                    pseudo1 = pseudo1,
+                    pseudo2 = pseudo2,
                     resultats1 = resultats1,
                     resultats2 = resultats2,
                     // La partie est déjà enregistrée en base pour les deux joueurs dès que les
@@ -762,6 +796,15 @@ fun AppNavHost(
                     onTerminer = { navController.popBackStack(Routes.MENU, inclusive = false) },
                     onRetour = { navController.popBackStack() },
                 )
+                // Affichés l'un après l'autre (retour utilisateur) : les deux dialogs modaux en
+                // même temps se chevaucheraient. Joueur 1 d'abord, joueur 2 une fois le sien fermé.
+                val tropheesJoueur1 by duoVm.tropheesDebloquesJoueur1.collectAsState()
+                val tropheesJoueur2 by duoVm.tropheesDebloquesJoueur2.collectAsState()
+                if (tropheesJoueur1.isNotEmpty()) {
+                    TropheesDebloquesDialog(tropheesJoueur1, nomJoueur = pseudo1, onDismiss = { duoVm.effacerTropheesDebloquesJoueur1() })
+                } else {
+                    TropheesDebloquesDialog(tropheesJoueur2, nomJoueur = pseudo2, onDismiss = { duoVm.effacerTropheesDebloquesJoueur2() })
+                }
             }
         }
 
@@ -1034,12 +1077,19 @@ fun AppNavHost(
                                     scoreCumule = null,
                                     pseudo = null,
                                     afficherResultat = false,
-                                    onMancheTerminee = { obtenu ->
+                                    onMancheTerminee = { obtenu, detailChiffres ->
                                         val detail = roundVm.uiState.value.operationsEffectuees
                                             .joinToString("\n").ifBlank { "Aucune opération" }
                                         reseauVm.enregistrerMonResultat(
                                             ResultatDuoManche(
-                                                ResultatManche(ModeJeu.CHIFFRES, manche.niveau.name, obtenu),
+                                                ResultatManche(
+                                                    ModeJeu.CHIFFRES, manche.niveau.name, obtenu,
+                                                    cibleChiffres = detailChiffres?.cible,
+                                                    nombreOperationsChiffres = detailChiffres?.nombreOperations,
+                                                    maxEtapeIntermediaireChiffres = detailChiffres?.maxEtapeIntermediaire,
+                                                    dureeSecondesManche = detailChiffres?.dureeSecondesEcoulees,
+                                                    tempsRestantSecondesValidation = detailChiffres?.tempsRestantSecondes,
+                                                ),
                                                 roundVm.uiState.value.ecartCible,
                                                 detail,
                                                 solutionPossible = roundVm.uiState.value.solutionSolveur,
@@ -1089,7 +1139,10 @@ fun AppNavHost(
                                 onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots, longueurMotInvalide ->
                                     reseauVm.enregistrerMonResultat(
                                         ResultatDuoManche(
-                                            ResultatManche(ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide),
+                                            ResultatManche(
+                                            ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
+                                            dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
+                                        ),
                                             detail = motValide ?: texteAucunMot,
                                             dixMeilleursMots = dixMeilleursMots,
                                         ),
@@ -1164,6 +1217,8 @@ fun AppNavHost(
                     onRejouer = if (reseauVm.monTourDuo == TourDuo.JOUEUR1) reseauVm::rejouer else null,
                     afficherAttenteRejouer = reseauVm.monTourDuo != TourDuo.JOUEUR1,
                 )
+                val tropheesDebloques by reseauVm.tropheesDebloques.collectAsState()
+                TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { reseauVm.effacerTropheesDebloques() })
             }
 
             // Duel mots (retour utilisateur, 100 % réseau) : même pattern de connexion que
@@ -1462,6 +1517,8 @@ fun AppNavHost(
                     },
                     onRejouer = duelMotsVm::rejouer,
                 )
+                val tropheesDebloques by duelMotsVm.tropheesDebloques.collectAsState()
+                TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { duelMotsVm.effacerTropheesDebloques() })
             }
         }
 
@@ -1541,6 +1598,8 @@ fun AppNavHost(
                     }
                 },
             )
+            val tropheesDebloques by defiVm.tropheesDebloques.collectAsState()
+            TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { defiVm.effacerTropheesDebloques() })
             if (demanderConfirmationRetour) {
                 AlertDialog(
                     onDismissRequest = { demanderConfirmationRetour = false },
@@ -1610,6 +1669,8 @@ fun AppNavHost(
                     }
                 }
             }
+            val tropheesDebloques by defiVm.tropheesDebloques.collectAsState()
+            TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { defiVm.effacerTropheesDebloques() })
 
             // Alternance stricte (retour utilisateur), chiffres en premier : index pair = chiffres,
             // impair = lettres. Clé sur essaiId (jamais réutilisé, y compris entre les deux modes) :
@@ -1626,7 +1687,7 @@ fun AppNavHost(
                     couleurRang = couleurRang,
                     progressionManche = "$index",
                     libelleProgression = libelleProgression,
-                    onMancheTerminee = { obtenu -> if (obtenu != 10) defiVm.echec() },
+                    onMancheTerminee = { obtenu, _ -> if (obtenu != 10) defiVm.echec() },
                     onRetourEntrainement = onRetourAvecConfirmation,
                     actionsFinManche = actionsFinManche,
                 )
@@ -1772,7 +1833,7 @@ fun AppNavHost(
                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 progressionManche = "$index",
                 libelleProgression = "Série",
-                onMancheTerminee = { obtenu ->
+                onMancheTerminee = { obtenu, _ ->
                     derniereMancheReussie = obtenu == 10
                     if (obtenu != 10) defiVm.echec()
                 },
@@ -1791,6 +1852,8 @@ fun AppNavHost(
                     }
                 },
             )
+            val tropheesDebloques by defiVm.tropheesDebloques.collectAsState()
+            TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { defiVm.effacerTropheesDebloques() })
             if (demanderConfirmationRetour) {
                 AlertDialog(
                     onDismissRequest = { demanderConfirmationRetour = false },
@@ -1887,6 +1950,8 @@ fun AppNavHost(
                 },
                 seuilRequis = seuil,
             )
+            val tropheesDebloques by defiVm.tropheesDebloques.collectAsState()
+            TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { defiVm.effacerTropheesDebloques() })
             if (demanderConfirmationRetour) {
                 AlertDialog(
                     onDismissRequest = { demanderConfirmationRetour = false },
@@ -1970,7 +2035,7 @@ fun AppNavHost(
                 // (retour utilisateur) : sur un échec, le panneau de résultat (compte obtenu)
                 // est affiché — enchaîner tout de suite sur la manche suivante (ancien
                 // comportement) le faisait disparaître aussitôt affiché.
-                onMancheTerminee = { obtenu ->
+                onMancheTerminee = { obtenu, _ ->
                     derniereMancheReussie = obtenu == 10
                 },
                 onRetourEntrainement = onRetourAvecConfirmation,
@@ -1990,6 +2055,8 @@ fun AppNavHost(
                     }
                 },
             )
+            val tropheesDebloques by defiVm.tropheesDebloques.collectAsState()
+            TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { defiVm.effacerTropheesDebloques() })
             if (demanderConfirmationRetour) {
                 AlertDialog(
                     onDismissRequest = { demanderConfirmationRetour = false },
@@ -2090,6 +2157,8 @@ fun AppNavHost(
                 },
                 seuilRequis = seuil,
             )
+            val tropheesDebloques by defiVm.tropheesDebloques.collectAsState()
+            TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { defiVm.effacerTropheesDebloques() })
             if (demanderConfirmationRetour) {
                 AlertDialog(
                     onDismissRequest = { demanderConfirmationRetour = false },

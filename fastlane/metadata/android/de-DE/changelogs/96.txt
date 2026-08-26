@@ -1,0 +1,1 @@
+Überarbeitung der Trophäen: neue Rangstufen (Smaragd, Saphir, Rubin hinzugefügt), 30 geheime Trophäen zu entdecken, ein eigener Bildschirm beim Freischalten einer Trophäe am Ende einer Runde/Partie, und ein überarbeitetes Layout (gruppierte Abschnitte, eigene Symbole).

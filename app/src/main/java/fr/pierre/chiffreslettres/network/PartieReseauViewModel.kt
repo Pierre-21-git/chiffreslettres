@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ResultatManche
+import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.numbers.Niveau
@@ -143,6 +144,14 @@ class PartieReseauViewModel(
     val choixVoyellesRecu: StateFlow<Map<Int, Int>> = _choixVoyellesRecu.asStateFlow()
 
     private val _erreurJeu = MutableStateFlow<String?>(null)
+
+    private val _tropheesDebloques = MutableStateFlow<List<Trophee>>(emptyList())
+    /** Trophées fraîchement débloqués à la fin de cette partie (retour utilisateur : écran dédié). */
+    val tropheesDebloques: StateFlow<List<Trophee>> = _tropheesDebloques.asStateFlow()
+
+    fun effacerTropheesDebloques() {
+        _tropheesDebloques.value = emptyList()
+    }
     val erreurJeu: StateFlow<String?> = _erreurJeu.asStateFlow()
 
     /** Fixé une fois au démarrage : l'hôte est toujours JOUEUR1, l'invité toujours JOUEUR2. */
@@ -368,8 +377,8 @@ class PartieReseauViewModel(
         val sonTotal = resultatsAdversaire.sumOf { it.score }
         val type = mode.versTypePartieReseau()
         viewModelScope.launch {
-            historiqueRepository.enregistrerSession(profilId, type, mesResultats, monTotal >= sonTotal)
-            tropheeRepository.reevaluer(profilId)
+            historiqueRepository.enregistrerSession(profilId, type, mesResultats, monTotal >= sonTotal, monTotal == sonTotal)
+            _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
         }
     }
 

@@ -9,17 +9,29 @@ data class ResultatManche(
     val motJoue: String? = null,
     /** Longueur du mot soumis quand il était invalide (mode Lettres, parties duo/confrontation uniquement), pour le bonus de score de l'adversaire. */
     val longueurMotInvalide: Int? = null,
+    val cibleChiffres: Int? = null,
+    val nombreOperationsChiffres: Int? = null,
+    val maxEtapeIntermediaireChiffres: Int? = null,
+    val dureeSecondesManche: Int? = null,
+    val tempsRestantSecondesValidation: Int? = null,
 )
 
 class HistoriqueRepository(private val dao: HistoriqueDao) {
 
-    suspend fun enregistrerSession(profilId: Long, type: TypePartie, manches: List<ResultatManche>, victoireDuel: Boolean? = null) {
+    suspend fun enregistrerSession(
+        profilId: Long,
+        type: TypePartie,
+        manches: List<ResultatManche>,
+        victoireDuel: Boolean? = null,
+        egaliteDuel: Boolean? = null,
+    ) {
         val session = SessionEntity(
             profilId = profilId,
             date = System.currentTimeMillis(),
             type = type,
             scoreTotal = manches.sumOf { it.score },
             victoireDuel = victoireDuel,
+            egaliteDuel = egaliteDuel,
         )
         val entites = manches.mapIndexed { index, resultat ->
             MancheEntity(
@@ -29,6 +41,12 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
                 niveauCode = resultat.niveauCode,
                 score = resultat.score,
                 motJoue = resultat.motJoue,
+                longueurMotInvalide = resultat.longueurMotInvalide,
+                cibleChiffres = resultat.cibleChiffres,
+                nombreOperationsChiffres = resultat.nombreOperationsChiffres,
+                maxEtapeIntermediaireChiffres = resultat.maxEtapeIntermediaireChiffres,
+                dureeSecondesManche = resultat.dureeSecondesManche,
+                tempsRestantSecondesValidation = resultat.tempsRestantSecondesValidation,
             )
         }
         dao.enregistrerPartie(session, entites)

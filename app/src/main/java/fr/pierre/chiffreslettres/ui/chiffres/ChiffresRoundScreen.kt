@@ -44,7 +44,7 @@ private const val MAX_OPERATIONS = 5
 fun ChiffresRoundScreen(
     viewModel: ChiffresRoundViewModel,
     scoreCumule: Int?,
-    onMancheTerminee: (score: Int) -> Unit,
+    onMancheTerminee: (score: Int, detail: DetailChiffresManche?) -> Unit,
     actionsFinManche: @Composable () -> Unit,
     onRetourEntrainement: (() -> Unit)? = null,
     pseudo: String? = null,
@@ -60,7 +60,7 @@ fun ChiffresRoundScreen(
     val etat by viewModel.uiState.collectAsState()
 
     LaunchedEffect(etat.termine) {
-        if (etat.termine) onMancheTerminee(etat.scoreObtenu ?: 0)
+        if (etat.termine) onMancheTerminee(etat.scoreObtenu ?: 0, etat.detailFinal)
     }
 
     Column(

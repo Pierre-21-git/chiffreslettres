@@ -188,6 +188,11 @@
     <string name="trophees_progression">%1$d / %2$d</string>
     <string name="trophees_masquer_obtenus">Freigeschaltete Trophäen ausblenden</string>
     <string name="trophees_afficher_obtenus">Freigeschaltete Trophäen anzeigen</string>
+    <string name="trophees_section_parties_duels">Partien- und Duell-Trophäen</string>
+    <string name="trophees_section_defis">Herausforderungs-Trophäen</string>
+    <string name="trophee_titre_cache">\?\?\?\?\?\?\?</string>
+    <string name="trophees_debloques_titre_singulier">Neue Trophäe freigeschaltet!</string>
+    <string name="trophees_debloques_titre_pluriel">Neue Trophäen freigeschaltet!</string>
 
     <string name="lettres_tirage_label">Buchstaben</string>
     <string name="lettres_tirage_valeur">%1$d / %2$d</string>

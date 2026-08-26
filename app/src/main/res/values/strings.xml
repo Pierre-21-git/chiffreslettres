@@ -242,6 +242,13 @@
     <string name="trophees_progression">%1$d / %2$d</string>
     <string name="trophees_masquer_obtenus">Masquer les trophées obtenus</string>
     <string name="trophees_afficher_obtenus">Afficher les trophées obtenus</string>
+    <string name="trophees_section_parties_duels">Trophées des parties et duels</string>
+    <string name="trophees_section_defis">Trophées des défis</string>
+    <string name="trophee_titre_cache">\?\?\?\?\?\?\?</string>
+
+    <!-- ui/trophees/TropheesDebloquesDialog -->
+    <string name="trophees_debloques_titre_singulier">Nouveau trophée débloqué !</string>
+    <string name="trophees_debloques_titre_pluriel">Nouveaux trophées débloqués !</string>
 
     <!-- ui/lettres/LettresRoundScreen -->
     <string name="lettres_tirage_label">Tirage</string>

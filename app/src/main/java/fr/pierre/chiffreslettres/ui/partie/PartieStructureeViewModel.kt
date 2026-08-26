@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ResultatManche
+import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TypePartie
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,6 +33,14 @@ class PartieStructureeViewModel(
     val resultats: StateFlow<List<ResultatManche>> = _resultats.asStateFlow()
 
     private var enregistre = false
+
+    private val _tropheesDebloques = MutableStateFlow<List<Trophee>>(emptyList())
+    /** Trophées fraîchement débloqués à la fin de cette partie (retour utilisateur : écran dédié), vidé par [effacerTropheesDebloques] une fois affiché. */
+    val tropheesDebloques: StateFlow<List<Trophee>> = _tropheesDebloques.asStateFlow()
+
+    fun effacerTropheesDebloques() {
+        _tropheesDebloques.value = emptyList()
+    }
 
     fun demarrer(sequence: List<ManchePlanifiee>) {
         _sequence.value = sequence
@@ -62,7 +71,7 @@ class PartieStructureeViewModel(
         val resultats = _resultats.value
         viewModelScope.launch {
             historiqueRepository.enregistrerSession(profilId, TypePartie.STRUCTUREE, resultats)
-            tropheeRepository.reevaluer(profilId)
+            _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
         }
     }
 }

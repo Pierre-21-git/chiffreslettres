@@ -17,6 +17,7 @@ import fr.pierre.chiffreslettres.data.Palier
 import fr.pierre.chiffreslettres.data.ProfilEntity
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.data.TropheeRepository
+import fr.pierre.chiffreslettres.data.VisitesEcranStore
 import java.time.LocalDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +40,9 @@ private fun drawableCadre(palier: Palier?): Int = when (palier) {
     Palier.ARGENT -> R.drawable.widget_cadre_argent
     Palier.OR -> R.drawable.widget_cadre_or
     Palier.PLATINE -> R.drawable.widget_cadre_platine
+    Palier.EMERAUDE -> R.drawable.widget_cadre_emeraude
+    Palier.SAPHIR -> R.drawable.widget_cadre_saphir
+    Palier.RUBIS -> R.drawable.widget_cadre_rubis
     Palier.DIAMANT -> R.drawable.widget_cadre_diamant
     null -> R.drawable.widget_cadre_neutre
 }
@@ -82,7 +86,10 @@ private suspend fun construireVues(context: Context): RemoteViews {
     val db = AppDatabaseProvider.obtenir(context.applicationContext)
     val profilRepository = ProfilRepository(db.profilDao())
     val defiQuotidienRepository = DefiQuotidienRepository(db.defiQuotidienDao())
-    val tropheeRepository = TropheeRepository(db.tropheeDao(), db.historiqueDao(), db.defiDao(), db.defiQuotidienDao())
+    val tropheeRepository = TropheeRepository(
+        db.tropheeDao(), db.historiqueDao(), db.defiDao(), db.defiQuotidienDao(), db.profilDao(),
+        VisitesEcranStore(context.applicationContext),
+    )
     val profils = profilRepository.tousLesProfils().first()
     val jour = LocalDate.now().toString()
 

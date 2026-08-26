@@ -12,4 +12,6 @@ data class SessionEntity(
     val scoreTotal: Int,
     /** Uniquement renseigné pour DUO/DUO_CONFRONTATION : score total strictement supérieur à celui de l'adversaire. Null pour les autres types de partie. */
     val victoireDuel: Boolean? = null,
+    /** Score total exactement égal à celui de l'adversaire (easter egg "Ex-aequo"). Renseigné pour les mêmes types que [victoireDuel], sauf Duel mots Confrontation (pas de signal d'égalité disponible côté ViewModel). */
+    val egaliteDuel: Boolean? = null,
 )

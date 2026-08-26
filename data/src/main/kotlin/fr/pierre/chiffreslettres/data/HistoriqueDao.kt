@@ -220,4 +220,129 @@ interface HistoriqueDao {
     /** Nombre de parties dont le type figure dans [types] gagnées par ce profil (`victoireDuel = 1`), tous niveaux confondus. */
     @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND type IN (:types) AND victoireDuel = 1")
     suspend fun compterPartiesGagneesParTypes(profilId: Long, types: List<String>): Int
+
+    // --- Agrégats pour les easter eggs (refonte 2026-08) ---
+
+    /** Nombre de niveaux de difficulté distincts déjà joués (trophée "Multi-niveaux"). */
+    @Query(
+        """
+        SELECT COUNT(DISTINCT m.niveauCode)
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+        """,
+    )
+    suspend fun compterNiveauxDistinctsJoues(profilId: Long): Int
+
+    data class DateEtScore(val date: Long, val score: Int)
+
+    /**
+     * Date et score de chaque partie, triés du plus ancien au plus récent — base commune pour
+     * plusieurs easter eggs calculés en mémoire (Marathon, Ça ne s'arrête jamais, Constance,
+     * Bonjour !/Oiseau de nuit), trop spécifiques pour mériter chacun leur propre requête SQL.
+     */
+    @Query(
+        """
+        SELECT date, scoreTotal AS score
+        FROM SessionEntity
+        WHERE profilId = :profilId AND type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+        ORDER BY date ASC
+        """,
+    )
+    suspend fun datesEtScoresParties(profilId: Long): List<DateEtScore>
+
+    /**
+     * Tous les mots valides joués en mode Lettres — base commune pour les easter eggs
+     * "Mot rare"/"Palindrome"/"Symétrique"/"Alphabet complet", calculés en mémoire (pas
+     * pratique à exprimer en SQL).
+     */
+    @Query(
+        """
+        SELECT m.motJoue
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+            AND m.mode = 'LETTRES' AND m.motJoue IS NOT NULL
+        """,
+    )
+    suspend fun motsJoues(profilId: Long): List<String>
+
+    /** Un mot invalide d'au moins 10 lettres a-t-il déjà été proposé (easter egg "Le mot le plus long jamais tenté") ? */
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+            AND m.longueurMotInvalide >= 10
+        """,
+    )
+    suspend fun compterMotsInvalidesDixLettresOuPlus(profilId: Long): Int
+
+    /** Une partie duo/confrontation terminée exactement à égalité avec l'adversaire (easter egg "Ex-aequo") ? */
+    @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND egaliteDuel = 1")
+    suspend fun compterEgalitesDuel(profilId: Long): Int
+
+    /** Un même score obtenu au moins deux fois en partie solo (easter egg "Symétrie") ? */
+    @Query(
+        """
+        SELECT COUNT(*) FROM (
+            SELECT scoreTotal FROM SessionEntity WHERE profilId = :profilId AND type = 'STRUCTUREE'
+            GROUP BY scoreTotal HAVING COUNT(*) >= 2
+        )
+        """,
+    )
+    suspend fun compterScoresSoloRepetes(profilId: Long): Int
+
+    /** Détail des manches chiffres à compte exact (easter eggs "Nombre premier"/"Calcul mental"/"Chemin minimal"/"Chirurgical"/"Speedrun"/"Va-tout") — calculés en mémoire, trop spécifiques pour 6 requêtes séparées. */
+    data class DetailCompteExact(
+        val cible: Int?,
+        val nombreOperations: Int?,
+        val maxEtapeIntermediaire: Int?,
+        val dureeSecondesManche: Int?,
+        val tempsRestantSecondesValidation: Int?,
+        val niveauCode: String,
+    )
+
+    @Query(
+        """
+        SELECT m.cibleChiffres AS cible, m.nombreOperationsChiffres AS nombreOperations,
+            m.maxEtapeIntermediaireChiffres AS maxEtapeIntermediaire,
+            m.dureeSecondesManche AS dureeSecondesManche,
+            m.tempsRestantSecondesValidation AS tempsRestantSecondesValidation,
+            m.niveauCode AS niveauCode
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+            AND m.mode = 'CHIFFRES' AND m.score = 10
+        """,
+    )
+    suspend fun comptesExactsChiffresDetail(profilId: Long): List<DetailCompteExact>
+
+    /** Une manche terminée par expiration du chrono sans aucune proposition (easter egg "Aucune idée"). */
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+            AND m.score = 0
+            AND (
+                (m.mode = 'CHIFFRES' AND m.nombreOperationsChiffres = 0)
+                OR (m.mode = 'LETTRES' AND m.motJoue IS NULL AND m.longueurMotInvalide IS NULL)
+            )
+        """,
+    )
+    suspend fun compterManchesSansRienPropose(profilId: Long): Int
+
+    /** Temps de jeu cumulé, en secondes (easter egg "100 heures de jeu"), chiffres et lettres confondus. */
+    @Query(
+        """
+        SELECT COALESCE(SUM(m.dureeSecondesManche), 0)
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+        """,
+    )
+    suspend fun sommeSecondesJouees(profilId: Long): Int
 }

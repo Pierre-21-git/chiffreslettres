@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import fr.pierre.chiffreslettres.data.DefiQuotidienRepository
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
+import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TypeDefi
 import fr.pierre.chiffreslettres.widget.DefiQuotidienWidgetProvider
@@ -69,6 +70,14 @@ class DefiViewModel(
 
     private var debutChrono = System.currentTimeMillis()
 
+    private val _tropheesDebloques = MutableStateFlow<List<Trophee>>(emptyList())
+    /** Trophées fraîchement débloqués à la fin de ce défi (retour utilisateur : écran dédié). */
+    val tropheesDebloques: StateFlow<List<Trophee>> = _tropheesDebloques.asStateFlow()
+
+    fun effacerTropheesDebloques() {
+        _tropheesDebloques.value = emptyList()
+    }
+
     /** Défi chrono uniquement : temps restant (s) à donner à la prochaine manche, 0 si le budget est épuisé. */
     fun dureeProchaineManche(): Int {
         val ecoulees = ((System.currentTimeMillis() - debutChrono) / 1000).toInt()
@@ -88,7 +97,7 @@ class DefiViewModel(
         val serieFinale = _index.value
         viewModelScope.launch {
             defiRepository.enregistrer(profilId, mode, niveauCode, type, serieFinale)
-            tropheeRepository.reevaluer(profilId)
+            _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
         }
     }
 
@@ -106,7 +115,7 @@ class DefiViewModel(
             val reussitesFinales = _reussites.value
             viewModelScope.launch {
                 defiRepository.enregistrer(profilId, mode, niveauCode, type, reussitesFinales)
-                tropheeRepository.reevaluer(profilId)
+                _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
             }
         } else {
             _essaiId.value += 1
@@ -140,7 +149,7 @@ class DefiViewModel(
             // Enregistré après la réussite du jour : un seuil de trophée franchi pile à cet
             // instant (ex. série de 30 jours) est détecté immédiatement, pas au prochain
             // reevaluer() (bug remonté par l'utilisateur).
-            tropheeRepository.reevaluer(profilId)
+            _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
         }
     }
 

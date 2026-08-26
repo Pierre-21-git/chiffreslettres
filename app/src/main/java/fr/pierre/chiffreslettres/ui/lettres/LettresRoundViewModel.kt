@@ -37,6 +37,8 @@ data class LettresRoundUiState(
     val scoreObtenu: Int? = null,
     /** Nombre de voyelles choisi pour ce tirage, null tant qu'il n'a pas été choisi — permet au mode Duo de forcer le même choix pour le second joueur d'une manche (retour utilisateur : mêmes lettres pour les deux). */
     val nombreVoyellesChoisi: Int? = null,
+    /** Durée écoulée entre le tirage et la validation (retour mainteneur, easter egg "100 heures de jeu"), null si manche non chronométrée. */
+    val dureeSecondesEcoulees: Int? = null,
 )
 
 /** Tirage selon le nombre de voyelles choisi (§4.1) puis recherche du mot le plus long (§4.5). */
@@ -44,7 +46,7 @@ class LettresRoundViewModel(
     private val niveau: NiveauLettres,
     private val dictionnaire: DictionnaireIndex,
     private val configurationAlphabet: ConfigurationAlphabetLettres,
-    dureeSecondes: Int? = null,
+    private val dureeSecondes: Int? = null,
     private val nombreLettres: Int = TirageLettres.NOMBRE_LETTRES,
     /** Permet au mode Duo de rejouer exactement le même tirage pour les deux joueurs (même graine, nouvelle instance de Random par joueur ; combiné au même nombreVoyelles forcé côté second joueur). */
     private val random: Random = Random,
@@ -146,6 +148,7 @@ class LettresRoundViewModel(
         val meilleur = meilleurMot(etat.lettresTirees, dictionnaire)
         val dixMeilleurs = dixMeilleursMots(etat.lettresTirees, dictionnaire)
         val score = if (motValide) etat.motSaisi.trim().length else 0
+        val dureeEcoulee = dureeSecondes?.let { it - (etat.tempsRestantSecondes ?: 0) }
         _uiState.update {
             it.copy(
                 termine = true,
@@ -153,6 +156,7 @@ class LettresRoundViewModel(
                 dixMeilleursMots = dixMeilleurs,
                 motJoueurValide = motValide,
                 scoreObtenu = score,
+                dureeSecondesEcoulees = dureeEcoulee,
             )
         }
     }

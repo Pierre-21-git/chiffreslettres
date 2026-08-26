@@ -1,0 +1,1 @@
+Refonte complète des trophées : nouvelle grille de paliers (Émeraude, Saphir, Rubis ajoutés), 30 trophées secrets à découvrir, écran dédié à l'obtention d'un trophée en fin de manche/partie, et présentation revue (grands blocs par catégorie, icônes dédiées).

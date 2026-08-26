@@ -18,6 +18,9 @@
     <color name="widget_palier_argent">#FF9AA5B1</color>
     <color name="widget_palier_or">#FFE4BE4A</color>
     <color name="widget_palier_platine">#FF7FE3C4</color>
+    <color name="widget_palier_emeraude">#FF50C878</color>
+    <color name="widget_palier_saphir">#FF0F52BA</color>
+    <color name="widget_palier_rubis">#FFE0115F</color>
     <color name="widget_palier_diamant">#FF33D2FF</color>
     <color name="widget_palier_neutre">#33CBB98A</color>
 </resources>

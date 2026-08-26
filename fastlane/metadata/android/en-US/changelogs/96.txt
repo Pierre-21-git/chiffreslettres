@@ -1,0 +1,1 @@
+Trophy system overhaul: new tier grid (Emerald, Sapphire, Ruby added), 30 secret trophies to discover, a dedicated screen when unlocking a trophy at the end of a round/game, and a revamped layout (grouped sections, dedicated icons).

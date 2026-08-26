@@ -29,7 +29,7 @@ interface DefiDao {
 
     // --- Agrégats pour l'évaluation des trophées ---
 
-    /** Nombre total de défis terminés (tous types/modes/niveaux confondus). */
+    /** Nombre total de défis terminés, tous types/modes/niveaux confondus (easter egg "Touche-à-tout"). */
     @Query("SELECT COUNT(*) FROM DefiEntity WHERE profilId = :profilId")
     suspend fun compterDefisTotal(profilId: Long): Int
 

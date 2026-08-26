@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ResultatManche
+import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.numbers.Expression
 import fr.pierre.chiffreslettres.ui.partie.ManchePlanifiee
@@ -89,6 +90,22 @@ class PartieDuoViewModel(
 
     private var enregistre = false
 
+    private val _tropheesDebloquesJoueur1 = MutableStateFlow<List<Trophee>>(emptyList())
+    /** Trophées fraîchement débloqués pour le joueur 1 à la fin de cette partie (retour utilisateur : écran dédié). */
+    val tropheesDebloquesJoueur1: StateFlow<List<Trophee>> = _tropheesDebloquesJoueur1.asStateFlow()
+
+    private val _tropheesDebloquesJoueur2 = MutableStateFlow<List<Trophee>>(emptyList())
+    /** Comme [tropheesDebloquesJoueur1], pour le joueur 2. */
+    val tropheesDebloquesJoueur2: StateFlow<List<Trophee>> = _tropheesDebloquesJoueur2.asStateFlow()
+
+    fun effacerTropheesDebloquesJoueur1() {
+        _tropheesDebloquesJoueur1.value = emptyList()
+    }
+
+    fun effacerTropheesDebloquesJoueur2() {
+        _tropheesDebloquesJoueur2.value = emptyList()
+    }
+
     fun demarrer(profil2Id: Long, sequence: List<ManchePlanifiee>, mode: ModeScoreDuo) {
         this.profil2Id = profil2Id
         this.mode = mode
@@ -131,11 +148,12 @@ class PartieDuoViewModel(
         val total1 = finaux1.sumOf { it.score }
         val total2 = finaux2.sumOf { it.score }
         val type = mode.versTypePartie()
+        val egalite = total1 == total2
         viewModelScope.launch {
-            historiqueRepository.enregistrerSession(profilId, type, finaux1, total1 >= total2)
-            historiqueRepository.enregistrerSession(profil2Id, type, finaux2, total2 >= total1)
-            tropheeRepository.reevaluer(profilId)
-            tropheeRepository.reevaluer(profil2Id)
+            historiqueRepository.enregistrerSession(profilId, type, finaux1, total1 >= total2, egalite)
+            historiqueRepository.enregistrerSession(profil2Id, type, finaux2, total2 >= total1, egalite)
+            _tropheesDebloquesJoueur1.value = tropheeRepository.reevaluer(profilId)
+            _tropheesDebloquesJoueur2.value = tropheeRepository.reevaluer(profil2Id)
         }
     }
 

@@ -30,6 +30,7 @@ import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.data.ReglagesStore
 import fr.pierre.chiffreslettres.data.TropheeRepository
+import fr.pierre.chiffreslettres.data.VisitesEcranStore
 import fr.pierre.chiffreslettres.data.alphabet.ConfigurationAlphabetProvider
 import fr.pierre.chiffreslettres.data.dictionary.DictionnaireProvider
 import fr.pierre.chiffreslettres.data.langueParDefautSysteme
@@ -81,7 +82,10 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val profilRepository = remember { ProfilRepository(db.profilDao()) }
     val historiqueRepository = remember { HistoriqueRepository(db.historiqueDao()) }
     val defiRepository = remember { DefiRepository(db.defiDao()) }
-    val tropheeRepository = remember { TropheeRepository(db.tropheeDao(), db.historiqueDao(), db.defiDao(), db.defiQuotidienDao()) }
+    val visitesEcranStore = remember { VisitesEcranStore(context.applicationContext) }
+    val tropheeRepository = remember {
+        TropheeRepository(db.tropheeDao(), db.historiqueDao(), db.defiDao(), db.defiQuotidienDao(), db.profilDao(), visitesEcranStore)
+    }
     val defiQuotidienRepository = remember { DefiQuotidienRepository(db.defiQuotidienDao()) }
     val profilActifStore = remember { ProfilActifStore(context.applicationContext) }
     val reglagesStore = remember { ReglagesStore(context.applicationContext) }
@@ -173,6 +177,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
                 defiQuotidienRepository = defiQuotidienRepository,
                 profilActifStore = profilActifStore,
                 reglagesStore = reglagesStore,
+                visitesEcranStore = visitesEcranStore,
                 modifier = modifier,
             )
         }
