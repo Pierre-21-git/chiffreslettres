@@ -43,6 +43,7 @@ import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
+import fr.pierre.chiffreslettres.data.ReglagesStore
 import fr.pierre.chiffreslettres.data.ResultatManche
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TropheeStats
@@ -114,6 +115,7 @@ import fr.pierre.chiffreslettres.ui.partiereseau.RechercheInviteScreen
 import fr.pierre.chiffreslettres.ui.partiereseau.RevelationMancheReseauScreen
 import fr.pierre.chiffreslettres.ui.profil.ChangerProfilScreen
 import fr.pierre.chiffreslettres.ui.profil.CreerProfilScreen
+import fr.pierre.chiffreslettres.ui.reglages.ReglagesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.MesStatistiquesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesGeneralesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesJoueurScreen
@@ -201,6 +203,7 @@ fun AppNavHost(
     tropheeRepository: TropheeRepository,
     defiQuotidienRepository: DefiQuotidienRepository,
     profilActifStore: ProfilActifStore,
+    reglagesStore: ReglagesStore,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -241,6 +244,14 @@ fun AppNavHost(
                 onAPropos = { navController.navigate(Routes.A_PROPOS) },
                 onReglesDuJeu = { navController.navigate(Routes.REGLES_DU_JEU) },
                 onVersions = { navController.navigate(Routes.VERSIONS) },
+                onReglages = { navController.navigate(Routes.REGLAGES) },
+            )
+        }
+
+        composable(Routes.REGLAGES) {
+            ReglagesScreen(
+                reglagesStore = reglagesStore,
+                onRetour = { navController.popBackStack() },
             )
         }
 

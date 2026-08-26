@@ -1,0 +1,1 @@
+El recordatorio diario ahora es opcional (ajuste dedicado, el permiso de notificación se solicita solo al activarlo); los nuevos perfiles usan por defecto el idioma del teléfono.

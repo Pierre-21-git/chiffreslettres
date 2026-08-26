@@ -1,0 +1,1 @@
+Widget du défi quotidien redimensionnable ; export et import du défi quotidien.

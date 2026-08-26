@@ -1,0 +1,1 @@
+Correction du dictionnaire : suppression de mots invalides.

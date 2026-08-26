@@ -1,0 +1,1 @@
+Größenveränderbares Widget für die tägliche Herausforderung; Export und Import der täglichen Herausforderung.

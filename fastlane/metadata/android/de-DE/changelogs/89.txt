@@ -1,0 +1,1 @@
+Neues Spiel Wortduell, spielbar im lokalen Netzwerk.

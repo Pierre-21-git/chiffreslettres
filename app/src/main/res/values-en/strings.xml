@@ -331,4 +331,13 @@
     <string name="menu_partie_reseau">Online game</string>
 
     <string name="selecteur_langue_label">Language</string>
+
+    <string name="reglages_titre">Settings</string>
+    <string name="reglages_rappel_quotidien_titre">Daily challenge reminder</string>
+    <string name="reglages_rappel_quotidien_description">Daily notification for profiles that haven\'t played today\'s challenge yet.</string>
+
+    <string name="rappel_canal_nom">Daily challenge reminder</string>
+    <string name="rappel_canal_description">Reminds every day which profiles haven\'t played the daily challenge yet.</string>
+    <string name="rappel_notification_titre">Daily challenge</string>
+    <string name="rappel_notification_texte">Challenge not played yet today: %1$s</string>
 </resources>

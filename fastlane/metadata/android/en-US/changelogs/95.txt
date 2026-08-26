@@ -1,0 +1,1 @@
+Daily reminder is now optional (dedicated setting, notification permission requested only when enabled); new profiles default to the phone's language.

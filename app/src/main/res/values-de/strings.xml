@@ -305,4 +305,13 @@
     <string name="menu_partie_reseau">Online-Spiel</string>
 
     <string name="selecteur_langue_label">Sprache</string>
+
+    <string name="reglages_titre">Einstellungen</string>
+    <string name="reglages_rappel_quotidien_titre">Erinnerung an die tägliche Herausforderung</string>
+    <string name="reglages_rappel_quotidien_description">Tägliche Benachrichtigung für Profile, die die heutige Herausforderung noch nicht gespielt haben.</string>
+
+    <string name="rappel_canal_nom">Erinnerung an die tägliche Herausforderung</string>
+    <string name="rappel_canal_description">Erinnert jeden Tag daran, welche Profile die tägliche Herausforderung noch nicht gespielt haben.</string>
+    <string name="rappel_notification_titre">Tägliche Herausforderung</string>
+    <string name="rappel_notification_texte">Herausforderung heute noch nicht gespielt: %1$s</string>
 </resources>

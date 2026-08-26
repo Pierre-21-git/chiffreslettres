@@ -1,0 +1,1 @@
+Widget del desafío diario redimensionable; exportación e importación del desafío diario.

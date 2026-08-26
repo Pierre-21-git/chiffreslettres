@@ -1,0 +1,1 @@
+Tägliche Erinnerung jetzt optional (eigene Einstellung, Benachrichtigungsberechtigung nur bei Aktivierung angefragt); neue Profile übernehmen standardmäßig die Sprache des Telefons.

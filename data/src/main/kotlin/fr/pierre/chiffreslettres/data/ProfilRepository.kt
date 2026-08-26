@@ -6,7 +6,14 @@ class ProfilRepository(private val dao: ProfilDao) {
     fun tousLesProfils(): Flow<List<ProfilEntity>> = dao.tous()
 
     suspend fun creerProfil(pseudo: String, avatar: String = AVATAR_PAR_DEFAUT): Long =
-        dao.inserer(ProfilEntity(pseudo = pseudo, dateCreation = System.currentTimeMillis(), avatar = avatar))
+        dao.inserer(
+            ProfilEntity(
+                pseudo = pseudo,
+                dateCreation = System.currentTimeMillis(),
+                avatar = avatar,
+                langue = langueParDefautSysteme(),
+            ),
+        )
 
     suspend fun supprimerProfil(profil: ProfilEntity) = dao.supprimer(profil)
 

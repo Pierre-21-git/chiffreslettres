@@ -2,10 +2,8 @@ package fr.pierre.chiffreslettres
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -30,10 +28,13 @@ import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
 import fr.pierre.chiffreslettres.data.ProfilActifStore
 import fr.pierre.chiffreslettres.data.ProfilRepository
+import fr.pierre.chiffreslettres.data.ReglagesStore
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.alphabet.ConfigurationAlphabetProvider
 import fr.pierre.chiffreslettres.data.dictionary.DictionnaireProvider
+import fr.pierre.chiffreslettres.data.langueParDefautSysteme
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
+import fr.pierre.chiffreslettres.rappel.annulerRappelQuotidien
 import fr.pierre.chiffreslettres.rappel.creerCanalNotificationRappel
 import fr.pierre.chiffreslettres.rappel.planifierRappelQuotidien
 import fr.pierre.chiffreslettres.ui.navigation.AppNavHost
@@ -51,8 +52,6 @@ class MainActivity : ComponentActivity() {
         // que enableEdgeToEdge() n'est pas appelé explicitement : sans lui, systemBarsPadding()
         // ci-dessous ne recevait pas les bonnes valeurs.
         enableEdgeToEdge()
-        creerCanalNotificationRappel(this)
-        planifierRappelQuotidien(this)
         planifierRafraichissementWidgetMinuit(this)
         // Rafraîchissement immédiat à chaque ouverture de l'app (retour utilisateur : le widget
         // reconstruit ses vues à partir de la date du jour, donc cet appel est sans effet s'il
@@ -77,14 +76,6 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     var dictionnaire by remember { mutableStateOf<DictionnaireIndex?>(null) }
 
-    // Demande la permission de notification une fois au lancement (retour utilisateur : sans
-    // elle, le rappel de défi quotidien planifié ci-dessous ne peut rien afficher).
-    val lanceurPermissionNotification =
-        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {}
-    LaunchedEffect(Unit) {
-        lanceurPermissionNotification.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-    }
-
     val configurationAlphabet = remember { ConfigurationAlphabetProvider.charger(context.applicationContext) }
     val db = remember { AppDatabaseProvider.obtenir(context.applicationContext) }
     val profilRepository = remember { ProfilRepository(db.profilDao()) }
@@ -93,6 +84,20 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val tropheeRepository = remember { TropheeRepository(db.tropheeDao(), db.historiqueDao(), db.defiDao(), db.defiQuotidienDao()) }
     val defiQuotidienRepository = remember { DefiQuotidienRepository(db.defiQuotidienDao()) }
     val profilActifStore = remember { ProfilActifStore(context.applicationContext) }
+    val reglagesStore = remember { ReglagesStore(context.applicationContext) }
+
+    // Rappel quotidien activé/désactivé par réglage utilisateur (retour mainteneur F-Droid :
+    // pas de planification, donc pas de permission de notification requise, tant que
+    // l'utilisateur n'a pas explicitement activé le rappel dans les réglages).
+    val rappelDefiActif by reglagesStore.rappelDefiActif.collectAsState(initial = false)
+    LaunchedEffect(rappelDefiActif) {
+        if (rappelDefiActif) {
+            creerCanalNotificationRappel(context.applicationContext)
+            planifierRappelQuotidien(context.applicationContext)
+        } else {
+            annulerRappelQuotidien(context.applicationContext)
+        }
+    }
 
     // null = pas encore chargé (distinct d'une vraie liste vide, cf. plus bas) : un simple
     // `initial = emptyList()` ferait passer par l'écran "premier lancement" à chaque
@@ -105,7 +110,10 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val profilActifIdStore by profilActifStore.profilActifId.collectAsState(initial = null)
     val profilActifPourLangue = profils?.find { it.id == profilActifIdStore } ?: profils?.firstOrNull()
     LaunchedEffect(profilActifPourLangue?.langue) {
-        dictionnaire = DictionnaireProvider.obtenir(context.applicationContext, profilActifPourLangue?.langue ?: "fr")
+        dictionnaire = DictionnaireProvider.obtenir(
+            context.applicationContext,
+            profilActifPourLangue?.langue ?: langueParDefautSysteme(),
+        )
     }
     val dictionnaireCharge = dictionnaire
     // Non persisté d'un lancement à l'autre : redemande confirmation à chaque lancement de
@@ -164,6 +172,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
                 tropheeRepository = tropheeRepository,
                 defiQuotidienRepository = defiQuotidienRepository,
                 profilActifStore = profilActifStore,
+                reglagesStore = reglagesStore,
                 modifier = modifier,
             )
         }

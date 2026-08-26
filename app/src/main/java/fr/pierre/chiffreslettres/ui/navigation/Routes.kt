@@ -99,4 +99,6 @@ object Routes {
     const val A_PROPOS = "apropos"
     const val REGLES_DU_JEU = "apropos/reglesDuJeu"
     const val VERSIONS = "apropos/versions"
+
+    const val REGLAGES = "reglages"
 }

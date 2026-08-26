@@ -305,4 +305,13 @@
     <string name="menu_partie_reseau">Partida en red</string>
 
     <string name="selecteur_langue_label">Idioma</string>
+
+    <string name="reglages_titre">Ajustes</string>
+    <string name="reglages_rappel_quotidien_titre">Recordatorio del desafío diario</string>
+    <string name="reglages_rappel_quotidien_description">Notificación diaria para los perfiles que aún no han jugado el desafío de hoy.</string>
+
+    <string name="rappel_canal_nom">Recordatorio del desafío diario</string>
+    <string name="rappel_canal_description">Recuerda cada día qué perfiles aún no han jugado el desafío diario.</string>
+    <string name="rappel_notification_titre">Desafío diario</string>
+    <string name="rappel_notification_texte">Desafío aún no jugado hoy: %1$s</string>
 </resources>

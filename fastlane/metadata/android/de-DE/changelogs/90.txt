@@ -1,0 +1,1 @@
+Wortduell: Timer, vorzeitiges Ende und Neustart ohne erneute Verbindung; Regelkorrekturen.

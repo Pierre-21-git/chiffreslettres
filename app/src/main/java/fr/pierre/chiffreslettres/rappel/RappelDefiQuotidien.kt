@@ -35,10 +35,10 @@ private val HEURE_RAPPEL: LocalTime = LocalTime.of(18, 0)
 fun creerCanalNotificationRappel(context: Context) {
     val canal = NotificationChannel(
         CANAL_RAPPEL_ID,
-        "Rappel du défi quotidien",
+        context.getString(R.string.rappel_canal_nom),
         NotificationManager.IMPORTANCE_DEFAULT,
     ).apply {
-        description = "Rappelle chaque jour les profils qui n'ont pas encore fait le défi quotidien."
+        description = context.getString(R.string.rappel_canal_description)
     }
     context.getSystemService(NotificationManager::class.java).createNotificationChannel(canal)
 }
@@ -60,6 +60,11 @@ fun planifierRappelQuotidien(context: Context) {
 
     WorkManager.getInstance(context)
         .enqueueUniquePeriodicWork(NOM_TRAVAIL_PERIODIQUE, ExistingPeriodicWorkPolicy.KEEP, requete)
+}
+
+/** Désactive le rappel (retour mainteneur F-Droid : réglage utilisateur pour activer/désactiver). */
+fun annulerRappelQuotidien(context: Context) {
+    WorkManager.getInstance(context).cancelUniqueWork(NOM_TRAVAIL_PERIODIQUE)
 }
 
 /**
@@ -98,10 +103,10 @@ class RappelDefiQuotidienWorker(context: Context, params: WorkerParameters) : Co
             Intent(context, MainActivity::class.java),
             PendingIntent.FLAG_IMMUTABLE,
         )
-        val texte = "Défi pas encore joué aujourd'hui : ${pseudosRestants.joinToString(", ")}"
+        val texte = context.getString(R.string.rappel_notification_texte, pseudosRestants.joinToString(", "))
         val notification = NotificationCompat.Builder(context, CANAL_RAPPEL_ID)
             .setSmallIcon(R.drawable.ic_notification_rappel)
-            .setContentTitle("Défi quotidien")
+            .setContentTitle(context.getString(R.string.rappel_notification_titre))
             .setContentText(texte)
             .setStyle(NotificationCompat.BigTextStyle().bigText(texte))
             .setContentIntent(intentOuverture)

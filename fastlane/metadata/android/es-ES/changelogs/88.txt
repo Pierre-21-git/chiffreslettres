@@ -1,0 +1,1 @@
+Widget de inicio, desafío cronometrado de números, correcciones de trofeos y diccionario.

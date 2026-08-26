@@ -1,0 +1,1 @@
+Rappel quotidien désormais optionnel (réglage dédié, permission de notification demandée uniquement à l'activation) ; langue par défaut d'un nouveau profil basée sur celle du téléphone.

@@ -1,0 +1,1 @@
+Resizable daily challenge widget; daily challenge export and import.

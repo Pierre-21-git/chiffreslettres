@@ -366,4 +366,15 @@
 
     <!-- ui/profil/ChangerProfilScreen (sélecteur de langue) -->
     <string name="selecteur_langue_label">Langue</string>
+
+    <!-- ui/reglages/ReglagesScreen -->
+    <string name="reglages_titre">Réglages</string>
+    <string name="reglages_rappel_quotidien_titre">Rappel du défi quotidien</string>
+    <string name="reglages_rappel_quotidien_description">Notification quotidienne pour les profils qui n\'ont pas encore fait le défi du jour.</string>
+
+    <!-- rappel/RappelDefiQuotidien -->
+    <string name="rappel_canal_nom">Rappel du défi quotidien</string>
+    <string name="rappel_canal_description">Rappelle chaque jour les profils qui n\'ont pas encore fait le défi quotidien.</string>
+    <string name="rappel_notification_titre">Défi quotidien</string>
+    <string name="rappel_notification_texte">Défi pas encore joué aujourd\'hui : %1$s</string>
 </resources>

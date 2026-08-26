@@ -9,8 +9,10 @@ import kotlinx.coroutines.flow.map
 
 /** Un seul DataStore "reglages" pour toute l'app : DataStore n'autorise qu'une
  * instance par nom de fichier, donc cette propriété doit rester unique et être
- * réutilisée par toutes les classes de préférences (ne pas la redéclarer ailleurs). */
-private val Context.dataStore by preferencesDataStore(name = "reglages")
+ * réutilisée par toutes les classes de préférences (ne pas la redéclarer ailleurs).
+ * `internal` (et non `private`) pour être réutilisable depuis les autres fichiers du
+ * module data, ex. [ReglagesStore]. */
+internal val Context.dataStore by preferencesDataStore(name = "reglages")
 
 private val CLE_PROFIL_ACTIF = longPreferencesKey("profil_actif_id")
 

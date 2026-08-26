@@ -51,6 +51,7 @@ fun MenuPrincipalScreen(
     onAPropos: () -> Unit,
     onReglesDuJeu: () -> Unit,
     onVersions: () -> Unit,
+    onReglages: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize().fondPlateau().padding(24.dp).verticalScroll(rememberScrollState()),
@@ -87,6 +88,7 @@ fun MenuPrincipalScreen(
         TuilePrincipale(stringResource(R.string.statistiques_titre_defaut), onClick = onStatistiques)
         TuilePrincipale(stringResource(R.string.apropos_titre), onClick = onAPropos)
         TuilePrincipale(stringResource(R.string.apropos_bouton_regles_du_jeu), onClick = onReglesDuJeu)
+        TuilePrincipale(stringResource(R.string.reglages_titre), onClick = onReglages)
         if (BuildConfig.DEBUG) {
             TuilePrincipale(stringResource(R.string.apropos_bouton_versions), onClick = onVersions)
         }

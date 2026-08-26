@@ -1,0 +1,1 @@
+Word Duel: timer, early finish and replay without reconnecting; rule fixes.
