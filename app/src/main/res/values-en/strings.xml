@@ -142,6 +142,7 @@
     <string name="defi_type_chrono">Timed challenge</string>
     <string name="defi_type_mots_max">Word challenge</string>
     <string name="defi_type_sans_faute">Flawless challenge</string>
+    <string name="defi_type_points">Points Challenge</string>
     <string name="defi_objectif">Goal: %1$s</string>
     <string name="defi_objectif_comptes_serie">%1$d exact counts in a row</string>
     <string name="defi_objectif_comptes">%1$d exact counts</string>
@@ -163,6 +164,12 @@
     <string name="defi_mots_max_fin_tous_mots_trouves">All possible words have been found!</string>
     <string name="defi_mots_max_mots_possibles_titre">Words possible with this draw</string>
     <string name="defi_mots_max_mot_possible_trouve">%1$s (found)</string>
+    <string name="defi_points_objectifs_titre">Objectives</string>
+    <string name="defi_points_score_en_cours">Current score: %1$d pts</string>
+    <string name="defi_points_rejet_score_sans_objectif">"%1$s" is worth %2$d pts, but no objective matches.</string>
+    <string name="defi_points_recap_score">%1$d / %2$d objective(s) reached</string>
+    <string name="defi_points_fin_tous_objectifs_atteints">All objectives have been reached!</string>
+    <string name="defi_points_mots_trouves_titre">Words found</string>
     <string name="grille_mots_titre_longueur">%1$d-letter words</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
@@ -314,6 +321,14 @@
     <string name="regles_mode_defi_mots_titre">Word challenge mode</string>
     <string name="regles_defi_mots_intro">A single letter draw for the whole round, with 5 minutes to find as many distinct words as possible. Every valid word immediately frees up the letters to look for a new one on the same draw. A word only counts if it reaches a minimum length, as in the streak and timed challenges:</string>
     <string name="regles_defi_mots_detail">A word that\'s too short, an invalid word, or submitting with nothing typed ends the challenge — like a first failure in the streak challenge. A word already found is flagged but doesn\'t score an extra point, and doesn\'t end the challenge. On the Monique and Mathieu levels, the draw is guaranteed to offer at least 10 valid words. The number of distinct words found is recorded in the statistics.</string>
+
+    <string name="regles_mode_defi_points_titre">Points Challenge mode</string>
+    <string name="regles_defi_points_intro">A single letter draw, timed. Point objectives are set depending on the level, computed with a Scrabble-style tile value (E, A, I, N, O, R, S, T, U, L are worth 1 point; D, M, G are worth 2; B, C, P are worth 3; F, H, V are worth 4; J, Q are worth 8; K, W, X, Y, Z are worth 10). Find a word whose score exactly matches each objective before time runs out:</string>
+    <string name="regles_defi_points_objectifs_emile">Emile: 3 objectives, 2 minutes</string>
+    <string name="regles_defi_points_objectifs_nestor">Nestor: 4 objectives, 3 minutes</string>
+    <string name="regles_defi_points_objectifs_monique">Monique: 5 objectives, 4 minutes</string>
+    <string name="regles_defi_points_objectifs_mathieu">Mathieu: 6 objectives, 5 minutes</string>
+    <string name="regles_defi_points_detail">A valid word whose score doesn\'t match any remaining objective is flagged, with no penalty. Once an objective is reached, the letters become usable again to look for the next word on the same draw. The challenge ends when all objectives are reached, when time runs out, or by voluntary stop (submitting with nothing typed). The number of objectives reached is recorded in the statistics.</string>
     <string name="regles_mode_defi_sans_faute_titre">No-mistake challenge mode</string>
     <string name="regles_defi_sans_faute_intro">A single level for both modes: numbers and letters alternate strictly (numbers first), with the same clock as in a solo game for that level. The challenge stops at the first mistake, like the streak challenge. In letters, a word only counts if it reaches the same minimum length as in the streak and timed challenges:</string>
     <string name="regles_defi_sans_faute_detail">In numbers, an exact solution is always guaranteed, even on Monique and Mathieu. The streak of successes obtained, across all rounds (numbers and letters combined), is recorded in the statistics.</string>

@@ -50,6 +50,7 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
         ReglesModeDefiSerie()
         ReglesModeDefiChrono()
         ReglesModeDefiMots()
+        ReglesModeDefiPoints()
         ReglesModeDefiSansFaute()
         ReglesModeDefiQuotidien()
         ReglesModeDuelMots()
@@ -165,6 +166,20 @@ fun ReglesModeDefiMots() {
             stringResource(R.string.regles_seuil_mathieu),
         )
         Text(stringResource(R.string.regles_defi_mots_detail), style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+fun ReglesModeDefiPoints() {
+    SectionRegle(stringResource(R.string.regles_mode_defi_points_titre)) {
+        Text(stringResource(R.string.regles_defi_points_intro), style = MaterialTheme.typography.bodyMedium)
+        ListeAPuces(
+            stringResource(R.string.regles_defi_points_objectifs_emile),
+            stringResource(R.string.regles_defi_points_objectifs_nestor),
+            stringResource(R.string.regles_defi_points_objectifs_monique),
+            stringResource(R.string.regles_defi_points_objectifs_mathieu),
+        )
+        Text(stringResource(R.string.regles_defi_points_detail), style = MaterialTheme.typography.bodyMedium)
     }
 }
 

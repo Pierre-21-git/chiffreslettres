@@ -30,6 +30,10 @@ private fun statsVides() = TropheeStats(
     meilleurScoreDefiMotsMax = 0,
     meilleurScoreDefiMotsMaxNiveauMonique = 0,
     meilleurScoreDefiMotsMaxNiveauMathieu = 0,
+    meilleurScoreDefiObjectifsPoints = 0,
+    defiObjectifsPointsComplete = false,
+    defiObjectifsPointsCompleteNiveauMonique = false,
+    defiObjectifsPointsCompleteNiveauMathieu = false,
     meilleureSerieSansFaute = 0,
     meilleureSerieSansFauteNiveauMonique = 0,
     meilleureSerieSansFauteNiveauMathieu = 0,
@@ -73,8 +77,30 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `150 trophees au total (120 + 30 easter eggs) - refonte 2026-08 complete`() {
-        assertEquals(150, CatalogueTrophees.TOUS.size)
+    fun `155 trophees au total (150 + 5 defi Points)`() {
+        assertEquals(155, CatalogueTrophees.TOUS.size)
+    }
+
+    @Test
+    fun `defi Points a son propre bareme, adapte a un score maximal de 3 a 6`() {
+        assertFalse(trophee("defi_points_1").estDebloque(statsVides()))
+        assertTrue(trophee("defi_points_1").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 1)))
+        assertFalse(trophee("defi_points_3").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 2)))
+        assertTrue(trophee("defi_points_3").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 3)))
+        assertEquals(Palier.BRONZE, trophee("defi_points_1").palier)
+        assertEquals(Palier.ARGENT, trophee("defi_points_3").palier)
+
+        assertFalse(trophee("defi_points_complet").estDebloque(statsVides()))
+        assertTrue(trophee("defi_points_complet").estDebloque(statsVides().copy(defiObjectifsPointsComplete = true)))
+        assertEquals(Palier.OR, trophee("defi_points_complet").palier)
+
+        assertFalse(trophee("defi_points_complet_monique").estDebloque(statsVides()))
+        assertTrue(trophee("defi_points_complet_monique").estDebloque(statsVides().copy(defiObjectifsPointsCompleteNiveauMonique = true)))
+        assertEquals(Palier.PLATINE, trophee("defi_points_complet_monique").palier)
+
+        assertFalse(trophee("defi_points_complet_mathieu").estDebloque(statsVides()))
+        assertTrue(trophee("defi_points_complet_mathieu").estDebloque(statsVides().copy(defiObjectifsPointsCompleteNiveauMathieu = true)))
+        assertEquals(Palier.EMERAUDE, trophee("defi_points_complet_mathieu").palier)
     }
 
     @Test

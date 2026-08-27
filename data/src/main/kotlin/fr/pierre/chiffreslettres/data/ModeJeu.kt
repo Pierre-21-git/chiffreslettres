@@ -11,5 +11,8 @@ enum class ModeJeu { CHIFFRES, LETTRES }
  * SANS_FAUTE : alterne strictement manches chiffres et lettres (retour utilisateur), sans le
  * plafond de manches du niveau, jusqu'à la première erreur — mode mixte, donc `DefiEntity.mode`
  * n'est pas signifiant pour ce type (toujours CHIFFRES par convention, cf. sa doc).
+ * OBJECTIFS_POINTS ("Défi Points") : un seul tirage de lettres, chronométré, avec des objectifs
+ * de points façon Scrabble à atteindre (`BaremeLettres`, core-letters) — `DefiEntity.serie` compte
+ * le nombre d'objectifs atteints, toujours `ModeJeu.LETTRES`.
  */
-enum class TypeDefi { SERIE, CHRONO, MOTS_MAX, SANS_FAUTE }
+enum class TypeDefi { SERIE, CHRONO, MOTS_MAX, SANS_FAUTE, OBJECTIFS_POINTS }

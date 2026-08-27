@@ -58,6 +58,7 @@ import fr.pierre.chiffreslettres.ui.apropos.AProposScreen
 import fr.pierre.chiffreslettres.ui.apropos.ReglesDuJeuScreen
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiChrono
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiMots
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiPoints
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSansFaute
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSerie
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDuelMots
@@ -69,6 +70,8 @@ import fr.pierre.chiffreslettres.ui.defi.ChoixDefiSansFauteScreen
 import fr.pierre.chiffreslettres.ui.defi.ChoixDefiScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiMotsMaxScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiMotsMaxViewModel
+import fr.pierre.chiffreslettres.ui.defi.DefiObjectifsPointsScreen
+import fr.pierre.chiffreslettres.ui.defi.DefiObjectifsPointsViewModel
 import fr.pierre.chiffreslettres.ui.defi.DefiQuotidienScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiViewModel
 import fr.pierre.chiffreslettres.ui.defi.budgetSecondesDefiChrono
@@ -240,6 +243,7 @@ fun AppNavHost(
                 onDefiSerie = { navController.navigate(Routes.CHOIX_DEFI_SERIE) },
                 onDefiChrono = { navController.navigate(Routes.CHOIX_DEFI_CHRONO) },
                 onDefiMotsMax = { navController.navigate(Routes.CHOIX_DEFI_MOTS_MAX) },
+                onDefiPoints = { navController.navigate(Routes.CHOIX_DEFI_POINTS) },
                 onDefiSansFaute = { navController.navigate(Routes.CHOIX_DEFI_SANS_FAUTE) },
                 onDefiQuotidien = { navController.navigate(Routes.CHOIX_DEFI_QUOTIDIEN) },
                 onStatistiques = { navController.navigate(Routes.statistiquesJoueur(profilId)) },
@@ -1622,6 +1626,75 @@ fun AppNavHost(
                         TextButton(onClick = {
                             demanderConfirmationRetour = false
                             navController.popBackStack(Routes.CHOIX_DEFI_MOTS_MAX, inclusive = false)
+                        }) { Text(stringResource(R.string.action_quitter)) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
+                    },
+                )
+            }
+        }
+
+        // Lettres uniquement (retour utilisateur) : onNiveauChiffresChoisi = null masque la
+        // section chiffres de ChoixDefiScreen. afficherDuree = true (retour utilisateur) : la
+        // durée du chrono varie par niveau, contrairement au défi mots max.
+        composable(Routes.CHOIX_DEFI_POINTS) {
+            ChoixDefiScreen(
+                titre = stringResource(R.string.defi_type_points),
+                pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                afficherDuree = true,
+                onNiveauChiffresChoisi = null,
+                onNiveauLettresChoisi = { niveau -> navController.navigate(Routes.jeuDefiPoints(niveau)) },
+                onRetour = { navController.popBackStack() },
+                contenuRegles = { ReglesModeDefiPoints() },
+            )
+        }
+
+        composable(
+            route = Routes.JEU_DEFI_POINTS_PATTERN,
+            arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val niveau = NiveauLettres.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+            val defiVm: DefiObjectifsPointsViewModel = viewModel(backStackEntry) {
+                DefiObjectifsPointsViewModel(niveau, dictionnaire, configurationAlphabet, defiRepository, tropheeRepository, profilId)
+            }
+            val etat by defiVm.uiState.collectAsState()
+            var demanderConfirmationRetour by remember { mutableStateOf(false) }
+            DefiObjectifsPointsScreen(
+                viewModel = defiVm,
+                pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
+                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                onRetour = {
+                    if (etat.termine) {
+                        navController.popBackStack(Routes.CHOIX_DEFI_POINTS, inclusive = false)
+                    } else {
+                        demanderConfirmationRetour = true
+                    }
+                },
+                actionsFin = {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Button(onClick = { defiVm.recommencer() }, modifier = Modifier.fillMaxWidth()) {
+                            Text(stringResource(R.string.action_recommencer))
+                        }
+                        OutlinedButton(
+                            onClick = { navController.popBackStack(Routes.CHOIX_DEFI_POINTS, inclusive = false) },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) { Text(stringResource(R.string.action_retour)) }
+                    }
+                },
+            )
+            val tropheesDebloques by defiVm.tropheesDebloques.collectAsState()
+            TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { defiVm.effacerTropheesDebloques() })
+            if (demanderConfirmationRetour) {
+                AlertDialog(
+                    onDismissRequest = { demanderConfirmationRetour = false },
+                    title = { Text(stringResource(R.string.quitter_defi_titre)) },
+                    text = { Text(stringResource(R.string.quitter_partie_message)) },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            demanderConfirmationRetour = false
+                            navController.popBackStack(Routes.CHOIX_DEFI_POINTS, inclusive = false)
                         }) { Text(stringResource(R.string.action_quitter)) }
                     },
                     dismissButton = {

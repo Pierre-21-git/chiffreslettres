@@ -38,4 +38,12 @@ class ParametresDefiTest {
         assertFalse(motEstReussiDefiLettres(NiveauLettres.EMILE, "col", seuil = 4, meilleurMot = "col"))
         assertFalse(motEstReussiDefiLettres(NiveauLettres.NESTOR, "col", seuil = 5, meilleurMot = "col"))
     }
+
+    @Test
+    fun `le nombre d'objectifs du defi Points croit avec la difficulte du niveau`() {
+        assertEquals(3, nombreObjectifsDefiPoints(NiveauLettres.EMILE))
+        assertEquals(4, nombreObjectifsDefiPoints(NiveauLettres.NESTOR))
+        assertEquals(5, nombreObjectifsDefiPoints(NiveauLettres.MONIQUE))
+        assertEquals(6, nombreObjectifsDefiPoints(NiveauLettres.MATHIEU))
+    }
 }

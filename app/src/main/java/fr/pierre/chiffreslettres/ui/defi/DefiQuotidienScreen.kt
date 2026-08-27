@@ -24,6 +24,7 @@ import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.apropos.LienReglesDuJeu
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiChrono
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiMots
+import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiPoints
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiQuotidien
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSansFaute
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSerie
@@ -50,6 +51,7 @@ fun DefiQuotidienScreen(
             TypeDefi.CHRONO -> R.string.defi_type_chrono
             TypeDefi.MOTS_MAX -> R.string.defi_type_mots_max
             TypeDefi.SANS_FAUTE -> R.string.defi_type_sans_faute
+            TypeDefi.OBJECTIFS_POINTS -> R.string.defi_type_points
         },
     )
     val natureObjectif = when {
@@ -72,6 +74,7 @@ fun DefiQuotidienScreen(
                 TypeDefi.CHRONO -> ReglesModeDefiChrono()
                 TypeDefi.MOTS_MAX -> ReglesModeDefiMots()
                 TypeDefi.SANS_FAUTE -> ReglesModeDefiSansFaute()
+                TypeDefi.OBJECTIFS_POINTS -> ReglesModeDefiPoints()
             }
         }
 

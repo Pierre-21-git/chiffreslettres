@@ -17,6 +17,9 @@ data class DefiResultat(val serie: Int, val date: Long)
 /** Comme [LigneClassement] (parties), mais pour le classement général des défis, commun à tous les profils. */
 data class LigneClassementDefi(val profilId: Long, val pseudo: String, val avatar: String, val serie: Int, val date: Long)
 
+/** Un défi Points terminé (niveau + objectifs atteints), pour l'évaluation des trophées (retour utilisateur : le total d'objectifs par niveau varie, calculé côté Kotlin plutôt qu'en SQL). */
+data class DefiObjectifsPointsDetail(val niveauCode: String, val serie: Int)
+
 @Dao
 interface DefiDao {
     @Insert
@@ -134,4 +137,8 @@ interface DefiDao {
         """,
     )
     fun classementDefi(type: String, mode: String, niveauCode: String): Flow<List<LigneClassementDefi>>
+
+    /** Tous les défis Points terminés d'un joueur (niveau + objectifs atteints), pour l'évaluation des trophées. */
+    @Query("SELECT niveauCode, serie FROM DefiEntity WHERE profilId = :profilId AND type = 'OBJECTIFS_POINTS'")
+    suspend fun defisObjectifsPointsDetail(profilId: Long): List<DefiObjectifsPointsDetail>
 }

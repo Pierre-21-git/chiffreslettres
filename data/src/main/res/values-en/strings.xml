@@ -10,6 +10,7 @@
     <string name="categorie_defi">Streak challenge</string>
     <string name="categorie_defi_chrono">Timed challenge</string>
     <string name="categorie_defi_mots_max">Word challenge</string>
+    <string name="categorie_defi_points">Points Challenge</string>
     <string name="categorie_defi_sans_faute">Flawless challenge</string>
     <string name="categorie_defi_quotidien">Daily challenge</string>
     <string name="categorie_trophees_speciaux">Special trophies</string>
@@ -95,6 +96,10 @@
     <string name="trophee_titre_defi_mots_max">%1$d words on a single draw</string>
     <string name="trophee_titre_defi_mots_max_niveau_monique">%1$d words on a single draw, Ça se complique, Monique level or above</string>
     <string name="trophee_titre_defi_mots_max_niveau_mathieu">%1$d words on a single draw, C\'est du sérieux, Mathieu level</string>
+    <string name="trophee_titre_defi_points">%1$d point objective(s) reached in one game</string>
+    <string name="trophee_titre_defi_points_complet">Points Challenge completed</string>
+    <string name="trophee_titre_defi_points_complet_niveau_monique">Points Challenge completed, Ça se complique, Monique level or above</string>
+    <string name="trophee_titre_defi_points_complet_niveau_mathieu">Points Challenge completed, C\'est du sérieux, Mathieu level</string>
     <string name="trophee_titre_defi_sans_faute">A flawless streak of %1$d</string>
     <string name="trophee_titre_defi_sans_faute_niveau_monique">A flawless streak of %1$d, Ça se complique, Monique level or above</string>
     <string name="trophee_titre_defi_sans_faute_niveau_mathieu">A flawless streak of %1$d, C\'est du sérieux, Mathieu level</string>
@@ -152,6 +157,10 @@
     <string name="trophee_desc_defi_mots_max">Find %1$d or more words on the same letter draw, in the word challenge.</string>
     <string name="trophee_desc_defi_mots_max_niveau_monique">Find %1$d or more words on the same letter draw, in the word challenge, at Ça se complique, Monique or C\'est du sérieux, Mathieu level.</string>
     <string name="trophee_desc_defi_mots_max_niveau_mathieu">Find %1$d or more words on the same letter draw, in the word challenge, at C\'est du sérieux, Mathieu level.</string>
+    <string name="trophee_desc_defi_points">Reach at least %1$d point objective(s) in a single Points Challenge game.</string>
+    <string name="trophee_desc_defi_points_complet">Reach all the point objectives of a Points Challenge game, at any level.</string>
+    <string name="trophee_desc_defi_points_complet_niveau_monique">Reach all the point objectives of a Points Challenge game, at Ça se complique, Monique level or C\'est du sérieux, Mathieu level.</string>
+    <string name="trophee_desc_defi_points_complet_niveau_mathieu">Reach all the point objectives of a Points Challenge game, at C\'est du sérieux, Mathieu level.</string>
     <string name="trophee_desc_defi_sans_faute">Get %1$d or more wins in a row in the flawless challenge, numbers and letters alternating.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_monique">Get %1$d or more wins in a row in the flawless challenge, numbers and letters alternating, at Ça se complique, Monique or C\'est du sérieux, Mathieu level.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Get %1$d or more wins in a row in the flawless challenge, numbers and letters alternating, at C\'est du sérieux, Mathieu level.</string>

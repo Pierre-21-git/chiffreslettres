@@ -116,6 +116,7 @@
     <string name="defi_type_chrono">Desafío contrarreloj</string>
     <string name="defi_type_mots_max">Desafío de palabras</string>
     <string name="defi_type_sans_faute">Desafío sin fallos</string>
+    <string name="defi_type_points">Desafío de Puntos</string>
     <string name="defi_objectif">Objetivo: %1$s</string>
     <string name="defi_objectif_comptes_serie">%1$d resultados exactos seguidos</string>
     <string name="defi_objectif_comptes">%1$d resultados exactos</string>
@@ -137,6 +138,12 @@
     <string name="defi_mots_max_fin_tous_mots_trouves">¡Se han encontrado todas las palabras posibles!</string>
     <string name="defi_mots_max_mots_possibles_titre">Palabras posibles con este sorteo</string>
     <string name="defi_mots_max_mot_possible_trouve">%1$s (encontrada)</string>
+    <string name="defi_points_objectifs_titre">Objetivos</string>
+    <string name="defi_points_score_en_cours">Puntuación actual: %1$d pts</string>
+    <string name="defi_points_rejet_score_sans_objectif">«%1$s» vale %2$d pts, pero ningún objetivo coincide.</string>
+    <string name="defi_points_recap_score">%1$d / %2$d objetivo(s) alcanzado(s)</string>
+    <string name="defi_points_fin_tous_objectifs_atteints">¡Todos los objetivos han sido alcanzados!</string>
+    <string name="defi_points_mots_trouves_titre">Palabras encontradas</string>
     <string name="grille_mots_titre_longueur">Palabras de %1$d letras</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
@@ -288,6 +295,14 @@
     <string name="regles_mode_defi_mots_titre">Modo Desafío de palabras</string>
     <string name="regles_defi_mots_intro">Un único sorteo de letras para toda la ronda, con 5 minutos para encontrar el mayor número de palabras distintas posible. Cada palabra válida libera enseguida las letras para buscar una nueva con el mismo sorteo. Una palabra solo cuenta si alcanza una longitud mínima, como en el desafío de racha y el contrarreloj:</string>
     <string name="regles_defi_mots_detail">Una palabra demasiado corta, una palabra inválida, o validar sin nada escrito, termina el desafío — como un primer fallo en el desafío de racha. Una palabra ya encontrada se señala pero no suma un punto extra, sin terminar el desafío. En los niveles Monique y Mathieu, el sorteo garantiza al menos 10 palabras válidas. El número de palabras distintas encontradas se registra en las estadísticas.</string>
+
+    <string name="regles_mode_defi_points_titre">Modo Desafío de Puntos</string>
+    <string name="regles_defi_points_intro">Un único sorteo de letras, cronometrado. Se fijan objetivos de puntos según el nivel, calculados con un valor de ficha al estilo Scrabble (E, A, I, N, O, R, S, T, U, L valen 1 punto; D, M, G valen 2; B, C, P valen 3; F, H, V valen 4; J, Q valen 8; K, W, X, Y, Z valen 10). Encuentra una palabra cuya puntuación coincida exactamente con cada objetivo antes de que se acabe el tiempo:</string>
+    <string name="regles_defi_points_objectifs_emile">Émile: 3 objetivos, 2 minutos</string>
+    <string name="regles_defi_points_objectifs_nestor">Nestor: 4 objetivos, 3 minutos</string>
+    <string name="regles_defi_points_objectifs_monique">Monique: 5 objetivos, 4 minutos</string>
+    <string name="regles_defi_points_objectifs_mathieu">Mathieu: 6 objetivos, 5 minutos</string>
+    <string name="regles_defi_points_detail">Una palabra válida cuya puntuación no coincida con ningún objetivo restante se señala, sin penalización. Una vez alcanzado un objetivo, las letras vuelven a estar disponibles para buscar la siguiente palabra en el mismo sorteo. El desafío termina cuando se alcanzan todos los objetivos, cuando se acaba el tiempo, o por parada voluntaria (validar sin nada escrito). El número de objetivos alcanzados se registra en las estadísticas.</string>
     <string name="regles_mode_defi_sans_faute_titre">Modo Desafío sin fallos</string>
     <string name="regles_defi_sans_faute_intro">Un único nivel para ambos modos: números y letras se alternan estrictamente (números primero), con el mismo cronómetro que en una partida solo de ese nivel. El desafío se detiene en el primer fallo, como el desafío de racha. En letras, una palabra solo cuenta si alcanza la misma longitud mínima que en el desafío de racha y el contrarreloj:</string>
     <string name="regles_defi_sans_faute_detail">En números, una solución exacta está siempre garantizada, incluso en Monique y Mathieu. La racha de éxitos obtenida, en todas las rondas (números y letras combinados), se registra en las estadísticas.</string>

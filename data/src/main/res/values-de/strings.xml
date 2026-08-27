@@ -10,6 +10,7 @@
     <string name="categorie_defi">Serien-Herausforderung</string>
     <string name="categorie_defi_chrono">Zeitherausforderung</string>
     <string name="categorie_defi_mots_max">Wörter-Herausforderung</string>
+    <string name="categorie_defi_points">Punkte-Herausforderung</string>
     <string name="categorie_defi_sans_faute">Fehlerfreie Herausforderung</string>
     <string name="categorie_defi_quotidien">Tägliche Herausforderung</string>
     <string name="categorie_trophees_speciaux">Sondertrophäen</string>
@@ -95,6 +96,10 @@
     <string name="trophee_titre_defi_mots_max">%1$d Wörter bei derselben Ziehung</string>
     <string name="trophee_titre_defi_mots_max_niveau_monique">%1$d Wörter bei derselben Ziehung, Stufe Ça se complique, Monique oder höher</string>
     <string name="trophee_titre_defi_mots_max_niveau_mathieu">%1$d Wörter bei derselben Ziehung, Stufe C\'est du sérieux, Mathieu</string>
+    <string name="trophee_titre_defi_points">%1$d Punkteziel(e) in einer Partie erreicht</string>
+    <string name="trophee_titre_defi_points_complet">Punkte-Herausforderung geschafft</string>
+    <string name="trophee_titre_defi_points_complet_niveau_monique">Punkte-Herausforderung geschafft, Stufe Ça se complique, Monique oder höher</string>
+    <string name="trophee_titre_defi_points_complet_niveau_mathieu">Punkte-Herausforderung geschafft, Stufe C\'est du sérieux, Mathieu</string>
     <string name="trophee_titre_defi_sans_faute">%1$d fehlerfrei in Folge</string>
     <string name="trophee_titre_defi_sans_faute_niveau_monique">%1$d fehlerfrei in Folge, Stufe Ça se complique, Monique oder höher</string>
     <string name="trophee_titre_defi_sans_faute_niveau_mathieu">%1$d fehlerfrei in Folge, Stufe C\'est du sérieux, Mathieu</string>
@@ -152,6 +157,10 @@
     <string name="trophee_desc_defi_mots_max">%1$d oder mehr Wörter bei derselben Buchstabenziehung finden, in der Wörter-Herausforderung.</string>
     <string name="trophee_desc_defi_mots_max_niveau_monique">%1$d oder mehr Wörter bei derselben Buchstabenziehung finden, in der Wörter-Herausforderung, auf Stufe Ça se complique, Monique oder C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_mots_max_niveau_mathieu">%1$d oder mehr Wörter bei derselben Buchstabenziehung finden, in der Wörter-Herausforderung, auf Stufe C\'est du sérieux, Mathieu.</string>
+    <string name="trophee_desc_defi_points">Mindestens %1$d Punkteziel(e) in einer einzigen Partie der Punkte-Herausforderung erreichen.</string>
+    <string name="trophee_desc_defi_points_complet">Alle Punkteziele einer Partie der Punkte-Herausforderung erreichen, auf beliebiger Stufe.</string>
+    <string name="trophee_desc_defi_points_complet_niveau_monique">Alle Punkteziele einer Partie der Punkte-Herausforderung erreichen, auf Stufe Ça se complique, Monique oder C\'est du sérieux, Mathieu.</string>
+    <string name="trophee_desc_defi_points_complet_niveau_mathieu">Alle Punkteziele einer Partie der Punkte-Herausforderung erreichen, auf Stufe C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute">%1$d oder mehr Erfolge in Folge in der fehlerfreien Herausforderung erzielen, Zahlen und Wörter im Wechsel.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_monique">%1$d oder mehr Erfolge in Folge in der fehlerfreien Herausforderung erzielen, Zahlen und Wörter im Wechsel, auf Stufe Ça se complique, Monique oder C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">%1$d oder mehr Erfolge in Folge in der fehlerfreien Herausforderung erzielen, Zahlen und Wörter im Wechsel, auf Stufe C\'est du sérieux, Mathieu.</string>

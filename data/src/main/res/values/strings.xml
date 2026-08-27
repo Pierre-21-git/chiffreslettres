@@ -10,6 +10,7 @@
     <string name="categorie_defi">Défi série</string>
     <string name="categorie_defi_chrono">Défi chrono</string>
     <string name="categorie_defi_mots_max">Défi mots</string>
+    <string name="categorie_defi_points">Défi Points</string>
     <string name="categorie_defi_sans_faute">Défi sans faute</string>
     <string name="categorie_defi_quotidien">Défi quotidien</string>
     <string name="categorie_trophees_speciaux">Trophées spéciaux</string>
@@ -95,6 +96,10 @@
     <string name="trophee_titre_defi_mots_max">%1$d mots sur un même tirage</string>
     <string name="trophee_titre_defi_mots_max_niveau_monique">%1$d mots sur un même tirage, niveau Ça se complique, Monique ou plus</string>
     <string name="trophee_titre_defi_mots_max_niveau_mathieu">%1$d mots sur un même tirage, niveau C\'est du sérieux, Mathieu</string>
+    <string name="trophee_titre_defi_points">%1$d objectif(s) de points atteint(s) en une partie</string>
+    <string name="trophee_titre_defi_points_complet">Défi Points réussi</string>
+    <string name="trophee_titre_defi_points_complet_niveau_monique">Défi Points réussi, niveau Ça se complique, Monique ou plus</string>
+    <string name="trophee_titre_defi_points_complet_niveau_mathieu">Défi Points réussi, niveau C\'est du sérieux, Mathieu</string>
     <string name="trophee_titre_defi_sans_faute">Série de %1$d sans faute</string>
     <string name="trophee_titre_defi_sans_faute_niveau_monique">Série de %1$d sans faute, niveau Ça se complique, Monique ou plus</string>
     <string name="trophee_titre_defi_sans_faute_niveau_mathieu">Série de %1$d sans faute, niveau C\'est du sérieux, Mathieu</string>
@@ -152,6 +157,10 @@
     <string name="trophee_desc_defi_mots_max">Trouver %1$d mots ou plus sur le même tirage de lettres, en défi mots.</string>
     <string name="trophee_desc_defi_mots_max_niveau_monique">Trouver %1$d mots ou plus sur le même tirage de lettres, en défi mots, au niveau Ça se complique, Monique ou C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_mots_max_niveau_mathieu">Trouver %1$d mots ou plus sur le même tirage de lettres, en défi mots, au niveau C\'est du sérieux, Mathieu.</string>
+    <string name="trophee_desc_defi_points">Atteindre au moins %1$d objectif(s) de points en une seule partie de défi Points.</string>
+    <string name="trophee_desc_defi_points_complet">Atteindre tous les objectifs de points d\'une partie de défi Points, quel que soit le niveau.</string>
+    <string name="trophee_desc_defi_points_complet_niveau_monique">Atteindre tous les objectifs de points d\'une partie de défi Points, au niveau Ça se complique, Monique ou C\'est du sérieux, Mathieu.</string>
+    <string name="trophee_desc_defi_points_complet_niveau_mathieu">Atteindre tous les objectifs de points d\'une partie de défi Points, au niveau C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_monique">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés, au niveau Ça se complique, Monique ou C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés, au niveau C\'est du sérieux, Mathieu.</string>

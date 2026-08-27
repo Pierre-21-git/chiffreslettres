@@ -47,3 +47,11 @@ fun budgetSecondesDefiChrono(niveau: NiveauLettres): Int = when (niveau) {
 
 /** Durée fixe (retour utilisateur : 5 minutes), identique quel que soit le niveau, du défi mots max. */
 const val DUREE_SECONDES_DEFI_MOTS_MAX = 300
+
+/** Nombre d'objectifs de points à atteindre en défi Points, selon le niveau (retour utilisateur). */
+fun nombreObjectifsDefiPoints(niveau: NiveauLettres): Int = when (niveau) {
+    NiveauLettres.EMILE -> 3
+    NiveauLettres.NESTOR -> 4
+    NiveauLettres.MONIQUE -> 5
+    NiveauLettres.MATHIEU -> 6
+}

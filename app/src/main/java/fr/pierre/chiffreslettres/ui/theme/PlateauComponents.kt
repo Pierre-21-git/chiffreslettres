@@ -224,6 +224,8 @@ fun TuileJeton(
     enabled: Boolean = true,
     monospace: Boolean = true,
     grand: Boolean = false,
+    /** Valeur en points (défi Points, retour utilisateur) affichée en petit en bas à droite de la tuile, comme une plaquette Scrabble. Null ailleurs : ne change rien aux usages existants. */
+    points: Int? = null,
 ) {
     TuileRelief(
         degrade = if (selectionne) listOf(BrassHighlight, BrassBright) else listOf(IvoryTileTop, IvoryTileBottom),
@@ -242,6 +244,15 @@ fun TuileJeton(
             fontSize = if (grand) 24.sp else if (monospace) 17.sp else 16.sp,
             fontFamily = if (monospace) FontFamily.Monospace else FontFamily.SansSerif,
         )
+        if (points != null) {
+            Text(
+                "$points",
+                color = InkOnIvory,
+                fontWeight = FontWeight.Bold,
+                fontSize = 9.sp,
+                modifier = Modifier.align(Alignment.BottomEnd).padding(bottom = 2.dp, end = 4.dp),
+            )
+        }
     }
 }
 

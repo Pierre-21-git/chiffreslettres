@@ -10,6 +10,7 @@
     <string name="categorie_defi">Desafío de racha</string>
     <string name="categorie_defi_chrono">Desafío cronometrado</string>
     <string name="categorie_defi_mots_max">Desafío de palabras</string>
+    <string name="categorie_defi_points">Desafío de Puntos</string>
     <string name="categorie_defi_sans_faute">Desafío sin fallos</string>
     <string name="categorie_defi_quotidien">Desafío diario</string>
     <string name="categorie_trophees_speciaux">Trofeos especiales</string>
@@ -95,6 +96,10 @@
     <string name="trophee_titre_defi_mots_max">%1$d palabras en un mismo sorteo</string>
     <string name="trophee_titre_defi_mots_max_niveau_monique">%1$d palabras en un mismo sorteo, nivel Ça se complique, Monique o superior</string>
     <string name="trophee_titre_defi_mots_max_niveau_mathieu">%1$d palabras en un mismo sorteo, nivel C\'est du sérieux, Mathieu</string>
+    <string name="trophee_titre_defi_points">%1$d objetivo(s) de puntos alcanzado(s) en una partida</string>
+    <string name="trophee_titre_defi_points_complet">Desafío de Puntos superado</string>
+    <string name="trophee_titre_defi_points_complet_niveau_monique">Desafío de Puntos superado, nivel Ça se complique, Monique o superior</string>
+    <string name="trophee_titre_defi_points_complet_niveau_mathieu">Desafío de Puntos superado, nivel C\'est du sérieux, Mathieu</string>
     <string name="trophee_titre_defi_sans_faute">Una racha sin fallos de %1$d</string>
     <string name="trophee_titre_defi_sans_faute_niveau_monique">Una racha sin fallos de %1$d, nivel Ça se complique, Monique o superior</string>
     <string name="trophee_titre_defi_sans_faute_niveau_mathieu">Una racha sin fallos de %1$d, nivel C\'est du sérieux, Mathieu</string>
@@ -152,6 +157,10 @@
     <string name="trophee_desc_defi_mots_max">Encontrar %1$d palabras o más en el mismo sorteo de letras, en el desafío de palabras.</string>
     <string name="trophee_desc_defi_mots_max_niveau_monique">Encontrar %1$d palabras o más en el mismo sorteo de letras, en el desafío de palabras, en el nivel Ça se complique, Monique o C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_mots_max_niveau_mathieu">Encontrar %1$d palabras o más en el mismo sorteo de letras, en el desafío de palabras, en el nivel C\'est du sérieux, Mathieu.</string>
+    <string name="trophee_desc_defi_points">Alcanzar al menos %1$d objetivo(s) de puntos en una sola partida del desafío de Puntos.</string>
+    <string name="trophee_desc_defi_points_complet">Alcanzar todos los objetivos de puntos de una partida del desafío de Puntos, en cualquier nivel.</string>
+    <string name="trophee_desc_defi_points_complet_niveau_monique">Alcanzar todos los objetivos de puntos de una partida del desafío de Puntos, en el nivel Ça se complique, Monique o C\'est du sérieux, Mathieu.</string>
+    <string name="trophee_desc_defi_points_complet_niveau_mathieu">Alcanzar todos los objetivos de puntos de una partida del desafío de Puntos, en el nivel C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute">Encadenar %1$d victorias o más seguidas en el desafío sin fallos, números y letras alternados.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_monique">Encadenar %1$d victorias o más seguidas en el desafío sin fallos, números y letras alternados, en el nivel Ça se complique, Monique o C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Encadenar %1$d victorias o más seguidas en el desafío sin fallos, números y letras alternados, en el nivel C\'est du sérieux, Mathieu.</string>

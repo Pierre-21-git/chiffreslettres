@@ -44,6 +44,7 @@ fun MenuPrincipalScreen(
     onDefiSerie: () -> Unit,
     onDefiChrono: () -> Unit,
     onDefiMotsMax: () -> Unit,
+    onDefiPoints: () -> Unit,
     onDefiSansFaute: () -> Unit,
     onDefiQuotidien: () -> Unit,
     onStatistiques: () -> Unit,
@@ -80,6 +81,7 @@ fun MenuPrincipalScreen(
         TuilePrincipale(stringResource(R.string.defi_type_serie), onClick = onDefiSerie)
         TuilePrincipale(stringResource(R.string.defi_type_chrono), onClick = onDefiChrono)
         TuilePrincipale(stringResource(R.string.defi_type_mots_max), onClick = onDefiMotsMax)
+        TuilePrincipale(stringResource(R.string.defi_type_points), onClick = onDefiPoints)
         TuilePrincipale(stringResource(R.string.defi_type_sans_faute), onClick = onDefiSansFaute)
         TuilePrincipale(stringResource(R.string.defi_quotidien_titre), onClick = onDefiQuotidien)
 

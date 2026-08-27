@@ -116,6 +116,7 @@
     <string name="defi_type_chrono">Zeit-Herausforderung</string>
     <string name="defi_type_mots_max">Wörter-Herausforderung</string>
     <string name="defi_type_sans_faute">Fehlerfreie Herausforderung</string>
+    <string name="defi_type_points">Punkte-Herausforderung</string>
     <string name="defi_objectif">Ziel: %1$s</string>
     <string name="defi_objectif_comptes_serie">%1$d exakte Ergebnisse in Folge</string>
     <string name="defi_objectif_comptes">%1$d exakte Ergebnisse</string>
@@ -137,6 +138,12 @@
     <string name="defi_mots_max_fin_tous_mots_trouves">Alle möglichen Wörter wurden gefunden!</string>
     <string name="defi_mots_max_mots_possibles_titre">Mit dieser Ziehung mögliche Wörter</string>
     <string name="defi_mots_max_mot_possible_trouve">%1$s (gefunden)</string>
+    <string name="defi_points_objectifs_titre">Ziele</string>
+    <string name="defi_points_score_en_cours">Aktuelle Punktzahl: %1$d Pkt.</string>
+    <string name="defi_points_rejet_score_sans_objectif">„%1$s“ ist %2$d Punkte wert, aber kein Ziel passt dazu.</string>
+    <string name="defi_points_recap_score">%1$d / %2$d Ziel(e) erreicht</string>
+    <string name="defi_points_fin_tous_objectifs_atteints">Alle Ziele wurden erreicht!</string>
+    <string name="defi_points_mots_trouves_titre">Gefundene Wörter</string>
     <string name="grille_mots_titre_longueur">Wörter mit %1$d Buchstaben</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
@@ -288,6 +295,14 @@
     <string name="regles_mode_defi_mots_titre">Modus Wörter-Herausforderung</string>
     <string name="regles_defi_mots_intro">Ein einziger Buchstabenzug für die ganze Runde, mit 5 Minuten Zeit, um so viele verschiedene Wörter wie möglich zu finden. Jedes gültige Wort gibt die Buchstaben sofort wieder frei, um ein neues auf demselben Zug zu suchen. Ein Wort zählt nur, wenn es eine Mindestlänge erreicht, wie bei der Serien- und der Zeit-Herausforderung:</string>
     <string name="regles_defi_mots_detail">Ein zu kurzes Wort, ein ungültiges Wort oder eine leere Eingabe beendet die Herausforderung — wie ein erster Fehlversuch bei der Serien-Herausforderung. Ein bereits gefundenes Wort wird angezeigt, zählt aber keinen zusätzlichen Punkt und beendet die Herausforderung nicht. Auf den Stufen Monique und Mathieu ist garantiert, dass der Zug mindestens 10 gültige Wörter bietet. Die Anzahl der gefundenen unterschiedlichen Wörter wird in der Statistik erfasst.</string>
+
+    <string name="regles_mode_defi_points_titre">Modus Punkte-Herausforderung</string>
+    <string name="regles_defi_points_intro">Ein einziger Buchstabenzug, mit Zeitlimit. Je nach Stufe werden Punktziele festgelegt, berechnet nach einem Scrabble-ähnlichen Buchstabenwert (E, A, I, N, O, R, S, T, U, L sind 1 Punkt wert; D, M, G sind 2 Punkte wert; B, C, P sind 3 Punkte wert; F, H, V sind 4 Punkte wert; J, Q sind 8 Punkte wert; K, W, X, Y, Z sind 10 Punkte wert). Finde ein Wort, dessen Punktzahl genau einem Ziel entspricht, bevor die Zeit abläuft:</string>
+    <string name="regles_defi_points_objectifs_emile">Émile: 3 Ziele, 2 Minuten</string>
+    <string name="regles_defi_points_objectifs_nestor">Nestor: 4 Ziele, 3 Minuten</string>
+    <string name="regles_defi_points_objectifs_monique">Monique: 5 Ziele, 4 Minuten</string>
+    <string name="regles_defi_points_objectifs_mathieu">Mathieu: 6 Ziele, 5 Minuten</string>
+    <string name="regles_defi_points_detail">Ein gültiges Wort, dessen Punktzahl keinem verbleibenden Ziel entspricht, wird angezeigt, ohne Nachteil. Sobald ein Ziel erreicht ist, werden die Buchstaben wieder frei, um auf demselben Zug nach dem nächsten Wort zu suchen. Die Herausforderung endet, wenn alle Ziele erreicht sind, die Zeit abläuft oder durch freiwilligen Abbruch (leere Eingabe). Die Anzahl der erreichten Ziele wird in der Statistik erfasst.</string>
     <string name="regles_mode_defi_sans_faute_titre">Modus Fehlerfrei-Herausforderung</string>
     <string name="regles_defi_sans_faute_intro">Eine einzige Stufe für beide Modi: Zahlen und Buchstaben wechseln sich streng ab (zuerst Zahlen), mit derselben Zeit wie in einer Solo-Partie dieser Stufe. Die Herausforderung endet beim ersten Fehler, wie bei der Serien-Herausforderung. Bei Buchstaben zählt ein Wort nur, wenn es dieselbe Mindestlänge wie bei der Serien- und der Zeit-Herausforderung erreicht:</string>
     <string name="regles_defi_sans_faute_detail">Bei Zahlen ist eine exakte Lösung immer garantiert, auch bei Monique und Mathieu. Die erzielte Erfolgsserie über alle Runden hinweg (Zahlen und Buchstaben zusammen) wird in der Statistik erfasst.</string>

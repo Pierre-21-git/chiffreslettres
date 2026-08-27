@@ -58,6 +58,14 @@ data class TropheeStats(
     val meilleurScoreDefiMotsMaxNiveauMonique: Int,
     /** Comme [meilleurScoreDefiMotsMax], restreint au niveau Mathieu. */
     val meilleurScoreDefiMotsMaxNiveauMathieu: Int,
+    /** Meilleur nombre d'objectifs de points atteints en une partie de défi Points, tous niveaux confondus. */
+    val meilleurScoreDefiObjectifsPoints: Int,
+    /** Le défi Points a-t-il déjà été complété (tous les objectifs atteints) au moins une fois, tous niveaux confondus. */
+    val defiObjectifsPointsComplete: Boolean,
+    /** Comme [defiObjectifsPointsComplete], restreint au niveau Monique ou Mathieu. */
+    val defiObjectifsPointsCompleteNiveauMonique: Boolean,
+    /** Comme [defiObjectifsPointsComplete], restreint au niveau Mathieu. */
+    val defiObjectifsPointsCompleteNiveauMathieu: Boolean,
     /** Meilleure série en défi sans faute (mixte chiffres+lettres), tous niveaux confondus. */
     val meilleureSerieSansFaute: Int,
     /** Comme [meilleureSerieSansFaute], restreint au niveau Monique ou Mathieu. */
@@ -189,6 +197,7 @@ enum class CategorieTrophee(val titreRes: Int) {
     DEFI(R.string.categorie_defi),
     DEFI_CHRONO(R.string.categorie_defi_chrono),
     DEFI_MOTS_MAX(R.string.categorie_defi_mots_max),
+    DEFI_OBJECTIFS_POINTS(R.string.categorie_defi_points),
     DEFI_SANS_FAUTE(R.string.categorie_defi_sans_faute),
     DEFI_QUOTIDIEN(R.string.categorie_defi_quotidien),
     TROPHEES_SPECIAUX(R.string.categorie_trophees_speciaux),
@@ -254,6 +263,10 @@ private val SEUILS_SCORE = listOf(20, 30, 40, 50, 60, 70, 80, 90)
 private val SEUILS_DEFI_SERIE = listOf(3, 5, 8)
 private val SEUILS_DEFI_SANS_FAUTE = listOf(3, 5, 8)
 private val SEUILS_DEFI_MOTS_MAX = listOf(3, 5, 8)
+
+/** Barème dédié au défi Points (retour utilisateur) : score maximal en une partie = nombre d'objectifs du niveau (3 à 6), bien plus faible que les autres défis lettres. */
+private val SEUILS_DEFI_POINTS = listOf(1, 3)
+private val PALIERS_DEFI_POINTS = mapOf(1 to Palier.BRONZE, 3 to Palier.ARGENT)
 private const val SEUIL_DEFI_NIVEAU_MONIQUE = 10
 private val SEUILS_DEFI_NIVEAU_MATHIEU = listOf(12, 15, 20, 25)
 private val PALIERS_DEFI_NIVEAU_MATHIEU = mapOf(
@@ -902,6 +915,53 @@ object CatalogueTrophees {
             )
         }
 
+        // Défi Points (refonte 2026-08-27) : le score maximal atteignable en une partie est le
+        // nombre d'objectifs du niveau (3 à 6, cf. `nombreObjectifsDefiPoints`) — bien plus faible
+        // que pour les autres défis lettres, donc un barème dédié plutôt que réutiliser
+        // SEUILS_DEFI_MOTS_MAX (qui dépasserait le score maximal possible dès le 3e palier).
+        for (seuil in SEUILS_DEFI_POINTS) {
+            add(
+                Trophee(
+                    "defi_points_$seuil",
+                    titreRes = R.string.trophee_titre_defi_points,
+                    titreArgs = listOf(seuil),
+                    descriptionRes = R.string.trophee_desc_defi_points,
+                    descriptionArgs = listOf(seuil),
+                    categorie = CategorieTrophee.DEFI_OBJECTIFS_POINTS,
+                    palier = PALIERS_DEFI_POINTS.getValue(seuil),
+                    objectif = seuil,
+                    progression = { it.meilleurScoreDefiObjectifsPoints },
+                ) { it.meilleurScoreDefiObjectifsPoints >= seuil },
+            )
+        }
+        add(
+            Trophee(
+                "defi_points_complet",
+                titreRes = R.string.trophee_titre_defi_points_complet,
+                descriptionRes = R.string.trophee_desc_defi_points_complet,
+                categorie = CategorieTrophee.DEFI_OBJECTIFS_POINTS,
+                palier = Palier.OR,
+            ) { it.defiObjectifsPointsComplete },
+        )
+        add(
+            Trophee(
+                "defi_points_complet_monique",
+                titreRes = R.string.trophee_titre_defi_points_complet_niveau_monique,
+                descriptionRes = R.string.trophee_desc_defi_points_complet_niveau_monique,
+                categorie = CategorieTrophee.DEFI_OBJECTIFS_POINTS,
+                palier = Palier.PLATINE,
+            ) { it.defiObjectifsPointsCompleteNiveauMonique },
+        )
+        add(
+            Trophee(
+                "defi_points_complet_mathieu",
+                titreRes = R.string.trophee_titre_defi_points_complet_niveau_mathieu,
+                descriptionRes = R.string.trophee_desc_defi_points_complet_niveau_mathieu,
+                categorie = CategorieTrophee.DEFI_OBJECTIFS_POINTS,
+                palier = Palier.EMERAUDE,
+            ) { it.defiObjectifsPointsCompleteNiveauMathieu },
+        )
+
         for (seuil in SEUILS_DEFI_SANS_FAUTE) {
             add(
                 Trophee(
@@ -1371,7 +1431,7 @@ object CatalogueTrophees {
     /** Rendu par `TropheesScreen.kt` sous le grand titre "Trophées des défis". */
     val CATEGORIES_SECTION_DEFI = setOf(
         CategorieTrophee.DEFI, CategorieTrophee.DEFI_CHRONO, CategorieTrophee.DEFI_MOTS_MAX,
-        CategorieTrophee.DEFI_SANS_FAUTE, CategorieTrophee.DEFI_QUOTIDIEN,
+        CategorieTrophee.DEFI_OBJECTIFS_POINTS, CategorieTrophee.DEFI_SANS_FAUTE, CategorieTrophee.DEFI_QUOTIDIEN,
     )
 
     /** Rendu par `TropheesScreen.kt` sous le grand titre "Trophées des parties et duels". */
