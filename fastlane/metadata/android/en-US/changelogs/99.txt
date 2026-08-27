@@ -1,0 +1,1 @@
+Fix: exporting/importing statistics no longer loses some data (invalid word, numbers-challenge calculation detail, duo tie/win) added in a recent version.

@@ -1,0 +1,1 @@
+Korrektur: Beim Exportieren/Importieren der Statistiken gehen einige kürzlich hinzugefügte Daten nicht mehr verloren (ungültiges Wort, Rechendetail bei der Zahlen-Herausforderung, Unentschieden/Sieg im Duo).

@@ -1,0 +1,1 @@
+Correction : l'export/import des statistiques ne perd plus certaines données (mot invalide, détail du calcul en défi chiffres, égalité/victoire en duo) ajoutées dans une version récente.

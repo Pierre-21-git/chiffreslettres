@@ -35,6 +35,8 @@ object StatistiquesExport {
                 .put("date", entree.session.date)
                 .put("type", entree.session.type.name)
                 .put("scoreTotal", entree.session.scoreTotal)
+                .put("victoireDuel", entree.session.victoireDuel ?: JSONObject.NULL)
+                .put("egaliteDuel", entree.session.egaliteDuel ?: JSONObject.NULL)
             val manches = JSONArray()
             for (manche in entree.manches) {
                 manches.put(
@@ -43,7 +45,13 @@ object StatistiquesExport {
                         .put("mode", manche.mode.name)
                         .put("niveauCode", manche.niveauCode)
                         .put("score", manche.score)
-                        .put("motJoue", manche.motJoue ?: JSONObject.NULL),
+                        .put("motJoue", manche.motJoue ?: JSONObject.NULL)
+                        .put("longueurMotInvalide", manche.longueurMotInvalide ?: JSONObject.NULL)
+                        .put("cibleChiffres", manche.cibleChiffres ?: JSONObject.NULL)
+                        .put("nombreOperationsChiffres", manche.nombreOperationsChiffres ?: JSONObject.NULL)
+                        .put("maxEtapeIntermediaireChiffres", manche.maxEtapeIntermediaireChiffres ?: JSONObject.NULL)
+                        .put("dureeSecondesManche", manche.dureeSecondesManche ?: JSONObject.NULL)
+                        .put("tempsRestantSecondesValidation", manche.tempsRestantSecondesValidation ?: JSONObject.NULL),
                 )
             }
             session.put("manches", manches)
@@ -115,6 +123,15 @@ object StatistiquesExport {
                         niveauCode = m.getString("niveauCode"),
                         score = m.getInt("score"),
                         motJoue = if (m.isNull("motJoue")) null else m.getString("motJoue"),
+                        // Absents des exports antérieurs à leur ajout (v1.95) : `optInt` avec
+                        // sentinelle plutôt que `getInt`, pour rester compatible avec un ancien
+                        // fichier exporté qui ne contient pas encore ces clés.
+                        longueurMotInvalide = if (m.isNull("longueurMotInvalide")) null else m.optInt("longueurMotInvalide"),
+                        cibleChiffres = if (m.isNull("cibleChiffres")) null else m.optInt("cibleChiffres"),
+                        nombreOperationsChiffres = if (m.isNull("nombreOperationsChiffres")) null else m.optInt("nombreOperationsChiffres"),
+                        maxEtapeIntermediaireChiffres = if (m.isNull("maxEtapeIntermediaireChiffres")) null else m.optInt("maxEtapeIntermediaireChiffres"),
+                        dureeSecondesManche = if (m.isNull("dureeSecondesManche")) null else m.optInt("dureeSecondesManche"),
+                        tempsRestantSecondesValidation = if (m.isNull("tempsRestantSecondesValidation")) null else m.optInt("tempsRestantSecondesValidation"),
                     )
                 }
                 sessions += SessionAvecManches(
@@ -123,6 +140,8 @@ object StatistiquesExport {
                         date = s.getLong("date"),
                         type = TypePartie.valueOf(s.getString("type")),
                         scoreTotal = s.getInt("scoreTotal"),
+                        victoireDuel = if (s.isNull("victoireDuel")) null else s.optBoolean("victoireDuel"),
+                        egaliteDuel = if (s.isNull("egaliteDuel")) null else s.optBoolean("egaliteDuel"),
                     ),
                     manches = manches,
                 )

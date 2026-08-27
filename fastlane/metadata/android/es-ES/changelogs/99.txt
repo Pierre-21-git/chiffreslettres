@@ -1,0 +1,1 @@
+Corrección: exportar/importar estadísticas ya no pierde algunos datos (palabra no válida, detalle del cálculo en el desafío de números, empate/victoria en dúo) añadidos en una versión reciente.

@@ -35,4 +35,9 @@ dependencies {
     api(libs.androidx.datastore.preferences)
 
     testImplementation(libs.junit)
+    // org.json a de vraies classes dans android.jar en runtime, mais seulement des stubs qui
+    // lèvent une RuntimeException ("not mocked") en test JVM pur — cette dépendance fournit une
+    // vraie implémentation pour les tests de StatistiquesExport.kt (test-only, jamais empaqueté
+    // dans l'APK, licence Apache/domaine public).
+    testImplementation(libs.json)
 }
