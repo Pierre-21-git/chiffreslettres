@@ -46,4 +46,24 @@ class DefiQuotidienStreakTest {
         val jours = setOf("2026-07-01", "2026-07-02").map(::jour).toSet()
         assertEquals(0, serieEnCoursDeJours(jours, jour("2026-07-07")))
     }
+
+    @Test
+    fun `rangNiveau croit avec la difficulte, chiffres et lettres confondus`() {
+        // Retour utilisateur : rejouer un niveau supérieur le même jour doit remplacer le niveau
+        // enregistré (voir DefiQuotidienRepository.enregistrerReussite), jamais le contraire.
+        assertEquals(0, rangNiveau("EMILE"))
+        assertEquals(1, rangNiveau("NESTOR"))
+        assertEquals(2, rangNiveau("MONIQUE"))
+        assertEquals(3, rangNiveau("MATHIEU"))
+        assertEquals(true, rangNiveau("MATHIEU") > rangNiveau("MONIQUE"))
+        assertEquals(true, rangNiveau("MONIQUE") > rangNiveau("NESTOR"))
+    }
+
+    @Test
+    fun `rangNiveau renvoie -1 pour un niveau absent ou inconnu`() {
+        assertEquals(-1, rangNiveau(null))
+        assertEquals(-1, rangNiveau("INCONNU"))
+        // -1 garantit qu'un premier niveau réussi (existante = null) est toujours "supérieur".
+        assertEquals(true, rangNiveau("EMILE") > rangNiveau(null))
+    }
 }

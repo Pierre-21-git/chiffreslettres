@@ -1,5 +1,7 @@
 package fr.pierre.chiffreslettres.data
 
+import kotlinx.coroutines.flow.Flow
+
 class DefiRepository(private val dao: DefiDao) {
 
     suspend fun enregistrer(profilId: Long, mode: ModeJeu, niveauCode: String, type: TypeDefi, serie: Int) {
@@ -26,4 +28,13 @@ class DefiRepository(private val dao: DefiDao) {
             dao.enregistrer(defi.copy(id = 0, profilId = profilId))
         }
     }
+
+    fun podiumDefi(profilId: Long, type: TypeDefi, mode: ModeJeu, niveauCode: String): Flow<List<DefiResultat>> =
+        dao.podiumDefi(profilId, type.name, mode.name, niveauCode)
+
+    fun historiqueDefi(profilId: Long, type: TypeDefi, mode: ModeJeu, niveauCode: String): Flow<List<DefiResultat>> =
+        dao.historiqueDefi(profilId, type.name, mode.name, niveauCode)
+
+    fun classementDefi(type: TypeDefi, mode: ModeJeu, niveauCode: String): Flow<List<LigneClassementDefi>> =
+        dao.classementDefi(type.name, mode.name, niveauCode)
 }

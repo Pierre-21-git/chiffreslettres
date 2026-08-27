@@ -107,6 +107,7 @@
     <string name="revelation_manche_suivante">Manche suivante</string>
     <string name="revelation_voir_resultats">Voir les résultats</string>
     <string name="revelation_aucun_mot">(aucun mot)</string>
+    <string name="revelation_mot_invalide">%1$s (invalide)</string>
     <string name="revelation_score_vainqueur">🏆 %1$d pts</string>
     <string name="revelation_score">%1$d pts</string>
 
@@ -167,7 +168,7 @@
     <string name="defi_objectif_mots">%1$d mots valides</string>
     <string name="defi_quotidien_aucune_serie">Aucune série en cours</string>
     <string name="defi_quotidien_serie_en_cours">Série en cours : %1$d jour(s) d\'affilée</string>
-    <string name="defi_quotidien_deja_reussi">Défi du jour déjà réussi, bravo ! Reviens demain pour le prochain.</string>
+    <string name="defi_quotidien_deja_reussi">Défi du jour déjà réussi niveau %1$s aujourd\'hui — tente un niveau supérieur si tu veux !</string>
     <string name="defi_quotidien_choisis_niveau">Choisis ton niveau</string>
     <string name="trophee_semaine_defi_quotidien">Une semaine de défi quotidien</string>
     <string name="trophee_mois_defi_quotidien">Un mois de défi quotidien</string>
@@ -285,6 +286,10 @@
     <string name="statistiques_erreur_lecture">Impossible de lire le fichier.</string>
     <string name="statistiques_mes_meilleurs_scores">Mes meilleurs scores par niveau (chiffres et lettres confondus)</string>
     <string name="statistiques_classement_par_niveau">Classement par niveau (chiffres et lettres confondus)</string>
+    <string name="statistiques_mes_defis">Mes défis par niveau</string>
+    <string name="statistiques_classement_defis">Classement des défis par niveau</string>
+    <string name="statistiques_defi_valeur_reussites">%1$d réussites</string>
+    <string name="statistiques_defi_valeur_mots">%1$d mots</string>
     <string name="statistiques_pas_assez_de_parties">Pas encore assez de parties pour un graphique de progression.</string>
     <string name="statistiques_nb_parties">%1$d parties</string>
     <string name="statistiques_meilleur_score">meilleur : %1$d pts</string>

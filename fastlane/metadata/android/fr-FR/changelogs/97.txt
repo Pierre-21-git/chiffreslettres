@@ -1,0 +1,1 @@
+Grille de mots trouvés (défi mots) qui grandit sans plafond, au moins 10 mots proposés sur un tirage lettres, statistiques étendues pour les défis (podium et progression), défi quotidien qui garde le meilleur niveau du jour, indicateur d'attente et mot invalide affiché en partie réseau, rafraîchissement du widget à minuit plus fiable, petit nettoyage du dictionnaire français.

@@ -51,9 +51,11 @@ import fr.pierre.chiffreslettres.data.DefiQuotidienRepository
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.ExportStatistiques
 import fr.pierre.chiffreslettres.data.HistoriqueRepository
+import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.ProfilRepository
 import fr.pierre.chiffreslettres.data.StatistiquesExport
 import fr.pierre.chiffreslettres.data.TropheeRepository
+import fr.pierre.chiffreslettres.data.TypeDefi
 import fr.pierre.chiffreslettres.data.TypePartie
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
@@ -274,9 +276,22 @@ private fun nomFichier(pseudo: String?): String =
 fun MesStatistiquesScreen(
     profilId: Long,
     historiqueRepository: HistoriqueRepository,
+    defiRepository: DefiRepository,
     onRetour: (() -> Unit)? = null,
 ) {
     val typesPartieAffiches = typesPartieAffiches()
+    val variantesDefi = variantesDefi()
+    // Même principe que donneesParNiveau ci-dessous (Flow collectés avant le LazyColumn, retour
+    // utilisateur : titre épinglé au scroll), pour les défis.
+    val donneesDefisParNiveau = Niveau.entries.map { niveau ->
+        niveau to variantesDefi.map { variante ->
+            val podiumFlow = remember(niveau, variante) { defiRepository.podiumDefi(profilId, variante.type, variante.mode, niveau.name) }
+            val podium by podiumFlow.collectAsState(initial = emptyList())
+            val historiqueFlow = remember(niveau, variante) { defiRepository.historiqueDefi(profilId, variante.type, variante.mode, niveau.name) }
+            val historique by historiqueFlow.collectAsState(initial = emptyList())
+            Triple(variante, podium, historique)
+        }
+    }.filter { (_, donnees) -> donnees.any { it.second.isNotEmpty() } }
     // Calculé ici, avant le LazyColumn (retour utilisateur : titre épinglé au scroll) : les
     // Flow doivent être collectés à chaque recomposition, pas seulement quand un item devient
     // visible, pour savoir dès le départ quels niveaux ont des données (filtre ci-dessous).
@@ -328,6 +343,32 @@ fun MesStatistiquesScreen(
             }
             if (position != donneesParNiveau.lastIndex) item { HorizontalDivider() }
         }
+
+        if (donneesDefisParNiveau.isNotEmpty()) {
+            item { HorizontalDivider() }
+            item {
+                Text(
+                    stringResource(R.string.statistiques_mes_defis),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+        }
+        for ((position, entry) in donneesDefisParNiveau.withIndex()) {
+            val (niveau, donneesParVariante) = entry
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
+                    for ((variante, podium, historique) in donneesParVariante) {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Text(variante.libelle, style = MaterialTheme.typography.titleSmall)
+                            Podium(podium.map { EntreePodium(null, it.serie, it.date, variante.formatValeurRes) })
+                            GraphiqueProgression(historique.map { it.serie })
+                        }
+                    }
+                }
+            }
+            if (position != donneesDefisParNiveau.lastIndex) item { HorizontalDivider() }
+        }
     }
 }
 
@@ -340,6 +381,34 @@ private fun typesPartieAffiches(): List<Pair<TypePartie, String>> = listOf(
     TypePartie.DUO_RESEAU to stringResource(R.string.type_partie_duo_distance),
     TypePartie.DUO_CONFRONTATION_RESEAU to stringResource(R.string.type_partie_confrontation_distance),
 )
+
+/**
+ * Une combinaison (type de défi, mode) affichée comme une section distincte (retour utilisateur :
+ * défi série et défi chrono existent en chiffres ET en lettres, mots max est lettres uniquement,
+ * sans faute mélange les deux mais stocké sous `ModeJeu.CHIFFRES` par convention, cf. DefiEntity).
+ * [formatValeurRes] : "X réussites" pour série/chrono/sans faute, "X mots" pour mots max.
+ */
+private data class VarianteDefi(val type: TypeDefi, val mode: ModeJeu, val libelle: String, val formatValeurRes: Int)
+
+@Composable
+private fun variantesDefi(): List<VarianteDefi> {
+    val chiffres = stringResource(R.string.mode_chiffres)
+    val lettres = stringResource(R.string.mode_lettres)
+    val serie = stringResource(R.string.defi_type_serie)
+    val chrono = stringResource(R.string.defi_type_chrono)
+    val mots = stringResource(R.string.defi_type_mots_max)
+    val sansFaute = stringResource(R.string.defi_type_sans_faute)
+    val formatReussites = R.string.statistiques_defi_valeur_reussites
+    val formatMots = R.string.statistiques_defi_valeur_mots
+    return listOf(
+        VarianteDefi(TypeDefi.SERIE, ModeJeu.CHIFFRES, "$serie — $chiffres", formatReussites),
+        VarianteDefi(TypeDefi.SERIE, ModeJeu.LETTRES, "$serie — $lettres", formatReussites),
+        VarianteDefi(TypeDefi.CHRONO, ModeJeu.CHIFFRES, "$chrono — $chiffres", formatReussites),
+        VarianteDefi(TypeDefi.CHRONO, ModeJeu.LETTRES, "$chrono — $lettres", formatReussites),
+        VarianteDefi(TypeDefi.MOTS_MAX, ModeJeu.LETTRES, mots, formatMots),
+        VarianteDefi(TypeDefi.SANS_FAUTE, ModeJeu.CHIFFRES, sansFaute, formatReussites),
+    )
+}
 
 /**
  * Courbe de progression des scores dans l'ordre chronologique des parties (retour utilisateur :
@@ -419,9 +488,18 @@ private fun GraphiqueProgression(scores: List<Int>) {
 @Composable
 fun StatistiquesGeneralesScreen(
     historiqueRepository: HistoriqueRepository,
+    defiRepository: DefiRepository,
     onRetour: (() -> Unit)? = null,
 ) {
     val typesPartieAffiches = typesPartieAffiches()
+    val variantesDefi = variantesDefi()
+    val classementsDefisParNiveau = Niveau.entries.map { niveau ->
+        niveau to variantesDefi.map { variante ->
+            val classementFlow = remember(niveau, variante) { defiRepository.classementDefi(variante.type, variante.mode, niveau.name) }
+            val classement by classementFlow.collectAsState(initial = emptyList())
+            Pair(variante, classement)
+        }
+    }.filter { (_, donnees) -> donnees.any { it.second.isNotEmpty() } }
     // Calculé ici, avant le LazyColumn (retour utilisateur : titre épinglé au scroll) : cf.
     // commentaire équivalent sur MesStatistiquesScreen.
     val donneesParNiveau = Niveau.entries.map { niveau ->
@@ -467,11 +545,45 @@ fun StatistiquesGeneralesScreen(
             }
             if (position != donneesParNiveau.lastIndex) item { HorizontalDivider() }
         }
+
+        if (classementsDefisParNiveau.isNotEmpty()) {
+            item { HorizontalDivider() }
+            item {
+                Text(
+                    stringResource(R.string.statistiques_classement_defis),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+        }
+        for ((position, entry) in classementsDefisParNiveau.withIndex()) {
+            val (niveau, donneesParVariante) = entry
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
+                    for ((variante, classement) in donneesParVariante) {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Text(variante.libelle, style = MaterialTheme.typography.titleSmall)
+                            Podium(
+                                classement.map {
+                                    EntreePodium("${it.avatar} ${it.pseudo}", it.serie, it.date, variante.formatValeurRes)
+                                },
+                            )
+                        }
+                    }
+                }
+            }
+            if (position != classementsDefisParNiveau.lastIndex) item { HorizontalDivider() }
+        }
     }
 }
 
-/** [label] à null pour "mes statistiques" (toujours le joueur courant, pas besoin de le nommer). */
-private data class EntreePodium(val label: String?, val score: Int, val date: Long)
+/**
+ * [label] à null pour "mes statistiques" (toujours le joueur courant, pas besoin de le nommer).
+ * [formatValeurRes] : ID de ressource string à un paramètre `%1$d` pour afficher [score] (retour
+ * utilisateur : "X pts" pour une partie, "X réussites"/"X mots" pour un défi — la valeur n'est
+ * pas toujours un score de points).
+ */
+private data class EntreePodium(val label: String?, val score: Int, val date: Long, val formatValeurRes: Int = R.string.revelation_score)
 
 /** Podium des 3 meilleurs scores (retour utilisateur), remplace l'ancienne liste numérotée. */
 @Composable
@@ -504,7 +616,7 @@ private fun MarchePodium(rang: Int, entree: EntreePodium, modifier: Modifier = M
         if (entree.label != null) {
             Text(entree.label, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center, maxLines = 1)
         }
-        Text(stringResource(R.string.revelation_score, entree.score), color = Ivory, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+        Text(stringResource(entree.formatValeurRes, entree.score), color = Ivory, fontWeight = FontWeight.Bold, fontSize = 14.sp)
         Box(
             modifier = Modifier
                 .fillMaxWidth()

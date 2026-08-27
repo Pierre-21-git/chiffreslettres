@@ -28,19 +28,39 @@ internal fun serieEnCoursDeJours(jours: Set<LocalDate>, aujourdHui: LocalDate): 
     return serie
 }
 
+/** Ordre de difficulté croissant des niveaux, chiffres et lettres confondus (mêmes noms d'enum des deux côtés). */
+private val ORDRE_NIVEAUX = listOf("EMILE", "NESTOR", "MONIQUE", "MATHIEU")
+
+internal fun rangNiveau(code: String?): Int = code?.let { ORDRE_NIVEAUX.indexOf(it) } ?: -1
+
 /**
- * Suivi du défi quotidien (retour utilisateur) : réussite du jour (verrouillage du rejeu une
- * fois atteinte) et séries de jours consécutifs — la meilleure série (pour les trophées, comme
- * toutes les autres stats de trophées) et la série en cours (affichage seulement).
+ * Suivi du défi quotidien (retour utilisateur) : réussite du jour (le niveau le plus élevé
+ * réussi est conservé, pas seulement le premier — voir [enregistrerReussite]) et séries de
+ * jours consécutifs — la meilleure série (pour les trophées, comme toutes les autres stats de
+ * trophées) et la série en cours (affichage seulement).
  */
 class DefiQuotidienRepository(private val dao: DefiQuotidienDao) {
 
     suspend fun reussiteDuJour(profilId: Long, jour: String): Boolean = dao.reussiteDuJour(profilId, jour) != null
 
+    /** Niveau (nom d'enum) déjà réussi aujourd'hui, ou null si aucune réussite ce jour (retour utilisateur : les boutons de niveau restent affichés, seul celui-ci doit être désactivé). */
+    suspend fun niveauReussiAujourdhui(profilId: Long, jour: String): String? = dao.reussiteDuJour(profilId, jour)?.niveau
+
+    /**
+     * Enregistre une réussite du défi quotidien. Si aucune réussite n'existe encore pour ce jour,
+     * l'insère. Si une réussite existe déjà avec un niveau inférieur, la remplace par ce niveau
+     * plus élevé (retour utilisateur : rejouer un niveau supérieur le même jour doit compter,
+     * pas rester bloqué sur le premier niveau réussi) ; si le niveau existant est déjà égal ou
+     * supérieur, ne fait rien.
+     */
     suspend fun enregistrerReussite(profilId: Long, jour: String, niveau: String) {
-        dao.enregistrerReussite(
-            DefiQuotidienEntity(profilId = profilId, jour = jour, dateReussite = System.currentTimeMillis(), niveau = niveau),
-        )
+        val existante = dao.reussiteDuJour(profilId, jour)
+        val entity = DefiQuotidienEntity(profilId = profilId, jour = jour, dateReussite = System.currentTimeMillis(), niveau = niveau)
+        if (existante == null) {
+            dao.enregistrerReussite(entity)
+        } else if (rangNiveau(niveau) > rangNiveau(existante.niveau)) {
+            dao.remplacerReussite(entity)
+        }
     }
 
     suspend fun reinitialiserJoueur(profilId: Long) = dao.reinitialiserJoueur(profilId)

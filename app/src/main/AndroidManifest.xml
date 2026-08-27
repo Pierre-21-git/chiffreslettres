@@ -45,6 +45,12 @@
                 android:resource="@xml/widget_defi_quotidien_info" />
         </receiver>
 
+        <!-- Déclenchée uniquement par notre propre PendingIntent (AlarmManager), jamais par une
+             app tierce (retour utilisateur : fiabilité du rafraîchissement du widget à minuit). -->
+        <receiver
+            android:name=".widget.AlarmeRafraichissementWidgetMinuitReceiver"
+            android:exported="false" />
+
     </application>
 
 </manifest>

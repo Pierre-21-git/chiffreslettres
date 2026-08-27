@@ -65,6 +65,8 @@ sealed interface MessageReseau {
         val detail: String,
         /** Longueur du mot soumis quand il était invalide (mode Lettres uniquement), pour le bonus de score de l'adversaire (retour utilisateur, cf. [fr.pierre.chiffreslettres.ui.partieduo.appliquerBonusMotInvalide]). */
         val longueurMotInvalide: Int? = null,
+        /** Le mot lui-même quand il était invalide (mode Lettres uniquement), pour l'afficher sur l'écran de révélation côté adversaire (retour utilisateur : seule la longueur était transmise, le mot restait invisible). */
+        val motInvalide: String? = null,
     ) : MessageReseau {
         override fun versJson(): JSONObject = JSONObject().apply {
             put(CLE_TYPE, TYPE)
@@ -76,6 +78,7 @@ sealed interface MessageReseau {
             put("ecartCible", ecartCible)
             put("detail", detail)
             put("longueurMotInvalide", longueurMotInvalide)
+            put("motInvalide", motInvalide)
         }
         companion object {
             const val TYPE = "resultatDeManche"
@@ -228,6 +231,7 @@ sealed interface MessageReseau {
                     ecartCible = if (json.isNull("ecartCible")) null else json.getInt("ecartCible"),
                     detail = json.getString("detail"),
                     longueurMotInvalide = if (json.isNull("longueurMotInvalide")) null else json.getInt("longueurMotInvalide"),
+                    motInvalide = if (json.isNull("motInvalide")) null else json.getString("motInvalide"),
                 )
                 ChoixVoyelles.TYPE -> ChoixVoyelles(index = json.getInt("index"), nombre = json.getInt("nombre"))
                 DemarrerManche.TYPE -> DemarrerManche(index = json.getInt("index"))

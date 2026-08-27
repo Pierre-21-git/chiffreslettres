@@ -345,6 +345,7 @@ class PartieReseauViewModel(
                     ecartCible = resultat.ecartCible,
                     detail = resultat.detail,
                     longueurMotInvalide = resultat.resultat.longueurMotInvalide,
+                    motInvalide = resultat.resultat.motInvalide,
                 ),
             )
         }
@@ -400,6 +401,7 @@ class PartieReseauViewModel(
             message.score,
             message.motJoue,
             message.longueurMotInvalide,
+            motInvalide = message.motInvalide,
         ),
         ecartCible = message.ecartCible,
         detail = message.detail,

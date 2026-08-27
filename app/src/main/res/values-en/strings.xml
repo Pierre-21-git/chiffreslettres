@@ -93,6 +93,7 @@
     <string name="revelation_manche_suivante">Next round</string>
     <string name="revelation_voir_resultats">See results</string>
     <string name="revelation_aucun_mot">(no word)</string>
+    <string name="revelation_mot_invalide">%1$s (invalid)</string>
     <string name="revelation_score_vainqueur">🏆 %1$d pts</string>
     <string name="revelation_score">%1$d pts</string>
 
@@ -148,7 +149,7 @@
     <string name="defi_objectif_mots">%1$d valid words</string>
     <string name="defi_quotidien_aucune_serie">No streak in progress</string>
     <string name="defi_quotidien_serie_en_cours">Current streak: %1$d day(s) in a row</string>
-    <string name="defi_quotidien_deja_reussi">Today\'s challenge already completed, well done! Come back tomorrow for the next one.</string>
+    <string name="defi_quotidien_deja_reussi">Today\'s challenge already completed at %1$s level — try a higher level if you like!</string>
     <string name="defi_quotidien_choisis_niveau">Choose your level</string>
     <string name="trophee_semaine_defi_quotidien">A week of daily challenges</string>
     <string name="trophee_mois_defi_quotidien">A month of daily challenges</string>
@@ -253,6 +254,10 @@
     <string name="statistiques_erreur_lecture">Could not read the file.</string>
     <string name="statistiques_mes_meilleurs_scores">My best scores by level (numbers and letters combined)</string>
     <string name="statistiques_classement_par_niveau">Rankings by level (numbers and letters combined)</string>
+    <string name="statistiques_mes_defis">My challenges by level</string>
+    <string name="statistiques_classement_defis">Challenge rankings by level</string>
+    <string name="statistiques_defi_valeur_reussites">%1$d successes</string>
+    <string name="statistiques_defi_valeur_mots">%1$d words</string>
     <string name="statistiques_pas_assez_de_parties">Not enough games yet for a progression chart.</string>
     <string name="statistiques_nb_parties">%1$d games</string>
     <string name="statistiques_meilleur_score">best: %1$d pts</string>

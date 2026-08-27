@@ -345,6 +345,7 @@ fun AppNavHost(
             MesStatistiquesScreen(
                 profilId = profilIdArg,
                 historiqueRepository = historiqueRepository,
+                defiRepository = defiRepository,
                 onRetour = { navController.popBackStack() },
             )
         }
@@ -352,6 +353,7 @@ fun AppNavHost(
         composable(Routes.STATISTIQUES_GENERALES) {
             StatistiquesGeneralesScreen(
                 historiqueRepository = historiqueRepository,
+                defiRepository = defiRepository,
                 onRetour = { navController.popBackStack() },
             )
         }
@@ -418,7 +420,7 @@ fun AppNavHost(
                     scoreCumule = null,
                     pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                     couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                    onMancheTerminee = { obtenu, motValide, _, _, _ -> entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide) },
+                    onMancheTerminee = { obtenu, motValide, _, _, _, _ -> entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide) },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
                         Button(
@@ -510,7 +512,7 @@ fun AppNavHost(
                                 scoreCumule = scoreCumule,
                                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                                onMancheTerminee = { obtenu, motValide, _, _, longueurMotInvalide ->
+                                onMancheTerminee = { obtenu, motValide, _, _, longueurMotInvalide, _ ->
                                     partieVm.enregistrerResultat(
                                         ResultatManche(
                                             ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
@@ -588,6 +590,7 @@ fun AppNavHost(
                 val manche = sequence.getOrNull(index)
                 var demanderConfirmationRetour by remember { mutableStateOf(false) }
                 val texteAucunMot = stringResource(R.string.revelation_aucun_mot)
+                val patronMotInvalide = stringResource(R.string.revelation_mot_invalide)
 
                 val onRetourAvecConfirmation = { demanderConfirmationRetour = true }
 
@@ -741,14 +744,15 @@ fun AppNavHost(
                                 pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
                                 couleurRang = joueurActif?.let { couleurRangJoueur(it.id, tropheeRepository) },
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots, longueurMotInvalide ->
+                                onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots, longueurMotInvalide, motInvalide ->
                                     duoVm.enregistrerResultat(
                                         ResultatDuoManche(
                                             ResultatManche(
                                             ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
                                             dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
+                                            motInvalide = motInvalide,
                                         ),
-                                            detail = motValide ?: texteAucunMot,
+                                            detail = motValide ?: motInvalide?.let { patronMotInvalide.format(it) } ?: texteAucunMot,
                                             dixMeilleursMots = dixMeilleursMots,
                                         ),
                                     )
@@ -973,6 +977,12 @@ fun AppNavHost(
                 val onRetourAvecConfirmation = { demanderConfirmationRetour = true }
                 val jeSuisDeclencheur = tour == reseauVm.monTourDuo
                 val texteAucunMot = stringResource(R.string.revelation_aucun_mot)
+                val patronMotInvalide = stringResource(R.string.revelation_mot_invalide)
+                // Mon résultat de cette manche est déjà envoyé, mais pas encore celui de
+                // l'adversaire (sinon etatManche serait déjà Revelation) : j'affiche un indicateur
+                // d'attente au lieu du plateau figé/désactivé (retour utilisateur, chrono qui
+                // restait affiché à sa valeur de validation sans indiquer d'attente).
+                val monResultatEnvoye = if (reseauVm.monTourDuo == TourDuo.JOUEUR1) resultats1[index] != null else resultats2[index] != null
 
                 if (erreurJeu != null) {
                     Column(
@@ -1052,6 +1062,8 @@ fun AppNavHost(
                     // Je suis le déclencheur, mais l'adversaire n'a pas encore confirmé être
                     // arrivé sur l'écran d'attente : éviter de déclencher la manche trop tôt.
                     AttenteReseauScreen("En attente que $pseudoAdversaire soit prêt…")
+                } else if (monResultatEnvoye) {
+                    AttenteReseauScreen("En attente du résultat de $pseudoAdversaire…")
                 } else {
                     val seedManche = seeds.getOrNull(index) ?: 0L
                     val progressionManche = "${index + 1} / ${sequence.size}"
@@ -1136,14 +1148,15 @@ fun AppNavHost(
                                 scoreCumule = null,
                                 pseudo = null,
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots, longueurMotInvalide ->
+                                onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots, longueurMotInvalide, motInvalide ->
                                     reseauVm.enregistrerMonResultat(
                                         ResultatDuoManche(
                                             ResultatManche(
                                             ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
                                             dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
+                                            motInvalide = motInvalide,
                                         ),
-                                            detail = motValide ?: texteAucunMot,
+                                            detail = motValide ?: motInvalide?.let { patronMotInvalide.format(it) } ?: texteAucunMot,
                                             dixMeilleursMots = dixMeilleursMots,
                                         ),
                                     )
@@ -1709,7 +1722,7 @@ fun AppNavHost(
                     couleurRang = couleurRang,
                     progressionManche = "$index",
                     libelleProgression = libelleProgression,
-                    onMancheTerminee = { _, motValide, meilleurMot, _, _ ->
+                    onMancheTerminee = { _, motValide, meilleurMot, _, _, _ ->
                         val reussi = motValide != null && motEstReussiDefiLettres(niveauLettres, motValide, seuilLettres, meilleurMot)
                         if (!reussi) defiVm.echec()
                     },
@@ -1740,17 +1753,17 @@ fun AppNavHost(
         composable(Routes.CHOIX_DEFI_QUOTIDIEN) {
             val jour = remember { LocalDate.now().toString() }
             val tirage = remember(profilId, jour) { DefiQuotidienTirage.pour(profilId, jour) }
-            var dejaReussi by remember(profilId, jour) { mutableStateOf(false) }
+            var niveauDejaReussi by remember(profilId, jour) { mutableStateOf<String?>(null) }
             var serieActuelle by remember(profilId) { mutableStateOf(0) }
             LaunchedEffect(profilId, jour) {
-                dejaReussi = defiQuotidienRepository.reussiteDuJour(profilId, jour)
+                niveauDejaReussi = defiQuotidienRepository.niveauReussiAujourdhui(profilId, jour)
                 serieActuelle = defiQuotidienRepository.serieActuelle(profilId)
             }
             DefiQuotidienScreen(
                 pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 tirage = tirage,
-                dejaReussiAujourdhui = dejaReussi,
+                niveauReussiAujourdhui = niveauDejaReussi,
                 serieActuelle = serieActuelle,
                 onNiveauChiffresChoisi = { niveau ->
                     val route = if (tirage.type == TypeDefi.SERIE) {
@@ -1929,7 +1942,7 @@ fun AppNavHost(
                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 progressionManche = "$index",
                 libelleProgression = "Série",
-                onMancheTerminee = { _, motValide, meilleurMot, _, _ ->
+                onMancheTerminee = { _, motValide, meilleurMot, _, _, _ ->
                     val reussi = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
                     derniereMancheReussie = reussi
                     if (!reussi) defiVm.echec()
@@ -2136,7 +2149,7 @@ fun AppNavHost(
                 // (retour utilisateur) : sur un échec, le mot le plus long possible est
                 // affiché dans le panneau de résultat — enchaîner tout de suite sur la manche
                 // suivante (ancien comportement) le faisait disparaître aussitôt affiché.
-                onMancheTerminee = { _, motValide, meilleurMot, _, _ ->
+                onMancheTerminee = { _, motValide, meilleurMot, _, _, _ ->
                     derniereMancheReussie = motValide != null && motEstReussiDefiLettres(niveau, motValide, seuil, meilleurMot)
                 },
                 onRetourEntrainement = onRetourAvecConfirmation,

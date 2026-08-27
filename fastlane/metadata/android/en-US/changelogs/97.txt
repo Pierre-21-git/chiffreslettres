@@ -1,0 +1,1 @@
+Found-words panel (word challenge) now grows without a cap, at least 10 words shown on a letters draw, extended stats for challenges (podium and progression), daily challenge now keeps the best level of the day, waiting indicator and invalid word shown in online games, more reliable midnight widget refresh, small French dictionary cleanup.

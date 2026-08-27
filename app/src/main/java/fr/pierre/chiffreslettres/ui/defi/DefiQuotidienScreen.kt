@@ -35,7 +35,8 @@ import fr.pierre.chiffreslettres.ui.theme.libelle
 fun DefiQuotidienScreen(
     pseudoActif: String,
     tirage: TirageDefiQuotidien,
-    dejaReussiAujourdhui: Boolean,
+    /** Nom d'enum (Niveau ou NiveauLettres) déjà réussi aujourd'hui, null si aucune réussite ce jour (retour utilisateur : les boutons de niveau restent affichés, seul celui déjà réussi est désactivé). */
+    niveauReussiAujourdhui: String?,
     serieActuelle: Int,
     onNiveauChiffresChoisi: (Niveau) -> Unit,
     onNiveauLettresChoisi: (NiveauLettres) -> Unit,
@@ -85,22 +86,37 @@ fun DefiQuotidienScreen(
             },
             style = MaterialTheme.typography.bodyMedium,
         )
-        if (dejaReussiAujourdhui) {
+        val libelleNiveauDejaReussi = niveauReussiAujourdhui?.let { code ->
+            if (tirage.mode == ModeJeu.CHIFFRES) {
+                Niveau.entries.find { it.name == code }?.libelle()
+            } else {
+                NiveauLettres.entries.find { it.name == code }?.libelle()
+            }
+        }
+        if (libelleNiveauDejaReussi != null) {
             Text(
-                stringResource(R.string.defi_quotidien_deja_reussi),
+                stringResource(R.string.defi_quotidien_deja_reussi, libelleNiveauDejaReussi),
                 style = MaterialTheme.typography.bodyMedium,
             )
-        } else if (tirage.mode == ModeJeu.CHIFFRES) {
-            Text(stringResource(R.string.defi_quotidien_choisis_niveau), style = MaterialTheme.typography.titleMedium)
+        }
+        Text(stringResource(R.string.defi_quotidien_choisis_niveau), style = MaterialTheme.typography.titleMedium)
+        if (tirage.mode == ModeJeu.CHIFFRES) {
             for (niveau in Niveau.entries) {
-                Button(onClick = { onNiveauChiffresChoisi(niveau) }, modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = { onNiveauChiffresChoisi(niveau) },
+                    enabled = niveau.name != niveauReussiAujourdhui,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
                     Text(niveau.libelle())
                 }
             }
         } else {
-            Text(stringResource(R.string.defi_quotidien_choisis_niveau), style = MaterialTheme.typography.titleMedium)
             for (niveau in NiveauLettres.entries) {
-                Button(onClick = { onNiveauLettresChoisi(niveau) }, modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = { onNiveauLettresChoisi(niveau) },
+                    enabled = niveau.name != niveauReussiAujourdhui,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
                     Text(niveau.libelle())
                 }
             }

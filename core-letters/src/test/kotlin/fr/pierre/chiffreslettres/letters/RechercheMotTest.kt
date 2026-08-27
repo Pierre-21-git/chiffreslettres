@@ -22,19 +22,34 @@ class RechercheMotTest {
     }
 
     @Test
-    fun `dixMeilleursMots ne retient que les deux plus grandes longueurs, triees par longueur decroissante puis ordre alphabetique`() {
+    fun `dixMeilleursMots complete avec les longueurs inferieures tant que le total est sous 10`() {
         val dico = DictionnaireIndex(sequenceOf("art", "rat", "as", "at", "arts"))
-        // "as"/"at" (2 lettres) sont une 3e longueur, écartée : seules les longueurs 4 et 3 sont gardées.
-        assertEquals(listOf("arts", "art", "rat"), dixMeilleursMots("ARTS".toList(), dico))
+        // Seuls 5 mots au total (toutes longueurs confondues) : la 3e longueur (2 lettres) est
+        // donc incluse elle aussi, alors que l'ancienne règle "2 plus grandes longueurs" l'aurait
+        // écartée (retour utilisateur : certains tirages n'affichaient que 5 à 7 mots).
+        assertEquals(listOf("arts", "art", "rat", "as", "at"), dixMeilleursMots("ARTS".toList(), dico))
     }
 
     @Test
-    fun `dixMeilleursMots n'a plus de plafond fixe, meme au-dela de 10 mots`() {
+    fun `dixMeilleursMots s'arrete des qu'une tranche de longueur atteint 10 mots, sans la tronquer`() {
         val motsLongueur4 = listOf(
             "aaaa", "aaab", "aaba", "aabb", "abaa", "abab", "abba", "abbb", "baaa", "baab", "baba",
         )
         val motsLongueur3 = listOf("aab", "abb")
         val dico = DictionnaireIndex((motsLongueur4 + motsLongueur3).asSequence())
-        assertEquals(motsLongueur4 + motsLongueur3, dixMeilleursMots("AAAAAABBBB".toList(), dico))
+        // La tranche de 4 lettres compte déjà 11 mots (> 10) : elle n'est pas tronquée, et la
+        // tranche de 3 lettres suivante n'est pas ajoutée (le seuil est déjà dépassé).
+        assertEquals(motsLongueur4, dixMeilleursMots("AAAAAABBBB".toList(), dico))
+    }
+
+    @Test
+    fun `dixMeilleursMots cumule plusieurs tranches successives jusqu'a depasser 10 mots`() {
+        val motsLongueur5 = listOf("aaaaa", "aaaab", "aaaba")
+        val motsLongueur4 = listOf("aaaa", "aaab", "aaba", "aabb")
+        val motsLongueur3 = listOf("aaa", "aab", "aba", "abb", "baa")
+        val dico = DictionnaireIndex((motsLongueur5 + motsLongueur4 + motsLongueur3).asSequence())
+        // 3 mots de 5 lettres + 4 de 4 lettres = 7, encore sous 10 : la 3e tranche (3 lettres,
+        // 5 mots) est donc ajoutée en entier, portant le total à 12.
+        assertEquals(motsLongueur5 + motsLongueur4 + motsLongueur3, dixMeilleursMots("AAAAAABBBB".toList(), dico))
     }
 }

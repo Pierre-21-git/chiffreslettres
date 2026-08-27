@@ -67,6 +67,7 @@
     <string name="revelation_manche_suivante">Nächste Runde</string>
     <string name="revelation_voir_resultats">Ergebnisse ansehen</string>
     <string name="revelation_aucun_mot">(kein Wort)</string>
+    <string name="revelation_mot_invalide">%1$s (ungültig)</string>
     <string name="revelation_score_vainqueur">🏆 %1$d Pkt.</string>
     <string name="revelation_score">%1$d Pkt.</string>
 
@@ -122,7 +123,7 @@
     <string name="defi_objectif_mots">%1$d gültige Wörter</string>
     <string name="defi_quotidien_aucune_serie">Keine laufende Serie</string>
     <string name="defi_quotidien_serie_en_cours">Aktuelle Serie: %1$d Tag(e) in Folge</string>
-    <string name="defi_quotidien_deja_reussi">Heutige Herausforderung bereits geschafft, gut gemacht! Komm morgen für die nächste wieder.</string>
+    <string name="defi_quotidien_deja_reussi">Heutige Herausforderung bereits auf Stufe %1$s geschafft — versuch\'s gern auf einer höheren Stufe!</string>
     <string name="defi_quotidien_choisis_niveau">Wähle dein Level</string>
     <string name="trophee_semaine_defi_quotidien">Eine Woche tägliche Herausforderungen</string>
     <string name="trophee_mois_defi_quotidien">Ein Monat tägliche Herausforderungen</string>
@@ -227,6 +228,10 @@
     <string name="statistiques_erreur_lecture">Datei konnte nicht gelesen werden.</string>
     <string name="statistiques_mes_meilleurs_scores">Meine besten Punktzahlen nach Level (Zahlen und Buchstaben zusammen)</string>
     <string name="statistiques_classement_par_niveau">Rangliste nach Level (Zahlen und Buchstaben zusammen)</string>
+    <string name="statistiques_mes_defis">Meine Herausforderungen nach Level</string>
+    <string name="statistiques_classement_defis">Rangliste der Herausforderungen nach Level</string>
+    <string name="statistiques_defi_valeur_reussites">%1$d Erfolge</string>
+    <string name="statistiques_defi_valeur_mots">%1$d Wörter</string>
     <string name="statistiques_pas_assez_de_parties">Noch nicht genug Spiele für ein Fortschrittsdiagramm.</string>
     <string name="statistiques_nb_parties">%1$d Spiele</string>
     <string name="statistiques_meilleur_score">beste: %1$d Pkt.</string>

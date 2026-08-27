@@ -67,6 +67,7 @@
     <string name="revelation_manche_suivante">Siguiente ronda</string>
     <string name="revelation_voir_resultats">Ver resultados</string>
     <string name="revelation_aucun_mot">(ninguna palabra)</string>
+    <string name="revelation_mot_invalide">%1$s (no válida)</string>
     <string name="revelation_score_vainqueur">🏆 %1$d pts</string>
     <string name="revelation_score">%1$d pts</string>
 
@@ -122,7 +123,7 @@
     <string name="defi_objectif_mots">%1$d palabras válidas</string>
     <string name="defi_quotidien_aucune_serie">Ninguna racha en curso</string>
     <string name="defi_quotidien_serie_en_cours">Racha actual: %1$d día(s) seguido(s)</string>
-    <string name="defi_quotidien_deja_reussi">Desafío de hoy ya superado, ¡bien hecho! Vuelve mañana para el siguiente.</string>
+    <string name="defi_quotidien_deja_reussi">Desafío de hoy ya superado en nivel %1$s — ¡inténtalo en un nivel superior si quieres!</string>
     <string name="defi_quotidien_choisis_niveau">Elige tu nivel</string>
     <string name="trophee_semaine_defi_quotidien">Una semana de desafíos diarios</string>
     <string name="trophee_mois_defi_quotidien">Un mes de desafíos diarios</string>
@@ -227,6 +228,10 @@
     <string name="statistiques_erreur_lecture">No se pudo leer el archivo.</string>
     <string name="statistiques_mes_meilleurs_scores">Mis mejores puntuaciones por nivel (números y letras combinados)</string>
     <string name="statistiques_classement_par_niveau">Clasificación por nivel (números y letras combinados)</string>
+    <string name="statistiques_mes_defis">Mis desafíos por nivel</string>
+    <string name="statistiques_classement_defis">Clasificación de desafíos por nivel</string>
+    <string name="statistiques_defi_valeur_reussites">%1$d éxitos</string>
+    <string name="statistiques_defi_valeur_mots">%1$d palabras</string>
     <string name="statistiques_pas_assez_de_parties">Aún no hay suficientes partidas para un gráfico de progresión.</string>
     <string name="statistiques_nb_parties">%1$d partidas</string>
     <string name="statistiques_meilleur_score">mejor: %1$d pts</string>

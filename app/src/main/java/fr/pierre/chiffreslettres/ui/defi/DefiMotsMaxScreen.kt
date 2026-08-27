@@ -40,8 +40,6 @@ import fr.pierre.chiffreslettres.ui.theme.fondPlateau
 
 private const val LETTRES_PAR_LIGNE = 5
 private const val COLONNES_MOTS = 3
-/** 3 colonnes × 4 lignes = 12 emplacements, pour l'objectif de 10 mots des trophées Platine/Diamant (retour utilisateur). */
-private const val LIGNES_MOTS_TROUVES = 4
 
 /**
  * Défi mots max (retour utilisateur) : contrairement à `LettresRoundScreen`, un seul écran
@@ -161,10 +159,10 @@ fun DefiMotsMaxScreen(
 
         if (etat.motsTrouves.isNotEmpty()) {
             PanneauResultat {
-                // Emplacements réservés pour 4 lignes (retour utilisateur), pas seulement les
-                // mots déjà trouvés : la grille garde une taille stable pendant la recherche,
-                // pour l'objectif de 10 mots des trophées Platine/Diamant.
-                GrilleMots(mots = etat.motsTrouves, lignesReservees = LIGNES_MOTS_TROUVES) { mot ->
+                // Le cadre grandit au fur et à mesure des mots trouvés (retour utilisateur), sans
+                // emplacements vides réservés à l'avance ni plafond (auparavant limité à 12 mots,
+                // perdant silencieusement les suivants — problème pour les trophées Diamant à 25 mots).
+                GrilleMots(mots = etat.motsTrouves) { mot ->
                     Text(mot, color = TextMuted, fontSize = 13.sp)
                 }
             }
@@ -210,13 +208,13 @@ fun DefiMotsMaxScreen(
 /**
  * Grille de mots sur [COLONNES_MOTS] colonnes alignées (retour utilisateur) : chaque cellule se
  * partage la largeur à parts égales (`Modifier.weight`), donc les colonnes restent alignées d'une
- * ligne à l'autre quelle que soit la longueur des mots. Si [lignesReservees] est fourni, la
- * grille réserve toujours ce nombre de lignes (cellules vides au-delà de [mots]) pour ne pas
- * changer de taille au fil de la recherche ; sinon elle s'arrête au dernier mot.
+ * ligne à l'autre quelle que soit la longueur des mots. Le nombre de lignes suit exactement
+ * [mots] (retour utilisateur : le cadre grandit au fur et à mesure des mots trouvés, sans
+ * emplacements vides réservés à l'avance ni plafond).
  */
 @Composable
-private fun GrilleMots(mots: List<String>, lignesReservees: Int? = null, rendu: @Composable (String) -> Unit) {
-    val nombreLignes = lignesReservees ?: ((mots.size + COLONNES_MOTS - 1) / COLONNES_MOTS)
+private fun GrilleMots(mots: List<String>, rendu: @Composable (String) -> Unit) {
+    val nombreLignes = (mots.size + COLONNES_MOTS - 1) / COLONNES_MOTS
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         for (ligne in 0 until nombreLignes) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

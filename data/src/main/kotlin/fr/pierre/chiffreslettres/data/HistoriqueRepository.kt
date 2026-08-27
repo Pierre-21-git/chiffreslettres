@@ -9,6 +9,8 @@ data class ResultatManche(
     val motJoue: String? = null,
     /** Longueur du mot soumis quand il était invalide (mode Lettres, parties duo/confrontation uniquement), pour le bonus de score de l'adversaire. */
     val longueurMotInvalide: Int? = null,
+    /** Le mot lui-même quand il était invalide (mode Lettres, parties duo/confrontation/réseau), pour l'affichage sur l'écran de révélation — transitoire, jamais persisté en base (pas de colonne MancheEntity correspondante). */
+    val motInvalide: String? = null,
     val cibleChiffres: Int? = null,
     val nombreOperationsChiffres: Int? = null,
     val maxEtapeIntermediaireChiffres: Int? = null,

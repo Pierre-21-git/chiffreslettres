@@ -11,6 +11,10 @@ interface DefiQuotidienDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun enregistrerReussite(entity: DefiQuotidienEntity)
 
+    /** Écrase la réussite du jour (retour utilisateur : rejouer un niveau supérieur le même jour remplace l'ancien niveau enregistré, voir DefiQuotidienRepository.enregistrerReussite). */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun remplacerReussite(entity: DefiQuotidienEntity)
+
     @Query("SELECT * FROM DefiQuotidienEntity WHERE profilId = :profilId AND jour = :jour")
     suspend fun reussiteDuJour(profilId: Long, jour: String): DefiQuotidienEntity?
 
