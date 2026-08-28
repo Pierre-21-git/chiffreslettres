@@ -225,6 +225,14 @@ data class ArgRes(val res: Int)
  */
 enum class NiveauVisibilite { VISIBLE, SEMI_CACHE, INVISIBLE }
 
+/**
+ * Unité d'affichage de la progression "X / objectif" d'un trophée (retour utilisateur) :
+ * [NOMBRE] (défaut) affiche les valeurs brutes, [DUREE] les formate en heures/minutes/secondes
+ * (ex. trophée "100 heures de jeu", dont [Trophee.objectif]/[Trophee.progression] sont en
+ * secondes).
+ */
+enum class UniteProgression { NOMBRE, DUREE }
+
 class Trophee(
     val id: String,
     val titreRes: Int,
@@ -243,6 +251,8 @@ class Trophee(
     val objectif: Int? = null,
     /** Valeur courante du joueur pour [objectif] (retour utilisateur), null si non applicable. */
     val progression: ((TropheeStats) -> Int)? = null,
+    /** Unité d'affichage de [objectif]/[progression] (retour utilisateur, défaut nombre brut). */
+    val uniteProgression: UniteProgression = UniteProgression.NOMBRE,
     val niveauVisibilite: NiveauVisibilite = NiveauVisibilite.VISIBLE,
     /** Description affichée tant que le trophée n'est pas débloqué, si [niveauVisibilite] != VISIBLE. */
     val descriptionAvantDeblocageRes: Int? = null,
@@ -1412,6 +1422,7 @@ object CatalogueTrophees {
                 descriptionAvantDeblocageRes = R.string.easter_avant_longue_haleine,
                 objectif = SECONDES_CENT_HEURES,
                 progression = { it.secondesJoueesTotal },
+                uniteProgression = UniteProgression.DUREE,
             ) { it.secondesJoueesTotal >= SECONDES_CENT_HEURES },
         )
         add(

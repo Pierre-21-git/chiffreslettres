@@ -13,7 +13,7 @@
     <string name="categorie_defi_points">Punkte-Herausforderung</string>
     <string name="categorie_defi_sans_faute">Fehlerfreie Herausforderung</string>
     <string name="categorie_defi_quotidien">Tägliche Herausforderung</string>
-    <string name="categorie_trophees_speciaux">Sondertrophäen</string>
+    <string name="categorie_trophees_speciaux">Geheimnisse</string>
 
     <!-- Rang-Bezeichnungen (voller Spielerrang, z. B. "Bronze-Spieler") -->
     <string name="palier_joueur_bronze">Bronze-Spieler</string>

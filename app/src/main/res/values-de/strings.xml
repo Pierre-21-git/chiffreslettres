@@ -194,6 +194,7 @@
     <string name="trophees_obtenu_le">Freigeschaltet am %1$s</string>
     <string name="trophees_pas_encore_obtenu">Noch nicht freigeschaltet</string>
     <string name="trophees_progression">%1$d / %2$d</string>
+    <string name="trophees_progression_duree">%1$dh %2$dmin %3$ds / %4$dh</string>
     <string name="trophees_masquer_obtenus">Freigeschaltete Trophäen ausblenden</string>
     <string name="trophees_afficher_obtenus">Freigeschaltete Trophäen anzeigen</string>
     <string name="trophees_section_parties_duels">Partien- und Duell-Trophäen</string>

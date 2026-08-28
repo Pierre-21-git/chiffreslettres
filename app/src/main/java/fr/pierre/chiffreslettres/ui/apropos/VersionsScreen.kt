@@ -19,6 +19,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.100",
+        date = "2026-08-28",
+        changements = listOf(
+            "Écran Trophées : le bloc du bas (easter eggs) s'appelle maintenant \"Secrets\" au " +
+                "lieu de \"Trophées spéciaux\".",
+            "Trophée \"100 heures de jeu\" : la progression s'affiche maintenant en heures, " +
+                "minutes et secondes (ex. \"12h 30min 46s / 100h\") au lieu du nombre de secondes " +
+                "brut.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.99",
         date = "2026-08-28",
         changements = listOf(

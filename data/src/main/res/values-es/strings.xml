@@ -13,7 +13,7 @@
     <string name="categorie_defi_points">Desafío de Puntos</string>
     <string name="categorie_defi_sans_faute">Desafío sin fallos</string>
     <string name="categorie_defi_quotidien">Desafío diario</string>
-    <string name="categorie_trophees_speciaux">Trofeos especiales</string>
+    <string name="categorie_trophees_speciaux">Secretos</string>
 
     <!-- Etiquetas de nivel (rango completo del jugador, ej. "Jugador Bronce") -->
     <string name="palier_joueur_bronze">Jugador Bronce</string>

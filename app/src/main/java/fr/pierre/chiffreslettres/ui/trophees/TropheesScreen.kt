@@ -41,6 +41,7 @@ import fr.pierre.chiffreslettres.data.CategorieTrophee
 import fr.pierre.chiffreslettres.data.NiveauVisibilite
 import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.TropheeStats
+import fr.pierre.chiffreslettres.data.UniteProgression
 import fr.pierre.chiffreslettres.data.libelleCourtRes
 import fr.pierre.chiffreslettres.data.libelleJoueurRes
 import fr.pierre.chiffreslettres.ui.statistiques.formatDate
@@ -76,7 +77,25 @@ internal fun titreAffiche(trophee: Trophee, debloque: Boolean): String =
         texteTrophee(trophee.titreRes, trophee.titreArgs)
     }
 
-/** Un "grand bloc" de l'écran (Parties et duels / Défis / Trophées spéciaux), avant filtrage. */
+/**
+ * Texte "X / objectif" affiché dans le détail d'un trophée non débloqué (retour utilisateur) :
+ * [UniteProgression.NOMBRE] affiche les valeurs brutes, [UniteProgression.DUREE] les formate en
+ * heures/minutes/secondes (ex. "12h 30min 46s / 100h") — [valeur] et [objectif] sont alors
+ * exprimés en secondes.
+ */
+@Composable
+private fun texteProgression(valeur: Int, objectif: Int, unite: UniteProgression): String = when (unite) {
+    UniteProgression.NOMBRE -> stringResource(R.string.trophees_progression, valeur, objectif)
+    UniteProgression.DUREE -> stringResource(
+        R.string.trophees_progression_duree,
+        valeur / 3600,
+        (valeur % 3600) / 60,
+        valeur % 60,
+        objectif / 3600,
+    )
+}
+
+/** Un "grand bloc" de l'écran (Parties et duels / Défis / Secrets), avant filtrage. */
 private data class GrandBloc(val titreRes: Int, val categories: List<CategorieTrophee>, val meta: Trophee?)
 
 /** Même chose après filtrage (masquerObtenus, catégories vides retirées). */
@@ -144,7 +163,7 @@ fun TropheesScreen(
         }
 
         // Trois "grands blocs" (retour utilisateur) au-dessus des sous-titres de catégorie déjà
-        // existants : Parties et duels, Défis, Trophées spéciaux (easter eggs) — dans cet ordre.
+        // existants : Parties et duels, Défis, Secrets (easter eggs) — dans cet ordre.
         // Les méta-trophées "Maître des parties"/"Maître des défis" (catégorie TROPHEES_SPECIAUX,
         // condition pilotée par TropheeRepository.reevaluer) sont rattachés manuellement en tout
         // dernier de leur bloc plutôt que rendus via leur propre catégorie.
@@ -262,7 +281,7 @@ fun TropheesScreen(
                     }
                     if (date == null && objectif != null && progression != null && stats != null) {
                         Text(
-                            stringResource(R.string.trophees_progression, progression(stats).coerceAtMost(objectif), objectif),
+                            texteProgression(progression(stats).coerceAtMost(objectif), objectif, trophee.uniteProgression),
                             style = MaterialTheme.typography.labelLarge,
                             color = TextMuted,
                         )

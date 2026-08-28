@@ -13,7 +13,7 @@
     <string name="categorie_defi_points">Points Challenge</string>
     <string name="categorie_defi_sans_faute">Flawless challenge</string>
     <string name="categorie_defi_quotidien">Daily challenge</string>
-    <string name="categorie_trophees_speciaux">Special trophies</string>
+    <string name="categorie_trophees_speciaux">Secrets</string>
 
     <!-- Tier labels (full player rank, e.g. "Bronze Player") -->
     <string name="palier_joueur_bronze">Bronze Player</string>

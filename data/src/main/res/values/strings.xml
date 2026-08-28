@@ -13,7 +13,7 @@
     <string name="categorie_defi_points">Défi Points</string>
     <string name="categorie_defi_sans_faute">Défi sans faute</string>
     <string name="categorie_defi_quotidien">Défi quotidien</string>
-    <string name="categorie_trophees_speciaux">Trophées spéciaux</string>
+    <string name="categorie_trophees_speciaux">Secrets</string>
 
     <!-- Libellés de palier (rang joueur complet, ex. "Joueur Bronze") -->
     <string name="palier_joueur_bronze">Joueur Bronze</string>
