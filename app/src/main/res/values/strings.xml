@@ -31,6 +31,17 @@
     <!-- Lettres comptant comme voyelles pour la règle du minimum de voyelles au tirage. -->
     <string name="alphabet_voyelles">AEIOUY</string>
 
+    <!-- Barème de points du défi Points (retour utilisateur), un point par lettre de
+         alphabet_lettres dans le même ordre (A à Z) — barème classique de points par lettre. -->
+    <integer-array name="bareme_valeurs">
+        <item>1</item><item>3</item><item>3</item><item>2</item><item>1</item>
+        <item>4</item><item>2</item><item>4</item><item>1</item><item>8</item>
+        <item>10</item><item>1</item><item>2</item><item>1</item><item>1</item>
+        <item>3</item><item>8</item><item>1</item><item>1</item><item>1</item>
+        <item>1</item><item>4</item><item>10</item><item>10</item><item>10</item>
+        <item>10</item>
+    </integer-array>
+
     <!-- Lettres exclues du sac par niveau, du plus facile (le plus de lettres rares
          exclues) au plus difficile (aucune exclusion). -->
     <string name="lettres_exclues_emile">XYZWKQHJ</string>
@@ -356,7 +367,7 @@
     <string name="regles_defi_mots_detail">Un mot trop court, un mot invalide, ou une validation à vide, met fin au défi — comme un premier échec en défi série. Un mot déjà trouvé est signalé mais ne compte pas de point supplémentaire, sans mettre fin au défi. Sur les niveaux Monique et Mathieu, le tirage est garanti pour offrir au moins 10 mots valides. Le nombre de mots distincts trouvés est enregistré dans les statistiques.</string>
 
     <string name="regles_mode_defi_points_titre">Mode Défi Points</string>
-    <string name="regles_defi_points_intro">Un seul tirage de lettres, chronométré. Des objectifs de points sont fixés selon le niveau, calculés avec un barème façon Scrabble (E, A, I, N, O, R, S, T, U, L valent 1 point ; D, M, G valent 2 ; B, C, P valent 3 ; F, H, V valent 4 ; J, Q valent 8 ; K, W, X, Y, Z valent 10). Trouve un mot dont le score correspond exactement à chaque objectif, avant la fin du temps imparti :</string>
+    <string name="regles_defi_points_intro">Un seul tirage de lettres, chronométré. Des objectifs de points sont fixés selon le niveau, calculés à partir d\'un barème classique qui attribue plus de points aux lettres rares. Trouve un mot dont le score correspond exactement à chaque objectif, avant la fin du temps imparti :</string>
     <string name="regles_defi_points_objectifs_emile">Émile : 3 objectifs, 2 minutes</string>
     <string name="regles_defi_points_objectifs_nestor">Nestor : 4 objectifs, 3 minutes</string>
     <string name="regles_defi_points_objectifs_monique">Monique : 5 objectifs, 4 minutes</string>

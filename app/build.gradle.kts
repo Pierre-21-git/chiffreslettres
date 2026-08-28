@@ -26,8 +26,8 @@ android {
         applicationId = "fr.pierre.chiffreslettres"
         minSdk = 33
         targetSdk = 36
-        versionCode = 99
-        versionName = "1.98"
+        versionCode = 100
+        versionName = "1.99"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -14,6 +14,8 @@ data class ConfigurationAlphabetLettres(
     val distributionBase: Map<Char, Int>,
     val voyelles: Set<Char>,
     val lettresExcluesParNiveau: Map<NiveauLettres, Set<Char>>,
+    /** Barème de points par lettre (défi Points, retour utilisateur : dépend de la langue). */
+    val baremeLettres: Map<Char, Int>,
 )
 
 object ConfigurationAlphabetProvider {
@@ -30,6 +32,9 @@ object ConfigurationAlphabetProvider {
             NiveauLettres.MONIQUE to resources.getString(R.string.lettres_exclues_monique).toSet(),
             NiveauLettres.MATHIEU to resources.getString(R.string.lettres_exclues_mathieu).toSet(),
         )
-        return ConfigurationAlphabetLettres(distributionBase, voyelles, lettresExcluesParNiveau)
+        val valeursPoints = resources.getIntArray(R.array.bareme_valeurs)
+        require(lettres.size == valeursPoints.size) { "alphabet_lettres et bareme_valeurs doivent avoir la même taille" }
+        val baremeLettres = lettres.map { it[0] }.zip(valeursPoints.toList()).toMap()
+        return ConfigurationAlphabetLettres(distributionBase, voyelles, lettresExcluesParNiveau, baremeLettres)
     }
 }

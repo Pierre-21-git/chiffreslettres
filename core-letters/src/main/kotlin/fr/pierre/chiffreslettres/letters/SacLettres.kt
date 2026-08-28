@@ -7,8 +7,8 @@ import kotlin.random.Random
  * distribution de base et l'ensemble des voyelles sont fournis par l'appelant (retour
  * utilisateur : externalisés dans strings.xml côté app pour permettre une déclinaison par
  * langue — ce module reste du Kotlin pur sans dépendance Android). En français,
- * distribution Scrabble (spec §4.1), Y compte comme voyelle pour la règle du minimum 2
- * voyelles.
+ * distribution classique de lettres (spec §4.1), Y compte comme voyelle pour la règle du
+ * minimum 2 voyelles.
  */
 class SacLettres private constructor(private val comptes: MutableMap<Char, Int>, private val voyelles: Set<Char>) {
 

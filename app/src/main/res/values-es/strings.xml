@@ -297,7 +297,7 @@
     <string name="regles_defi_mots_detail">Una palabra demasiado corta, una palabra inválida, o validar sin nada escrito, termina el desafío — como un primer fallo en el desafío de racha. Una palabra ya encontrada se señala pero no suma un punto extra, sin terminar el desafío. En los niveles Monique y Mathieu, el sorteo garantiza al menos 10 palabras válidas. El número de palabras distintas encontradas se registra en las estadísticas.</string>
 
     <string name="regles_mode_defi_points_titre">Modo Desafío de Puntos</string>
-    <string name="regles_defi_points_intro">Un único sorteo de letras, cronometrado. Se fijan objetivos de puntos según el nivel, calculados con un valor de ficha al estilo Scrabble (E, A, I, N, O, R, S, T, U, L valen 1 punto; D, M, G valen 2; B, C, P valen 3; F, H, V valen 4; J, Q valen 8; K, W, X, Y, Z valen 10). Encuentra una palabra cuya puntuación coincida exactamente con cada objetivo antes de que se acabe el tiempo:</string>
+    <string name="regles_defi_points_intro">Un único sorteo de letras, cronometrado. Se fijan objetivos de puntos según el nivel, calculados con una tabla de puntuación clásica que asigna más puntos a las letras menos frecuentes. Encuentra una palabra cuya puntuación coincida exactamente con cada objetivo antes de que se acabe el tiempo:</string>
     <string name="regles_defi_points_objectifs_emile">Émile: 3 objetivos, 2 minutos</string>
     <string name="regles_defi_points_objectifs_nestor">Nestor: 4 objetivos, 3 minutos</string>
     <string name="regles_defi_points_objectifs_monique">Monique: 5 objetivos, 4 minutos</string>

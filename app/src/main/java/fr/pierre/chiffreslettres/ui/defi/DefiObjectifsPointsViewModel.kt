@@ -46,15 +46,17 @@ data class DefiObjectifsPointsUiState(
     val raisonRejetTransitoire: RaisonRejetMotDefiObjectifsPoints? = null,
     val nombreVoyellesChoisi: Int? = null,
     val raisonFin: RaisonFinDefiObjectifsPoints? = null,
+    /** Barème de points par lettre de la langue courante (retour utilisateur : dépend de la langue). */
+    val bareme: Map<Char, Int> = BaremeLettres.FRANCAIS,
 ) {
-    /** Score courant (barème Scrabble) du mot en cours de saisie (retour utilisateur : affiché en direct sous "Votre mot"). */
-    val scoreMotSaisi: Int get() = BaremeLettres.scoreMot(motSaisi)
+    /** Score courant du mot en cours de saisie (retour utilisateur : affiché en direct sous "Votre mot"). */
+    val scoreMotSaisi: Int get() = BaremeLettres.scoreMot(motSaisi, bareme)
 }
 
 /**
  * Défi "Points" (retour utilisateur) : un seul tirage de lettres, chronométré (durée par niveau
- * comme le défi chrono, cf. [budgetSecondesDefiChrono]), avec des objectifs de points façon
- * Scrabble à atteindre exactement (`BaremeLettres`/[genererObjectifs]). Comme le défi mots max,
+ * comme le défi chrono, cf. [budgetSecondesDefiChrono]), avec des objectifs de points à atteindre
+ * exactement (`BaremeLettres`/[genererObjectifs]). Comme le défi mots max,
  * les lettres utilisées sont "dégrisées" après chaque mot validé ; un mot dont le score ne
  * correspond à aucun objectif restant est signalé mais ne met pas fin au défi. Un seul ViewModel
  * couvre tout le défi, qui enregistre lui-même sa performance finale.
@@ -83,7 +85,12 @@ class DefiObjectifsPointsViewModel(
     private var enregistre = false
 
     private val _uiState = MutableStateFlow(
-        DefiObjectifsPointsUiState(niveau = niveau, nombreLettres = nombreLettres, tempsRestantSecondes = budgetSecondesDefiChrono(niveau)),
+        DefiObjectifsPointsUiState(
+            niveau = niveau,
+            nombreLettres = nombreLettres,
+            tempsRestantSecondes = budgetSecondesDefiChrono(niveau),
+            bareme = configurationAlphabet.baremeLettres,
+        ),
     )
     val uiState: StateFlow<DefiObjectifsPointsUiState> = _uiState.asStateFlow()
 
@@ -115,12 +122,12 @@ class DefiObjectifsPointsViewModel(
     private fun tirerAvecGarantie(nombreVoyelles: Int): Pair<List<Char>, List<ObjectifPoints>> {
         repeat(MAX_TENTATIVES_GARANTIE - 1) {
             val tirage = TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
-            val objectifs = genererObjectifs(tirage, dictionnaire, nombreObjectifsCible)
+            val objectifs = genererObjectifs(tirage, dictionnaire, nombreObjectifsCible, configurationAlphabet.baremeLettres)
             if (objectifs.size >= nombreObjectifsCible) return tirage to objectifs
             sac = sacNeuf()
         }
         val tirage = TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
-        return tirage to genererObjectifs(tirage, dictionnaire, nombreObjectifsCible)
+        return tirage to genererObjectifs(tirage, dictionnaire, nombreObjectifsCible, configurationAlphabet.baremeLettres)
     }
 
     private fun demarrerChrono() {
@@ -176,7 +183,7 @@ class DefiObjectifsPointsViewModel(
             rejeterMot(mot, RaisonRejetMotDefiObjectifsPoints.INVALIDE)
             return
         }
-        val score = BaremeLettres.scoreMot(mot)
+        val score = BaremeLettres.scoreMot(mot, configurationAlphabet.baremeLettres)
         val indexObjectif = etat.objectifs.indexOfFirst { it.points == score && !it.atteint }
         if (indexObjectif == -1) {
             rejeterMot(mot, RaisonRejetMotDefiObjectifsPoints.SCORE_SANS_OBJECTIF)
@@ -221,7 +228,12 @@ class DefiObjectifsPointsViewModel(
         enregistre = false
         sac = sacNeuf()
         _uiState.update {
-            DefiObjectifsPointsUiState(niveau = it.niveau, nombreLettres = nombreLettres, tempsRestantSecondes = budgetSecondesDefiChrono(niveau))
+            DefiObjectifsPointsUiState(
+                niveau = it.niveau,
+                nombreLettres = nombreLettres,
+                tempsRestantSecondes = budgetSecondesDefiChrono(niveau),
+                bareme = configurationAlphabet.baremeLettres,
+            )
         }
     }
 

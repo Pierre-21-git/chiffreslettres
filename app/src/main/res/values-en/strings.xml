@@ -7,7 +7,7 @@
     <string name="niveau_monique">Ça se complique, Monique</string>
     <string name="niveau_mathieu">C\'est du sérieux, Mathieu</string>
 
-    <!-- Letters mode alphabet: English Scrabble distribution (98 tiles, no blanks, same
+    <!-- Letters mode alphabet: classic English letter distribution (98 tiles, no blanks, same
          convention as the French default). No letters excluded per level for now (retour
          utilisateur : à redemander plus tard). -->
     <string-array name="alphabet_lettres">
@@ -27,6 +27,17 @@
         <item>1</item>
     </integer-array>
     <string name="alphabet_voyelles">AEIOU</string>
+
+    <!-- Points challenge letter-value chart, one point per letter of alphabet_lettres in the
+         same order (A to Z) — English classic letter-point chart. -->
+    <integer-array name="bareme_valeurs">
+        <item>1</item><item>3</item><item>3</item><item>2</item><item>1</item>
+        <item>4</item><item>2</item><item>4</item><item>1</item><item>8</item>
+        <item>5</item><item>1</item><item>3</item><item>1</item><item>1</item>
+        <item>3</item><item>10</item><item>1</item><item>1</item><item>1</item>
+        <item>1</item><item>4</item><item>4</item><item>8</item><item>4</item>
+        <item>10</item>
+    </integer-array>
 
     <string name="lettres_exclues_emile"></string>
     <string name="lettres_exclues_nestor"></string>
@@ -323,7 +334,7 @@
     <string name="regles_defi_mots_detail">A word that\'s too short, an invalid word, or submitting with nothing typed ends the challenge — like a first failure in the streak challenge. A word already found is flagged but doesn\'t score an extra point, and doesn\'t end the challenge. On the Monique and Mathieu levels, the draw is guaranteed to offer at least 10 valid words. The number of distinct words found is recorded in the statistics.</string>
 
     <string name="regles_mode_defi_points_titre">Points Challenge mode</string>
-    <string name="regles_defi_points_intro">A single letter draw, timed. Point objectives are set depending on the level, computed with a Scrabble-style tile value (E, A, I, N, O, R, S, T, U, L are worth 1 point; D, M, G are worth 2; B, C, P are worth 3; F, H, V are worth 4; J, Q are worth 8; K, W, X, Y, Z are worth 10). Find a word whose score exactly matches each objective before time runs out:</string>
+    <string name="regles_defi_points_intro">A single letter draw, timed. Point objectives are set depending on the level, computed from a classic letter-value chart that awards more points to rarer letters. Find a word whose score exactly matches each objective before time runs out:</string>
     <string name="regles_defi_points_objectifs_emile">Emile: 3 objectives, 2 minutes</string>
     <string name="regles_defi_points_objectifs_nestor">Nestor: 4 objectives, 3 minutes</string>
     <string name="regles_defi_points_objectifs_monique">Monique: 5 objectives, 4 minutes</string>

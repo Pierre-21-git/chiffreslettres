@@ -224,7 +224,7 @@ fun TuileJeton(
     enabled: Boolean = true,
     monospace: Boolean = true,
     grand: Boolean = false,
-    /** Valeur en points (défi Points, retour utilisateur) affichée en petit en bas à droite de la tuile, comme une plaquette Scrabble. Null ailleurs : ne change rien aux usages existants. */
+    /** Valeur en points (défi Points, retour utilisateur) affichée en petit en bas à droite de la tuile, comme une plaquette de jeu de lettres classique. Null ailleurs : ne change rien aux usages existants. */
     points: Int? = null,
 ) {
     TuileRelief(

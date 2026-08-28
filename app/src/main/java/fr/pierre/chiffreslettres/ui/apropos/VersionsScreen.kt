@@ -19,6 +19,17 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.99",
+        date = "2026-08-28",
+        changements = listOf(
+            "Défi Points : les objectifs commencent désormais à 3 points minimum (un objectif à " +
+                "1 ou 2 points était trop trivial).",
+            "Défi Points : le barème de points par lettre dépend maintenant de la langue de jeu " +
+                "(français et anglais ont chacun leur propre barème ; allemand et espagnol " +
+                "utilisent encore le barème français en attendant leur propre alphabet de tirage).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.93",
         date = "2026-08-12",
         changements = listOf(

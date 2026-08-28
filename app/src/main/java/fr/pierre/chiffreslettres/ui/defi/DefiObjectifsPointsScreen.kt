@@ -119,7 +119,7 @@ fun DefiObjectifsPointsScreen(
                         enabled = etat.tirageTermine && !etat.termine && !utilisee,
                         monospace = false,
                         grand = true,
-                        points = BaremeLettres.valeurLettre(lettre),
+                        points = BaremeLettres.valeurLettre(lettre, etat.bareme),
                         onClick = { viewModel.cliquerLettre(index) },
                     )
                 }
@@ -145,7 +145,7 @@ fun DefiObjectifsPointsScreen(
                 RaisonRejetMotDefiObjectifsPoints.INVALIDE ->
                     stringResource(R.string.defi_mots_max_fin_mot_invalide, motRejete)
                 RaisonRejetMotDefiObjectifsPoints.SCORE_SANS_OBJECTIF ->
-                    stringResource(R.string.defi_points_rejet_score_sans_objectif, motRejete, BaremeLettres.scoreMot(motRejete))
+                    stringResource(R.string.defi_points_rejet_score_sans_objectif, motRejete, BaremeLettres.scoreMot(motRejete, etat.bareme))
                 null -> null
             }
             if (message != null) {
