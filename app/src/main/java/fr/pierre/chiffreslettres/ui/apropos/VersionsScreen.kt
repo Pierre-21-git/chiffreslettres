@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.101",
+        date = "2026-08-28",
+        changements = listOf(
+            "Nouvelle page \"Statut joueur\" (accessible depuis le libellé de rang de l'écran " +
+                "Trophées) : l'échelle complète des 8 paliers avec le rang courant en évidence, " +
+                "et la liste des trophées encore manquants pour atteindre le rang suivant.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.100",
         date = "2026-08-28",
         changements = listOf(

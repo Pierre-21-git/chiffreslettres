@@ -200,6 +200,15 @@
     <string name="trophees_section_parties_duels">Trofeos de partidas y duelos</string>
     <string name="trophees_section_defis">Trofeos de desafíos</string>
     <string name="trophee_titre_cache">\?\?\?\?\?\?\?</string>
+
+    <!-- ui/trophees/StatutJoueurScreen -->
+    <string name="statut_joueur_titre">Estado del jugador</string>
+    <string name="statut_joueur_rang_actuel">Rango actual</string>
+    <string name="statut_joueur_aucun_rang">Todavía sin rango</string>
+    <string name="statut_joueur_echelle_titre">Rangos</string>
+    <string name="statut_joueur_prochain_titre">Para convertirte en %1$s</string>
+    <string name="statut_joueur_prochain_aucun">No falta nada por ahora.</string>
+    <string name="statut_joueur_rang_maximum">Rango máximo alcanzado: ¡Diamante!</string>
     <string name="trophees_debloques_titre_singulier">¡Nuevo trofeo desbloqueado!</string>
     <string name="trophees_debloques_titre_pluriel">¡Nuevos trofeos desbloqueados!</string>
 

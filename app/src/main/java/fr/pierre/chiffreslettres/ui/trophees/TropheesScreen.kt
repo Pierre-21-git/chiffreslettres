@@ -113,6 +113,8 @@ fun TropheesScreen(
     onRetour: (() -> Unit)? = null,
     /** Stats du joueur (retour utilisateur : affiche "X / objectif" dans le détail d'un trophée non débloqué), null en consultation du catalogue seul. */
     stats: TropheeStats? = null,
+    /** Navigation vers la page dédiée du statut joueur (retour utilisateur), null en consultation du catalogue seul (pas de rang affiché dans ce cas). */
+    onVoirStatutJoueur: (() -> Unit)? = null,
 ) {
     var tropheeSelectionne by remember { mutableStateOf<Trophee?>(null) }
     // Lien masquer/afficher (retour utilisateur), pertinent seulement en consultation des
@@ -151,13 +153,13 @@ fun TropheesScreen(
                         style = MaterialTheme.typography.titleMedium,
                     )
                     val rang = CatalogueTrophees.rangJoueur(tropheesDebloques.keys)
-                    if (rang != null) {
-                        Text(
-                            stringResource(rang.libelleJoueurRes),
-                            style = MaterialTheme.typography.titleSmall,
-                            color = couleurPalier(rang),
-                        )
-                    }
+                    val texteRang = if (rang != null) stringResource(rang.libelleJoueurRes) else stringResource(R.string.statut_joueur_titre)
+                    Text(
+                        texteRang,
+                        modifier = if (onVoirStatutJoueur != null) Modifier.clickable(onClick = onVoirStatutJoueur) else Modifier,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = if (rang != null) couleurPalier(rang) else TextMuted,
+                    )
                 }
             }
         }

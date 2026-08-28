@@ -237,6 +237,15 @@
     <string name="trophees_section_parties_duels">Games and duels trophies</string>
     <string name="trophees_section_defis">Challenge trophies</string>
     <string name="trophee_titre_cache">\?\?\?\?\?\?\?</string>
+
+    <!-- ui/trophees/StatutJoueurScreen -->
+    <string name="statut_joueur_titre">Player status</string>
+    <string name="statut_joueur_rang_actuel">Current rank</string>
+    <string name="statut_joueur_aucun_rang">No rank yet</string>
+    <string name="statut_joueur_echelle_titre">Ranks</string>
+    <string name="statut_joueur_prochain_titre">To become %1$s</string>
+    <string name="statut_joueur_prochain_aucun">Nothing missing for now.</string>
+    <string name="statut_joueur_rang_maximum">Maximum rank reached: Diamond!</string>
     <string name="trophees_debloques_titre_singulier">New trophy unlocked!</string>
     <string name="trophees_debloques_titre_pluriel">New trophies unlocked!</string>
 

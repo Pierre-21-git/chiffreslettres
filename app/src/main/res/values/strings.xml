@@ -268,6 +268,15 @@
     <string name="trophees_section_defis">Trophées des défis</string>
     <string name="trophee_titre_cache">\?\?\?\?\?\?\?</string>
 
+    <!-- ui/trophees/StatutJoueurScreen -->
+    <string name="statut_joueur_titre">Statut joueur</string>
+    <string name="statut_joueur_rang_actuel">Rang actuel</string>
+    <string name="statut_joueur_aucun_rang">Pas encore de rang</string>
+    <string name="statut_joueur_echelle_titre">Paliers</string>
+    <string name="statut_joueur_prochain_titre">Pour devenir %1$s</string>
+    <string name="statut_joueur_prochain_aucun">Rien ne manque pour l\'instant.</string>
+    <string name="statut_joueur_rang_maximum">Rang maximum atteint : Diamant !</string>
+
     <!-- ui/trophees/TropheesDebloquesDialog -->
     <string name="trophees_debloques_titre_singulier">Nouveau trophée débloqué !</string>
     <string name="trophees_debloques_titre_pluriel">Nouveaux trophées débloqués !</string>

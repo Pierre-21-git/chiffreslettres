@@ -125,6 +125,7 @@ import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesGeneralesScreen
 import fr.pierre.chiffreslettres.ui.statistiques.StatistiquesJoueurScreen
 import fr.pierre.chiffreslettres.ui.theme.couleurRangJoueur
 import fr.pierre.chiffreslettres.ui.trophees.TropheesDebloquesDialog
+import fr.pierre.chiffreslettres.ui.trophees.StatutJoueurScreen
 import fr.pierre.chiffreslettres.ui.trophees.TropheesScreen
 import java.time.LocalDate
 import kotlin.random.Random
@@ -296,6 +297,20 @@ fun AppNavHost(
                 titre = stringResource(R.string.mes_trophees_titre),
                 tropheesDebloques = tropheesDebloques,
                 stats = stats,
+                onRetour = { navController.popBackStack() },
+                onVoirStatutJoueur = { navController.navigate(Routes.statutJoueur(profilIdArg)) },
+            )
+        }
+
+        composable(
+            route = Routes.STATUT_JOUEUR_PATTERN,
+            arguments = listOf(navArgument(Routes.ARG_PROFIL_ID) { type = NavType.LongType }),
+        ) { backStackEntry ->
+            val profilIdArg = backStackEntry.arguments!!.getLong(Routes.ARG_PROFIL_ID)
+            val debloques by tropheeRepository.tropheesDebloques(profilIdArg).collectAsState(initial = null)
+            val tropheesDebloques = debloques?.associate { it.trophyId to it.dateDebloque } ?: emptyMap()
+            StatutJoueurScreen(
+                tropheesDebloques = tropheesDebloques,
                 onRetour = { navController.popBackStack() },
             )
         }
