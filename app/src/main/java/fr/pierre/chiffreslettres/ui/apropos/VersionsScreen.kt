@@ -19,6 +19,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.111",
+        date = "2026-08-29",
+        changements = listOf(
+            "Défi Points : les mots possibles sur le tirage s'affichent maintenant en fin de " +
+                "partie, comme dans le défi Mots max.",
+            "Mots possibles (défi Mots max et défi Points) : la liste affichée est désormais " +
+                "limitée à 100 mots au maximum.",
+            "Partie réseau (Duo/Confrontation) : après avoir validé son compte ou son mot, on " +
+                "reste sur l'écran d'attente en voyant le chrono de la manche continuer de " +
+                "défiler, au lieu d'un simple indicateur figé.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.110",
         date = "2026-08-29",
         changements = listOf(

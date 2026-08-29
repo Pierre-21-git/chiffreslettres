@@ -1088,7 +1088,23 @@ fun AppNavHost(
                     // arrivé sur l'écran d'attente : éviter de déclencher la manche trop tôt.
                     AttenteReseauScreen("En attente que $pseudoAdversaire soit prêt…")
                 } else if (monResultatEnvoye) {
-                    AttenteReseauScreen("En attente du résultat de $pseudoAdversaire…")
+                    // Retour utilisateur : rester sur cet écran en voyant le chrono de la manche
+                    // continuer de défiler, plutôt qu'un simple indicateur figé. Le ViewModel de
+                    // la manche existe déjà (créé dans le "else" ci-dessous avant ma validation) ;
+                    // on le retrouve par sa clé pour lire son temps restant, sans le recréer.
+                    val secondesRestantes = when (manche) {
+                        is ManchePlanifiee.Chiffres -> {
+                            val roundVm: ChiffresRoundViewModel = viewModel(key = "reseau-chiffres-$index")
+                            val uiState by roundVm.uiState.collectAsState()
+                            uiState.tempsRestantSecondes
+                        }
+                        is ManchePlanifiee.Lettres -> {
+                            val roundVm: LettresRoundViewModel = viewModel(key = "reseau-lettres-$index")
+                            val uiState by roundVm.uiState.collectAsState()
+                            uiState.tempsRestantSecondes
+                        }
+                    }
+                    AttenteReseauScreen("En attente du résultat de $pseudoAdversaire…", secondesInitiales = secondesRestantes)
                 } else {
                     val seedManche = seeds.getOrNull(index) ?: 0L
                     val progressionManche = "${index + 1} / ${sequence.size}"

@@ -47,7 +47,7 @@ data class DefiMotsMaxUiState(
     val nombreVoyellesChoisi: Int? = null,
     /** Pourquoi le défi s'est arrêté (retour utilisateur), null tant qu'il n'est pas terminé. */
     val raisonFin: RaisonFinDefiMotsMax? = null,
-    /** Tous les mots d'au moins [seuilLongueurDefiLettres] lettres jouables sur ce tirage (retour utilisateur : révélés en fin de défi), triés du plus long au plus court. */
+    /** Mots d'au moins [seuilLongueurDefiLettres] lettres jouables sur ce tirage (retour utilisateur : révélés en fin de défi), triés du plus long au plus court, limités à [MAX_MOTS_POSSIBLES_AFFICHES] (la détection "tous les mots trouvés" reste basée sur la liste complète, non plafonnée). */
     val motsPossibles: List<String> = emptyList(),
 )
 
@@ -215,7 +215,7 @@ class DefiMotsMaxViewModel(
     private fun terminer(raison: RaisonFinDefiMotsMax) {
         if (_uiState.value.termine) return
         timerJob?.cancel()
-        _uiState.update { it.copy(termine = true, raisonFin = raison, motsPossibles = motsPossiblesCalcules) }
+        _uiState.update { it.copy(termine = true, raisonFin = raison, motsPossibles = motsPossiblesCalcules.take(MAX_MOTS_POSSIBLES_AFFICHES)) }
         if (enregistre || !enregistrerResultat) return
         enregistre = true
         val score = _uiState.value.motsTrouves.size

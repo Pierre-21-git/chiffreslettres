@@ -40,6 +40,7 @@ import fr.pierre.chiffreslettres.ui.theme.PanneauResultat
 import fr.pierre.chiffreslettres.ui.theme.PanelDeep
 import fr.pierre.chiffreslettres.ui.theme.PucePseudo
 import fr.pierre.chiffreslettres.ui.theme.TextMuted
+import fr.pierre.chiffreslettres.ui.theme.GrilleMotsGroupee
 import fr.pierre.chiffreslettres.ui.theme.TuileJeton
 import fr.pierre.chiffreslettres.ui.theme.TuilePrincipale
 import fr.pierre.chiffreslettres.ui.theme.fondPlateau
@@ -213,6 +214,19 @@ fun DefiObjectifsPointsScreen(
                 }
                 if (explication != null) {
                     Text(explication, color = TextMuted, fontSize = 13.sp)
+                }
+            }
+            if (etat.motsPossibles.isNotEmpty()) {
+                PanneauResultat {
+                    Text(stringResource(R.string.defi_mots_max_mots_possibles_titre), color = TextMuted, fontSize = 11.sp, letterSpacing = 1.sp)
+                    GrilleMotsGroupee(mots = etat.motsPossibles) { mot ->
+                        val trouve = mot in etat.motsTrouves
+                        Text(
+                            if (trouve) stringResource(R.string.defi_mots_max_mot_possible_trouve, mot) else mot,
+                            color = if (trouve) TextMuted else Ivory,
+                            fontSize = 13.sp,
+                        )
+                    }
                 }
             }
             actionsFin()

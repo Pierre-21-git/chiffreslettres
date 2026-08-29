@@ -48,6 +48,9 @@ fun budgetSecondesDefiChrono(niveau: NiveauLettres): Int = when (niveau) {
 /** Durée fixe (retour utilisateur : 5 minutes), identique quel que soit le niveau, du défi mots max. */
 const val DUREE_SECONDES_DEFI_MOTS_MAX = 300
 
+/** Nombre maximal de mots affichés dans "mots possibles" en fin de défi (retour utilisateur : au-delà, la grille devient illisible). Le calcul du score/de la fin du défi reste basé sur la liste complète, seul l'affichage est plafonné. */
+const val MAX_MOTS_POSSIBLES_AFFICHES = 100
+
 /** Nombre d'objectifs de points à atteindre en défi Points, selon le niveau (retour utilisateur). */
 fun nombreObjectifsDefiPoints(niveau: NiveauLettres): Int = when (niveau) {
     NiveauLettres.EMILE -> 3

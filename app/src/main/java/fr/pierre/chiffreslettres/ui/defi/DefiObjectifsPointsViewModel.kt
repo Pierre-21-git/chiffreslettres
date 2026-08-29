@@ -51,6 +51,8 @@ data class DefiObjectifsPointsUiState(
     val raisonFin: RaisonFinDefiObjectifsPoints? = null,
     /** Barème de points par lettre de la langue courante (retour utilisateur : dépend de la langue). */
     val bareme: Map<Char, Int> = BaremeLettres.FRANCAIS,
+    /** Tous les mots jouables sur ce tirage (retour utilisateur : révélés en fin de défi, comme en défi mots max), triés du plus long au plus court, limités à [MAX_MOTS_POSSIBLES_AFFICHES]. */
+    val motsPossibles: List<String> = emptyList(),
 ) {
     /** Score courant du mot en cours de saisie (retour utilisateur : affiché en direct sous "Votre mot"). */
     val scoreMotSaisi: Int get() = BaremeLettres.scoreMot(motSaisi, bareme)
@@ -92,6 +94,8 @@ class DefiObjectifsPointsViewModel(
     private val nombreObjectifsCible = nombreObjectifsDefiPoints(niveau)
     private var timerJob: Job? = null
     private var enregistre = false
+    /** Calculés une fois le tirage connu (retour utilisateur : révélés en fin de défi, comme en défi mots max). */
+    private var motsPossiblesCalcules: List<String> = emptyList()
 
     private val _uiState = MutableStateFlow(
         DefiObjectifsPointsUiState(
@@ -118,6 +122,9 @@ class DefiObjectifsPointsViewModel(
         _uiState.update {
             it.copy(lettresTirees = lettres, tirageTermine = true, nombreVoyellesChoisi = nombreVoyelles, objectifs = objectifs)
         }
+        motsPossiblesCalcules = dictionnaire.rechercherAuMoins(lettres, LONGUEUR_MIN_MOT_POSSIBLE)
+            .distinct()
+            .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
         demarrerChrono()
     }
 
@@ -222,7 +229,7 @@ class DefiObjectifsPointsViewModel(
     private fun terminer(raison: RaisonFinDefiObjectifsPoints) {
         if (_uiState.value.termine) return
         timerJob?.cancel()
-        _uiState.update { it.copy(termine = true, raisonFin = raison) }
+        _uiState.update { it.copy(termine = true, raisonFin = raison, motsPossibles = motsPossiblesCalcules.take(MAX_MOTS_POSSIBLES_AFFICHES)) }
         if (enregistre) return
         enregistre = true
         val score = _uiState.value.objectifs.count { it.atteint }
@@ -241,6 +248,7 @@ class DefiObjectifsPointsViewModel(
     fun recommencer() {
         timerJob?.cancel()
         enregistre = false
+        motsPossiblesCalcules = emptyList()
         sac = sacNeuf()
         _uiState.update {
             DefiObjectifsPointsUiState(
@@ -258,5 +266,7 @@ class DefiObjectifsPointsViewModel(
 
     private companion object {
         const val MAX_TENTATIVES_GARANTIE = 300
+        /** Pas de longueur minimale propre au défi Points (contrairement au défi mots max) : tous les mots jouables du dictionnaire comptent, à partir de sa longueur minimale. */
+        const val LONGUEUR_MIN_MOT_POSSIBLE = 2
     }
 }
