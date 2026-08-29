@@ -27,13 +27,13 @@ class DefiQuotidienTirageTest {
     }
 
     @Test
-    fun `objectif dans la plage 3 a 5 en chiffres, toujours 3 en lettres`() {
+    fun `objectif dans la plage 3 a 5 en chiffres, toujours 3 en lettres sauf pour le defi points`() {
         for (jour in 1..28) {
             val tirage = DefiQuotidienTirage.pour(profilId = 42, jour = "2026-0${1 + jour % 9}-${"%02d".format(jour)}")
-            if (tirage.mode == ModeJeu.LETTRES) {
-                assertEquals(3, tirage.objectif)
-            } else {
-                assertTrue("objectif=${tirage.objectif}", tirage.objectif in 3..5)
+            when {
+                tirage.type == TypeDefi.OBJECTIFS_POINTS -> assertEquals(0, tirage.objectif)
+                tirage.mode == ModeJeu.LETTRES -> assertEquals(3, tirage.objectif)
+                else -> assertTrue("objectif=${tirage.objectif}", tirage.objectif in 3..5)
             }
         }
     }
@@ -45,6 +45,29 @@ class DefiQuotidienTirageTest {
             for (jour in 1..28) {
                 val tirage = DefiQuotidienTirage.pour(profilId, jour = "2026-0${1 + jour % 9}-${"%02d".format(jour)}")
                 assertFalse(tirage.type == TypeDefi.SANS_FAUTE)
+            }
+        }
+    }
+
+    @Test
+    fun `le defi mots max n'est jamais tire pour le defi quotidien`() {
+        // Défi à tirage unique, non chaînable : pas de variante quotidienne (cf. commentaire sur TYPES_TIRABLES_LETTRES).
+        for (profilId in 1L..50L) {
+            for (jour in 1..28) {
+                val tirage = DefiQuotidienTirage.pour(profilId, jour = "2026-0${1 + jour % 9}-${"%02d".format(jour)}")
+                assertFalse(tirage.type == TypeDefi.MOTS_MAX)
+            }
+        }
+    }
+
+    @Test
+    fun `le defi points n'est tire qu'en mode lettres`() {
+        for (profilId in 1L..50L) {
+            for (jour in 1..28) {
+                val tirage = DefiQuotidienTirage.pour(profilId, jour = "2026-0${1 + jour % 9}-${"%02d".format(jour)}")
+                if (tirage.type == TypeDefi.OBJECTIFS_POINTS) {
+                    assertEquals(ModeJeu.LETTRES, tirage.mode)
+                }
             }
         }
     }

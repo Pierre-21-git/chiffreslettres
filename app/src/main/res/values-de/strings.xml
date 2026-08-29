@@ -130,6 +130,7 @@
     <string name="defi_objectif_comptes">%1$d exakte Ergebnisse</string>
     <string name="defi_objectif_mots_serie">%1$d gültige Wörter in Folge</string>
     <string name="defi_objectif_mots">%1$d gültige Wörter</string>
+    <string name="defi_objectif_points">alle Punktziele des Niveaus</string>
     <string name="defi_quotidien_aucune_serie">Keine laufende Serie</string>
     <string name="defi_quotidien_serie_en_cours">Aktuelle Serie: %1$d Tag(e) in Folge</string>
     <string name="defi_quotidien_deja_reussi">Heutige Herausforderung bereits auf Stufe %1$s geschafft — versuch\'s gern auf einer höheren Stufe!</string>

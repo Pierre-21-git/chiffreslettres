@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.108",
+        date = "2026-08-29",
+        changements = listOf(
+            "Le défi Points peut désormais faire partie du défi quotidien (jusqu'ici tiré mais " +
+                "routé par erreur vers un défi chrono classique). Le défi Mots max, qui a le même " +
+                "défaut de fond et n'a pas de variante quotidienne prévue, n'est plus tiré du tout.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.107",
         date = "2026-08-29",
         changements = listOf(

@@ -99,8 +99,12 @@ object Routes {
     const val JEU_DEFI_MOTS_MAX_PATTERN = "defi/motsMax/jeuLettres/{$ARG_NIVEAU}"
     fun jeuDefiMotsMax(niveau: NiveauLettres) = "defi/motsMax/jeuLettres/${niveau.name}"
 
-    const val JEU_DEFI_POINTS_PATTERN = "defi/points/jeuLettres/{$ARG_NIVEAU}"
-    fun jeuDefiPoints(niveau: NiveauLettres) = "defi/points/jeuLettres/${niveau.name}"
+    // Tirage unique, pas de chaînage de manches, donc pas d'objectif quotidien numérique à
+    // vérifier (contrairement aux 4 routes série/chrono) : l'objectif du niveau (tous les
+    // objectifs de points atteints) suffit à lui seul, seul le jour est transmis.
+    const val JEU_DEFI_POINTS_PATTERN = "defi/points/jeuLettres/{$ARG_NIVEAU}?$ARG_JOUR_QUOTIDIEN={$ARG_JOUR_QUOTIDIEN}"
+    fun jeuDefiPoints(niveau: NiveauLettres, jourQuotidien: String? = null) =
+        "defi/points/jeuLettres/${niveau.name}" + if (jourQuotidien != null) "?$ARG_JOUR_QUOTIDIEN=$jourQuotidien" else ""
 
     // Un seul niveau pour les deux modes (retour utilisateur) : Niveau et NiveauLettres partagent
     // les mêmes noms (EMILE/NESTOR/MONIQUE/MATHIEU), niveau.name convient donc pour les deux.

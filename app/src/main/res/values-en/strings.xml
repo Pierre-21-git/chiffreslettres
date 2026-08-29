@@ -167,6 +167,7 @@
     <string name="defi_objectif_comptes">%1$d exact counts</string>
     <string name="defi_objectif_mots_serie">%1$d valid words in a row</string>
     <string name="defi_objectif_mots">%1$d valid words</string>
+    <string name="defi_objectif_points">all of the level\'s point targets</string>
     <string name="defi_quotidien_aucune_serie">No streak in progress</string>
     <string name="defi_quotidien_serie_en_cours">Current streak: %1$d day(s) in a row</string>
     <string name="defi_quotidien_deja_reussi">Today\'s challenge already completed at %1$s level — try a higher level if you like!</string>

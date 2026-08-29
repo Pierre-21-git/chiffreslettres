@@ -130,6 +130,7 @@
     <string name="defi_objectif_comptes">%1$d resultados exactos</string>
     <string name="defi_objectif_mots_serie">%1$d palabras válidas seguidas</string>
     <string name="defi_objectif_mots">%1$d palabras válidas</string>
+    <string name="defi_objectif_points">todos los objetivos de puntos del nivel</string>
     <string name="defi_quotidien_aucune_serie">Ninguna racha en curso</string>
     <string name="defi_quotidien_serie_en_cours">Racha actual: %1$d día(s) seguido(s)</string>
     <string name="defi_quotidien_deja_reussi">Desafío de hoy ya superado en nivel %1$s — ¡inténtalo en un nivel superior si quieres!</string>

@@ -74,6 +74,7 @@ import fr.pierre.chiffreslettres.ui.defi.DefiObjectifsPointsScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiObjectifsPointsViewModel
 import fr.pierre.chiffreslettres.ui.defi.DefiQuotidienScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiViewModel
+import fr.pierre.chiffreslettres.ui.defi.RaisonFinDefiObjectifsPoints
 import fr.pierre.chiffreslettres.ui.defi.budgetSecondesDefiChrono
 import fr.pierre.chiffreslettres.data.alphabet.ConfigurationAlphabetLettres
 import fr.pierre.chiffreslettres.ui.defi.motEstReussiDefiLettres
@@ -1722,13 +1723,23 @@ fun AppNavHost(
 
         composable(
             route = Routes.JEU_DEFI_POINTS_PATTERN,
-            arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
+            arguments = listOf(
+                navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType },
+                navArgument(Routes.ARG_JOUR_QUOTIDIEN) { type = NavType.StringType; nullable = true; defaultValue = null },
+            ),
         ) { backStackEntry ->
             val niveau = NiveauLettres.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
+            val jourQuotidien = backStackEntry.arguments!!.getString(Routes.ARG_JOUR_QUOTIDIEN)
             val defiVm: DefiObjectifsPointsViewModel = viewModel(backStackEntry) {
-                DefiObjectifsPointsViewModel(niveau, dictionnaire, configurationAlphabet, defiRepository, tropheeRepository, profilId)
+                DefiObjectifsPointsViewModel(
+                    niveau, dictionnaire, configurationAlphabet, defiRepository, tropheeRepository, profilId,
+                    defiQuotidienRepository = defiQuotidienRepository,
+                    jourQuotidien = jourQuotidien,
+                    context = context,
+                )
             }
             val etat by defiVm.uiState.collectAsState()
+            val cibleRetour = if (jourQuotidien != null) Routes.CHOIX_DEFI_QUOTIDIEN else Routes.CHOIX_DEFI_POINTS
             var demanderConfirmationRetour by remember { mutableStateOf(false) }
             DefiObjectifsPointsScreen(
                 viewModel = defiVm,
@@ -1736,20 +1747,24 @@ fun AppNavHost(
                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 onRetour = {
                     if (etat.termine) {
-                        navController.popBackStack(Routes.CHOIX_DEFI_POINTS, inclusive = false)
+                        navController.popBackStack(cibleRetour, inclusive = false)
                     } else {
                         demanderConfirmationRetour = true
                     }
                 },
                 actionsFin = {
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Button(onClick = { defiVm.recommencer() }, modifier = Modifier.fillMaxWidth()) {
-                            Text(stringResource(R.string.action_recommencer))
+                    if (jourQuotidien != null && etat.raisonFin == RaisonFinDefiObjectifsPoints.TOUS_OBJECTIFS_ATTEINTS) {
+                        DefiQuotidienGagne(onTerminer = { navController.popBackStack(Routes.CHOIX_DEFI_QUOTIDIEN, inclusive = false) })
+                    } else {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Button(onClick = { defiVm.recommencer() }, modifier = Modifier.fillMaxWidth()) {
+                                Text(stringResource(R.string.action_recommencer))
+                            }
+                            OutlinedButton(
+                                onClick = { navController.popBackStack(cibleRetour, inclusive = false) },
+                                modifier = Modifier.fillMaxWidth(),
+                            ) { Text(stringResource(R.string.action_retour)) }
                         }
-                        OutlinedButton(
-                            onClick = { navController.popBackStack(Routes.CHOIX_DEFI_POINTS, inclusive = false) },
-                            modifier = Modifier.fillMaxWidth(),
-                        ) { Text(stringResource(R.string.action_retour)) }
                     }
                 },
             )
@@ -1763,7 +1778,7 @@ fun AppNavHost(
                     confirmButton = {
                         TextButton(onClick = {
                             demanderConfirmationRetour = false
-                            navController.popBackStack(Routes.CHOIX_DEFI_POINTS, inclusive = false)
+                            navController.popBackStack(cibleRetour, inclusive = false)
                         }) { Text(stringResource(R.string.action_quitter)) }
                     },
                     dismissButton = {
@@ -1919,10 +1934,10 @@ fun AppNavHost(
                     navController.navigate(route)
                 },
                 onNiveauLettresChoisi = { niveau ->
-                    val route = if (tirage.type == TypeDefi.SERIE) {
-                        Routes.jeuDefiLettres(niveau, tirage.objectif, jour)
-                    } else {
-                        Routes.jeuDefiChronoLettres(niveau, tirage.objectif, jour)
+                    val route = when (tirage.type) {
+                        TypeDefi.SERIE -> Routes.jeuDefiLettres(niveau, tirage.objectif, jour)
+                        TypeDefi.OBJECTIFS_POINTS -> Routes.jeuDefiPoints(niveau, jour)
+                        else -> Routes.jeuDefiChronoLettres(niveau, tirage.objectif, jour)
                     }
                     navController.navigate(route)
                 },

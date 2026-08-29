@@ -1,7 +1,9 @@
 package fr.pierre.chiffreslettres.ui.defi
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.pierre.chiffreslettres.data.DefiQuotidienRepository
 import fr.pierre.chiffreslettres.data.DefiRepository
 import fr.pierre.chiffreslettres.data.ModeJeu
 import fr.pierre.chiffreslettres.data.Trophee
@@ -15,6 +17,7 @@ import fr.pierre.chiffreslettres.letters.ObjectifPoints
 import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
 import fr.pierre.chiffreslettres.letters.genererObjectifs
+import fr.pierre.chiffreslettres.widget.DefiQuotidienWidgetProvider
 import kotlin.random.Random
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -70,7 +73,13 @@ class DefiObjectifsPointsViewModel(
     private val profilId: Long,
     private val nombreLettres: Int = TirageLettres.NOMBRE_LETTRES,
     private val random: Random = Random,
+    /** Non nuls seulement quand ce défi fait partie du défi quotidien (retour utilisateur). */
+    private val defiQuotidienRepository: DefiQuotidienRepository? = null,
+    private val jourQuotidien: String? = null,
+    context: Context? = null,
 ) : ViewModel() {
+
+    private val appContext = context?.applicationContext
 
     private fun sacNeuf() = SacLettres.creer(
         configurationAlphabet.distributionBase,
@@ -219,6 +228,12 @@ class DefiObjectifsPointsViewModel(
         val score = _uiState.value.objectifs.count { it.atteint }
         viewModelScope.launch {
             defiRepository.enregistrer(profilId, ModeJeu.LETTRES, niveauCode, TypeDefi.OBJECTIFS_POINTS, score)
+            // Réussite du jour uniquement sur un succès complet (retour utilisateur : pas de
+            // défi quotidien "partiel"), même principe que DefiViewModel.objectifQuotidienAtteint().
+            if (raison == RaisonFinDefiObjectifsPoints.TOUS_OBJECTIFS_ATTEINTS && defiQuotidienRepository != null && jourQuotidien != null) {
+                defiQuotidienRepository.enregistrerReussite(profilId, jourQuotidien, niveauCode)
+                appContext?.let { DefiQuotidienWidgetProvider.demanderMiseAJour(it) }
+            }
             _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
         }
     }

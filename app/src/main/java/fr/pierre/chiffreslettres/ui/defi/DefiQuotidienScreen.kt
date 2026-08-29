@@ -57,6 +57,7 @@ fun DefiQuotidienScreen(
         },
     )
     val natureObjectif = when {
+        tirage.type == TypeDefi.OBJECTIFS_POINTS -> stringResource(R.string.defi_objectif_points)
         tirage.mode == ModeJeu.CHIFFRES && tirage.type == TypeDefi.SERIE -> stringResource(R.string.defi_objectif_comptes_serie, tirage.objectif)
         tirage.mode == ModeJeu.CHIFFRES -> stringResource(R.string.defi_objectif_comptes, tirage.objectif)
         tirage.type == TypeDefi.SERIE -> stringResource(R.string.defi_objectif_mots_serie, tirage.objectif)
