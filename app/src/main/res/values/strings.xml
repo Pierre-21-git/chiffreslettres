@@ -152,6 +152,7 @@
     <string name="configuration_duo_demarrer">Démarrer le duel</string>
 
     <string name="duel_mots_titre">Duel mots</string>
+    <string name="duel_points_titre">Duel points</string>
     <string name="duel_mots_choisir_sous_mode">Quel sous-mode ?</string>
     <string name="duel_mots_sous_mode_duo">Duo (5 minutes, comparaison à la fin)</string>
     <string name="duel_mots_sous_mode_confrontation">Confrontation (course en direct)</string>

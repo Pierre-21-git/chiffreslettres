@@ -86,7 +86,7 @@ fun DuelMotsConfrontationScreen(
         modifier = Modifier.fillMaxSize().fondPlateau().padding(20.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        EnTeteEcran(stringResource(R.string.duel_mots_titre), onRetour)
+        EnTeteEcran(stringResource(if (estPoints) R.string.duel_points_titre else R.string.duel_mots_titre), onRetour)
         PucePseudo(pseudoMoi, couleurRang = couleurRang)
 
         val progressionRes = if (estPoints) R.string.duel_mots_objectif_points_progression else R.string.duel_mots_objectif_mots_progression

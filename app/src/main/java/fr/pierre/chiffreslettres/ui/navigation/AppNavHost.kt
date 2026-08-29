@@ -241,6 +241,7 @@ fun AppNavHost(
                 onPartieDuo = { navController.navigate(Routes.PARTIE_DUO_GRAPH) },
                 onPartieReseau = { navController.navigate(Routes.RESEAU_GRAPH) },
                 onDuelMots = { navController.navigate(Routes.CHOIX_ROLE_DUEL_MOTS) },
+                onDuelPoints = { navController.navigate(Routes.CHOIX_ROLE_DUEL_POINTS) },
                 onDefiSerie = { navController.navigate(Routes.CHOIX_DEFI_SERIE) },
                 onDefiChrono = { navController.navigate(Routes.CHOIX_DEFI_CHRONO) },
                 onDefiMotsMax = { navController.navigate(Routes.CHOIX_DEFI_MOTS_MAX) },
@@ -1274,6 +1275,38 @@ fun AppNavHost(
                     tropheeRepository = tropheeRepository,
                     profilId = profilId,
                 )
+                duelMotsVm.imposerSousMode(null)
+                ChoixRoleReseauScreen(
+                    pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
+                    couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                    onHeberger = { transport ->
+                        duelMotsVm.choisirHote(transport)
+                        navController.navigate(Routes.HOTE_ATTENTE_DUEL_MOTS)
+                    },
+                    onRejoindre = { transport ->
+                        duelMotsVm.choisirInvite(transport)
+                        navController.navigate(Routes.INVITE_RECHERCHE_DUEL_MOTS)
+                    },
+                    onRetour = { navController.popBackStack() },
+                    contenuRegles = { ReglesModeDuelMots() },
+                )
+            }
+
+            // Point d'entrée dédié au bouton "Duel points" du menu (retour utilisateur,
+            // 2026-08-29) : mêmes écrans hôte/invité que ci-dessus, seul le sous-mode imposé
+            // sur le ViewModel partagé change — voir Routes.CHOIX_ROLE_DUEL_POINTS.
+            composable(Routes.CHOIX_ROLE_DUEL_POINTS) { backStackEntry ->
+                val duelMotsVm = duelMotsReseauViewModel(
+                    navController, backStackEntry, context,
+                    pseudo = profilActif?.pseudo ?: "",
+                    avatar = profilActif?.avatar ?: "",
+                    dictionnaire = dictionnaire,
+                    configurationAlphabet = configurationAlphabet,
+                    historiqueRepository = historiqueRepository,
+                    tropheeRepository = tropheeRepository,
+                    profilId = profilId,
+                )
+                duelMotsVm.imposerSousMode(SousModeDuelMots.POINTS)
                 ChoixRoleReseauScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                     couleurRang = couleurRangJoueur(profilId, tropheeRepository),
@@ -1302,10 +1335,15 @@ fun AppNavHost(
                     profilId = profilId,
                 )
                 val etat by duelMotsVm.etat.collectAsState()
+                val routeEntreeDuelMots = if (duelMotsVm.sousModeImpose == SousModeDuelMots.POINTS) {
+                    Routes.CHOIX_ROLE_DUEL_POINTS
+                } else {
+                    Routes.CHOIX_ROLE_DUEL_MOTS
+                }
                 LaunchedEffect(etat) {
                     if (etat is EtatPartieReseau.Connecte) {
                         navController.navigate(Routes.DUEL_MOTS_CONNEXION) {
-                            popUpTo(Routes.CHOIX_ROLE_DUEL_MOTS) { inclusive = false }
+                            popUpTo(routeEntreeDuelMots) { inclusive = false }
                         }
                     }
                 }
@@ -1315,7 +1353,7 @@ fun AppNavHost(
                     erreur = (etatActuel as? EtatPartieReseau.Erreur)?.message,
                     onAnnulerErreur = {
                         duelMotsVm.annulerEtRevenirAuChoix()
-                        navController.popBackStack(Routes.CHOIX_ROLE_DUEL_MOTS, inclusive = false)
+                        navController.popBackStack(routeEntreeDuelMots, inclusive = false)
                     },
                     onAnnuler = {
                         duelMotsVm.annulerEtRevenirAuChoix()
@@ -1337,10 +1375,15 @@ fun AppNavHost(
                 )
                 val etat by duelMotsVm.etat.collectAsState()
                 val parties by duelMotsVm.partiesTrouvees.collectAsState()
+                val routeEntreeDuelMots = if (duelMotsVm.sousModeImpose == SousModeDuelMots.POINTS) {
+                    Routes.CHOIX_ROLE_DUEL_POINTS
+                } else {
+                    Routes.CHOIX_ROLE_DUEL_MOTS
+                }
                 LaunchedEffect(etat) {
                     if (etat is EtatPartieReseau.Connecte) {
                         navController.navigate(Routes.DUEL_MOTS_CONNEXION) {
-                            popUpTo(Routes.CHOIX_ROLE_DUEL_MOTS) { inclusive = false }
+                            popUpTo(routeEntreeDuelMots) { inclusive = false }
                         }
                     }
                 }
@@ -1352,7 +1395,7 @@ fun AppNavHost(
                     onSelectionner = { duelMotsVm.rejoindre(it) },
                     onAnnulerErreur = {
                         duelMotsVm.annulerEtRevenirAuChoix()
-                        navController.popBackStack(Routes.CHOIX_ROLE_DUEL_MOTS, inclusive = false)
+                        navController.popBackStack(routeEntreeDuelMots, inclusive = false)
                     },
                     onAnnuler = {
                         duelMotsVm.annulerEtRevenirAuChoix()
@@ -1402,6 +1445,7 @@ fun AppNavHost(
                 ChoixModeDuelMotsScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                     couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                    sousModeImpose = duelMotsVm.sousModeImpose,
                     onDemarrer = { sousMode, niveau, objectifMots, atteindreExactement ->
                         duelMotsVm.demarrerCommeHote(sousMode, niveau, objectifMots, atteindreExactement)
                         navController.navigate(Routes.JEU_DUEL_MOTS)

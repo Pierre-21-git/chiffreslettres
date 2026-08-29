@@ -51,6 +51,11 @@ object Routes {
     // Duel mots : 100 % réseau, nichées dans RESEAU_GRAPH plutôt qu'un graphe séparé, puisque
     // tout passe par la même connexion (retour utilisateur, voir le plan du 2026-08-10).
     const val CHOIX_ROLE_DUEL_MOTS = "reseau/duelMots/choixRole"
+    /** Point d'entrée dédié au bouton "Duel points" du menu (retour utilisateur) : même écran de
+     * choix hôte/invité que [CHOIX_ROLE_DUEL_MOTS], mais impose le sous-mode Points au lieu du
+     * sélecteur Duo/Confrontation — pour ne plus laisser croire que "Duel mots" exclut les points
+     * (parallèle avec Défi mots/Défi points, deux défis bien distincts). */
+    const val CHOIX_ROLE_DUEL_POINTS = "reseau/duelMots/choixRolePoints"
     const val HOTE_ATTENTE_DUEL_MOTS = "reseau/duelMots/hote/attente"
     const val INVITE_RECHERCHE_DUEL_MOTS = "reseau/duelMots/invite/recherche"
     const val DUEL_MOTS_CONNEXION = "reseau/duelMots/connexion"

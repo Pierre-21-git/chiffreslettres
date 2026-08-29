@@ -122,6 +122,19 @@ class DuelMotsReseauViewModel(
     var atteindreExactement: Boolean = false
         private set
 
+    /**
+     * Sous-mode imposé par le point d'entrée du menu (retour utilisateur, 2026-08-29) : non nul
+     * quand l'hôte est arrivé via le bouton "Duel points" plutôt que "Duel mots" — dans ce cas,
+     * `ChoixModeDuelMotsScreen` n'affiche pas le sélecteur Duo/Confrontation/Points et démarre
+     * directement en sous-mode Points. Sans effet côté invité (qui ne voit jamais cet écran).
+     */
+    var sousModeImpose: SousModeDuelMots? = null
+        private set
+
+    fun imposerSousMode(sousMode: SousModeDuelMots?) {
+        sousModeImpose = sousMode
+    }
+
     private val _tirageTermine = MutableStateFlow(false)
     val tirageTermine: StateFlow<Boolean> = _tirageTermine.asStateFlow()
 

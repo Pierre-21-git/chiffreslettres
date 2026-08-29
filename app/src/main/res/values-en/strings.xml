@@ -134,6 +134,7 @@
     <string name="configuration_duo_demarrer">Start the duel</string>
 
     <string name="duel_mots_titre">Word duel</string>
+    <string name="duel_points_titre">Points duel</string>
     <string name="duel_mots_choisir_sous_mode">Which sub-mode?</string>
     <string name="duel_mots_sous_mode_duo">Duo (5 minutes, compared at the end)</string>
     <string name="duel_mots_sous_mode_confrontation">Head-to-head (live race)</string>

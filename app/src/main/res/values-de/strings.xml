@@ -97,6 +97,7 @@
     <string name="configuration_duo_demarrer">Duell starten</string>
 
     <string name="duel_mots_titre">Wortduell</string>
+    <string name="duel_points_titre">Punkteduell</string>
     <string name="duel_mots_choisir_sous_mode">Welcher Untermodus?</string>
     <string name="duel_mots_sous_mode_duo">Duo (5 Minuten, Vergleich am Ende)</string>
     <string name="duel_mots_sous_mode_confrontation">Duell (Live-Wettlauf)</string>

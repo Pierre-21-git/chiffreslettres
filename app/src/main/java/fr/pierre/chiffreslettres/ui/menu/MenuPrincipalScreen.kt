@@ -41,6 +41,7 @@ fun MenuPrincipalScreen(
     onPartieDuo: () -> Unit,
     onPartieReseau: () -> Unit,
     onDuelMots: () -> Unit,
+    onDuelPoints: () -> Unit,
     onDefiSerie: () -> Unit,
     onDefiChrono: () -> Unit,
     onDefiMotsMax: () -> Unit,
@@ -78,6 +79,7 @@ fun MenuPrincipalScreen(
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))
 
         TuilePrincipale(stringResource(R.string.duel_mots_titre), onClick = onDuelMots)
+        TuilePrincipale(stringResource(R.string.duel_points_titre), onClick = onDuelPoints)
 
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))
 

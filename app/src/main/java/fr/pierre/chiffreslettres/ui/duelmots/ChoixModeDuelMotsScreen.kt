@@ -40,15 +40,21 @@ private const val OBJECTIF_MOTS_MAXIMUM = 10
 /** Sous-mode Points (retour utilisateur, 2026-08-28) : pas de niveau, alphabet complet — voir `SousModeDuelMots`. */
 private val NIVEAU_DUEL_POINTS = NiveauLettres.MATHIEU
 
-/** Configuration du duel mots, hôte uniquement (retour utilisateur : l'invité attend simplement que la partie démarre). */
+/**
+ * Configuration du duel mots, hôte uniquement (retour utilisateur : l'invité attend simplement
+ * que la partie démarre). [sousModeImpose] non nul (bouton "Duel points" du menu, retour
+ * utilisateur 2026-08-29) : masque le sélecteur Duo/Confrontation/Points et démarre directement
+ * en sous-mode Points — le bouton "Duel mots" ne propose plus alors que Duo/Confrontation.
+ */
 @Composable
 fun ChoixModeDuelMotsScreen(
     pseudoActif: String,
     onDemarrer: (sousMode: SousModeDuelMots, niveau: NiveauLettres, objectifMots: Int?, atteindreExactement: Boolean) -> Unit,
+    sousModeImpose: SousModeDuelMots? = null,
     onRetour: (() -> Unit)? = null,
     couleurRang: Color? = null,
 ) {
-    var sousMode by remember { mutableStateOf<SousModeDuelMots?>(null) }
+    var sousMode by remember { mutableStateOf(sousModeImpose) }
     var niveau by remember { mutableStateOf<NiveauLettres?>(null) }
     var objectifMots by remember { mutableIntStateOf(OBJECTIF_MOTS_MINIMUM) }
     var objectifPoints by remember { mutableIntStateOf(OBJECTIFS_POINTS_DUEL.first()) }
@@ -58,14 +64,19 @@ fun ChoixModeDuelMotsScreen(
         modifier = Modifier.fillMaxSize().padding(24.dp).verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
-        EnTeteEcran(stringResource(R.string.duel_mots_titre), onRetour)
+        EnTeteEcran(
+            stringResource(if (sousModeImpose == SousModeDuelMots.POINTS) R.string.duel_points_titre else R.string.duel_mots_titre),
+            onRetour,
+        )
         PucePseudo(pseudoActif, couleurRang = couleurRang)
         LienReglesDuJeu { ReglesModeDuelMots() }
 
-        Text(stringResource(R.string.duel_mots_choisir_sous_mode), style = MaterialTheme.typography.titleMedium)
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            for (candidat in SousModeDuelMots.entries) {
-                BoutonChoixSousMode(candidat, selectionne = candidat == sousMode, onClick = { sousMode = candidat })
+        if (sousModeImpose == null) {
+            Text(stringResource(R.string.duel_mots_choisir_sous_mode), style = MaterialTheme.typography.titleMedium)
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                for (candidat in listOf(SousModeDuelMots.DUO, SousModeDuelMots.CONFRONTATION)) {
+                    BoutonChoixSousMode(candidat, selectionne = candidat == sousMode, onClick = { sousMode = candidat })
+                }
             }
         }
 
