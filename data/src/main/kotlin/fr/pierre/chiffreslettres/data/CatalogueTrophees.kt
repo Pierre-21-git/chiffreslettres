@@ -40,6 +40,15 @@ data class TropheeStats(
     /** Parties Duel mots, sous-mode Confrontation (100 % réseau). Voir [partiesDuelMotsJouees]. */
     val partiesDuelMotsConfrontationJouees: Int,
     val partiesDuelMotsConfrontationGagnees: Int,
+    /** Parties Duel mots, sous-mode Points (100 % réseau, premier à atteindre un total de points). */
+    val partiesDuelPointsJouees: Int,
+    val partiesDuelPointsGagnees: Int,
+    /** Plus grand écart de points en victoire, en Duel points (easter egg "Rouleau compresseur"). */
+    val duelPointsEcartVictoireMax: Int,
+    /** Plus grand écart de points en défaite, en Duel points (easter egg "Déculottée"). */
+    val duelPointsEcartDefaiteMax: Int,
+    /** Une victoire en Duel points a-t-elle déjà été obtenue avec l'option "atteindre exactement l'objectif" (easter egg "Compte rond"). */
+    val duelPointsCompteRondObtenu: Boolean,
     /** Clé = nom du [ModeJeu] (ex. "CHIFFRES"), valeur = meilleure série en défi série, tous niveaux confondus. */
     val meilleuresSeriesDefi: Map<String, Int>,
     /** Comme [meilleuresSeriesDefi], restreint aux défis joués au niveau Monique ou Mathieu. */
@@ -770,6 +779,90 @@ object CatalogueTrophees {
                 progression = { it.partiesDuelMotsGagnees + it.partiesDuelMotsConfrontationGagnees },
             ) { it.partiesDuelMotsGagnees + it.partiesDuelMotsConfrontationGagnees >= 100 },
         )
+        add(
+            Trophee(
+                "duel_points_1",
+                titreRes = R.string.trophee_titre_duel_points_1,
+                descriptionRes = R.string.trophee_desc_duel_points_1,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.ARGENT,
+                sousTitreRes = R.string.soustitre_duel_points,
+                objectif = 1,
+                progression = { it.partiesDuelPointsJouees },
+            ) { it.partiesDuelPointsJouees >= 1 },
+        )
+        add(
+            Trophee(
+                "duel_points_gagnee_1",
+                titreRes = R.string.trophee_titre_duel_points_gagnee_1,
+                descriptionRes = R.string.trophee_desc_duel_points_gagnee_1,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.OR,
+                sousTitreRes = R.string.soustitre_duel_points,
+                objectif = 1,
+                progression = { it.partiesDuelPointsGagnees },
+            ) { it.partiesDuelPointsGagnees >= 1 },
+        )
+        add(
+            Trophee(
+                "duel_points_gagnee_10",
+                titreRes = R.string.trophee_titre_duel_points_gagnee_10,
+                descriptionRes = R.string.trophee_desc_duel_points_gagnee_10,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.PLATINE,
+                sousTitreRes = R.string.soustitre_duel_points,
+                objectif = 10,
+                progression = { it.partiesDuelPointsGagnees },
+            ) { it.partiesDuelPointsGagnees >= 10 },
+        )
+        add(
+            Trophee(
+                "duel_points_gagnee_25",
+                titreRes = R.string.trophee_titre_duel_points_gagnee_25,
+                descriptionRes = R.string.trophee_desc_duel_points_gagnee_25,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.EMERAUDE,
+                sousTitreRes = R.string.soustitre_duel_points,
+                objectif = 25,
+                progression = { it.partiesDuelPointsGagnees },
+            ) { it.partiesDuelPointsGagnees >= 25 },
+        )
+        add(
+            Trophee(
+                "duel_points_gagnee_50",
+                titreRes = R.string.trophee_titre_duel_points_gagnee_50,
+                descriptionRes = R.string.trophee_desc_duel_points_gagnee_50,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.SAPHIR,
+                sousTitreRes = R.string.soustitre_duel_points,
+                objectif = 50,
+                progression = { it.partiesDuelPointsGagnees },
+            ) { it.partiesDuelPointsGagnees >= 50 },
+        )
+        add(
+            Trophee(
+                "duel_points_gagnee_75",
+                titreRes = R.string.trophee_titre_duel_points_gagnee_75,
+                descriptionRes = R.string.trophee_desc_duel_points_gagnee_75,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.RUBIS,
+                sousTitreRes = R.string.soustitre_duel_points,
+                objectif = 75,
+                progression = { it.partiesDuelPointsGagnees },
+            ) { it.partiesDuelPointsGagnees >= 75 },
+        )
+        add(
+            Trophee(
+                "duel_points_gagnee_100",
+                titreRes = R.string.trophee_titre_duel_points_gagnee_100,
+                descriptionRes = R.string.trophee_desc_duel_points_gagnee_100,
+                categorie = CategorieTrophee.DUO,
+                palier = Palier.DIAMANT,
+                sousTitreRes = R.string.soustitre_duel_points,
+                objectif = 100,
+                progression = { it.partiesDuelPointsGagnees },
+            ) { it.partiesDuelPointsGagnees >= 100 },
+        )
 
         for (mode in ModeJeu.entries) {
             val modeCode = mode.name.lowercase()
@@ -1258,6 +1351,39 @@ object CatalogueTrophees {
         )
         add(
             Trophee(
+                "easter_compte_rond",
+                titreRes = R.string.trophee_titre_easter_compte_rond,
+                descriptionRes = R.string.trophee_desc_easter_compte_rond,
+                categorie = CategorieTrophee.EASTER_LETTRES,
+                palier = null,
+                niveauVisibilite = NiveauVisibilite.INVISIBLE,
+                descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
+            ) { it.duelPointsCompteRondObtenu },
+        )
+        add(
+            Trophee(
+                "easter_rouleau_compresseur",
+                titreRes = R.string.trophee_titre_easter_rouleau_compresseur,
+                descriptionRes = R.string.trophee_desc_easter_rouleau_compresseur,
+                categorie = CategorieTrophee.EASTER_LETTRES,
+                palier = null,
+                niveauVisibilite = NiveauVisibilite.INVISIBLE,
+                descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
+            ) { it.duelPointsEcartVictoireMax >= 20 },
+        )
+        add(
+            Trophee(
+                "easter_deculottee",
+                titreRes = R.string.trophee_titre_easter_deculottee,
+                descriptionRes = R.string.trophee_desc_easter_deculottee,
+                categorie = CategorieTrophee.EASTER_LETTRES,
+                palier = null,
+                niveauVisibilite = NiveauVisibilite.INVISIBLE,
+                descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
+            ) { it.duelPointsEcartDefaiteMax >= 20 },
+        )
+        add(
+            Trophee(
                 "easter_symetrie",
                 titreRes = R.string.trophee_titre_easter_symetrie,
                 descriptionRes = R.string.trophee_desc_easter_symetrie,
@@ -1487,6 +1613,9 @@ object CatalogueTrophees {
         "easter_touche_a_tout" to "🗺️",
         "easter_aucune_idee" to "🙈",
         "easter_toit_du_monde" to "🏔️",
+        "easter_compte_rond" to "🎯",
+        "easter_rouleau_compresseur" to "🚜",
+        "easter_deculottee" to "🩲",
     )
 
     fun iconeTrophee(id: String): String = ICONES_EASTER_EGGS[id] ?: "🏆"

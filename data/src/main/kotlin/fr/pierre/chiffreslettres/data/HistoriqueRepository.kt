@@ -26,6 +26,8 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
         manches: List<ResultatManche>,
         victoireDuel: Boolean? = null,
         egaliteDuel: Boolean? = null,
+        ecartDuel: Int? = null,
+        objectifExactAtteint: Boolean? = null,
     ) {
         val session = SessionEntity(
             profilId = profilId,
@@ -34,6 +36,8 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
             scoreTotal = manches.sumOf { it.score },
             victoireDuel = victoireDuel,
             egaliteDuel = egaliteDuel,
+            ecartDuel = ecartDuel,
+            objectifExactAtteint = objectifExactAtteint,
         )
         val entites = manches.mapIndexed { index, resultat ->
             MancheEntity(

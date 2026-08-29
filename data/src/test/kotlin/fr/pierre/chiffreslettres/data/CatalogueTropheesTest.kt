@@ -21,6 +21,11 @@ private fun statsVides() = TropheeStats(
     partiesDuelMotsGagnees = 0,
     partiesDuelMotsConfrontationJouees = 0,
     partiesDuelMotsConfrontationGagnees = 0,
+    partiesDuelPointsJouees = 0,
+    partiesDuelPointsGagnees = 0,
+    duelPointsEcartVictoireMax = 0,
+    duelPointsEcartDefaiteMax = 0,
+    duelPointsCompteRondObtenu = false,
     meilleuresSeriesDefi = emptyMap(),
     meilleuresSeriesDefiNiveauMonique = emptyMap(),
     meilleuresSeriesDefiNiveauMathieu = emptyMap(),
@@ -77,8 +82,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `155 trophees au total (150 + 5 defi Points)`() {
-        assertEquals(155, CatalogueTrophees.TOUS.size)
+    fun `165 trophees au total (155 + 7 duel points + 3 easter eggs)`() {
+        assertEquals(165, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -119,7 +124,7 @@ class CatalogueTropheesTest {
     @Test
     fun `aucun trophee n'a de palier sauf le catalogue principal (les easter eggs sont hors echelle)`() {
         val easterEggs = CatalogueTrophees.TOUS.filter { it.id.startsWith("easter_") }
-        assertEquals(30, easterEggs.size)
+        assertEquals(33, easterEggs.size)
         assertTrue(easterEggs.all { it.palier == null })
     }
 
@@ -419,6 +424,24 @@ class CatalogueTropheesTest {
     }
 
     @Test
+    fun `trophees duel points progressent avec les parties jouees et gagnees`() {
+        assertFalse(trophee("duel_points_1").estDebloque(statsVides()))
+        assertTrue(trophee("duel_points_1").estDebloque(statsVides().copy(partiesDuelPointsJouees = 1)))
+        assertFalse(trophee("duel_points_gagnee_10").estDebloque(statsVides().copy(partiesDuelPointsGagnees = 9)))
+        assertTrue(trophee("duel_points_gagnee_10").estDebloque(statsVides().copy(partiesDuelPointsGagnees = 10)))
+        assertEquals(Palier.DIAMANT, trophee("duel_points_gagnee_100").palier)
+    }
+
+    @Test
+    fun `easter eggs duel points, compte rond rouleau compresseur et deculottee`() {
+        assertTrue(trophee("easter_compte_rond").estDebloque(statsVides().copy(duelPointsCompteRondObtenu = true)))
+        assertFalse(trophee("easter_rouleau_compresseur").estDebloque(statsVides().copy(duelPointsEcartVictoireMax = 19)))
+        assertTrue(trophee("easter_rouleau_compresseur").estDebloque(statsVides().copy(duelPointsEcartVictoireMax = 20)))
+        assertFalse(trophee("easter_deculottee").estDebloque(statsVides().copy(duelPointsEcartDefaiteMax = 19)))
+        assertTrue(trophee("easter_deculottee").estDebloque(statsVides().copy(duelPointsEcartDefaiteMax = 20)))
+    }
+
+    @Test
     fun `rangJoueur est cumulatif et suit les nouveaux paliers Emeraude Saphir Rubis`() {
         val tropheesAPalier = CatalogueTrophees.TOUS.filter { it.palier != null }
         assertEquals(null, CatalogueTrophees.rangJoueur(emptySet()))
@@ -458,8 +481,8 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `exactement 5 trophees sont INVISIBLE, masques tant qu'ils ne sont pas debloques`() {
+    fun `exactement 8 trophees sont INVISIBLE, masques tant qu'ils ne sont pas debloques`() {
         val invisibles = CatalogueTrophees.TOUS.filter { it.niveauVisibilite == NiveauVisibilite.INVISIBLE }
-        assertEquals(5, invisibles.size)
+        assertEquals(8, invisibles.size)
     }
 }

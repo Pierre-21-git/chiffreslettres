@@ -69,6 +69,7 @@
     <string name="action_valider">Valider</string>
     <string name="action_supprimer">Supprimer</string>
     <string name="action_renommer">Renommer</string>
+    <string name="action_retirer">Retirer</string>
 
     <!-- ui/entrainement/ChoixNiveauEntrainementScreen -->
     <string name="entrainement_titre">Entraînement</string>
@@ -154,9 +155,15 @@
     <string name="duel_mots_choisir_sous_mode">Quel sous-mode ?</string>
     <string name="duel_mots_sous_mode_duo">Duo (5 minutes, comparaison à la fin)</string>
     <string name="duel_mots_sous_mode_confrontation">Confrontation (course en direct)</string>
+    <string name="duel_mots_sous_mode_points">Points (course en direct)</string>
     <string name="duel_mots_choisir_objectif">Objectif (Confrontation)</string>
     <string name="duel_mots_objectif_mots">%1$d mots</string>
     <string name="duel_mots_objectif_mots_progression">%1$d / %2$d mots</string>
+    <string name="duel_mots_choisir_objectif_points">Objectif de points</string>
+    <string name="duel_mots_objectif_points">%1$d points</string>
+    <string name="duel_mots_objectif_points_progression">%1$d / %2$d points</string>
+    <string name="duel_mots_atteindre_exactement">Atteindre exactement l\'objectif</string>
+    <string name="duel_mots_mot_points">%1$s (%2$d pts)</string>
     <string name="duel_mots_en_attente_configuration">En attente que l\'hôte choisisse le sous-mode et le niveau…</string>
     <string name="duel_mots_en_attente_adversaire">En attente du résultat de l\'adversaire…</string>
     <string name="duel_mots_victoire">Vous avez gagné !</string>
@@ -395,6 +402,7 @@
     <string name="regles_duel_mots_intro">Jeu de recherche de mots à deux, 100 % réseau (2 téléphones séparés) : un seul tirage de lettres, partagé par les deux joueurs. Un mot invalide, trop court ou déjà pris est simplement signalé, sans jamais faire perdre. Deux sous-modes au choix :</string>
     <string name="regles_duel_mots_mode_duo">Duo : chacun 5 minutes sur le même tirage, à l\'aveugle de l\'autre. À la fin, les deux listes de mots trouvés sont comparées côte à côte ; le plus grand nombre de mots gagne (égalité = victoire pour les deux).</string>
     <string name="regles_duel_mots_mode_confrontation">Confrontation : course au premier à atteindre l\'objectif de mots choisi avant la partie (5 à 10). Les mots trouvés apparaissent en direct dans deux colonnes ; un mot déjà pris par l\'adversaire ne peut plus être proposé.</string>
+    <string name="regles_duel_mots_mode_points">Points : même principe que Confrontation, mais course à un total de points (barème de lettres) au lieu d\'un nombre de mots — pas de niveau, tirage sur l\'alphabet complet, aucune longueur minimale. Option "atteindre exactement l\'objectif" : possibilité de retirer un mot déjà trouvé pour corriger un dépassement.</string>
 
     <!-- ui/apropos/VersionsScreen (uniquement le titre : le changelog historique reste en dur, cf. commentaire dans le fichier) -->
     <string name="versions_titre">Versions</string>

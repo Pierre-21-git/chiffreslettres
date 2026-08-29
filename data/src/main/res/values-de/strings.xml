@@ -38,6 +38,7 @@
     <!-- Untertitel zur visuellen Gruppierung -->
     <string name="soustitre_duo">Duo</string>
     <string name="soustitre_duel_mots">Wortduell</string>
+    <string name="soustitre_duel_points">Punkteduell</string>
     <string name="soustitre_chiffres">Zahlen</string>
     <string name="soustitre_lettres">Buchstaben</string>
 
@@ -87,6 +88,13 @@
     <string name="trophee_titre_duel_mots_gagnee_50">Fünfzigste gewonnene Wortduell-Partie</string>
     <string name="trophee_titre_duel_mots_gagnee_75">Fünfundsiebzigste gewonnene Wortduell-Partie</string>
     <string name="trophee_titre_duel_mots_gagnee_100">Hundertste gewonnene Wortduell-Partie</string>
+    <string name="trophee_titre_duel_points_1">Erste gespielte Punkteduell-Partie</string>
+    <string name="trophee_titre_duel_points_gagnee_1">Erste gewonnene Punkteduell-Partie</string>
+    <string name="trophee_titre_duel_points_gagnee_10">Zehnte gewonnene Punkteduell-Partie</string>
+    <string name="trophee_titre_duel_points_gagnee_25">Fünfundzwanzigste gewonnene Punkteduell-Partie</string>
+    <string name="trophee_titre_duel_points_gagnee_50">Fünfzigste gewonnene Punkteduell-Partie</string>
+    <string name="trophee_titre_duel_points_gagnee_75">Fünfundsiebzigste gewonnene Punkteduell-Partie</string>
+    <string name="trophee_titre_duel_points_gagnee_100">Hundertste gewonnene Punkteduell-Partie</string>
     <string name="trophee_titre_defi_serie">%1$d in Folge in der %2$s-Herausforderung</string>
     <string name="trophee_titre_defi_serie_niveau_monique">%1$d in Folge in der %2$s-Herausforderung, Stufe Ça se complique, Monique oder höher</string>
     <string name="trophee_titre_defi_serie_niveau_mathieu">%1$d in Folge in der %2$s-Herausforderung, Stufe C\'est du sérieux, Mathieu</string>
@@ -148,6 +156,13 @@
     <string name="trophee_desc_duel_mots_gagnee_50">50 Partien im Wortduell-Modus (Duo oder Duell) aus der Ferne gewinnen.</string>
     <string name="trophee_desc_duel_mots_gagnee_75">75 Partien im Wortduell-Modus (Duo oder Duell) aus der Ferne gewinnen.</string>
     <string name="trophee_desc_duel_mots_gagnee_100">100 Partien im Wortduell-Modus (Duo oder Duell) aus der Ferne gewinnen.</string>
+    <string name="trophee_desc_duel_points_1">Eine Partie im Punkteduell-Modus aus der Ferne beenden, jedes Ziel.</string>
+    <string name="trophee_desc_duel_points_gagnee_1">Eine Partie im Punkteduell-Modus aus der Ferne gewinnen.</string>
+    <string name="trophee_desc_duel_points_gagnee_10">10 Partien im Punkteduell-Modus aus der Ferne gewinnen.</string>
+    <string name="trophee_desc_duel_points_gagnee_25">25 Partien im Punkteduell-Modus aus der Ferne gewinnen.</string>
+    <string name="trophee_desc_duel_points_gagnee_50">50 Partien im Punkteduell-Modus aus der Ferne gewinnen.</string>
+    <string name="trophee_desc_duel_points_gagnee_75">75 Partien im Punkteduell-Modus aus der Ferne gewinnen.</string>
+    <string name="trophee_desc_duel_points_gagnee_100">100 Partien im Punkteduell-Modus aus der Ferne gewinnen.</string>
     <string name="trophee_desc_defi_serie">%1$d oder mehr Erfolge in Folge in derselben %2$s-Herausforderung erzielen.</string>
     <string name="trophee_desc_defi_serie_niveau_monique">%1$d oder mehr Erfolge in Folge in derselben %2$s-Herausforderung erzielen, auf Stufe Ça se complique, Monique oder C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_serie_niveau_mathieu">%1$d oder mehr Erfolge in Folge in derselben %2$s-Herausforderung erzielen, auf Stufe C\'est du sérieux, Mathieu.</string>
@@ -202,6 +217,12 @@
     <string name="trophee_desc_easter_rituel_dimanche">An einem Sonntag spielen, 4 Wochen in Folge.</string>
     <string name="trophee_titre_easter_ex_aequo">Gleichstand</string>
     <string name="trophee_desc_easter_ex_aequo">Eine Partie mit genau demselben Ergebnis wie ein Gegner beenden.</string>
+    <string name="trophee_titre_easter_compte_rond">Runde Zahl</string>
+    <string name="trophee_desc_easter_compte_rond">Eine Punkteduell-Partie mit aktivierter Option \"Ziel genau erreichen\" gewinnen.</string>
+    <string name="trophee_titre_easter_rouleau_compresseur">Dampfwalze</string>
+    <string name="trophee_desc_easter_rouleau_compresseur">Eine Punkteduell-Partie mit mindestens 20 Punkten Vorsprung gewinnen.</string>
+    <string name="trophee_titre_easter_deculottee">Klatsche</string>
+    <string name="trophee_desc_easter_deculottee">Eine Punkteduell-Partie mit mindestens 20 Punkten Rückstand verlieren.</string>
     <string name="trophee_titre_easter_symetrie">Symmetrie</string>
     <string name="trophee_desc_easter_symetrie">Zweimal dasselbe Ergebnis in Solo-Partien erzielen.</string>
     <string name="trophee_titre_easter_noce_de_chene">Eichenhochzeit</string>

@@ -25,6 +25,7 @@
     <string name="action_valider">Bestätigen</string>
     <string name="action_supprimer">Löschen</string>
     <string name="action_renommer">Umbenennen</string>
+    <string name="action_retirer">Entfernen</string>
 
     <string name="entrainement_titre">Training</string>
 
@@ -99,9 +100,15 @@
     <string name="duel_mots_choisir_sous_mode">Welcher Untermodus?</string>
     <string name="duel_mots_sous_mode_duo">Duo (5 Minuten, Vergleich am Ende)</string>
     <string name="duel_mots_sous_mode_confrontation">Duell (Live-Wettlauf)</string>
+    <string name="duel_mots_sous_mode_points">Punkte (Live-Wettlauf)</string>
     <string name="duel_mots_choisir_objectif">Ziel (Duell)</string>
     <string name="duel_mots_objectif_mots">%1$d Wörter</string>
     <string name="duel_mots_objectif_mots_progression">%1$d / %2$d Wörter</string>
+    <string name="duel_mots_choisir_objectif_points">Punkteziel</string>
+    <string name="duel_mots_objectif_points">%1$d Punkte</string>
+    <string name="duel_mots_objectif_points_progression">%1$d / %2$d Punkte</string>
+    <string name="duel_mots_atteindre_exactement">Ziel genau erreichen</string>
+    <string name="duel_mots_mot_points">%1$s (%2$d Pkt.)</string>
     <string name="duel_mots_en_attente_configuration">Warten, bis der Gastgeber Untermodus und Level wählt…</string>
     <string name="duel_mots_en_attente_adversaire">Warten auf das Ergebnis des Gegners…</string>
     <string name="duel_mots_victoire">Gewonnen!</string>
@@ -323,6 +330,7 @@
     <string name="regles_duel_mots_intro">Wortsuchspiel zu zweit, komplett aus der Ferne (2 getrennte Telefone): eine einzige Buchstabenziehung, gemeinsam für beide Spieler. Ein ungültiges, zu kurzes oder bereits vergebenes Wort wird nur angezeigt, ohne je zu einer Niederlage zu führen. Zwei wählbare Untermodi:</string>
     <string name="regles_duel_mots_mode_duo">Duo: jeder Spieler hat 5 Minuten auf derselben Ziehung, ohne die Wörter des anderen zu sehen. Am Ende werden beide Wortlisten nebeneinander verglichen; die meisten Wörter gewinnen (bei Gleichstand gewinnen beide).</string>
     <string name="regles_duel_mots_mode_confrontation">Duell: ein Wettlauf, um zuerst das gewählte Wortziel zu erreichen (5 bis 10, vor der Partie festgelegt). Gefundene Wörter erscheinen live in zwei Spalten; ein bereits vom Gegner vergebenes Wort kann nicht mehr vorgeschlagen werden.</string>
+    <string name="regles_duel_mots_mode_points">Punkte: gleiches Prinzip wie Duell, aber ein Wettlauf zu einer Punktesumme (Buchstabenwertung) statt einer Wortanzahl — keine Stufe, Ziehung aus dem vollständigen Alphabet, keine Mindestlänge. Option „Ziel genau erreichen“: erlaubt es, ein bereits gefundenes Wort zu entfernen, um eine Überschreitung zu korrigieren.</string>
 
     <string name="versions_titre">Versionen</string>
 

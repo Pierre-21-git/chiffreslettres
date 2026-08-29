@@ -147,6 +147,11 @@ class TropheeRepository(
             profilId,
             listOf(TypePartie.DUEL_MOTS_CONFRONTATION_RESEAU.name),
         ),
+        partiesDuelPointsJouees = historiqueDao.compterPartiesParTypes(profilId, listOf(TypePartie.DUEL_MOTS_POINTS_RESEAU.name)),
+        partiesDuelPointsGagnees = historiqueDao.compterPartiesGagneesParTypes(profilId, listOf(TypePartie.DUEL_MOTS_POINTS_RESEAU.name)),
+        duelPointsEcartVictoireMax = historiqueDao.maxEcartVictoireDuelPoints(profilId),
+        duelPointsEcartDefaiteMax = historiqueDao.maxEcartDefaiteDuelPoints(profilId),
+        duelPointsCompteRondObtenu = historiqueDao.compterCompteRondDuelPoints(profilId) >= 1,
         meilleuresSeriesDefi = defiDao.meilleuresSeriesDefiParMode(profilId)
             .associate { it.mode.name to it.meilleur },
         meilleuresSeriesDefiNiveauMonique = defiDao.meilleuresSeriesDefiParModeEtNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)

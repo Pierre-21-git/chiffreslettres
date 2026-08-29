@@ -11,6 +11,10 @@ package fr.pierre.chiffreslettres.data
  * DUEL_MOTS_RESEAU / DUEL_MOTS_CONFRONTATION_RESEAU : jeu "duel mots" (retour utilisateur, le
  * plus de mots trouvés en 5 minutes / le premier à N mots trouvés), 100 % réseau — pas de
  * variante sur le même téléphone, contrairement à DUO/DUO_CONFRONTATION.
+ *
+ * DUEL_MOTS_POINTS_RESEAU : variante "Duel points" de Confrontation (retour utilisateur, même
+ * tirage partagé en direct) — le premier à atteindre un total de points choisi gagne, au lieu
+ * d'un nombre de mots.
  */
 enum class TypePartie {
     LIBRE,
@@ -21,4 +25,5 @@ enum class TypePartie {
     DUO_CONFRONTATION_RESEAU,
     DUEL_MOTS_RESEAU,
     DUEL_MOTS_CONFRONTATION_RESEAU,
+    DUEL_MOTS_POINTS_RESEAU,
 }

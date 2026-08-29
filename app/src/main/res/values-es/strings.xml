@@ -25,6 +25,7 @@
     <string name="action_valider">Validar</string>
     <string name="action_supprimer">Eliminar</string>
     <string name="action_renommer">Renombrar</string>
+    <string name="action_retirer">Quitar</string>
 
     <string name="entrainement_titre">Entrenamiento</string>
 
@@ -99,9 +100,15 @@
     <string name="duel_mots_choisir_sous_mode">¿Qué submodo?</string>
     <string name="duel_mots_sous_mode_duo">Dúo (5 minutos, comparación al final)</string>
     <string name="duel_mots_sous_mode_confrontation">Enfrentamiento (carrera en directo)</string>
+    <string name="duel_mots_sous_mode_points">Puntos (carrera en directo)</string>
     <string name="duel_mots_choisir_objectif">Objetivo (Enfrentamiento)</string>
     <string name="duel_mots_objectif_mots">%1$d palabras</string>
     <string name="duel_mots_objectif_mots_progression">%1$d / %2$d palabras</string>
+    <string name="duel_mots_choisir_objectif_points">Objetivo de puntos</string>
+    <string name="duel_mots_objectif_points">%1$d puntos</string>
+    <string name="duel_mots_objectif_points_progression">%1$d / %2$d puntos</string>
+    <string name="duel_mots_atteindre_exactement">Alcanzar el objetivo exacto</string>
+    <string name="duel_mots_mot_points">%1$s (%2$d pts)</string>
     <string name="duel_mots_en_attente_configuration">Esperando a que el anfitrión elija el submodo y el nivel…</string>
     <string name="duel_mots_en_attente_adversaire">Esperando el resultado del adversario…</string>
     <string name="duel_mots_victoire">¡Has ganado!</string>
@@ -323,6 +330,7 @@
     <string name="regles_duel_mots_intro">Juego de búsqueda de palabras a dos, totalmente a distancia (2 teléfonos separados): un único sorteo de letras, compartido por ambos jugadores. Una palabra inválida, demasiado corta o ya tomada simplemente se señala, sin hacer perder nunca. Dos submodos a elegir:</string>
     <string name="regles_duel_mots_mode_duo">Dúo: cada jugador dispone de 5 minutos con el mismo sorteo, a ciegas del otro. Al final, ambas listas de palabras encontradas se comparan una al lado de la otra; gana quien encuentre más palabras (empate = victoria para ambos).</string>
     <string name="regles_duel_mots_mode_confrontation">Enfrentamiento: carrera por alcanzar primero el objetivo de palabras elegido (de 5 a 10, fijado antes de la partida). Las palabras encontradas aparecen en directo en dos columnas; una palabra ya tomada por el adversario ya no puede proponerse.</string>
+    <string name="regles_duel_mots_mode_points">Puntos: mismo principio que Enfrentamiento, pero una carrera hacia un total de puntos (baremo de letras) en lugar de un número de palabras — sin nivel, sorteo sobre el alfabeto completo, sin longitud mínima. Opción "alcanzar el objetivo exacto": permite retirar una palabra ya encontrada para corregir un exceso.</string>
 
     <string name="versions_titre">Versiones</string>
 

@@ -212,6 +212,7 @@ fun ReglesModeDuelMots() {
         ListeAPuces(
             stringResource(R.string.regles_duel_mots_mode_duo),
             stringResource(R.string.regles_duel_mots_mode_confrontation),
+            stringResource(R.string.regles_duel_mots_mode_points),
         )
     }
 }

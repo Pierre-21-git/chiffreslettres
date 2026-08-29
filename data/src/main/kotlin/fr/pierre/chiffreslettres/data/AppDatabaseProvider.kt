@@ -176,6 +176,19 @@ private val MIGRATION_12_13 = object : Migration(12, 13) {
     }
 }
 
+/**
+ * v13 → v14 : ajout des colonnes `ecartDuel`/`objectifExactAtteint` sur `SessionEntity` (retour
+ * utilisateur : sous-mode "Duel points", easter eggs "Rouleau compresseur"/"Déculottée"/"Compte
+ * rond"). Toutes deux nullables, sans défaut — les parties déjà enregistrées n'ont pas cette
+ * info et ne compteront simplement pas pour ces trophées.
+ */
+private val MIGRATION_13_14 = object : Migration(13, 14) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `SessionEntity` ADD COLUMN `ecartDuel` INTEGER")
+        db.execSQL("ALTER TABLE `SessionEntity` ADD COLUMN `objectifExactAtteint` INTEGER")
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null
@@ -186,7 +199,7 @@ object AppDatabaseProvider {
                 .addMigrations(
                     MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5,
                     MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10,
-                    MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13,
+                    MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14,
                 )
                 .build()
                 .also { instance = it }

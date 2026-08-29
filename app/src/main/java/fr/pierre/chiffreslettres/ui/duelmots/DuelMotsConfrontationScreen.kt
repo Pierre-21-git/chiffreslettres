@@ -1,5 +1,6 @@
 package fr.pierre.chiffreslettres.ui.duelmots
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -20,8 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.pierre.chiffreslettres.R
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
+import fr.pierre.chiffreslettres.letters.BaremeLettres
 import fr.pierre.chiffreslettres.network.RaisonFinConfrontation
 import fr.pierre.chiffreslettres.network.RaisonRejetMotDuelMots
+import fr.pierre.chiffreslettres.network.SousModeDuelMots
 import fr.pierre.chiffreslettres.ui.theme.Afficheur
 import fr.pierre.chiffreslettres.ui.theme.BoutonSecondaireContour
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
@@ -50,6 +53,9 @@ fun DuelMotsConfrontationScreen(
     pseudoMoi: String,
     pseudoAdversaire: String,
     couleurRang: Color?,
+    sousMode: SousModeDuelMots,
+    bareme: Map<Char, Int>,
+    atteindreExactement: Boolean,
     lettresTirees: List<Char>,
     indicesUtilises: List<Int>,
     motSaisi: String,
@@ -68,9 +74,13 @@ fun DuelMotsConfrontationScreen(
     onAnnulerLettre: () -> Unit,
     onEffacerMot: () -> Unit,
     onValider: () -> Unit,
+    onRetirerMot: (String) -> Unit,
     onRetour: () -> Unit,
     onRejouer: () -> Unit,
 ) {
+    val estPoints = sousMode == SousModeDuelMots.POINTS
+    val totalMoi = if (estPoints) BaremeLettres.scoreMot(motsTrouvesMoi.joinToString(""), bareme) else motsTrouvesMoi.size
+    val totalAdversaire = if (estPoints) BaremeLettres.scoreMot(motsTrouvesAdversaire.joinToString(""), bareme) else motsTrouvesAdversaire.size
     val termine = gagnant != null
     Column(
         modifier = Modifier.fillMaxSize().fondPlateau().padding(20.dp).verticalScroll(rememberScrollState()),
@@ -79,16 +89,17 @@ fun DuelMotsConfrontationScreen(
         EnTeteEcran(stringResource(R.string.duel_mots_titre), onRetour)
         PucePseudo(pseudoMoi, couleurRang = couleurRang)
 
+        val progressionRes = if (estPoints) R.string.duel_mots_objectif_points_progression else R.string.duel_mots_objectif_mots_progression
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Afficheur(
                 pseudoMoi,
-                stringResource(R.string.duel_mots_objectif_mots_progression, motsTrouvesMoi.size, objectifMots),
+                stringResource(progressionRes, totalMoi, objectifMots),
                 modifier = Modifier.weight(1f),
                 centre = true,
             )
             Afficheur(
                 pseudoAdversaire,
-                stringResource(R.string.duel_mots_objectif_mots_progression, motsTrouvesAdversaire.size, objectifMots),
+                stringResource(progressionRes, totalAdversaire, objectifMots),
                 modifier = Modifier.weight(1f),
                 centre = true,
             )
@@ -155,9 +166,14 @@ fun DuelMotsConfrontationScreen(
             TuilePrincipale(stringResource(R.string.action_valider), onClick = onValider)
         }
 
+        val baremeAffiche = bareme.takeIf { estPoints }
+        val peutRetirer = estPoints && atteindreExactement && !termine
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            ColonneMots(pseudoMoi, motsTrouvesMoi, Modifier.weight(1f))
-            ColonneMots(pseudoAdversaire, motsTrouvesAdversaire, Modifier.weight(1f))
+            ColonneMots(
+                pseudoMoi, motsTrouvesMoi, baremeAffiche,
+                onRetirer = onRetirerMot.takeIf { peutRetirer }, modifier = Modifier.weight(1f),
+            )
+            ColonneMots(pseudoAdversaire, motsTrouvesAdversaire, baremeAffiche, onRetirer = null, modifier = Modifier.weight(1f))
         }
 
         if (termine) {
@@ -200,11 +216,34 @@ fun DuelMotsConfrontationScreen(
 }
 
 @Composable
-private fun ColonneMots(pseudo: String, mots: List<String>, modifier: Modifier) {
+private fun ColonneMots(
+    pseudo: String,
+    mots: List<String>,
+    bareme: Map<Char, Int>?,
+    onRetirer: ((String) -> Unit)?,
+    modifier: Modifier,
+) {
     PanneauResultat(modifier = modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Text(pseudo, style = MaterialTheme.typography.labelLarge, color = TextMuted)
         for (mot in trie(mots)) {
-            Text(mot, color = TextMuted, fontSize = 13.sp)
+            val texte = if (bareme != null) {
+                stringResource(R.string.duel_mots_mot_points, mot, BaremeLettres.scoreMot(mot, bareme))
+            } else {
+                mot
+            }
+            if (onRetirer != null) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(texte, color = TextMuted, fontSize = 13.sp, modifier = Modifier.weight(1f))
+                    Text(
+                        stringResource(R.string.action_retirer),
+                        color = BrassBright,
+                        fontSize = 13.sp,
+                        modifier = Modifier.clickable { onRetirer(mot) },
+                    )
+                }
+            } else {
+                Text(texte, color = TextMuted, fontSize = 13.sp)
+            }
         }
     }
 }

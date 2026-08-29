@@ -1396,8 +1396,8 @@ fun AppNavHost(
                 ChoixModeDuelMotsScreen(
                     pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                     couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                    onDemarrer = { sousMode, niveau, objectifMots ->
-                        duelMotsVm.demarrerCommeHote(sousMode, niveau, objectifMots)
+                    onDemarrer = { sousMode, niveau, objectifMots, atteindreExactement ->
+                        duelMotsVm.demarrerCommeHote(sousMode, niveau, objectifMots, atteindreExactement)
                         navController.navigate(Routes.JEU_DUEL_MOTS)
                     },
                     onRetour = { navController.popBackStack() },
@@ -1424,7 +1424,7 @@ fun AppNavHost(
                 val seedValue = seedActuel
                 if (!tirageTermine || seedValue == null) {
                     AttenteReseauScreen(stringResource(R.string.duel_mots_en_attente_configuration))
-                } else if (duelMotsVm.sousMode == SousModeDuelMots.CONFRONTATION) {
+                } else if (duelMotsVm.sousMode == SousModeDuelMots.CONFRONTATION || duelMotsVm.sousMode == SousModeDuelMots.POINTS) {
                     val lettresTirees by duelMotsVm.lettresTirees.collectAsState()
                     val indicesUtilises by duelMotsVm.indicesUtilises.collectAsState()
                     val motSaisi by duelMotsVm.motSaisi.collectAsState()
@@ -1442,6 +1442,9 @@ fun AppNavHost(
                         pseudoMoi = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                         pseudoAdversaire = profilDistant?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
                         couleurRang = couleurRangJoueur(profilId, tropheeRepository),
+                        sousMode = duelMotsVm.sousMode,
+                        bareme = configurationAlphabet.baremeLettres,
+                        atteindreExactement = duelMotsVm.atteindreExactement,
                         lettresTirees = lettresTirees,
                         indicesUtilises = indicesUtilises,
                         motSaisi = motSaisi,
@@ -1460,6 +1463,7 @@ fun AppNavHost(
                         onAnnulerLettre = duelMotsVm::annulerLettreConfrontation,
                         onEffacerMot = duelMotsVm::effacerMotConfrontation,
                         onValider = duelMotsVm::validerMotConfrontation,
+                        onRetirerMot = duelMotsVm::retirerMotConfrontation,
                         onRetour = onRetourMenu,
                         onRejouer = duelMotsVm::rejouer,
                     )

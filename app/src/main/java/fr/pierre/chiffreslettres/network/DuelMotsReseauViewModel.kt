@@ -11,6 +11,7 @@ import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TypePartie
 import fr.pierre.chiffreslettres.data.alphabet.ConfigurationAlphabetLettres
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
+import fr.pierre.chiffreslettres.letters.BaremeLettres
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
@@ -32,9 +33,11 @@ import kotlinx.coroutines.withTimeoutOrNull
 /**
  * Sous-mode du jeu "duel mots" (retour utilisateur) : Duo = le plus de mots en 5 minutes, chacun
  * à l'aveugle jusqu'à la fin ; Confrontation = course au premier à [DuelMotsReseauViewModel.objectifMots]
- * mots, colonnes live.
+ * mots, colonnes live ; Points = même mécanique que Confrontation, mais course à un total de
+ * points (barème de lettres) au lieu d'un nombre de mots — pas de niveau, alphabet complet,
+ * aucune longueur minimale de mot (retour utilisateur, 2026-08-28).
  */
-enum class SousModeDuelMots { DUO, CONFRONTATION }
+enum class SousModeDuelMots { DUO, CONFRONTATION, POINTS }
 
 /** Raison du rejet d'un mot en sous-mode Confrontation (retour utilisateur : jamais une perte, juste signalé, cf. `DefiMotsMaxViewModel`). */
 enum class RaisonRejetMotDuelMots { INVALIDE, TROP_COURT, DEJA_PRIS_MOI, DEJA_PRIS_ADVERSAIRE }
@@ -45,7 +48,15 @@ enum class RaisonFinConfrontation { OBJECTIF_ATTEINT, TEMPS_ECOULE, TOUS_MOTS_TR
 private fun SousModeDuelMots.versTypePartie(): TypePartie = when (this) {
     SousModeDuelMots.DUO -> TypePartie.DUEL_MOTS_RESEAU
     SousModeDuelMots.CONFRONTATION -> TypePartie.DUEL_MOTS_CONFRONTATION_RESEAU
+    SousModeDuelMots.POINTS -> TypePartie.DUEL_MOTS_POINTS_RESEAU
 }
+
+/**
+ * Objectifs de points proposés pour le sous-mode Points (retour utilisateur, 2026-08-28) : choix
+ * libre, purement pour régler la durée de la partie — pas dérivé d'un niveau, contrairement à
+ * [DuelMotsReseauViewModel.objectifMots] en sous-mode Confrontation.
+ */
+val OBJECTIFS_POINTS_DUEL = listOf(25, 50, 75, 100)
 
 /**
  * Nombre de voyelles fixe pour le tirage partagé du duel mots (retour utilisateur : pas de choix
@@ -106,6 +117,9 @@ class DuelMotsReseauViewModel(
     var niveau: NiveauLettres = NiveauLettres.EMILE
         private set
     var objectifMots: Int = 0
+        private set
+    /** Sous-mode Points uniquement (retour utilisateur) : option "atteindre exactement l'objectif". */
+    var atteindreExactement: Boolean = false
         private set
 
     private val _tirageTermine = MutableStateFlow(false)
@@ -235,9 +249,11 @@ class DuelMotsReseauViewModel(
                         sousMode = SousModeDuelMots.valueOf(message.sousMode)
                         niveau = NiveauLettres.valueOf(message.niveauCode)
                         objectifMots = message.objectifMots ?: 0
+                        atteindreExactement = message.atteindreExactement
                         demarrerTirage(message.seed)
                     }
                     is MessageReseau.MotTrouve -> recevoirMotAdversaire(message.mot)
+                    is MessageReseau.MotRetire -> _motsTrouvesAdversaire.update { it - message.mot }
                     is MessageReseau.ResultatDuelMotsDuo -> recevoirResultatDuoAdversaire(message.motsTrouves)
                     is MessageReseau.FinDuelMots -> terminerConfrontation(
                         raison = RaisonFinConfrontation.valueOf(message.raison),
@@ -256,14 +272,22 @@ class DuelMotsReseauViewModel(
         }
     }
 
-    /** Hôte uniquement : choisit le sous-mode/niveau (et l'objectif en Confrontation) et démarre pour les deux côtés. */
-    fun demarrerCommeHote(sousMode: SousModeDuelMots, niveau: NiveauLettres, objectifMots: Int?) {
+    /** Hôte uniquement : choisit le sous-mode/niveau (et l'objectif en Confrontation/Points) et démarre pour les deux côtés. */
+    fun demarrerCommeHote(
+        sousMode: SousModeDuelMots,
+        niveau: NiveauLettres,
+        objectifMots: Int?,
+        atteindreExactement: Boolean = false,
+    ) {
         this.sousMode = sousMode
         this.niveau = niveau
         this.objectifMots = objectifMots ?: 0
+        this.atteindreExactement = atteindreExactement
         val graine = Random.nextLong()
         viewModelScope.launch {
-            connexionActive?.envoyer(MessageReseau.ConfigurationDuelMots(sousMode.name, niveau.name, graine, objectifMots))
+            connexionActive?.envoyer(
+                MessageReseau.ConfigurationDuelMots(sousMode.name, niveau.name, graine, objectifMots, atteindreExactement),
+            )
         }
         demarrerTirage(graine)
     }
@@ -275,7 +299,7 @@ class DuelMotsReseauViewModel(
         _motsTrouvesMoi.value = emptyList()
         _motsTrouvesAdversaire.value = emptyList()
         enregistre = false
-        if (sousMode == SousModeDuelMots.CONFRONTATION) {
+        if (sousMode == SousModeDuelMots.CONFRONTATION || sousMode == SousModeDuelMots.POINTS) {
             timerJobConfrontation?.cancel()
             val sac = SacLettres.creer(
                 configurationAlphabet.distributionBase,
@@ -283,7 +307,7 @@ class DuelMotsReseauViewModel(
                 configurationAlphabet.lettresExcluesParNiveau.getValue(niveau),
             )
             _lettresTirees.value = TirageLettres.tirer(sac, NOMBRE_VOYELLES_DUEL_MOTS, TirageLettres.NOMBRE_LETTRES, Random(graine))
-            _motsPossiblesConfrontation.value = dictionnaire.rechercherAuMoins(_lettresTirees.value, seuilLongueurDefiLettres(niveau))
+            _motsPossiblesConfrontation.value = dictionnaire.rechercherAuMoins(_lettresTirees.value, seuilRequisMot())
                 .distinct()
                 .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
             _indicesUtilises.value = emptyList()
@@ -312,7 +336,18 @@ class DuelMotsReseauViewModel(
         }
     }
 
-    // --- Sous-mode Confrontation ---
+    // --- Sous-mode Confrontation / Points ---
+
+    /** Sous-mode Points : pas de longueur minimale (retour utilisateur) ; sinon, seuil du niveau. */
+    private fun seuilRequisMot(): Int = if (sousMode == SousModeDuelMots.POINTS) 1 else seuilLongueurDefiLettres(niveau)
+
+    private fun scoreTotal(mots: List<String>): Int = mots.sumOf { BaremeLettres.scoreMot(it, configurationAlphabet.baremeLettres) }
+
+    /** Mon score ou mon nombre de mots trouvés selon le sous-mode — sert de base de comparaison partout où Confrontation/Points divergent. */
+    private fun monTotal(): Int = if (sousMode == SousModeDuelMots.POINTS) scoreTotal(_motsTrouvesMoi.value) else _motsTrouvesMoi.value.size
+
+    private fun totalAdversaire(): Int =
+        if (sousMode == SousModeDuelMots.POINTS) scoreTotal(_motsTrouvesAdversaire.value) else _motsTrouvesAdversaire.value.size
 
     fun cliquerLettreConfrontation(index: Int) {
         if (_gagnant.value != null) return
@@ -348,7 +383,7 @@ class DuelMotsReseauViewModel(
         if (_gagnant.value != null) return
         val mot = _motSaisi.value
         if (mot.isBlank()) return
-        val seuil = seuilLongueurDefiLettres(niveau)
+        val seuil = seuilRequisMot()
         val raison = when {
             !dictionnaire.estJouable(mot) -> RaisonRejetMotDuelMots.INVALIDE
             mot.length < seuil -> RaisonRejetMotDuelMots.TROP_COURT
@@ -369,7 +404,11 @@ class DuelMotsReseauViewModel(
         _motRejete.value = null
         _raisonRejet.value = null
         viewModelScope.launch { connexionActive?.envoyer(MessageReseau.MotTrouve(mot, mot.length)) }
-        if (_motsTrouvesMoi.value.size >= objectifMots) {
+        val objectifAtteint = when (sousMode) {
+            SousModeDuelMots.POINTS -> if (atteindreExactement) monTotal() == objectifMots else monTotal() >= objectifMots
+            else -> monTotal() >= objectifMots
+        }
+        if (objectifAtteint) {
             timerJobConfrontation?.cancel()
             _raisonFinConfrontation.value = RaisonFinConfrontation.OBJECTIF_ATTEINT
             _gagnant.value = true
@@ -382,6 +421,19 @@ class DuelMotsReseauViewModel(
         } else {
             verifierTousMotsTrouvesConfrontation()
         }
+    }
+
+    /**
+     * Sous-mode Points, option "atteindre exactement l'objectif" uniquement (retour utilisateur) :
+     * retire un mot déjà trouvé de ma propre liste pour corriger un dépassement — il redevient
+     * disponible pour les deux joueurs, comme s'il n'avait jamais été trouvé.
+     */
+    fun retirerMotConfrontation(mot: String) {
+        if (_gagnant.value != null) return
+        if (sousMode != SousModeDuelMots.POINTS || !atteindreExactement) return
+        if (mot !in _motsTrouvesMoi.value) return
+        _motsTrouvesMoi.update { it - mot }
+        viewModelScope.launch { connexionActive?.envoyer(MessageReseau.MotRetire(mot)) }
     }
 
     private fun recevoirMotAdversaire(mot: String) {
@@ -401,7 +453,7 @@ class DuelMotsReseauViewModel(
     private fun terminerLocalementConfrontation(raison: RaisonFinConfrontation) {
         if (_gagnant.value != null) return
         timerJobConfrontation?.cancel()
-        val jaiGagne = _motsTrouvesMoi.value.size >= _motsTrouvesAdversaire.value.size
+        val jaiGagne = monTotal() >= totalAdversaire()
         _raisonFinConfrontation.value = raison
         _gagnant.value = jaiGagne
         viewModelScope.launch {
@@ -425,8 +477,7 @@ class DuelMotsReseauViewModel(
         _raisonFinConfrontation.value = raison
         _gagnant.value = when (raison) {
             RaisonFinConfrontation.OBJECTIF_ATTEINT -> !gagnantEstExpediteur
-            RaisonFinConfrontation.TEMPS_ECOULE, RaisonFinConfrontation.TOUS_MOTS_TROUVES ->
-                _motsTrouvesMoi.value.size >= _motsTrouvesAdversaire.value.size
+            RaisonFinConfrontation.TEMPS_ECOULE, RaisonFinConfrontation.TOUS_MOTS_TROUVES -> monTotal() >= totalAdversaire()
         }
         enregistrerSessionSiNecessaire()
     }
@@ -464,14 +515,21 @@ class DuelMotsReseauViewModel(
         enregistre = true
         val jaiGagne = when (sousMode) {
             SousModeDuelMots.DUO -> _motsTrouvesMoi.value.size >= _motsTrouvesAdversaire.value.size
-            SousModeDuelMots.CONFRONTATION -> _gagnant.value == true
+            SousModeDuelMots.CONFRONTATION, SousModeDuelMots.POINTS -> _gagnant.value == true
         }
-        // Pas de signal d'égalité disponible pour le sous-mode Confrontation (retour mainteneur,
-        // easter egg "Ex-aequo") : `_gagnant` est un simple booléen gagné/perdu.
+        // Pas de signal d'égalité disponible pour les sous-modes Confrontation/Points (retour
+        // mainteneur, easter egg "Ex-aequo") : `_gagnant` est un simple booléen gagné/perdu.
         val egalite = if (sousMode == SousModeDuelMots.DUO) _motsTrouvesMoi.value.size == _motsTrouvesAdversaire.value.size else null
-        val manche = ResultatManche(ModeJeu.LETTRES, niveau.name, _motsTrouvesMoi.value.size)
+        val monScoreFinal = monTotal()
+        val manche = ResultatManche(ModeJeu.LETTRES, niveau.name, monScoreFinal)
+        // Duel points uniquement (retour utilisateur) : écart signé pour "Rouleau compresseur"/
+        // "Déculottée", victoire exacte pour "Compte rond".
+        val ecartDuel = if (sousMode == SousModeDuelMots.POINTS) monScoreFinal - totalAdversaire() else null
+        val objectifExactAtteint = (sousMode == SousModeDuelMots.POINTS && atteindreExactement && jaiGagne).takeIf { it }
         viewModelScope.launch {
-            historiqueRepository.enregistrerSession(profilId, sousMode.versTypePartie(), listOf(manche), jaiGagne, egalite)
+            historiqueRepository.enregistrerSession(
+                profilId, sousMode.versTypePartie(), listOf(manche), jaiGagne, egalite, ecartDuel, objectifExactAtteint,
+            )
             _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
         }
     }
@@ -484,7 +542,8 @@ class DuelMotsReseauViewModel(
      */
     fun rejouer() {
         if (role != RoleReseau.HOTE) return
-        demarrerCommeHote(sousMode, niveau, objectifMots.takeIf { sousMode == SousModeDuelMots.CONFRONTATION })
+        val objectifApplicable = sousMode == SousModeDuelMots.CONFRONTATION || sousMode == SousModeDuelMots.POINTS
+        demarrerCommeHote(sousMode, niveau, objectifMots.takeIf { objectifApplicable }, atteindreExactement)
     }
 
     fun annulerEtRevenirAuChoix() {

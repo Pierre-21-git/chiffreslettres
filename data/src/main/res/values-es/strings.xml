@@ -38,6 +38,7 @@
     <!-- Subtítulos de agrupación visual -->
     <string name="soustitre_duo">Dúo</string>
     <string name="soustitre_duel_mots">Duelo de palabras</string>
+    <string name="soustitre_duel_points">Duelo de puntos</string>
     <string name="soustitre_chiffres">Números</string>
     <string name="soustitre_lettres">Letras</string>
 
@@ -87,6 +88,13 @@
     <string name="trophee_titre_duel_mots_gagnee_50">Quincuagésima partida de duelo de palabras ganada</string>
     <string name="trophee_titre_duel_mots_gagnee_75">Septuagésima quinta partida de duelo de palabras ganada</string>
     <string name="trophee_titre_duel_mots_gagnee_100">Centésima partida de duelo de palabras ganada</string>
+    <string name="trophee_titre_duel_points_1">Primera partida de duelo de puntos jugada</string>
+    <string name="trophee_titre_duel_points_gagnee_1">Primera partida de duelo de puntos ganada</string>
+    <string name="trophee_titre_duel_points_gagnee_10">Décima partida de duelo de puntos ganada</string>
+    <string name="trophee_titre_duel_points_gagnee_25">Vigésimo quinta partida de duelo de puntos ganada</string>
+    <string name="trophee_titre_duel_points_gagnee_50">Quincuagésima partida de duelo de puntos ganada</string>
+    <string name="trophee_titre_duel_points_gagnee_75">Septuagésimo quinta partida de duelo de puntos ganada</string>
+    <string name="trophee_titre_duel_points_gagnee_100">Centésima partida de duelo de puntos ganada</string>
     <string name="trophee_titre_defi_serie">Racha de %1$d en el desafío de %2$s</string>
     <string name="trophee_titre_defi_serie_niveau_monique">Racha de %1$d en el desafío de %2$s, nivel Ça se complique, Monique o superior</string>
     <string name="trophee_titre_defi_serie_niveau_mathieu">Racha de %1$d en el desafío de %2$s, nivel C\'est du sérieux, Mathieu</string>
@@ -148,6 +156,13 @@
     <string name="trophee_desc_duel_mots_gagnee_50">Ganar 50 partidas en modo Duelo de palabras (Dúo o Enfrentamiento), a distancia.</string>
     <string name="trophee_desc_duel_mots_gagnee_75">Ganar 75 partidas en modo Duelo de palabras (Dúo o Enfrentamiento), a distancia.</string>
     <string name="trophee_desc_duel_mots_gagnee_100">Ganar 100 partidas en modo Duelo de palabras (Dúo o Enfrentamiento), a distancia.</string>
+    <string name="trophee_desc_duel_points_1">Terminar una partida en modo Duelo de puntos, a distancia, cualquier objetivo.</string>
+    <string name="trophee_desc_duel_points_gagnee_1">Ganar una partida en modo Duelo de puntos, a distancia.</string>
+    <string name="trophee_desc_duel_points_gagnee_10">Ganar 10 partidas en modo Duelo de puntos, a distancia.</string>
+    <string name="trophee_desc_duel_points_gagnee_25">Ganar 25 partidas en modo Duelo de puntos, a distancia.</string>
+    <string name="trophee_desc_duel_points_gagnee_50">Ganar 50 partidas en modo Duelo de puntos, a distancia.</string>
+    <string name="trophee_desc_duel_points_gagnee_75">Ganar 75 partidas en modo Duelo de puntos, a distancia.</string>
+    <string name="trophee_desc_duel_points_gagnee_100">Ganar 100 partidas en modo Duelo de puntos, a distancia.</string>
     <string name="trophee_desc_defi_serie">Encadenar %1$d éxitos o más seguidos en un mismo desafío de %2$s.</string>
     <string name="trophee_desc_defi_serie_niveau_monique">Encadenar %1$d éxitos o más seguidos en un mismo desafío de %2$s, en el nivel Ça se complique, Monique o C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_serie_niveau_mathieu">Encadenar %1$d éxitos o más seguidos en un mismo desafío de %2$s, en el nivel C\'est du sérieux, Mathieu.</string>
@@ -202,6 +217,12 @@
     <string name="trophee_desc_easter_rituel_dimanche">Jugar un domingo, 4 semanas seguidas.</string>
     <string name="trophee_titre_easter_ex_aequo">Empate</string>
     <string name="trophee_desc_easter_ex_aequo">Terminar una partida con exactamente el mismo puntaje que un adversario.</string>
+    <string name="trophee_titre_easter_compte_rond">Número redondo</string>
+    <string name="trophee_desc_easter_compte_rond">Ganar una partida de Duelo de puntos con la opción \"alcanzar el objetivo exacto\" activada.</string>
+    <string name="trophee_titre_easter_rouleau_compresseur">Aplanadora</string>
+    <string name="trophee_desc_easter_rouleau_compresseur">Ganar una partida de Duelo de puntos con al menos 20 puntos de diferencia.</string>
+    <string name="trophee_titre_easter_deculottee">Paliza</string>
+    <string name="trophee_desc_easter_deculottee">Perder una partida de Duelo de puntos con al menos 20 puntos de diferencia.</string>
     <string name="trophee_titre_easter_symetrie">Simetría</string>
     <string name="trophee_desc_easter_symetrie">Obtener dos veces el mismo puntaje en partidas individuales.</string>
     <string name="trophee_titre_easter_noce_de_chene">Bodas de roble</string>

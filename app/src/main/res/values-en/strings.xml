@@ -62,6 +62,7 @@
     <string name="action_valider">Submit</string>
     <string name="action_supprimer">Delete</string>
     <string name="action_renommer">Rename</string>
+    <string name="action_retirer">Remove</string>
 
     <string name="entrainement_titre">Training</string>
 
@@ -136,9 +137,15 @@
     <string name="duel_mots_choisir_sous_mode">Which sub-mode?</string>
     <string name="duel_mots_sous_mode_duo">Duo (5 minutes, compared at the end)</string>
     <string name="duel_mots_sous_mode_confrontation">Head-to-head (live race)</string>
+    <string name="duel_mots_sous_mode_points">Points (live race)</string>
     <string name="duel_mots_choisir_objectif">Target (Head-to-head)</string>
     <string name="duel_mots_objectif_mots">%1$d words</string>
     <string name="duel_mots_objectif_mots_progression">%1$d / %2$d words</string>
+    <string name="duel_mots_choisir_objectif_points">Points target</string>
+    <string name="duel_mots_objectif_points">%1$d points</string>
+    <string name="duel_mots_objectif_points_progression">%1$d / %2$d points</string>
+    <string name="duel_mots_atteindre_exactement">Reach the target exactly</string>
+    <string name="duel_mots_mot_points">%1$s (%2$d pts)</string>
     <string name="duel_mots_en_attente_configuration">Waiting for the host to choose the sub-mode and level…</string>
     <string name="duel_mots_en_attente_adversaire">Waiting for the opponent\'s result…</string>
     <string name="duel_mots_victoire">You won!</string>
@@ -360,6 +367,7 @@
     <string name="regles_duel_mots_intro">Two-player word-finding game, fully remote (2 separate phones): a single letter draw, shared by both players. An invalid, too-short, or already-taken word is simply flagged, never a loss. Two sub-modes to choose from:</string>
     <string name="regles_duel_mots_mode_duo">Duo: each player gets 5 minutes on the same draw, blind to the other. At the end, both word lists are compared side by side; the most words wins (a tie counts as a win for both).</string>
     <string name="regles_duel_mots_mode_confrontation">Head-to-head: a race to reach the chosen word target first (5 to 10, picked before the game). Words found appear live in two columns; a word already taken by the opponent can no longer be proposed.</string>
+    <string name="regles_duel_mots_mode_points">Points: same principle as Head-to-head, but a race to a points total (letter scoring) instead of a number of words — no level, drawn from the full alphabet, no minimum word length. "Reach the target exactly" option: lets you remove an already found word to correct an overshoot.</string>
 
     <string name="versions_titre">Versions</string>
 

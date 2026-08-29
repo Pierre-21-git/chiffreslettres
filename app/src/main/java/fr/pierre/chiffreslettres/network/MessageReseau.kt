@@ -135,14 +135,17 @@ sealed interface MessageReseau {
     /**
      * Envoyée une fois par l'hôte pour démarrer un "duel mots" (retour utilisateur, jeu 100 %
      * réseau) : une seule graine (un seul tirage partagé, pas une liste de manches comme
-     * [Configuration]). [objectifMots] n'est utilisé qu'en sous-mode Confrontation (course au
-     * premier à N mots), null en sous-mode Duo (chacun ses 5 minutes, comparés à la fin).
+     * [Configuration]). [objectifMots] n'est utilisé qu'en sous-mode Confrontation/Points (course
+     * au premier à N mots ou N points), null en sous-mode Duo (chacun ses 5 minutes, comparés à
+     * la fin). [atteindreExactement] : sous-mode Points uniquement (retour utilisateur, option
+     * "atteindre exactement l'objectif"), toujours false pour les autres sous-modes.
      */
     data class ConfigurationDuelMots(
         val sousMode: String,
         val niveauCode: String,
         val seed: Long,
         val objectifMots: Int?,
+        val atteindreExactement: Boolean = false,
     ) : MessageReseau {
         override fun versJson(): JSONObject = JSONObject().apply {
             put(CLE_TYPE, TYPE)
@@ -150,6 +153,7 @@ sealed interface MessageReseau {
             put("niveauCode", niveauCode)
             put("seed", seed)
             put("objectifMots", objectifMots)
+            put("atteindreExactement", atteindreExactement)
         }
         companion object {
             const val TYPE = "configurationDuelMots"
@@ -169,6 +173,21 @@ sealed interface MessageReseau {
         }
         companion object {
             const val TYPE = "motTrouve"
+        }
+    }
+
+    /**
+     * Duel mots, sous-mode Points uniquement : diffusé quand un joueur retire un de ses propres
+     * mots déjà trouvés (retour utilisateur, option "atteindre exactement l'objectif") pour
+     * corriger un dépassement — le mot redevient disponible pour les deux joueurs.
+     */
+    data class MotRetire(val mot: String) : MessageReseau {
+        override fun versJson(): JSONObject = JSONObject().apply {
+            put(CLE_TYPE, TYPE)
+            put("mot", mot)
+        }
+        companion object {
+            const val TYPE = "motRetire"
         }
     }
 
@@ -241,8 +260,10 @@ sealed interface MessageReseau {
                     niveauCode = json.getString("niveauCode"),
                     seed = json.getLong("seed"),
                     objectifMots = if (json.isNull("objectifMots")) null else json.getInt("objectifMots"),
+                    atteindreExactement = json.optBoolean("atteindreExactement", false),
                 )
                 MotTrouve.TYPE -> MotTrouve(mot = json.getString("mot"), longueur = json.getInt("longueur"))
+                MotRetire.TYPE -> MotRetire(mot = json.getString("mot"))
                 ResultatDuelMotsDuo.TYPE -> {
                     val motsJson = json.getJSONArray("motsTrouves")
                     ResultatDuelMotsDuo(motsTrouves = List(motsJson.length()) { motsJson.getString(it) })

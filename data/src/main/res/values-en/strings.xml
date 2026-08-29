@@ -38,6 +38,7 @@
     <!-- Visual grouping subtitles -->
     <string name="soustitre_duo">Duo</string>
     <string name="soustitre_duel_mots">Word duel</string>
+    <string name="soustitre_duel_points">Points duel</string>
     <string name="soustitre_chiffres">Numbers</string>
     <string name="soustitre_lettres">Letters</string>
 
@@ -87,6 +88,13 @@
     <string name="trophee_titre_duel_mots_gagnee_50">Fiftieth word duel game won</string>
     <string name="trophee_titre_duel_mots_gagnee_75">Seventy-fifth word duel game won</string>
     <string name="trophee_titre_duel_mots_gagnee_100">Hundredth word duel game won</string>
+    <string name="trophee_titre_duel_points_1">First points duel game played</string>
+    <string name="trophee_titre_duel_points_gagnee_1">First points duel game won</string>
+    <string name="trophee_titre_duel_points_gagnee_10">Tenth points duel game won</string>
+    <string name="trophee_titre_duel_points_gagnee_25">Twenty-fifth points duel game won</string>
+    <string name="trophee_titre_duel_points_gagnee_50">Fiftieth points duel game won</string>
+    <string name="trophee_titre_duel_points_gagnee_75">Seventy-fifth points duel game won</string>
+    <string name="trophee_titre_duel_points_gagnee_100">Hundredth points duel game won</string>
     <string name="trophee_titre_defi_serie">Streak of %1$d in the %2$s challenge</string>
     <string name="trophee_titre_defi_serie_niveau_monique">Streak of %1$d in the %2$s challenge, Ça se complique, Monique level or above</string>
     <string name="trophee_titre_defi_serie_niveau_mathieu">Streak of %1$d in the %2$s challenge, C\'est du sérieux, Mathieu level</string>
@@ -148,6 +156,13 @@
     <string name="trophee_desc_duel_mots_gagnee_50">Win 50 games in Word duel (Duo or Head-to-head) mode, remote.</string>
     <string name="trophee_desc_duel_mots_gagnee_75">Win 75 games in Word duel (Duo or Head-to-head) mode, remote.</string>
     <string name="trophee_desc_duel_mots_gagnee_100">Win 100 games in Word duel (Duo or Head-to-head) mode, remote.</string>
+    <string name="trophee_desc_duel_points_1">Complete a game in Points duel mode, remote, any target.</string>
+    <string name="trophee_desc_duel_points_gagnee_1">Win a game in Points duel mode, remote.</string>
+    <string name="trophee_desc_duel_points_gagnee_10">Win 10 games in Points duel mode, remote.</string>
+    <string name="trophee_desc_duel_points_gagnee_25">Win 25 games in Points duel mode, remote.</string>
+    <string name="trophee_desc_duel_points_gagnee_50">Win 50 games in Points duel mode, remote.</string>
+    <string name="trophee_desc_duel_points_gagnee_75">Win 75 games in Points duel mode, remote.</string>
+    <string name="trophee_desc_duel_points_gagnee_100">Win 100 games in Points duel mode, remote.</string>
     <string name="trophee_desc_defi_serie">String together %1$d or more successes in a row in the same %2$s challenge.</string>
     <string name="trophee_desc_defi_serie_niveau_monique">String together %1$d or more successes in a row in the same %2$s challenge, at Ça se complique, Monique or C\'est du sérieux, Mathieu level.</string>
     <string name="trophee_desc_defi_serie_niveau_mathieu">String together %1$d or more successes in a row in the same %2$s challenge, at C\'est du sérieux, Mathieu level.</string>
@@ -202,6 +217,12 @@
     <string name="trophee_desc_easter_rituel_dimanche">Play on a Sunday, 4 weeks in a row.</string>
     <string name="trophee_titre_easter_ex_aequo">Tied</string>
     <string name="trophee_desc_easter_ex_aequo">Finish a game with exactly the same score as an opponent.</string>
+    <string name="trophee_titre_easter_compte_rond">Round number</string>
+    <string name="trophee_desc_easter_compte_rond">Win a Points duel game with the \"reach the target exactly\" option turned on.</string>
+    <string name="trophee_titre_easter_rouleau_compresseur">Steamroller</string>
+    <string name="trophee_desc_easter_rouleau_compresseur">Win a Points duel game by at least 20 points.</string>
+    <string name="trophee_titre_easter_deculottee">Thrashing</string>
+    <string name="trophee_desc_easter_deculottee">Lose a Points duel game by at least 20 points.</string>
     <string name="trophee_titre_easter_symetrie">Symmetry</string>
     <string name="trophee_desc_easter_symetrie">Get the same score twice in solo games.</string>
     <string name="trophee_titre_easter_noce_de_chene">Oak wedding</string>

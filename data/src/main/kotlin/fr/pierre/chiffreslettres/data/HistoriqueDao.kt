@@ -345,4 +345,33 @@ interface HistoriqueDao {
         """,
     )
     suspend fun sommeSecondesJouees(profilId: Long): Int
+
+    // --- Duel points (refonte 2026-08) ---
+
+    /** Plus grand écart de points en victoire, en Duel points (easter egg "Rouleau compresseur"). */
+    @Query(
+        """
+        SELECT COALESCE(MAX(ecartDuel), 0) FROM SessionEntity
+        WHERE profilId = :profilId AND type = 'DUEL_MOTS_POINTS_RESEAU' AND victoireDuel = 1
+        """,
+    )
+    suspend fun maxEcartVictoireDuelPoints(profilId: Long): Int
+
+    /** Plus grand écart de points en défaite, en Duel points (easter egg "Déculottée"). */
+    @Query(
+        """
+        SELECT COALESCE(MAX(-ecartDuel), 0) FROM SessionEntity
+        WHERE profilId = :profilId AND type = 'DUEL_MOTS_POINTS_RESEAU' AND victoireDuel = 0
+        """,
+    )
+    suspend fun maxEcartDefaiteDuelPoints(profilId: Long): Int
+
+    /** Une victoire en Duel points a-t-elle déjà été obtenue avec l'option "atteindre exactement l'objectif" (easter egg "Compte rond") ? */
+    @Query(
+        """
+        SELECT COUNT(*) FROM SessionEntity
+        WHERE profilId = :profilId AND type = 'DUEL_MOTS_POINTS_RESEAU' AND objectifExactAtteint = 1
+        """,
+    )
+    suspend fun compterCompteRondDuelPoints(profilId: Long): Int
 }

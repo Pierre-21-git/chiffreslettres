@@ -19,6 +19,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.102",
+        date = "2026-08-29",
+        changements = listOf(
+            "Nouveau sous-mode \"Duel points\" pour le Duel mots : course en direct à un total de " +
+                "points (barème de lettres) plutôt qu'à un nombre de mots, objectif libre 25/50/75/100, " +
+                "sans niveau ni contrainte de longueur. Option \"atteindre exactement l'objectif\" : " +
+                "possibilité de retirer un mot déjà trouvé pour corriger un dépassement.",
+            "Nouveaux trophées Duel points (progression Argent à Diamant) et 3 easter eggs : " +
+                "\"Compte rond\" (victoire exacte), \"Rouleau compresseur\" (victoire par 20 points " +
+                "d'écart ou plus) et \"Déculottée\" (défaite par 20 points d'écart ou plus).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.101",
         date = "2026-08-28",
         changements = listOf(
