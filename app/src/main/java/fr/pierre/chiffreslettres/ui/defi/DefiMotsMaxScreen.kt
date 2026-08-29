@@ -98,6 +98,7 @@ fun DefiMotsMaxScreen(
                         enabled = etat.tirageTermine && !etat.termine && !utilisee,
                         monospace = false,
                         grand = true,
+                        tresGrand = true,
                         onClick = { viewModel.cliquerLettre(index) },
                     )
                 }

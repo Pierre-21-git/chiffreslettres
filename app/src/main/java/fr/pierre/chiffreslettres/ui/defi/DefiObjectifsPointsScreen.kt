@@ -119,6 +119,7 @@ fun DefiObjectifsPointsScreen(
                         enabled = etat.tirageTermine && !etat.termine && !utilisee,
                         monospace = false,
                         grand = true,
+                        tresGrand = true,
                         points = BaremeLettres.valeurLettre(lettre, etat.bareme),
                         onClick = { viewModel.cliquerLettre(index) },
                     )

@@ -224,6 +224,8 @@ fun TuileJeton(
     enabled: Boolean = true,
     monospace: Boolean = true,
     grand: Boolean = false,
+    /** Encore plus grand que [grand] (retour utilisateur) : réservé aux plaquettes lettres (tirage), pour les distinguer des jetons chiffres qui restent à la taille [grand]. */
+    tresGrand: Boolean = false,
     /** Valeur en points (défi Points, retour utilisateur) affichée en petit en bas à droite de la tuile, comme une plaquette de jeu de lettres classique. Null ailleurs : ne change rien aux usages existants. */
     points: Int? = null,
 ) {
@@ -232,7 +234,10 @@ fun TuileJeton(
         couleurOmbre = if (selectionne) Brass else BrassShadow,
         modifier = modifier,
         contentModifier = Modifier
-            .defaultMinSize(minWidth = if (grand) 56.dp else 42.dp, minHeight = if (grand) 60.dp else 48.dp)
+            .defaultMinSize(
+                minWidth = if (tresGrand) 64.dp else if (grand) 56.dp else 42.dp,
+                minHeight = if (tresGrand) 70.dp else if (grand) 60.dp else 48.dp,
+            )
             .padding(horizontal = 8.dp),
         onClick = onClick,
         enabled = enabled,
@@ -241,7 +246,7 @@ fun TuileJeton(
             texte,
             color = InkOnIvory,
             fontWeight = FontWeight.Bold,
-            fontSize = if (grand) 24.sp else if (monospace) 17.sp else 16.sp,
+            fontSize = if (tresGrand) 28.sp else if (grand) 24.sp else if (monospace) 17.sp else 16.sp,
             fontFamily = if (monospace) FontFamily.Monospace else FontFamily.SansSerif,
         )
         if (points != null) {
@@ -249,7 +254,7 @@ fun TuileJeton(
                 "$points",
                 color = InkOnIvory,
                 fontWeight = FontWeight.Bold,
-                fontSize = 9.sp,
+                fontSize = if (tresGrand) 11.sp else 9.sp,
                 modifier = Modifier.align(Alignment.BottomEnd).padding(bottom = 2.dp, end = 4.dp),
             )
         }

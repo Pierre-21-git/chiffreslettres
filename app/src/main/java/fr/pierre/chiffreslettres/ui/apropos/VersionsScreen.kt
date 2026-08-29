@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.105",
+        date = "2026-08-29",
+        changements = listOf(
+            "Les plaquettes lettres (mode Lettres, défi Mots max, défi Points, Duel mots) sont " +
+                "maintenant encore plus grandes que le reste du plateau.",
+            "Menu principal : un séparateur a été ajouté au-dessus de \"Duel mots\", pour bien le " +
+                "distinguer des parties classiques.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.104",
         date = "2026-08-29",
         changements = listOf(

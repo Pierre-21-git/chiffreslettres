@@ -74,6 +74,9 @@ fun MenuPrincipalScreen(
         TuilePrincipale(stringResource(R.string.menu_partie_solo), onClick = onPartieStructuree)
         TuilePrincipale(stringResource(R.string.menu_partie_duo), onClick = onPartieDuo)
         TuilePrincipale(stringResource(R.string.menu_partie_reseau), onClick = onPartieReseau)
+
+        HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))
+
         TuilePrincipale(stringResource(R.string.duel_mots_titre), onClick = onDuelMots)
 
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))

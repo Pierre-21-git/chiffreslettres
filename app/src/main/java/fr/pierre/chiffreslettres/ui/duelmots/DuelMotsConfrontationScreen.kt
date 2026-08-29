@@ -126,6 +126,7 @@ fun DuelMotsConfrontationScreen(
                         enabled = !utilisee,
                         monospace = false,
                         grand = true,
+                        tresGrand = true,
                         onClick = { onCliquerLettre(index) },
                     )
                 }
