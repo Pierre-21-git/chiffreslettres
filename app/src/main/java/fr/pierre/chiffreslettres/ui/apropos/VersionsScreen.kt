@@ -19,6 +19,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.110",
+        date = "2026-08-29",
+        changements = listOf(
+            "Trophées : le bloc \"Secrets\" est renommé \"Easter eggs\". Les trophées dont le nom " +
+                "est encore caché (\"???????\") y sont désormais tous regroupés ensemble dans un " +
+                "dernier sous-titre \"Easter eggs\", au lieu d'être dispersés parmi les trophées " +
+                "déjà nommés — y compris \"Toit du monde\", qui n'a plus son sous-titre \"Trophée " +
+                "ultime\" pour lui seul.",
+            "Les titres des 3 grandes catégories de trophées (Parties et duels / Défis / Easter " +
+                "eggs) sont maintenant beaucoup plus grands.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.109",
         date = "2026-08-29",
         changements = listOf(

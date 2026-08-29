@@ -13,7 +13,7 @@
     <string name="categorie_defi_points">Points Challenge</string>
     <string name="categorie_defi_sans_faute">Flawless challenge</string>
     <string name="categorie_defi_quotidien">Daily challenge</string>
-    <string name="categorie_trophees_speciaux">Secrets</string>
+    <string name="categorie_trophees_speciaux">Easter eggs</string>
 
     <!-- Tier labels (full player rank, e.g. "Bronze Player") -->
     <string name="palier_joueur_bronze">Bronze Player</string>
@@ -188,9 +188,9 @@
     <string name="trophee_desc_section_partie_complete">Unlock every trophy in the Games section.</string>
 
     <!-- Easter eggs (refonte 2026-08): group 1, computable from existing data -->
-    <string name="categorie_easter_chiffres">Secrets — Numbers</string>
-    <string name="categorie_easter_lettres">Secrets — Letters</string>
-    <string name="categorie_easter_general">Secrets — General</string>
+    <string name="categorie_easter_chiffres">Easter eggs — Numbers</string>
+    <string name="categorie_easter_lettres">Easter eggs — Letters</string>
+    <string name="categorie_easter_general">Easter eggs — General</string>
     <string name="categorie_easter_ultime">Ultimate trophy</string>
 
     <string name="trophee_titre_easter_ancien_combattant">Veteran</string>

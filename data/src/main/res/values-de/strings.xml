@@ -13,7 +13,7 @@
     <string name="categorie_defi_points">Punkte-Herausforderung</string>
     <string name="categorie_defi_sans_faute">Fehlerfreie Herausforderung</string>
     <string name="categorie_defi_quotidien">Tägliche Herausforderung</string>
-    <string name="categorie_trophees_speciaux">Geheimnisse</string>
+    <string name="categorie_trophees_speciaux">Easter Eggs</string>
 
     <!-- Rang-Bezeichnungen (voller Spielerrang, z. B. "Bronze-Spieler") -->
     <string name="palier_joueur_bronze">Bronze-Spieler</string>
@@ -188,9 +188,9 @@
     <string name="trophee_desc_section_partie_complete">Alle Trophäen im Bereich Partien freischalten.</string>
 
     <!-- Easter eggs (Neugestaltung 2026-08): Gruppe 1, aus vorhandenen Daten berechenbar -->
-    <string name="categorie_easter_chiffres">Geheimnisse — Zahlen</string>
-    <string name="categorie_easter_lettres">Geheimnisse — Buchstaben</string>
-    <string name="categorie_easter_general">Geheimnisse — Allgemein</string>
+    <string name="categorie_easter_chiffres">Easter Eggs — Zahlen</string>
+    <string name="categorie_easter_lettres">Easter Eggs — Buchstaben</string>
+    <string name="categorie_easter_general">Easter Eggs — Allgemein</string>
     <string name="categorie_easter_ultime">Ultimative Trophäe</string>
 
     <string name="trophee_titre_easter_ancien_combattant">Veteran</string>

@@ -13,7 +13,7 @@
     <string name="categorie_defi_points">Défi Points</string>
     <string name="categorie_defi_sans_faute">Défi sans faute</string>
     <string name="categorie_defi_quotidien">Défi quotidien</string>
-    <string name="categorie_trophees_speciaux">Secrets</string>
+    <string name="categorie_trophees_speciaux">Easter eggs</string>
 
     <!-- Libellés de palier (rang joueur complet, ex. "Joueur Bronze") -->
     <string name="palier_joueur_bronze">Joueur Bronze</string>
@@ -188,9 +188,9 @@
     <string name="trophee_desc_section_partie_complete">Débloquer tous les trophées de la section Parties.</string>
 
     <!-- Easter eggs (refonte 2026-08) : groupe 1, calculables avec les données existantes -->
-    <string name="categorie_easter_chiffres">Secrets — Chiffres</string>
-    <string name="categorie_easter_lettres">Secrets — Lettres</string>
-    <string name="categorie_easter_general">Secrets — Général</string>
+    <string name="categorie_easter_chiffres">Easter eggs — Chiffres</string>
+    <string name="categorie_easter_lettres">Easter eggs — Lettres</string>
+    <string name="categorie_easter_general">Easter eggs — Général</string>
     <string name="categorie_easter_ultime">Trophée ultime</string>
 
     <string name="trophee_titre_easter_ancien_combattant">Ancien combattant</string>
