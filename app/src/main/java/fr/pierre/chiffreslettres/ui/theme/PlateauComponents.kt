@@ -266,7 +266,7 @@ fun BoutonOperateur(
 ) {
     Box(
         modifier = modifier
-            .size(46.dp)
+            .size(60.dp)
             .graphicsLayer(alpha = if (enabled) 1f else 0.3f)
             .clip(CircleShape)
             .background(if (selectionne) BrassBright else Ivory.copy(alpha = 0.05f))
@@ -279,7 +279,7 @@ fun BoutonOperateur(
             color = if (selectionne) InkOnIvory else Ivory,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
+            fontSize = 26.sp,
         )
     }
 }

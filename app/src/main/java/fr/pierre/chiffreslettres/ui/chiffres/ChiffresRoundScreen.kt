@@ -97,6 +97,7 @@ fun ChiffresRoundScreen(
                     texte = "${jeton.expression.resultat}",
                     selectionne = selectionne,
                     enabled = !etat.termine,
+                    grand = true,
                     onClick = { viewModel.cliquerJeton(jeton) },
                 )
             }

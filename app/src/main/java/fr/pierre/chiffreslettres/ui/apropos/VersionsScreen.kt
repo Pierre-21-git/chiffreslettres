@@ -19,6 +19,14 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.104",
+        date = "2026-08-29",
+        changements = listOf(
+            "Mode Chiffres : les jetons de nombres et surtout les boutons d'opérateurs (+, −, ×, ÷) " +
+                "sont maintenant plus grands sur l'écran de jeu.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.103",
         date = "2026-08-29",
         changements = listOf(
