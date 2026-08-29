@@ -1896,9 +1896,11 @@ fun AppNavHost(
             val jour = remember { LocalDate.now().toString() }
             val tirage = remember(profilId, jour) { DefiQuotidienTirage.pour(profilId, jour) }
             var niveauDejaReussi by remember(profilId, jour) { mutableStateOf<String?>(null) }
+            var niveauxDejaReussis by remember(profilId, jour) { mutableStateOf<Set<String>>(emptySet()) }
             var serieActuelle by remember(profilId) { mutableStateOf(0) }
             LaunchedEffect(profilId, jour) {
                 niveauDejaReussi = defiQuotidienRepository.niveauReussiAujourdhui(profilId, jour)
+                niveauxDejaReussis = defiQuotidienRepository.niveauxReussisAujourdhui(profilId, jour)
                 serieActuelle = defiQuotidienRepository.serieActuelle(profilId)
             }
             DefiQuotidienScreen(
@@ -1906,6 +1908,7 @@ fun AppNavHost(
                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
                 tirage = tirage,
                 niveauReussiAujourdhui = niveauDejaReussi,
+                niveauxReussisAujourdhui = niveauxDejaReussis,
                 serieActuelle = serieActuelle,
                 onNiveauChiffresChoisi = { niveau ->
                     val route = if (tirage.type == TypeDefi.SERIE) {

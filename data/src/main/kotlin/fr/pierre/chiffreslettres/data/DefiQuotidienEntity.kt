@@ -29,4 +29,10 @@ data class DefiQuotidienEntity(
      * absent sur les réussites enregistrées avant l'ajout des trophées défi quotidien niveau.
      */
     val niveau: String? = null,
+    /**
+     * Tous les niveaux déjà réussis ce jour-là (retour utilisateur), séparés par des virgules
+     * (ex. "EMILE,NESTOR") — chacun doit rester verrouillé, pas seulement [niveau] (le plus
+     * élevé). Vide sur les réussites enregistrées avant l'ajout de ce champ.
+     */
+    val niveauxReussis: String = "",
 )

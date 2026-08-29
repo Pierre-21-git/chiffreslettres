@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.107",
+        date = "2026-08-29",
+        changements = listOf(
+            "Correction du défi quotidien : rejouer un niveau supérieur le même jour déverrouillait " +
+                "à tort le niveau déjà réussi précédemment. Chaque niveau réussi aujourd'hui reste " +
+                "désormais verrouillé.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.106",
         date = "2026-08-29",
         changements = listOf(

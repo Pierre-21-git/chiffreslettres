@@ -37,6 +37,8 @@ object StatistiquesExport {
                 .put("scoreTotal", entree.session.scoreTotal)
                 .put("victoireDuel", entree.session.victoireDuel ?: JSONObject.NULL)
                 .put("egaliteDuel", entree.session.egaliteDuel ?: JSONObject.NULL)
+                .put("ecartDuel", entree.session.ecartDuel ?: JSONObject.NULL)
+                .put("objectifExactAtteint", entree.session.objectifExactAtteint ?: JSONObject.NULL)
             val manches = JSONArray()
             for (manche in entree.manches) {
                 manches.put(
@@ -51,7 +53,9 @@ object StatistiquesExport {
                         .put("nombreOperationsChiffres", manche.nombreOperationsChiffres ?: JSONObject.NULL)
                         .put("maxEtapeIntermediaireChiffres", manche.maxEtapeIntermediaireChiffres ?: JSONObject.NULL)
                         .put("dureeSecondesManche", manche.dureeSecondesManche ?: JSONObject.NULL)
-                        .put("tempsRestantSecondesValidation", manche.tempsRestantSecondesValidation ?: JSONObject.NULL),
+                        .put("tempsRestantSecondesValidation", manche.tempsRestantSecondesValidation ?: JSONObject.NULL)
+                        .put("ecartCibleChiffres", manche.ecartCibleChiffres ?: JSONObject.NULL)
+                        .put("operateursUtilisesChiffres", manche.operateursUtilisesChiffres ?: JSONObject.NULL),
                 )
             }
             session.put("manches", manches)
@@ -78,7 +82,8 @@ object StatistiquesExport {
                 JSONObject()
                     .put("jour", defiQuotidien.jour)
                     .put("dateReussite", defiQuotidien.dateReussite)
-                    .put("niveau", defiQuotidien.niveau ?: JSONObject.NULL),
+                    .put("niveau", defiQuotidien.niveau ?: JSONObject.NULL)
+                    .put("niveauxReussis", defiQuotidien.niveauxReussis),
             )
         }
         racine.put("defisQuotidiens", defisQuotidiens)
@@ -132,6 +137,8 @@ object StatistiquesExport {
                         maxEtapeIntermediaireChiffres = if (m.isNull("maxEtapeIntermediaireChiffres")) null else m.optInt("maxEtapeIntermediaireChiffres"),
                         dureeSecondesManche = if (m.isNull("dureeSecondesManche")) null else m.optInt("dureeSecondesManche"),
                         tempsRestantSecondesValidation = if (m.isNull("tempsRestantSecondesValidation")) null else m.optInt("tempsRestantSecondesValidation"),
+                        ecartCibleChiffres = if (m.isNull("ecartCibleChiffres")) null else m.optInt("ecartCibleChiffres"),
+                        operateursUtilisesChiffres = if (m.isNull("operateursUtilisesChiffres")) null else m.optInt("operateursUtilisesChiffres"),
                     )
                 }
                 sessions += SessionAvecManches(
@@ -142,6 +149,8 @@ object StatistiquesExport {
                         scoreTotal = s.getInt("scoreTotal"),
                         victoireDuel = if (s.isNull("victoireDuel")) null else s.optBoolean("victoireDuel"),
                         egaliteDuel = if (s.isNull("egaliteDuel")) null else s.optBoolean("egaliteDuel"),
+                        ecartDuel = if (s.isNull("ecartDuel")) null else s.optInt("ecartDuel"),
+                        objectifExactAtteint = if (s.isNull("objectifExactAtteint")) null else s.optBoolean("objectifExactAtteint"),
                     ),
                     manches = manches,
                 )
@@ -170,6 +179,7 @@ object StatistiquesExport {
                     jour = d.getString("jour"),
                     dateReussite = d.getLong("dateReussite"),
                     niveau = if (d.isNull("niveau")) null else d.getString("niveau"),
+                    niveauxReussis = if (d.isNull("niveauxReussis")) "" else d.optString("niveauxReussis"),
                 )
             }
 

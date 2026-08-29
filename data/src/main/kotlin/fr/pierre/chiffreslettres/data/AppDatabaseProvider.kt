@@ -202,6 +202,20 @@ private val MIGRATION_14_15 = object : Migration(14, 15) {
     }
 }
 
+/**
+ * v15 → v16 : ajout de la colonne `niveauxReussis` sur `DefiQuotidienEntity` (retour utilisateur :
+ * corrige le verrouillage du défi quotidien — rejouer un niveau plus haut le même jour déverrouillait
+ * à tort le niveau déjà réussi précédemment, faute de garder trace que de la meilleure réussite).
+ * Rétro-remplie depuis `niveau` pour les lignes déjà enregistrées, pour ne pas déverrouiller un
+ * niveau déjà réussi avant cette migration.
+ */
+private val MIGRATION_15_16 = object : Migration(15, 16) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `DefiQuotidienEntity` ADD COLUMN `niveauxReussis` TEXT NOT NULL DEFAULT ''")
+        db.execSQL("UPDATE `DefiQuotidienEntity` SET `niveauxReussis` = `niveau` WHERE `niveau` IS NOT NULL")
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null
@@ -213,6 +227,7 @@ object AppDatabaseProvider {
                     MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5,
                     MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10,
                     MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15,
+                    MIGRATION_15_16,
                 )
                 .build()
                 .also { instance = it }

@@ -21,6 +21,8 @@ class StatistiquesExportTest {
             maxEtapeIntermediaireChiffres = 42,
             dureeSecondesManche = 12,
             tempsRestantSecondesValidation = 88,
+            ecartCibleChiffres = 250,
+            operateursUtilisesChiffres = 0b1111,
         )
         val session = SessionEntity(
             profilId = 0,
@@ -29,11 +31,20 @@ class StatistiquesExportTest {
             scoreTotal = 10,
             victoireDuel = true,
             egaliteDuel = false,
+            ecartDuel = 25,
+            objectifExactAtteint = true,
+        )
+        val defiQuotidien = DefiQuotidienEntity(
+            profilId = 0,
+            jour = "2026-08-29",
+            dateReussite = 1_700_000_000_000L,
+            niveau = "NESTOR",
+            niveauxReussis = "EMILE,NESTOR",
         )
         val export = ExportStatistiques(
             sessions = listOf(SessionAvecManches(session, listOf(manche))),
             defis = emptyList(),
-            defisQuotidiens = emptyList(),
+            defisQuotidiens = listOf(defiQuotidien),
             trophees = emptyList(),
         )
 
@@ -42,12 +53,18 @@ class StatistiquesExportTest {
         val sessionRelue = relu.sessions.single()
         assertEquals(true, sessionRelue.session.victoireDuel)
         assertEquals(false, sessionRelue.session.egaliteDuel)
+        assertEquals(25, sessionRelue.session.ecartDuel)
+        assertEquals(true, sessionRelue.session.objectifExactAtteint)
         val mancheRelue = sessionRelue.manches.single()
         assertEquals(537, mancheRelue.cibleChiffres)
         assertEquals(1, mancheRelue.nombreOperationsChiffres)
         assertEquals(42, mancheRelue.maxEtapeIntermediaireChiffres)
         assertEquals(12, mancheRelue.dureeSecondesManche)
         assertEquals(88, mancheRelue.tempsRestantSecondesValidation)
+        assertEquals(250, mancheRelue.ecartCibleChiffres)
+        assertEquals(0b1111, mancheRelue.operateursUtilisesChiffres)
+        val defiQuotidienRelu = relu.defisQuotidiens.single()
+        assertEquals("EMILE,NESTOR", defiQuotidienRelu.niveauxReussis)
     }
 
     @Test
@@ -80,9 +97,13 @@ class StatistiquesExportTest {
         val sessionRelue = relu.sessions.single()
         assertNull(sessionRelue.session.victoireDuel)
         assertNull(sessionRelue.session.egaliteDuel)
+        assertNull(sessionRelue.session.ecartDuel)
+        assertNull(sessionRelue.session.objectifExactAtteint)
         val mancheRelue = sessionRelue.manches.single()
         assertNull(mancheRelue.cibleChiffres)
         assertNull(mancheRelue.dureeSecondesManche)
+        assertNull(mancheRelue.ecartCibleChiffres)
+        assertNull(mancheRelue.operateursUtilisesChiffres)
     }
 
     @Test

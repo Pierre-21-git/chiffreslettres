@@ -36,8 +36,10 @@ import fr.pierre.chiffreslettres.ui.theme.libelle
 fun DefiQuotidienScreen(
     pseudoActif: String,
     tirage: TirageDefiQuotidien,
-    /** Nom d'enum (Niveau ou NiveauLettres) déjà réussi aujourd'hui, null si aucune réussite ce jour (retour utilisateur : les boutons de niveau restent affichés, seul celui déjà réussi est désactivé). */
+    /** Niveau le plus élevé déjà réussi aujourd'hui, null si aucune réussite ce jour (retour utilisateur : affiché dans le message "défi déjà réussi"). */
     niveauReussiAujourdhui: String?,
+    /** Tous les niveaux déjà réussis aujourd'hui (retour utilisateur : chacun reste désactivé, pas seulement le plus élevé — sinon rejouer un niveau supérieur déverrouillait à tort un niveau déjà réussi). */
+    niveauxReussisAujourdhui: Set<String>,
     serieActuelle: Int,
     onNiveauChiffresChoisi: (Niveau) -> Unit,
     onNiveauLettresChoisi: (NiveauLettres) -> Unit,
@@ -107,7 +109,7 @@ fun DefiQuotidienScreen(
             for (niveau in Niveau.entries) {
                 Button(
                     onClick = { onNiveauChiffresChoisi(niveau) },
-                    enabled = niveau.name != niveauReussiAujourdhui,
+                    enabled = niveau.name !in niveauxReussisAujourdhui,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(niveau.libelle())
@@ -117,7 +119,7 @@ fun DefiQuotidienScreen(
             for (niveau in NiveauLettres.entries) {
                 Button(
                     onClick = { onNiveauLettresChoisi(niveau) },
-                    enabled = niveau.name != niveauReussiAujourdhui,
+                    enabled = niveau.name !in niveauxReussisAujourdhui,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(niveau.libelle())
