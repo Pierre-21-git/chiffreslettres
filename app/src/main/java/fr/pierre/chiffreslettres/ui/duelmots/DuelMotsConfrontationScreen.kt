@@ -127,6 +127,7 @@ fun DuelMotsConfrontationScreen(
                         monospace = false,
                         grand = true,
                         tresGrand = true,
+                        points = if (estPoints) BaremeLettres.valeurLettre(lettresTirees[index], bareme) else null,
                         onClick = { onCliquerLettre(index) },
                     )
                 }

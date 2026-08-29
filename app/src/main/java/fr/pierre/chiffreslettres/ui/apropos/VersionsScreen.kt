@@ -19,6 +19,14 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.109",
+        date = "2026-08-29",
+        changements = listOf(
+            "Duel points : la valeur en points de chaque lettre s'affiche maintenant sur les " +
+                "plaquettes du tirage, comme dans le défi Points.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.108",
         date = "2026-08-29",
         changements = listOf(
