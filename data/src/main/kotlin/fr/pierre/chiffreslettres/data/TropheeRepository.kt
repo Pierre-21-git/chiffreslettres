@@ -15,6 +15,13 @@ private val NIVEAUX_MONIQUE_OU_PLUS = listOf("MONIQUE", "MATHIEU")
 private val NIVEAUX_MATHIEU = listOf("MATHIEU")
 
 /**
+ * Masque binaire des 4 opérations chiffres toutes utilisées (bits 0-3, un par valeur de l'enum
+ * `Operation` du module `core-numbers`, inaccessible ici — `data` ne dépend jamais de `app` ni de
+ * `core-numbers`) — easter egg "Boîte à outils".
+ */
+private const val TOUS_OPERATEURS_MASK = 0b1111
+
+/**
  * Nombre d'objectifs du défi Points par niveau (retour utilisateur) — dupliqué depuis
  * `ui.defi.nombreObjectifsDefiPoints` (module `app`, inaccessible ici, `data` ne dépend jamais de
  * `app`), même valeurs (3/4/5/6). Sert uniquement à détecter si un défi Points enregistré a été
@@ -231,6 +238,8 @@ class TropheeRepository(
         compteExactChirurgical = comptesExactsChiffres.any { it.nombreOperations == 5 },
         compteExactSpeedrun = comptesExactsChiffres.any { (it.dureeSecondesManche ?: Int.MAX_VALUE) <= 5 },
         compteExactVaTout = comptesExactsChiffres.any { (it.tempsRestantSecondesValidation ?: Int.MAX_VALUE) <= 1 },
+        ecartEnormeChiffres = historiqueDao.compterEcartEnormeChiffres(profilId) >= 1,
+        compteExactBoiteAOutils = comptesExactsChiffres.any { it.operateursUtilises == TOUS_OPERATEURS_MASK },
         aucuneIdeeProposee = historiqueDao.compterManchesSansRienPropose(profilId) >= 1,
         secondesJoueesTotal = historiqueDao.sommeSecondesJouees(profilId),
         )

@@ -34,6 +34,10 @@ data class DetailChiffresManche(
     /** Null si manche non chronométrée (entraînement libre). */
     val dureeSecondesEcoulees: Int?,
     val tempsRestantSecondes: Int?,
+    /** Écart avec la cible de la proposition finale, null si rien n'a été proposé (easter egg "À côté de la plaque"). */
+    val ecartCible: Int?,
+    /** Masque des opérations utilisées (bit = `Operation.ordinal`), pour l'easter egg "Boîte à outils". */
+    val operateursUtilises: Int,
 )
 
 data class ChiffresRoundUiState(
@@ -186,12 +190,20 @@ class ChiffresRoundViewModel(
         val maxEtapeIntermediaire = etat.operationsEffectuees
             .mapNotNull { ligne -> ligne.substringAfterLast("= ").toIntOrNull()?.let { abs(it) } }
             .maxOrNull()
+        // Masque des opérations utilisées (retour utilisateur, easter egg "Boîte à outils") :
+        // détecté sur le texte des lignes plutôt que sur `historique` (qui ne garde que l'état
+        // avant chaque combinaison, pas le type d'opération employée).
+        val operateursUtilises = Operation.entries.fold(0) { masque, operation ->
+            if (etat.operationsEffectuees.any { it.contains(operation.symbole) }) masque or (1 shl operation.ordinal) else masque
+        }
         val detail = DetailChiffresManche(
             cible = etat.cible,
             nombreOperations = etat.operationsEffectuees.size,
             maxEtapeIntermediaire = maxEtapeIntermediaire,
             dureeSecondesEcoulees = dureeSecondes?.let { it - (etat.tempsRestantSecondes ?: 0) },
             tempsRestantSecondes = etat.tempsRestantSecondes,
+            ecartCible = ecart,
+            operateursUtilises = operateursUtilises,
         )
         _uiState.update { it.copy(termine = true, scoreObtenu = score, ecartCible = ecart, detailFinal = detail) }
     }

@@ -302,6 +302,8 @@ interface HistoriqueDao {
         val dureeSecondesManche: Int?,
         val tempsRestantSecondesValidation: Int?,
         val niveauCode: String,
+        /** Masque des opérations utilisées (bit = `Operation.ordinal`), pour l'easter egg "Boîte à outils". */
+        val operateursUtilises: Int?,
     )
 
     @Query(
@@ -310,7 +312,8 @@ interface HistoriqueDao {
             m.maxEtapeIntermediaireChiffres AS maxEtapeIntermediaire,
             m.dureeSecondesManche AS dureeSecondesManche,
             m.tempsRestantSecondesValidation AS tempsRestantSecondesValidation,
-            m.niveauCode AS niveauCode
+            m.niveauCode AS niveauCode,
+            m.operateursUtilisesChiffres AS operateursUtilises
         FROM MancheEntity m
         INNER JOIN SessionEntity s ON s.id = m.sessionId
         WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
@@ -318,6 +321,18 @@ interface HistoriqueDao {
         """,
     )
     suspend fun comptesExactsChiffresDetail(profilId: Long): List<DetailCompteExact>
+
+    /** Une manche chiffres a-t-elle déjà été proposée avec un écart d'au moins 200 à la cible (easter egg "À côté de la plaque") ? */
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+            AND m.mode = 'CHIFFRES' AND m.ecartCibleChiffres >= 200
+        """,
+    )
+    suspend fun compterEcartEnormeChiffres(profilId: Long): Int
 
     /** Une manche terminée par expiration du chrono sans aucune proposition (easter egg "Aucune idée"). */
     @Query(

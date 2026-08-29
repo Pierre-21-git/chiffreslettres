@@ -223,6 +223,10 @@
     <string name="trophee_desc_easter_rouleau_compresseur">Win a Points duel game by at least 20 points.</string>
     <string name="trophee_titre_easter_deculottee">Thrashing</string>
     <string name="trophee_desc_easter_deculottee">Lose a Points duel game by at least 20 points.</string>
+    <string name="trophee_titre_easter_a_cote_de_la_plaque">Miles off</string>
+    <string name="trophee_desc_easter_a_cote_de_la_plaque">Submit a numbers calculation off by at least 200 from the target.</string>
+    <string name="trophee_titre_easter_boite_a_outils">Toolbox</string>
+    <string name="trophee_desc_easter_boite_a_outils">Find an exact solution using all 4 operations (+, −, ×, ÷) in the same calculation.</string>
     <string name="trophee_titre_easter_symetrie">Symmetry</string>
     <string name="trophee_desc_easter_symetrie">Get the same score twice in solo games.</string>
     <string name="trophee_titre_easter_noce_de_chene">Oak wedding</string>

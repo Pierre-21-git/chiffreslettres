@@ -16,6 +16,10 @@ data class ResultatManche(
     val maxEtapeIntermediaireChiffres: Int? = null,
     val dureeSecondesManche: Int? = null,
     val tempsRestantSecondesValidation: Int? = null,
+    /** Écart entre la cible et la proposition finale (mode Chiffres), pour l'easter egg "À côté de la plaque". Null si rien n'a été proposé. */
+    val ecartCibleChiffres: Int? = null,
+    /** Masque des opérations utilisées dans la manche (mode Chiffres, bit = `Operation.ordinal`), pour l'easter egg "Boîte à outils". Null si aucune opération. */
+    val operateursUtilisesChiffres: Int? = null,
 )
 
 class HistoriqueRepository(private val dao: HistoriqueDao) {
@@ -53,6 +57,8 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
                 maxEtapeIntermediaireChiffres = resultat.maxEtapeIntermediaireChiffres,
                 dureeSecondesManche = resultat.dureeSecondesManche,
                 tempsRestantSecondesValidation = resultat.tempsRestantSecondesValidation,
+                ecartCibleChiffres = resultat.ecartCibleChiffres,
+                operateursUtilisesChiffres = resultat.operateursUtilisesChiffres,
             )
         }
         dao.enregistrerPartie(session, entites)

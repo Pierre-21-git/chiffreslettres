@@ -223,6 +223,10 @@
     <string name="trophee_desc_easter_rouleau_compresseur">Ganar una partida de Duelo de puntos con al menos 20 puntos de diferencia.</string>
     <string name="trophee_titre_easter_deculottee">Paliza</string>
     <string name="trophee_desc_easter_deculottee">Perder una partida de Duelo de puntos con al menos 20 puntos de diferencia.</string>
+    <string name="trophee_titre_easter_a_cote_de_la_plaque">Fuera de lugar</string>
+    <string name="trophee_desc_easter_a_cote_de_la_plaque">Proponer un cálculo de cifras con una diferencia de al menos 200 respecto al objetivo.</string>
+    <string name="trophee_titre_easter_boite_a_outils">Caja de herramientas</string>
+    <string name="trophee_desc_easter_boite_a_outils">Encontrar una cuenta exacta usando las 4 operaciones (+, −, ×, ÷) en el mismo cálculo.</string>
     <string name="trophee_titre_easter_symetrie">Simetría</string>
     <string name="trophee_desc_easter_symetrie">Obtener dos veces el mismo puntaje en partidas individuales.</string>
     <string name="trophee_titre_easter_noce_de_chene">Bodas de roble</string>

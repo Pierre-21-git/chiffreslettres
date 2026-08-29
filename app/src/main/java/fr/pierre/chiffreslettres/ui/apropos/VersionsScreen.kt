@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.103",
+        date = "2026-08-29",
+        changements = listOf(
+            "Deux nouveaux trophées secrets en mode Chiffres : \"À côté de la plaque\" (proposer un " +
+                "calcul avec un écart d'au moins 200 par rapport à la cible) et \"Boîte à outils\" " +
+                "(trouver un compte exact en utilisant les 4 opérations dans le même calcul).",
+        ),
+    ),
+    EntreeVersion(
         version = "1.102",
         date = "2026-08-29",
         changements = listOf(

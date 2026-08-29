@@ -189,6 +189,19 @@ private val MIGRATION_13_14 = object : Migration(13, 14) {
     }
 }
 
+/**
+ * v14 → v15 : ajout des colonnes `ecartCibleChiffres`/`operateursUtilisesChiffres` sur
+ * `MancheEntity` (retour utilisateur : easter eggs "À côté de la plaque"/"Boîte à outils", mode
+ * Chiffres). Toutes deux nullables, sans défaut — les manches déjà enregistrées n'ont pas cette
+ * info et ne compteront simplement pas pour ces trophées.
+ */
+private val MIGRATION_14_15 = object : Migration(14, 15) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `MancheEntity` ADD COLUMN `ecartCibleChiffres` INTEGER")
+        db.execSQL("ALTER TABLE `MancheEntity` ADD COLUMN `operateursUtilisesChiffres` INTEGER")
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null
@@ -199,7 +212,7 @@ object AppDatabaseProvider {
                 .addMigrations(
                     MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5,
                     MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10,
-                    MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14,
+                    MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15,
                 )
                 .build()
                 .also { instance = it }

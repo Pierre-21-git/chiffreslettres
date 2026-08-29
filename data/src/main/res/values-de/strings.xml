@@ -223,6 +223,10 @@
     <string name="trophee_desc_easter_rouleau_compresseur">Eine Punkteduell-Partie mit mindestens 20 Punkten Vorsprung gewinnen.</string>
     <string name="trophee_titre_easter_deculottee">Klatsche</string>
     <string name="trophee_desc_easter_deculottee">Eine Punkteduell-Partie mit mindestens 20 Punkten Rückstand verlieren.</string>
+    <string name="trophee_titre_easter_a_cote_de_la_plaque">Weit daneben</string>
+    <string name="trophee_desc_easter_a_cote_de_la_plaque">Eine Zahlenrechnung mit mindestens 200 Abstand zum Ziel abgeben.</string>
+    <string name="trophee_titre_easter_boite_a_outils">Werkzeugkasten</string>
+    <string name="trophee_desc_easter_boite_a_outils">Ein exaktes Ergebnis mit allen 4 Rechenarten (+, −, ×, ÷) in derselben Rechnung finden.</string>
     <string name="trophee_titre_easter_symetrie">Symmetrie</string>
     <string name="trophee_desc_easter_symetrie">Zweimal dasselbe Ergebnis in Solo-Partien erzielen.</string>
     <string name="trophee_titre_easter_noce_de_chene">Eichenhochzeit</string>

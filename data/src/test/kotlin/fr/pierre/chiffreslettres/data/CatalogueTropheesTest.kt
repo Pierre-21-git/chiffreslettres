@@ -73,6 +73,8 @@ private fun statsVides() = TropheeStats(
     compteExactChirurgical = false,
     compteExactSpeedrun = false,
     compteExactVaTout = false,
+    ecartEnormeChiffres = false,
+    compteExactBoiteAOutils = false,
     aucuneIdeeProposee = false,
     secondesJoueesTotal = 0,
 )
@@ -82,8 +84,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `165 trophees au total (155 + 7 duel points + 3 easter eggs)`() {
-        assertEquals(165, CatalogueTrophees.TOUS.size)
+    fun `167 trophees au total (155 + 7 duel points + 3 easter eggs duel points + 2 easter eggs chiffres)`() {
+        assertEquals(167, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -116,6 +118,8 @@ class CatalogueTropheesTest {
         assertTrue(trophee("easter_chirurgical").estDebloque(statsVides().copy(compteExactChirurgical = true)))
         assertTrue(trophee("easter_speedrun").estDebloque(statsVides().copy(compteExactSpeedrun = true)))
         assertTrue(trophee("easter_va_tout").estDebloque(statsVides().copy(compteExactVaTout = true)))
+        assertTrue(trophee("easter_a_cote_de_la_plaque").estDebloque(statsVides().copy(ecartEnormeChiffres = true)))
+        assertTrue(trophee("easter_boite_a_outils").estDebloque(statsVides().copy(compteExactBoiteAOutils = true)))
         assertTrue(trophee("easter_aucune_idee").estDebloque(statsVides().copy(aucuneIdeeProposee = true)))
         assertFalse(trophee("easter_cent_heures").estDebloque(statsVides().copy(secondesJoueesTotal = 359_999)))
         assertTrue(trophee("easter_cent_heures").estDebloque(statsVides().copy(secondesJoueesTotal = 360_000)))
@@ -124,7 +128,7 @@ class CatalogueTropheesTest {
     @Test
     fun `aucun trophee n'a de palier sauf le catalogue principal (les easter eggs sont hors echelle)`() {
         val easterEggs = CatalogueTrophees.TOUS.filter { it.id.startsWith("easter_") }
-        assertEquals(33, easterEggs.size)
+        assertEquals(35, easterEggs.size)
         assertTrue(easterEggs.all { it.palier == null })
     }
 

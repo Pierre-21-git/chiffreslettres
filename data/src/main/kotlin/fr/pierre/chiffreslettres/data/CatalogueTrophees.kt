@@ -150,6 +150,10 @@ data class TropheeStats(
     val compteExactSpeedrun: Boolean,
     /** Un compte exact proposé à la toute dernière seconde du chrono (trophée "Va-tout"). */
     val compteExactVaTout: Boolean,
+    /** Une proposition chiffres avec un écart d'au moins 200 à la cible (trophée "À côté de la plaque"). */
+    val ecartEnormeChiffres: Boolean,
+    /** Un compte exact en utilisant les 4 opérations dans le même calcul (trophée "Boîte à outils"). */
+    val compteExactBoiteAOutils: Boolean,
     /** Une manche terminée sans aucune proposition (trophée "Aucune idée"). */
     val aucuneIdeeProposee: Boolean,
     /** Temps de jeu cumulé, en secondes (trophée "100 heures de jeu"). */
@@ -1528,6 +1532,28 @@ object CatalogueTrophees {
         )
         add(
             Trophee(
+                "easter_a_cote_de_la_plaque",
+                titreRes = R.string.trophee_titre_easter_a_cote_de_la_plaque,
+                descriptionRes = R.string.trophee_desc_easter_a_cote_de_la_plaque,
+                categorie = CategorieTrophee.EASTER_CHIFFRES,
+                palier = null,
+                niveauVisibilite = NiveauVisibilite.SEMI_CACHE,
+                descriptionAvantDeblocageRes = R.string.easter_avant_precision_chiffres,
+            ) { it.ecartEnormeChiffres },
+        )
+        add(
+            Trophee(
+                "easter_boite_a_outils",
+                titreRes = R.string.trophee_titre_easter_boite_a_outils,
+                descriptionRes = R.string.trophee_desc_easter_boite_a_outils,
+                categorie = CategorieTrophee.EASTER_CHIFFRES,
+                palier = null,
+                niveauVisibilite = NiveauVisibilite.SEMI_CACHE,
+                descriptionAvantDeblocageRes = R.string.easter_avant_precision_chiffres,
+            ) { it.compteExactBoiteAOutils },
+        )
+        add(
+            Trophee(
                 "easter_aucune_idee",
                 titreRes = R.string.trophee_titre_easter_aucune_idee,
                 descriptionRes = R.string.trophee_desc_easter_aucune_idee,
@@ -1616,6 +1642,8 @@ object CatalogueTrophees {
         "easter_compte_rond" to "🎯",
         "easter_rouleau_compresseur" to "🚜",
         "easter_deculottee" to "🩲",
+        "easter_a_cote_de_la_plaque" to "🛰️",
+        "easter_boite_a_outils" to "🧰",
     )
 
     fun iconeTrophee(id: String): String = ICONES_EASTER_EGGS[id] ?: "🏆"
