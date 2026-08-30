@@ -342,6 +342,8 @@ fun AppNavHost(
             arguments = listOf(navArgument(Routes.ARG_PROFIL_ID) { type = NavType.LongType }),
         ) { backStackEntry ->
             val profilIdArg = backStackEntry.arguments!!.getLong(Routes.ARG_PROFIL_ID)
+            // Easter egg "Data-lover" (retour mainteneur) : compte les clics sur "Statistiques" au menu principal.
+            LaunchedEffect(profilIdArg) { visitesEcranStore.incrementerVisitesStats(profilIdArg) }
             StatistiquesJoueurScreen(
                 profilId = profilIdArg,
                 historiqueRepository = historiqueRepository,
@@ -361,12 +363,11 @@ fun AppNavHost(
             arguments = listOf(navArgument(Routes.ARG_PROFIL_ID) { type = NavType.LongType }),
         ) { backStackEntry ->
             val profilIdArg = backStackEntry.arguments!!.getLong(Routes.ARG_PROFIL_ID)
-            // Easter egg "Data-lover" (retour mainteneur) : compte les ouvertures de cette page.
-            LaunchedEffect(profilIdArg) { visitesEcranStore.incrementerVisitesStats(profilIdArg) }
             MesStatistiquesScreen(
                 profilId = profilIdArg,
                 historiqueRepository = historiqueRepository,
                 defiRepository = defiRepository,
+                visitesEcranStore = visitesEcranStore,
                 onRetour = { navController.popBackStack() },
             )
         }

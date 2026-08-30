@@ -127,7 +127,7 @@ data class TropheeStats(
     val dimancheQuatreSemainesDeSuite: Boolean,
     /** La page des règles du jeu a déjà été consultée (trophée "Curieux"). */
     val reglesDejaVues: Boolean,
-    /** Nombre de fois où la page de statistiques personnelles a été ouverte (trophée "Data-lover"). */
+    /** Nombre de clics sur "Statistiques" au menu principal (trophée "Data-lover"). */
     val nombreVisitesStats: Int,
     /** Un mot invalide d'au moins 10 lettres a déjà été proposé (trophée "Le mot le plus long jamais tenté"). */
     val motInvalideDixLettresTente: Boolean,

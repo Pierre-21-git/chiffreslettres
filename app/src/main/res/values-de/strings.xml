@@ -253,9 +253,9 @@
     <string name="statistiques_import_echec">Import fehlgeschlagen: %1$s</string>
     <string name="statistiques_erreur_ecriture">Datei konnte nicht geschrieben werden.</string>
     <string name="statistiques_erreur_lecture">Datei konnte nicht gelesen werden.</string>
-    <string name="statistiques_mes_meilleurs_scores">Meine besten Punktzahlen nach Level (Zahlen und Buchstaben zusammen)</string>
+    <string name="statistiques_mes_meilleurs_scores">Meine Partien</string>
     <string name="statistiques_classement_par_niveau">Rangliste nach Level (Zahlen und Buchstaben zusammen)</string>
-    <string name="statistiques_mes_defis">Meine Herausforderungen nach Level</string>
+    <string name="statistiques_mes_defis">Meine Herausforderungen</string>
     <string name="statistiques_classement_defis">Rangliste der Herausforderungen nach Level</string>
     <string name="statistiques_defi_valeur_reussites">%1$d Erfolge</string>
     <string name="statistiques_defi_valeur_mots">%1$d Wörter</string>

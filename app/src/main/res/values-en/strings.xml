@@ -290,9 +290,9 @@
     <string name="statistiques_import_echec">Import failed: %1$s</string>
     <string name="statistiques_erreur_ecriture">Could not write the file.</string>
     <string name="statistiques_erreur_lecture">Could not read the file.</string>
-    <string name="statistiques_mes_meilleurs_scores">My best scores by level (numbers and letters combined)</string>
+    <string name="statistiques_mes_meilleurs_scores">My games</string>
     <string name="statistiques_classement_par_niveau">Rankings by level (numbers and letters combined)</string>
-    <string name="statistiques_mes_defis">My challenges by level</string>
+    <string name="statistiques_mes_defis">My challenges</string>
     <string name="statistiques_classement_defis">Challenge rankings by level</string>
     <string name="statistiques_defi_valeur_reussites">%1$d successes</string>
     <string name="statistiques_defi_valeur_mots">%1$d words</string>

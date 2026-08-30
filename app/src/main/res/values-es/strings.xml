@@ -253,9 +253,9 @@
     <string name="statistiques_import_echec">Error al importar: %1$s</string>
     <string name="statistiques_erreur_ecriture">No se pudo escribir el archivo.</string>
     <string name="statistiques_erreur_lecture">No se pudo leer el archivo.</string>
-    <string name="statistiques_mes_meilleurs_scores">Mis mejores puntuaciones por nivel (números y letras combinados)</string>
+    <string name="statistiques_mes_meilleurs_scores">Mis partidas</string>
     <string name="statistiques_classement_par_niveau">Clasificación por nivel (números y letras combinados)</string>
-    <string name="statistiques_mes_defis">Mis desafíos por nivel</string>
+    <string name="statistiques_mes_defis">Mis desafíos</string>
     <string name="statistiques_classement_defis">Clasificación de desafíos por nivel</string>
     <string name="statistiques_defi_valeur_reussites">%1$d éxitos</string>
     <string name="statistiques_defi_valeur_mots">%1$d palabras</string>

@@ -7,6 +7,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,9 +21,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -32,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +63,7 @@ import fr.pierre.chiffreslettres.data.StatistiquesExport
 import fr.pierre.chiffreslettres.data.TropheeRepository
 import fr.pierre.chiffreslettres.data.TypeDefi
 import fr.pierre.chiffreslettres.data.TypePartie
+import fr.pierre.chiffreslettres.data.VisitesEcranStore
 import fr.pierre.chiffreslettres.numbers.Niveau
 import fr.pierre.chiffreslettres.ui.theme.BrassBright
 import fr.pierre.chiffreslettres.ui.theme.EnTeteEcran
@@ -263,6 +270,25 @@ fun StatistiquesJoueurScreen(
     }
 }
 
+/**
+ * Titre de niveau cliquable pour déplier/replier ses statistiques (retour utilisateur : titres
+ * agrandis, plus faciles à repérer en scrollant une longue liste de niveaux).
+ */
+@Composable
+private fun TitreNiveauDepliable(titre: String, expanded: Boolean, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(titre, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+        Icon(
+            imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+            contentDescription = null,
+        )
+    }
+}
+
 /** Nom de fichier suggéré pour l'export, sans caractères qui poseraient problème selon le système de fichiers. */
 private fun nomFichier(pseudo: String?): String =
     (pseudo ?: "profil").map { if (it.isLetterOrDigit()) it else '_' }.joinToString("")
@@ -277,8 +303,10 @@ fun MesStatistiquesScreen(
     profilId: Long,
     historiqueRepository: HistoriqueRepository,
     defiRepository: DefiRepository,
+    visitesEcranStore: VisitesEcranStore,
     onRetour: (() -> Unit)? = null,
 ) {
+    val scope = rememberCoroutineScope()
     val typesPartieAffiches = typesPartieAffiches()
     val variantesDefi = variantesDefi()
     // Même principe que donneesParNiveau ci-dessous (Flow collectés avant le LazyColumn, retour
@@ -304,6 +332,22 @@ fun MesStatistiquesScreen(
         // Retour utilisateur : un niveau qu'aucun type de partie n'a encore alimenté (ex.
         // Mathieu jamais joué, ou mode réseau tout juste ajouté) ne doit pas polluer l'écran.
     }.filter { (_, donneesParType) -> donneesParType.any { it.third.isNotEmpty() } }
+    // Même raisonnement que ci-dessus : l'état déplié/replié (persisté par profil) doit être
+    // connu avant le LazyColumn, sinon une section change de taille juste après le premier
+    // affichage (valeur par défaut "déplié" le temps que DataStore réponde), ce qui perturbe
+    // le scroll en cours sur cet écran.
+    val partiesDepliees = donneesParNiveau.associate { (niveau, _) ->
+        val cle = "parties_${niveau.name}"
+        val expandedFlow = remember(niveau) { visitesEcranStore.sectionDeplieeFlow(profilId, cle) }
+        val expanded by expandedFlow.collectAsState(initial = true)
+        niveau to (cle to expanded)
+    }
+    val defisDepliees = donneesDefisParNiveau.associate { (niveau, _) ->
+        val cle = "defis_${niveau.name}"
+        val expandedFlow = remember(niveau) { visitesEcranStore.sectionDeplieeFlow(profilId, cle) }
+        val expanded by expandedFlow.collectAsState(initial = true)
+        niveau to (cle to expanded)
+    }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -320,22 +364,28 @@ fun MesStatistiquesScreen(
         item {
             Text(
                 stringResource(R.string.statistiques_mes_meilleurs_scores),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
             )
         }
         for ((position, entry) in donneesParNiveau.withIndex()) {
             val (niveau, donneesParType) = entry
             item {
+                val (cle, expanded) = partiesDepliees.getValue(niveau)
                 Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                    Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
-                    for ((type, libelle, meilleures) in donneesParType) {
-                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Text(libelle, style = MaterialTheme.typography.titleSmall)
-                            Podium(meilleures.map { EntreePodium(null, it.score, it.date) })
-                            if (type == TypePartie.STRUCTUREE) {
-                                val historiqueFlow = remember(niveau) { historiqueRepository.historiqueScoresParNiveau(profilId, niveau.name, type) }
-                                val historique by historiqueFlow.collectAsState(initial = emptyList())
-                                GraphiqueProgression(historique.map { it.score })
+                    TitreNiveauDepliable(niveau.libelle(), expanded) {
+                        scope.launch { visitesEcranStore.definirSectionDepliee(profilId, cle, !expanded) }
+                    }
+                    if (expanded) {
+                        for ((type, libelle, meilleures) in donneesParType) {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Text(libelle, style = MaterialTheme.typography.titleSmall)
+                                Podium(meilleures.map { EntreePodium(null, it.score, it.date) })
+                                if (type == TypePartie.STRUCTUREE) {
+                                    val historiqueFlow = remember(niveau) { historiqueRepository.historiqueScoresParNiveau(profilId, niveau.name, type) }
+                                    val historique by historiqueFlow.collectAsState(initial = emptyList())
+                                    GraphiqueProgression(historique.map { it.score })
+                                }
                             }
                         }
                     }
@@ -349,20 +399,26 @@ fun MesStatistiquesScreen(
             item {
                 Text(
                     stringResource(R.string.statistiques_mes_defis),
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
         for ((position, entry) in donneesDefisParNiveau.withIndex()) {
             val (niveau, donneesParVariante) = entry
             item {
+                val (cle, expanded) = defisDepliees.getValue(niveau)
                 Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                    Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
-                    for ((variante, podium, historique) in donneesParVariante) {
-                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Text(variante.libelle, style = MaterialTheme.typography.titleSmall)
-                            Podium(podium.map { EntreePodium(null, it.serie, it.date, variante.formatValeurRes) })
-                            GraphiqueProgression(historique.map { it.serie })
+                    TitreNiveauDepliable(niveau.libelle(), expanded) {
+                        scope.launch { visitesEcranStore.definirSectionDepliee(profilId, cle, !expanded) }
+                    }
+                    if (expanded) {
+                        for ((variante, podium, historique) in donneesParVariante) {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Text(variante.libelle, style = MaterialTheme.typography.titleSmall)
+                                Podium(podium.map { EntreePodium(null, it.serie, it.date, variante.formatValeurRes) })
+                                GraphiqueProgression(historique.map { it.serie })
+                            }
                         }
                     }
                 }
@@ -533,12 +589,15 @@ fun StatistiquesGeneralesScreen(
         for ((position, entry) in donneesParNiveau.withIndex()) {
             val (niveau, donneesParType) = entry
             item {
+                var expanded by rememberSaveable(niveau) { mutableStateOf(true) }
                 Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                    Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
-                    for ((_, libelle, classement) in donneesParType) {
-                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Text(libelle, style = MaterialTheme.typography.titleSmall)
-                            Podium(classement.map { EntreePodium("${it.avatar} ${it.pseudo}", it.score, it.date) })
+                    TitreNiveauDepliable(niveau.libelle(), expanded) { expanded = !expanded }
+                    if (expanded) {
+                        for ((_, libelle, classement) in donneesParType) {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Text(libelle, style = MaterialTheme.typography.titleSmall)
+                                Podium(classement.map { EntreePodium("${it.avatar} ${it.pseudo}", it.score, it.date) })
+                            }
                         }
                     }
                 }
@@ -558,16 +617,19 @@ fun StatistiquesGeneralesScreen(
         for ((position, entry) in classementsDefisParNiveau.withIndex()) {
             val (niveau, donneesParVariante) = entry
             item {
+                var expanded by rememberSaveable(niveau) { mutableStateOf(true) }
                 Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                    Text(niveau.libelle(), style = MaterialTheme.typography.titleMedium)
-                    for ((variante, classement) in donneesParVariante) {
-                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Text(variante.libelle, style = MaterialTheme.typography.titleSmall)
-                            Podium(
-                                classement.map {
-                                    EntreePodium("${it.avatar} ${it.pseudo}", it.serie, it.date, variante.formatValeurRes)
-                                },
-                            )
+                    TitreNiveauDepliable(niveau.libelle(), expanded) { expanded = !expanded }
+                    if (expanded) {
+                        for ((variante, classement) in donneesParVariante) {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Text(variante.libelle, style = MaterialTheme.typography.titleSmall)
+                                Podium(
+                                    classement.map {
+                                        EntreePodium("${it.avatar} ${it.pseudo}", it.serie, it.date, variante.formatValeurRes)
+                                    },
+                                )
+                            }
                         }
                     }
                 }

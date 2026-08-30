@@ -324,9 +324,9 @@
     <string name="statistiques_import_echec">L\'import a échoué : %1$s</string>
     <string name="statistiques_erreur_ecriture">Impossible d\'écrire le fichier.</string>
     <string name="statistiques_erreur_lecture">Impossible de lire le fichier.</string>
-    <string name="statistiques_mes_meilleurs_scores">Mes meilleurs scores par niveau (chiffres et lettres confondus)</string>
+    <string name="statistiques_mes_meilleurs_scores">Mes parties</string>
     <string name="statistiques_classement_par_niveau">Classement par niveau (chiffres et lettres confondus)</string>
-    <string name="statistiques_mes_defis">Mes défis par niveau</string>
+    <string name="statistiques_mes_defis">Mes défis</string>
     <string name="statistiques_classement_defis">Classement des défis par niveau</string>
     <string name="statistiques_defi_valeur_reussites">%1$d réussites</string>
     <string name="statistiques_defi_valeur_mots">%1$d mots</string>
