@@ -473,7 +473,7 @@ class CatalogueTropheesTest {
         val couvertes = CatalogueTrophees.CATEGORIES_SECTION_PARTIE + CatalogueTrophees.CATEGORIES_SECTION_DEFI +
             setOf(
                 CategorieTrophee.TROPHEES_SPECIAUX, CategorieTrophee.EASTER_CHIFFRES, CategorieTrophee.EASTER_LETTRES,
-                CategorieTrophee.EASTER_GENERAL, CategorieTrophee.EASTER_ULTIME,
+                CategorieTrophee.EASTER_GENERAL, CategorieTrophee.EASTER_SECRETS,
             )
         assertEquals(CategorieTrophee.entries.toSet(), couvertes)
     }
@@ -488,5 +488,14 @@ class CatalogueTropheesTest {
     fun `exactement 8 trophees sont INVISIBLE, masques tant qu'ils ne sont pas debloques`() {
         val invisibles = CatalogueTrophees.TOUS.filter { it.niveauVisibilite == NiveauVisibilite.INVISIBLE }
         assertEquals(8, invisibles.size)
+    }
+
+    @Test
+    fun `tous les trophees INVISIBLE partagent la categorie EASTER_SECRETS, jamais aucune autre`() {
+        // Retour utilisateur 2026-08-30 : leur catégorie ne doit jamais changer entre verrouillé
+        // et débloqué, donc c'est aussi leur seule et unique catégorie possible en permanence.
+        val invisibles = CatalogueTrophees.TOUS.filter { it.niveauVisibilite == NiveauVisibilite.INVISIBLE }
+        assertTrue(invisibles.all { it.categorie == CategorieTrophee.EASTER_SECRETS })
+        assertTrue(CatalogueTrophees.TOUS.none { it.categorie == CategorieTrophee.EASTER_SECRETS && it.niveauVisibilite != NiveauVisibilite.INVISIBLE })
     }
 }

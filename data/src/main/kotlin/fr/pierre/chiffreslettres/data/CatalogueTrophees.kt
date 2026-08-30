@@ -225,7 +225,13 @@ enum class CategorieTrophee(val titreRes: Int) {
     EASTER_CHIFFRES(R.string.categorie_easter_chiffres),
     EASTER_LETTRES(R.string.categorie_easter_lettres),
     EASTER_GENERAL(R.string.categorie_easter_general),
-    EASTER_ULTIME(R.string.categorie_easter_ultime),
+    /**
+     * Regroupe tous les trophées [NiveauVisibilite.INVISIBLE] ("???????" tant que non débloqués),
+     * quel que soit leur thème d'origine (retour utilisateur 2026-08-30) : leur vraie catégorie
+     * est celle-ci en permanence, donc leur position ne change jamais entre verrouillé et
+     * débloqué — remplace l'ancienne catégorie EASTER_ULTIME, qui n'avait qu'un seul trophée.
+     */
+    EASTER_SECRETS(R.string.categorie_easter_secrets),
 }
 
 /**
@@ -1191,7 +1197,7 @@ object CatalogueTrophees {
                 "easter_ex_aequo",
                 titreRes = R.string.trophee_titre_easter_ex_aequo,
                 descriptionRes = R.string.trophee_desc_easter_ex_aequo,
-                categorie = CategorieTrophee.EASTER_GENERAL,
+                categorie = CategorieTrophee.EASTER_SECRETS,
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.INVISIBLE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
@@ -1202,7 +1208,7 @@ object CatalogueTrophees {
                 "easter_compte_rond",
                 titreRes = R.string.trophee_titre_easter_compte_rond,
                 descriptionRes = R.string.trophee_desc_easter_compte_rond,
-                categorie = CategorieTrophee.EASTER_LETTRES,
+                categorie = CategorieTrophee.EASTER_SECRETS,
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.INVISIBLE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
@@ -1213,7 +1219,7 @@ object CatalogueTrophees {
                 "easter_rouleau_compresseur",
                 titreRes = R.string.trophee_titre_easter_rouleau_compresseur,
                 descriptionRes = R.string.trophee_desc_easter_rouleau_compresseur,
-                categorie = CategorieTrophee.EASTER_LETTRES,
+                categorie = CategorieTrophee.EASTER_SECRETS,
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.INVISIBLE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
@@ -1224,7 +1230,7 @@ object CatalogueTrophees {
                 "easter_deculottee",
                 titreRes = R.string.trophee_titre_easter_deculottee,
                 descriptionRes = R.string.trophee_desc_easter_deculottee,
-                categorie = CategorieTrophee.EASTER_LETTRES,
+                categorie = CategorieTrophee.EASTER_SECRETS,
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.INVISIBLE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
@@ -1235,7 +1241,7 @@ object CatalogueTrophees {
                 "easter_symetrie",
                 titreRes = R.string.trophee_titre_easter_symetrie,
                 descriptionRes = R.string.trophee_desc_easter_symetrie,
-                categorie = CategorieTrophee.EASTER_GENERAL,
+                categorie = CategorieTrophee.EASTER_SECRETS,
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.INVISIBLE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
@@ -1246,7 +1252,7 @@ object CatalogueTrophees {
                 "easter_noce_de_chene",
                 titreRes = R.string.trophee_titre_easter_noce_de_chene,
                 descriptionRes = R.string.trophee_desc_easter_noce_de_chene,
-                categorie = CategorieTrophee.EASTER_GENERAL,
+                categorie = CategorieTrophee.EASTER_SECRETS,
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.INVISIBLE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
@@ -1401,7 +1407,7 @@ object CatalogueTrophees {
                 "easter_aucune_idee",
                 titreRes = R.string.trophee_titre_easter_aucune_idee,
                 descriptionRes = R.string.trophee_desc_easter_aucune_idee,
-                categorie = CategorieTrophee.EASTER_GENERAL,
+                categorie = CategorieTrophee.EASTER_SECRETS,
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.INVISIBLE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
@@ -1426,7 +1432,7 @@ object CatalogueTrophees {
                 "easter_toit_du_monde",
                 titreRes = R.string.trophee_titre_easter_toit_du_monde,
                 descriptionRes = R.string.trophee_desc_easter_toit_du_monde,
-                categorie = CategorieTrophee.EASTER_ULTIME,
+                categorie = CategorieTrophee.EASTER_SECRETS,
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.INVISIBLE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_invisible,

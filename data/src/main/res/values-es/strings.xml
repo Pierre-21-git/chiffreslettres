@@ -160,7 +160,7 @@
     <string name="categorie_easter_chiffres">Easter eggs — Números</string>
     <string name="categorie_easter_lettres">Easter eggs — Letras</string>
     <string name="categorie_easter_general">Easter eggs — General</string>
-    <string name="categorie_easter_ultime">Trofeo definitivo</string>
+    <string name="categorie_easter_secrets">Secretos</string>
 
     <string name="trophee_titre_easter_ancien_combattant">Veterano</string>
     <string name="trophee_desc_easter_ancien_combattant">Tener una cuenta activa desde hace más de un año.</string>

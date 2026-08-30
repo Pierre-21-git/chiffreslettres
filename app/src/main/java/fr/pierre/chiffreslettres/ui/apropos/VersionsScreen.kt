@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.116",
+        date = "2026-08-30",
+        changements = listOf(
+            "Trophées : la catégorie \"Trophée ultime\" (qui ne contenait que \"Toit du monde\") " +
+                "est supprimée au profit d'une nouvelle catégorie \"Secrets\", qui regroupe " +
+                "maintenant les 8 trophées cachés (\"???????\") en permanence — plus de sous-titre " +
+                "à un seul trophée, plus de mélange avec les trophées déjà nommés.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.115",
         date = "2026-08-30",
         changements = listOf(
