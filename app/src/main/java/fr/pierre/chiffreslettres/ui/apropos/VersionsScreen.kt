@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.113",
+        date = "2026-08-30",
+        changements = listOf(
+            "Trophées : Duo, Confrontation, Duel mots et Duel points ne forment plus que 3 " +
+                "trophées séparés par sous-titre mais une seule progression fusionnée (\"1re " +
+                "partie de duel jouée\", \"Xe partie de duel gagnée\") : une victoire dans " +
+                "n'importe lequel de ces 4 modes compte pour le même trophée.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.112",
         date = "2026-08-30",
         changements = listOf(

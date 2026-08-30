@@ -85,7 +85,7 @@ class CatalogueTropheesTest {
 
     @Test
     fun `167 trophees au total (155 + 7 duel points + 3 easter eggs duel points + 2 easter eggs chiffres)`() {
-        assertEquals(167, CatalogueTrophees.TOUS.size)
+        assertEquals(153, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -412,28 +412,28 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `dixieme partie duo gagnee cumule victoires duo et confrontation, palier platine`() {
-        val stats = statsVides().copy(partiesDuoGagnees = 6, partiesConfrontationGagnees = 3)
+    fun `premiere partie de duel jouee compte duo, confrontation, duel mots et duel points`() {
+        // Retour utilisateur 2026-08-30 : "duo_1" fusionne les 4 modes, plus de trophées séparés
+        // "duel_mots_1"/"duel_points_1".
+        assertFalse(trophee("duo_1").estDebloque(statsVides()))
+        assertTrue(trophee("duo_1").estDebloque(statsVides().copy(partiesDuelMotsJouees = 1)))
+        assertTrue(trophee("duo_1").estDebloque(statsVides().copy(partiesDuelMotsConfrontationJouees = 1)))
+        assertTrue(trophee("duo_1").estDebloque(statsVides().copy(partiesDuelPointsJouees = 1)))
+    }
+
+    @Test
+    fun `dixieme partie de duel gagnee cumule duo, confrontation, duel mots et duel points, palier platine`() {
+        val stats = statsVides().copy(
+            partiesDuoGagnees = 3,
+            partiesConfrontationGagnees = 2,
+            partiesDuelMotsGagnees = 2,
+            partiesDuelMotsConfrontationGagnees = 1,
+            partiesDuelPointsGagnees = 1,
+        )
         assertFalse(trophee("duo_gagnee_10").estDebloque(stats))
-        assertTrue(trophee("duo_gagnee_10").estDebloque(stats.copy(partiesConfrontationGagnees = 4)))
+        assertTrue(trophee("duo_gagnee_10").estDebloque(stats.copy(partiesDuelPointsGagnees = 2)))
         assertEquals(Palier.PLATINE, trophee("duo_gagnee_10").palier)
-    }
-
-    @Test
-    fun `trophees duel mots cumulent duo et confrontation`() {
-        val stats = statsVides().copy(partiesDuelMotsGagnees = 6, partiesDuelMotsConfrontationGagnees = 3)
-        assertFalse(trophee("duel_mots_gagnee_10").estDebloque(stats))
-        assertTrue(trophee("duel_mots_gagnee_10").estDebloque(stats.copy(partiesDuelMotsConfrontationGagnees = 4)))
-        assertEquals(Palier.PLATINE, trophee("duel_mots_gagnee_10").palier)
-    }
-
-    @Test
-    fun `trophees duel points progressent avec les parties jouees et gagnees`() {
-        assertFalse(trophee("duel_points_1").estDebloque(statsVides()))
-        assertTrue(trophee("duel_points_1").estDebloque(statsVides().copy(partiesDuelPointsJouees = 1)))
-        assertFalse(trophee("duel_points_gagnee_10").estDebloque(statsVides().copy(partiesDuelPointsGagnees = 9)))
-        assertTrue(trophee("duel_points_gagnee_10").estDebloque(statsVides().copy(partiesDuelPointsGagnees = 10)))
-        assertEquals(Palier.DIAMANT, trophee("duel_points_gagnee_100").palier)
+        assertEquals(Palier.DIAMANT, trophee("duo_gagnee_100").palier)
     }
 
     @Test
