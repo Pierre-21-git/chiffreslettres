@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.115",
+        date = "2026-08-30",
+        changements = listOf(
+            "Trophées : un trophée caché (\"???????\") reste maintenant à sa vraie place dans sa " +
+                "catégorie tant qu'il n'est pas débloqué, au lieu d'être temporairement regroupé " +
+                "dans un tiroir \"Easter eggs\" à part — sa position ne change plus au moment où " +
+                "il est débloqué.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.114",
         date = "2026-08-30",
         changements = listOf(

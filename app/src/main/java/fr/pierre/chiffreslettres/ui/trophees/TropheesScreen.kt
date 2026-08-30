@@ -106,22 +106,19 @@ private data class GrandBloc(
     val titreRes: Int,
     val categories: List<CategorieTrophee>,
     val meta: Trophee?,
-    /** Non nul seulement pour le bloc Secrets (retour utilisateur) : les trophées dont le nom est
-     * encore masqué ("???????", [NiveauVisibilite.INVISIBLE] non débloqué) sont sortis de leur
-     * sous-titre de catégorie (Chiffres/Lettres/Général) et regroupés tous ensemble dans un
-     * dernier sous-groupe portant ce titre, plutôt que dispersés parmi les trophées déjà nommés —
-     * y compris "Toit du monde", seul trophée de EASTER_ULTIME, qui n'a donc plus son propre
-     * sous-titre "Trophée ultime" pour lui tout seul. */
-    val titreGroupeCaches: Int? = null,
 )
 
-/** Même chose après filtrage (masquerObtenus, catégories vides retirées, trophées cachés extraits). */
+/**
+ * Même chose après filtrage (masquerObtenus, palierFiltre, catégories vides retirées). Un
+ * trophée caché (["???????"][NiveauVisibilite.INVISIBLE] non débloqué) reste toujours affiché à
+ * sa place normale, dans sa vraie catégorie (retour utilisateur : sa position ne doit jamais
+ * changer entre le moment où il est encore masqué et celui où il est débloqué — contrairement au
+ * regroupement "Easter eggs" de la v1.110, retiré depuis).
+ */
 private data class BlocAffiche(
     val titreRes: Int,
     val categories: List<Pair<CategorieTrophee, List<Trophee>>>,
     val meta: Trophee?,
-    val titreGroupeCaches: Int?,
-    val tropheesCaches: List<Trophee>,
 )
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -231,7 +228,6 @@ fun TropheesScreen(
                         it != CategorieTrophee.TROPHEES_SPECIAUX
                 },
                 null,
-                titreGroupeCaches = CategorieTrophee.TROPHEES_SPECIAUX.titreRes,
             ),
         )
 
@@ -245,35 +241,24 @@ fun TropheesScreen(
             }
             .let { liste -> if (palierFiltre != null) liste.filter { it.palier == palierFiltre } else liste }
 
-        fun estNomCache(trophee: Trophee) =
-            trophee.niveauVisibilite == NiveauVisibilite.INVISIBLE && tropheesDebloques?.containsKey(trophee.id) != true
-
         val blocsAffiches = grandsBlocs.mapNotNull { grandBloc ->
-            val tropheesCaches = mutableListOf<Trophee>()
             val categoriesNonVides = grandBloc.categories.mapNotNull { categorie ->
                 val tropheesCategorie = tropheesAffiches(categorie)
-                val tropheesNommes = if (grandBloc.titreGroupeCaches != null) {
-                    val (caches, nommes) = tropheesCategorie.partition(::estNomCache)
-                    tropheesCaches += caches
-                    nommes
-                } else {
-                    tropheesCategorie
-                }
-                if (tropheesNommes.isEmpty()) null else categorie to tropheesNommes
+                if (tropheesCategorie.isEmpty()) null else categorie to tropheesCategorie
             }
             val meta = grandBloc.meta
             val metaAffiche = meta != null &&
                 !(masquerObtenus && tropheesDebloques?.containsKey(meta.id) == true) &&
                 (palierFiltre == null || meta.palier == palierFiltre)
-            if (categoriesNonVides.isEmpty() && !metaAffiche && tropheesCaches.isEmpty()) {
+            if (categoriesNonVides.isEmpty() && !metaAffiche) {
                 null
             } else {
-                BlocAffiche(grandBloc.titreRes, categoriesNonVides, if (metaAffiche) meta else null, grandBloc.titreGroupeCaches, tropheesCaches)
+                BlocAffiche(grandBloc.titreRes, categoriesNonVides, if (metaAffiche) meta else null)
             }
         }
 
         for ((positionBloc, bloc) in blocsAffiches.withIndex()) {
-            val (titreBlocRes, categoriesNonVides, meta, titreGroupeCaches, tropheesCaches) = bloc
+            val (titreBlocRes, categoriesNonVides, meta) = bloc
             item {
                 Text(stringResource(titreBlocRes), style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold, color = Ivory)
             }
@@ -293,19 +278,6 @@ fun TropheesScreen(
                                         color = TextMuted,
                                     )
                                 }
-                                val debloque = tropheesDebloques?.containsKey(trophee.id) == true
-                                TuileTrophee(trophee, debloque, onClick = { tropheeSelectionne = trophee })
-                            }
-                        }
-                    }
-                }
-            }
-            if (titreGroupeCaches != null && tropheesCaches.isNotEmpty()) {
-                item {
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text(stringResource(titreGroupeCaches), style = MaterialTheme.typography.titleSmall)
-                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            for (trophee in tropheesCaches) {
                                 val debloque = tropheesDebloques?.containsKey(trophee.id) == true
                                 TuileTrophee(trophee, debloque, onClick = { tropheeSelectionne = trophee })
                             }
