@@ -14,9 +14,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,6 +44,7 @@ import fr.pierre.chiffreslettres.data.ArgRes
 import fr.pierre.chiffreslettres.data.CatalogueTrophees
 import fr.pierre.chiffreslettres.data.CategorieTrophee
 import fr.pierre.chiffreslettres.data.NiveauVisibilite
+import fr.pierre.chiffreslettres.data.Palier
 import fr.pierre.chiffreslettres.data.Trophee
 import fr.pierre.chiffreslettres.data.TropheeStats
 import fr.pierre.chiffreslettres.data.UniteProgression
@@ -135,6 +140,11 @@ fun TropheesScreen(
     // trophées d'un joueur ([tropheesDebloques] non null) : pas de notion débloqué/verrouillé
     // en simple consultation de catalogue.
     var masquerObtenus by remember { mutableStateOf(false) }
+    // Filtre par palier (retour utilisateur : n'afficher que les trophées d'un niveau donné,
+    // ex. Or, Platine) — null = aucun filtre, tous les paliers affichés. Un easter egg (palier
+    // null) ne correspond à aucun filtre de palier précis, donc disparaît dès qu'un palier est
+    // sélectionné (cohérent : ce n'est pas un jalon Bronze→Diamant).
+    var palierFiltre by remember { mutableStateOf<Palier?>(null) }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -147,6 +157,23 @@ fun TropheesScreen(
         stickyHeader {
             Column(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background)) {
                 EnTeteEcran(titre, onRetour)
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(vertical = 8.dp)) {
+                    item {
+                        FilterChip(
+                            selected = palierFiltre == null,
+                            onClick = { palierFiltre = null },
+                            label = { Text(stringResource(R.string.trophees_filtre_tous)) },
+                        )
+                    }
+                    items(Palier.entries) { palier ->
+                        FilterChip(
+                            selected = palierFiltre == palier,
+                            onClick = { palierFiltre = if (palierFiltre == palier) null else palier },
+                            label = { Text(stringResource(palier.libelleCourtRes)) },
+                            colors = FilterChipDefaults.filterChipColors(selectedContainerColor = couleurPalier(palier).copy(alpha = 0.35f)),
+                        )
+                    }
+                }
                 if (tropheesDebloques != null) {
                     Text(
                         stringResource(if (masquerObtenus) R.string.trophees_afficher_obtenus else R.string.trophees_masquer_obtenus),
@@ -216,6 +243,7 @@ fun TropheesScreen(
                     liste
                 }
             }
+            .let { liste -> if (palierFiltre != null) liste.filter { it.palier == palierFiltre } else liste }
 
         fun estNomCache(trophee: Trophee) =
             trophee.niveauVisibilite == NiveauVisibilite.INVISIBLE && tropheesDebloques?.containsKey(trophee.id) != true
@@ -234,7 +262,9 @@ fun TropheesScreen(
                 if (tropheesNommes.isEmpty()) null else categorie to tropheesNommes
             }
             val meta = grandBloc.meta
-            val metaAffiche = meta != null && !(masquerObtenus && tropheesDebloques?.containsKey(meta.id) == true)
+            val metaAffiche = meta != null &&
+                !(masquerObtenus && tropheesDebloques?.containsKey(meta.id) == true) &&
+                (palierFiltre == null || meta.palier == palierFiltre)
             if (categoriesNonVides.isEmpty() && !metaAffiche && tropheesCaches.isEmpty()) {
                 null
             } else {

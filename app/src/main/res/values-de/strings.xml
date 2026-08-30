@@ -206,6 +206,7 @@
     <string name="trophees_progression_duree">%1$dh %2$dmin %3$ds / %4$dh</string>
     <string name="trophees_masquer_obtenus">Freigeschaltete Trophäen ausblenden</string>
     <string name="trophees_afficher_obtenus">Freigeschaltete Trophäen anzeigen</string>
+    <string name="trophees_filtre_tous">Alle</string>
     <string name="trophees_section_parties_duels">Partien- und Duell-Trophäen</string>
     <string name="trophees_section_defis">Herausforderungs-Trophäen</string>
     <string name="trophee_titre_cache">\?\?\?\?\?\?\?</string>

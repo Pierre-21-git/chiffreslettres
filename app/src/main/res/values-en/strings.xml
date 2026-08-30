@@ -243,6 +243,7 @@
     <string name="trophees_progression_duree">%1$dh %2$dmin %3$ds / %4$dh</string>
     <string name="trophees_masquer_obtenus">Hide unlocked trophies</string>
     <string name="trophees_afficher_obtenus">Show unlocked trophies</string>
+    <string name="trophees_filtre_tous">All</string>
     <string name="trophees_section_parties_duels">Games and duels trophies</string>
     <string name="trophees_section_defis">Challenge trophies</string>
     <string name="trophee_titre_cache">\?\?\?\?\?\?\?</string>

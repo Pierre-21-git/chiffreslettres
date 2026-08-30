@@ -19,6 +19,14 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.114",
+        date = "2026-08-30",
+        changements = listOf(
+            "Trophées : un filtre par palier (Bronze, Argent, Or...) permet de n'afficher que " +
+                "les trophées d'un niveau donné, en haut de l'écran.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.113",
         date = "2026-08-30",
         changements = listOf(

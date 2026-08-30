@@ -206,6 +206,7 @@
     <string name="trophees_progression_duree">%1$dh %2$dmin %3$ds / %4$dh</string>
     <string name="trophees_masquer_obtenus">Ocultar trofeos obtenidos</string>
     <string name="trophees_afficher_obtenus">Mostrar trofeos obtenidos</string>
+    <string name="trophees_filtre_tous">Todos</string>
     <string name="trophees_section_parties_duels">Trofeos de partidas y duelos</string>
     <string name="trophees_section_defis">Trofeos de desafíos</string>
     <string name="trophee_titre_cache">\?\?\?\?\?\?\?</string>
