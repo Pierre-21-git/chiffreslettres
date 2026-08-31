@@ -4,6 +4,7 @@ import java.text.Normalizer
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.util.SortedSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
@@ -79,25 +80,44 @@ private fun estPremier(n: Int): Boolean {
     return true
 }
 
-private fun alphabetComplet(mots: List<String>): Boolean {
-    val lettresUtilisees = mots.flatMap { lettresDeBase(it).toList() }.toSet()
-    return ('A'..'Z').all { it in lettresUtilisees }
-}
+/** Nombre de lettres distinctes de l'alphabet (A-Z) utilisées, cumulé sur tous les mots joués — trophée "Alphabet complet". */
+private fun nombreLettresAlphabetUtilisees(mots: List<String>): Int =
+    mots.flatMap { lettresDeBase(it).toList() }.filter { it in 'A'..'Z' }.toSet().size
 
-/** Au moins 4 dimanches consécutifs (7 jours d'écart pile) avec au moins une partie jouée. */
-private fun dimancheQuatreSemainesDeSuite(dates: List<Long>): Boolean {
-    val dimanches = dates
-        .map { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate() }
+private fun dimanchesJoues(dates: List<Long>): SortedSet<LocalDate> =
+    dates.map { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate() }
         .filter { it.dayOfWeek == java.time.DayOfWeek.SUNDAY }
         .toSortedSet()
-    var streak = 1
+
+/** Plus longue série de dimanches consécutifs (7 jours d'écart pile) dans un ensemble de dimanches triés — trophée "Rituel du dimanche". */
+internal fun plusLongueSerieDeDimanches(dimanchesTries: SortedSet<LocalDate>): Int {
+    if (dimanchesTries.isEmpty()) return 0
+    var meilleure = 1
+    var courante = 1
     var precedent: LocalDate? = null
-    for (dimanche in dimanches) {
-        streak = if (precedent != null && dimanche == precedent.plusWeeks(1)) streak + 1 else 1
-        if (streak >= 4) return true
+    for (dimanche in dimanchesTries) {
+        courante = if (precedent != null && dimanche == precedent.plusWeeks(1)) courante + 1 else 1
+        if (courante > meilleure) meilleure = courante
         precedent = dimanche
     }
-    return false
+    return meilleure
+}
+
+/**
+ * Série de dimanches consécutifs en cours, en remontant depuis le dimanche de la semaine
+ * courante (ou celui de la semaine précédente si celui de cette semaine n'a pas encore de
+ * partie, pour ne pas casser la série avant que le dimanche en cours soit joué) — même
+ * principe que [serieEnCoursDeJours] pour le défi quotidien, mais au pas hebdomadaire.
+ */
+internal fun serieEnCoursDeDimanches(dimanches: Set<LocalDate>, aujourdHui: LocalDate): Int {
+    val dimancheDeCetteSemaine = aujourdHui.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.SUNDAY))
+    var courant = if (dimancheDeCetteSemaine in dimanches) dimancheDeCetteSemaine else dimancheDeCetteSemaine.minusWeeks(1)
+    var serie = 0
+    while (courant in dimanches) {
+        serie++
+        courant = courant.minusWeeks(1)
+    }
+    return serie
 }
 
 /**
@@ -116,15 +136,114 @@ class TropheeRepository(
 ) {
     fun tropheesDebloques(profilId: Long): Flow<List<TropheeEntity>> = tropheeDao.tropheesDebloques(profilId)
 
-    /** Stats agrégées d'un joueur pour l'évaluation des trophées — aussi utilisé pour afficher la progression ("X / objectif") d'un trophée non débloqué. */
+    /**
+     * Stats agrégées d'un joueur pour l'évaluation des trophées — aussi utilisé pour afficher la
+     * progression ("X / objectif") d'un trophée non débloqué. Découpé en plusieurs fonctions
+     * privées par thème (retour mainteneur : une seule fonction suspend avec ~80 appels DAO en
+     * ligne dépasse la limite de taille de méthode de la JVM — "Method too large" — chaque appel
+     * suspend ajoutant un point de reprise à la machine à états générée).
+     */
     suspend fun stats(profilId: Long, aujourdHui: LocalDate = LocalDate.now()): TropheeStats {
         // Récupérées une seule fois (retour utilisateur : plusieurs easter eggs en dérivent, pas
         // la peine de réinterroger la base à chaque fois).
         val datesEtScores = historiqueDao.datesEtScoresParties(profilId)
         val mots = historiqueDao.motsJoues(profilId)
         val comptesExactsChiffres = historiqueDao.comptesExactsChiffresDetail(profilId)
-        val objectifsPointsDetail = defiDao.defisObjectifsPointsDetail(profilId)
+
+        val motsEtScores = statsMotsEtScores(profilId)
+        val duo = statsDuo(profilId)
+        val defis = statsDefis(profilId)
+        val defiQuotidien = statsDefiQuotidien(profilId, aujourdHui)
+        val easter = statsEasterGeneral(profilId, datesEtScores, mots, aujourdHui)
+        val easterChiffres = statsEasterChiffres(profilId, comptesExactsChiffres)
+
         return TropheeStats(
+        comptesExacts = motsEtScores.comptesExacts,
+        motsParLongueur = motsEtScores.motsParLongueur,
+        partieTousComptesExacts = motsEtScores.partieTousComptesExacts,
+        partiesMotsMin = motsEtScores.partiesMotsMin,
+        partiesMotsMinNiveauMathieu = motsEtScores.partiesMotsMinNiveauMathieu,
+        partiesParSeuilScore = motsEtScores.partiesParSeuilScore,
+        partiesSoloTotal = motsEtScores.partiesSoloTotal,
+        partiesDuoJouees = duo.partiesDuoJouees,
+        partiesDuoGagnees = duo.partiesDuoGagnees,
+        partiesConfrontationJouees = duo.partiesConfrontationJouees,
+        partiesConfrontationGagnees = duo.partiesConfrontationGagnees,
+        partiesDuelMotsJouees = duo.partiesDuelMotsJouees,
+        partiesDuelMotsGagnees = duo.partiesDuelMotsGagnees,
+        partiesDuelMotsConfrontationJouees = duo.partiesDuelMotsConfrontationJouees,
+        partiesDuelMotsConfrontationGagnees = duo.partiesDuelMotsConfrontationGagnees,
+        partiesDuelPointsJouees = duo.partiesDuelPointsJouees,
+        partiesDuelPointsGagnees = duo.partiesDuelPointsGagnees,
+        duelPointsEcartVictoireMax = duo.duelPointsEcartVictoireMax,
+        duelPointsEcartDefaiteMax = duo.duelPointsEcartDefaiteMax,
+        duelPointsCompteRondObtenu = duo.duelPointsCompteRondObtenu,
+        meilleuresSeriesDefi = defis.meilleuresSeriesDefi,
+        meilleuresSeriesDefiNiveauMonique = defis.meilleuresSeriesDefiNiveauMonique,
+        meilleuresSeriesDefiNiveauMathieu = defis.meilleuresSeriesDefiNiveauMathieu,
+        meilleuresReussitesDefiChrono = defis.meilleuresReussitesDefiChrono,
+        meilleuresReussitesDefiChronoNiveauMonique = defis.meilleuresReussitesDefiChronoNiveauMonique,
+        meilleuresReussitesDefiChronoNiveauMathieu = defis.meilleuresReussitesDefiChronoNiveauMathieu,
+        meilleurScoreDefiMotsMax = defis.meilleurScoreDefiMotsMax,
+        meilleurScoreDefiMotsMaxNiveauMonique = defis.meilleurScoreDefiMotsMaxNiveauMonique,
+        meilleurScoreDefiMotsMaxNiveauMathieu = defis.meilleurScoreDefiMotsMaxNiveauMathieu,
+        meilleurScoreDefiObjectifsPoints = defis.meilleurScoreDefiObjectifsPoints,
+        defiObjectifsPointsComplete = defis.defiObjectifsPointsComplete,
+        defiObjectifsPointsCompleteNiveauMonique = defis.defiObjectifsPointsCompleteNiveauMonique,
+        defiObjectifsPointsCompleteNiveauMathieu = defis.defiObjectifsPointsCompleteNiveauMathieu,
+        meilleureSerieSansFaute = defis.meilleureSerieSansFaute,
+        meilleureSerieSansFauteNiveauMonique = defis.meilleureSerieSansFauteNiveauMonique,
+        meilleureSerieSansFauteNiveauMathieu = defis.meilleureSerieSansFauteNiveauMathieu,
+        meilleureSerieJoursDefiQuotidien = defiQuotidien.meilleureSerieJoursDefiQuotidien,
+        meilleureSerieJoursDefiQuotidienNiveauMonique = defiQuotidien.meilleureSerieJoursDefiQuotidienNiveauMonique,
+        meilleureSerieJoursDefiQuotidienNiveauMathieu = defiQuotidien.meilleureSerieJoursDefiQuotidienNiveauMathieu,
+        serieEnCoursJoursDefiQuotidien = defiQuotidien.serieEnCoursJoursDefiQuotidien,
+        serieEnCoursJoursDefiQuotidienNiveauMonique = defiQuotidien.serieEnCoursJoursDefiQuotidienNiveauMonique,
+        serieEnCoursJoursDefiQuotidienNiveauMathieu = defiQuotidien.serieEnCoursJoursDefiQuotidienNiveauMathieu,
+        partiesSoloStructureeJouees = easter.partiesSoloStructureeJouees,
+        defisJouesTotal = defis.defisJouesTotal,
+        ancienneteJoursProfil = easter.ancienneteJoursProfil,
+        nombreNiveauxDistinctsJoues = easter.nombreNiveauxDistinctsJoues,
+        maxPartiesMemeJour = easter.maxPartiesMemeJour,
+        cinqPartiesEnUneHeure = easter.cinqPartiesEnUneHeure,
+        ecartDixDernieresPartiesFaible = easter.ecartDixDernieresPartiesFaible,
+        partieJoueeEntre5et7h = easter.partieJoueeEntre5et7h,
+        unePartieEntreMinuitEt5h = easter.unePartieEntreMinuitEt5h,
+        motRareJoue = easter.motRareJoue,
+        palindromeJoue = easter.palindromeJoue,
+        motSymetriqueJoue = easter.motSymetriqueJoue,
+        nombreLettresAlphabetUtilisees = easter.nombreLettresAlphabetUtilisees,
+        meilleureSerieDimanchesConsecutifs = easter.meilleureSerieDimanchesConsecutifs,
+        serieEnCoursDimanches = easter.serieEnCoursDimanches,
+        reglesDejaVues = easter.reglesDejaVues,
+        nombreVisitesStats = easter.nombreVisitesStats,
+        motInvalideDixLettresTente = easter.motInvalideDixLettresTente,
+        egaliteDuelDejaObtenue = easter.egaliteDuelDejaObtenue,
+        scoreSoloRepete = easter.scoreSoloRepete,
+        compteExactCibleNombrePremier = easterChiffres.compteExactCibleNombrePremier,
+        compteExactCalculMental = easterChiffres.compteExactCalculMental,
+        compteExactCheminMinimal = easterChiffres.compteExactCheminMinimal,
+        compteExactChirurgical = easterChiffres.compteExactChirurgical,
+        compteExactSpeedrun = easterChiffres.compteExactSpeedrun,
+        compteExactVaTout = easterChiffres.compteExactVaTout,
+        ecartEnormeChiffres = easterChiffres.ecartEnormeChiffres,
+        compteExactBoiteAOutils = easterChiffres.compteExactBoiteAOutils,
+        aucuneIdeeProposee = easterChiffres.aucuneIdeeProposee,
+        secondesJoueesTotal = defis.secondesJoueesDefis + historiqueDao.sommeSecondesJouees(profilId),
+        )
+    }
+
+    private data class StatsMotsEtScores(
+        val comptesExacts: Int,
+        val motsParLongueur: Map<Int, Int>,
+        val partieTousComptesExacts: Boolean,
+        val partiesMotsMin: Map<Int, Boolean>,
+        val partiesMotsMinNiveauMathieu: Map<Int, Boolean>,
+        val partiesParSeuilScore: Map<Int, Int>,
+        val partiesSoloTotal: Int,
+    )
+
+    private suspend fun statsMotsEtScores(profilId: Long) = StatsMotsEtScores(
         comptesExacts = historiqueDao.compterComptesExacts(profilId),
         motsParLongueur = LONGUEURS_MOTS_TROPHEE.associateWith { historiqueDao.compterMotsLongueur(profilId, it) },
         partieTousComptesExacts = historiqueDao.compterPartiesTousComptesExacts(profilId) >= 1,
@@ -134,6 +253,25 @@ class TropheeRepository(
         },
         partiesParSeuilScore = SEUILS_SCORE.associateWith { historiqueDao.compterPartiesScoreAuMoins(profilId, it) },
         partiesSoloTotal = historiqueDao.compterPartiesSoloTotal(profilId),
+    )
+
+    private data class StatsDuo(
+        val partiesDuoJouees: Int,
+        val partiesDuoGagnees: Int,
+        val partiesConfrontationJouees: Int,
+        val partiesConfrontationGagnees: Int,
+        val partiesDuelMotsJouees: Int,
+        val partiesDuelMotsGagnees: Int,
+        val partiesDuelMotsConfrontationJouees: Int,
+        val partiesDuelMotsConfrontationGagnees: Int,
+        val partiesDuelPointsJouees: Int,
+        val partiesDuelPointsGagnees: Int,
+        val duelPointsEcartVictoireMax: Int,
+        val duelPointsEcartDefaiteMax: Int,
+        val duelPointsCompteRondObtenu: Boolean,
+    )
+
+    private suspend fun statsDuo(profilId: Long) = StatsDuo(
         partiesDuoJouees = historiqueDao.compterPartiesParTypes(profilId, listOf(TypePartie.DUO.name, TypePartie.DUO_RESEAU.name)),
         partiesDuoGagnees = historiqueDao.compterPartiesGagneesParTypes(profilId, listOf(TypePartie.DUO.name, TypePartie.DUO_RESEAU.name)),
         partiesConfrontationJouees = historiqueDao.compterPartiesParTypes(
@@ -159,33 +297,76 @@ class TropheeRepository(
         duelPointsEcartVictoireMax = historiqueDao.maxEcartVictoireDuelPoints(profilId),
         duelPointsEcartDefaiteMax = historiqueDao.maxEcartDefaiteDuelPoints(profilId),
         duelPointsCompteRondObtenu = historiqueDao.compterCompteRondDuelPoints(profilId) >= 1,
-        meilleuresSeriesDefi = defiDao.meilleuresSeriesDefiParMode(profilId)
-            .associate { it.mode.name to it.meilleur },
-        meilleuresSeriesDefiNiveauMonique = defiDao.meilleuresSeriesDefiParModeEtNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)
-            .associate { it.mode.name to it.meilleur },
-        meilleuresSeriesDefiNiveauMathieu = defiDao.meilleuresSeriesDefiParModeEtNiveaux(profilId, NIVEAUX_MATHIEU)
-            .associate { it.mode.name to it.meilleur },
-        meilleuresReussitesDefiChrono = defiDao.meilleuresReussitesChronoParCombinaison(profilId)
-            .groupBy { it.mode.name }
-            .mapValues { (_, combinaisons) -> combinaisons.maxOf { it.meilleur } },
-        meilleuresReussitesDefiChronoNiveauMonique = defiDao.meilleuresReussitesChronoParModeEtNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)
-            .associate { it.mode.name to it.meilleur },
-        meilleuresReussitesDefiChronoNiveauMathieu = defiDao.meilleuresReussitesChronoParModeEtNiveaux(profilId, NIVEAUX_MATHIEU)
-            .associate { it.mode.name to it.meilleur },
-        meilleurScoreDefiMotsMax = defiDao.meilleurScoreDefiMotsMax(profilId) ?: 0,
-        meilleurScoreDefiMotsMaxNiveauMonique = defiDao.meilleurScoreDefiMotsMaxNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS) ?: 0,
-        meilleurScoreDefiMotsMaxNiveauMathieu = defiDao.meilleurScoreDefiMotsMaxNiveaux(profilId, NIVEAUX_MATHIEU) ?: 0,
-        meilleurScoreDefiObjectifsPoints = objectifsPointsDetail.maxOfOrNull { it.serie } ?: 0,
-        defiObjectifsPointsComplete = objectifsPointsDetail.any { it.serie >= (NOMBRE_OBJECTIFS_DEFI_POINTS_PAR_NIVEAU[it.niveauCode] ?: Int.MAX_VALUE) },
-        defiObjectifsPointsCompleteNiveauMonique = objectifsPointsDetail.any {
-            it.niveauCode in NIVEAUX_MONIQUE_OU_PLUS && it.serie >= (NOMBRE_OBJECTIFS_DEFI_POINTS_PAR_NIVEAU[it.niveauCode] ?: Int.MAX_VALUE)
-        },
-        defiObjectifsPointsCompleteNiveauMathieu = objectifsPointsDetail.any {
-            it.niveauCode in NIVEAUX_MATHIEU && it.serie >= (NOMBRE_OBJECTIFS_DEFI_POINTS_PAR_NIVEAU[it.niveauCode] ?: Int.MAX_VALUE)
-        },
-        meilleureSerieSansFaute = defiDao.meilleureSerieSansFaute(profilId) ?: 0,
-        meilleureSerieSansFauteNiveauMonique = defiDao.meilleureSerieSansFauteNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS) ?: 0,
-        meilleureSerieSansFauteNiveauMathieu = defiDao.meilleureSerieSansFauteNiveaux(profilId, NIVEAUX_MATHIEU) ?: 0,
+    )
+
+    private data class StatsDefis(
+        val meilleuresSeriesDefi: Map<String, Int>,
+        val meilleuresSeriesDefiNiveauMonique: Map<String, Int>,
+        val meilleuresSeriesDefiNiveauMathieu: Map<String, Int>,
+        val meilleuresReussitesDefiChrono: Map<String, Int>,
+        val meilleuresReussitesDefiChronoNiveauMonique: Map<String, Int>,
+        val meilleuresReussitesDefiChronoNiveauMathieu: Map<String, Int>,
+        val meilleurScoreDefiMotsMax: Int,
+        val meilleurScoreDefiMotsMaxNiveauMonique: Int,
+        val meilleurScoreDefiMotsMaxNiveauMathieu: Int,
+        val meilleurScoreDefiObjectifsPoints: Int,
+        val defiObjectifsPointsComplete: Boolean,
+        val defiObjectifsPointsCompleteNiveauMonique: Boolean,
+        val defiObjectifsPointsCompleteNiveauMathieu: Boolean,
+        val meilleureSerieSansFaute: Int,
+        val meilleureSerieSansFauteNiveauMonique: Int,
+        val meilleureSerieSansFauteNiveauMathieu: Int,
+        val defisJouesTotal: Int,
+        val secondesJoueesDefis: Int,
+    )
+
+    private suspend fun statsDefis(profilId: Long): StatsDefis {
+        val objectifsPointsDetail = defiDao.defisObjectifsPointsDetail(profilId)
+        return StatsDefis(
+            meilleuresSeriesDefi = defiDao.meilleuresSeriesDefiParMode(profilId)
+                .associate { it.mode.name to it.meilleur },
+            meilleuresSeriesDefiNiveauMonique = defiDao.meilleuresSeriesDefiParModeEtNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)
+                .associate { it.mode.name to it.meilleur },
+            meilleuresSeriesDefiNiveauMathieu = defiDao.meilleuresSeriesDefiParModeEtNiveaux(profilId, NIVEAUX_MATHIEU)
+                .associate { it.mode.name to it.meilleur },
+            meilleuresReussitesDefiChrono = defiDao.meilleuresReussitesChronoParCombinaison(profilId)
+                .groupBy { it.mode.name }
+                .mapValues { (_, combinaisons) -> combinaisons.maxOf { it.meilleur } },
+            meilleuresReussitesDefiChronoNiveauMonique = defiDao.meilleuresReussitesChronoParModeEtNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)
+                .associate { it.mode.name to it.meilleur },
+            meilleuresReussitesDefiChronoNiveauMathieu = defiDao.meilleuresReussitesChronoParModeEtNiveaux(profilId, NIVEAUX_MATHIEU)
+                .associate { it.mode.name to it.meilleur },
+            meilleurScoreDefiMotsMax = defiDao.meilleurScoreDefiMotsMax(profilId) ?: 0,
+            meilleurScoreDefiMotsMaxNiveauMonique = defiDao.meilleurScoreDefiMotsMaxNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS) ?: 0,
+            meilleurScoreDefiMotsMaxNiveauMathieu = defiDao.meilleurScoreDefiMotsMaxNiveaux(profilId, NIVEAUX_MATHIEU) ?: 0,
+            meilleurScoreDefiObjectifsPoints = objectifsPointsDetail.maxOfOrNull { it.serie } ?: 0,
+            defiObjectifsPointsComplete = objectifsPointsDetail.any {
+                it.serie >= (NOMBRE_OBJECTIFS_DEFI_POINTS_PAR_NIVEAU[it.niveauCode] ?: Int.MAX_VALUE)
+            },
+            defiObjectifsPointsCompleteNiveauMonique = objectifsPointsDetail.any {
+                it.niveauCode in NIVEAUX_MONIQUE_OU_PLUS && it.serie >= (NOMBRE_OBJECTIFS_DEFI_POINTS_PAR_NIVEAU[it.niveauCode] ?: Int.MAX_VALUE)
+            },
+            defiObjectifsPointsCompleteNiveauMathieu = objectifsPointsDetail.any {
+                it.niveauCode in NIVEAUX_MATHIEU && it.serie >= (NOMBRE_OBJECTIFS_DEFI_POINTS_PAR_NIVEAU[it.niveauCode] ?: Int.MAX_VALUE)
+            },
+            meilleureSerieSansFaute = defiDao.meilleureSerieSansFaute(profilId) ?: 0,
+            meilleureSerieSansFauteNiveauMonique = defiDao.meilleureSerieSansFauteNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS) ?: 0,
+            meilleureSerieSansFauteNiveauMathieu = defiDao.meilleureSerieSansFauteNiveaux(profilId, NIVEAUX_MATHIEU) ?: 0,
+            defisJouesTotal = defiDao.compterDefisTotal(profilId),
+            secondesJoueesDefis = defiDao.sommeSecondesDefis(profilId),
+        )
+    }
+
+    private data class StatsDefiQuotidien(
+        val meilleureSerieJoursDefiQuotidien: Int,
+        val meilleureSerieJoursDefiQuotidienNiveauMonique: Int,
+        val meilleureSerieJoursDefiQuotidienNiveauMathieu: Int,
+        val serieEnCoursJoursDefiQuotidien: Int,
+        val serieEnCoursJoursDefiQuotidienNiveauMonique: Int,
+        val serieEnCoursJoursDefiQuotidienNiveauMathieu: Int,
+    )
+
+    private suspend fun statsDefiQuotidien(profilId: Long, aujourdHui: LocalDate) = StatsDefiQuotidien(
         meilleureSerieJoursDefiQuotidien = plusLongueSerieDeJours(
             defiQuotidienDao.joursReussis(profilId).mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
         ),
@@ -211,25 +392,70 @@ class TropheeRepository(
                 .mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.toSet(),
             aujourdHui,
         ),
+    )
+
+    private data class StatsEasterGeneral(
+        val partiesSoloStructureeJouees: Int,
+        val ancienneteJoursProfil: Long,
+        val nombreNiveauxDistinctsJoues: Int,
+        val maxPartiesMemeJour: Int,
+        val cinqPartiesEnUneHeure: Boolean,
+        val ecartDixDernieresPartiesFaible: Boolean,
+        val partieJoueeEntre5et7h: Boolean,
+        val unePartieEntreMinuitEt5h: Boolean,
+        val motRareJoue: Boolean,
+        val palindromeJoue: Boolean,
+        val motSymetriqueJoue: Boolean,
+        val nombreLettresAlphabetUtilisees: Int,
+        val meilleureSerieDimanchesConsecutifs: Int,
+        val serieEnCoursDimanches: Int,
+        val reglesDejaVues: Boolean,
+        val nombreVisitesStats: Int,
+        val motInvalideDixLettresTente: Boolean,
+        val egaliteDuelDejaObtenue: Boolean,
+        val scoreSoloRepete: Boolean,
+    )
+
+    private suspend fun statsEasterGeneral(
+        profilId: Long,
+        datesEtScores: List<HistoriqueDao.DateEtScore>,
+        mots: List<String>,
+        aujourdHui: LocalDate,
+    ) = StatsEasterGeneral(
         partiesSoloStructureeJouees = historiqueDao.compterPartiesParType(profilId, "STRUCTUREE"),
-        defisJouesTotal = defiDao.compterDefisTotal(profilId),
         ancienneteJoursProfil = profilDao.parId(profilId)?.let { (System.currentTimeMillis() - it.dateCreation) / 86_400_000L } ?: 0L,
         nombreNiveauxDistinctsJoues = historiqueDao.compterNiveauxDistinctsJoues(profilId),
         maxPartiesMemeJour = maxPartiesMemeJour(datesEtScores.map { it.date }),
         cinqPartiesEnUneHeure = cinqPartiesEnUneHeure(datesEtScores.map { it.date }),
         ecartDixDernieresPartiesFaible = ecartDixDernieresPartiesFaible(datesEtScores.sortedByDescending { it.date }.map { it.score }),
-        premierePartieEntre5et7h = datesEtScores.minByOrNull { it.date }?.let { heureLocale(it.date) in 5..6 } ?: false,
+        partieJoueeEntre5et7h = datesEtScores.any { heureLocale(it.date) in 5..6 },
         unePartieEntreMinuitEt5h = datesEtScores.any { heureLocale(it.date) in 0..4 },
         motRareJoue = mots.any { estMotRare(it) },
         palindromeJoue = mots.any { estPalindrome(it) },
         motSymetriqueJoue = mots.any { estMotSymetrique(it) },
-        alphabetComplet = alphabetComplet(mots),
-        dimancheQuatreSemainesDeSuite = dimancheQuatreSemainesDeSuite(datesEtScores.map { it.date }),
+        nombreLettresAlphabetUtilisees = nombreLettresAlphabetUtilisees(mots),
+        meilleureSerieDimanchesConsecutifs = plusLongueSerieDeDimanches(dimanchesJoues(datesEtScores.map { it.date })),
+        serieEnCoursDimanches = serieEnCoursDeDimanches(dimanchesJoues(datesEtScores.map { it.date }), aujourdHui),
         reglesDejaVues = visitesEcranStore.reglesDejaVues(profilId),
         nombreVisitesStats = visitesEcranStore.nombreVisitesStats(profilId),
         motInvalideDixLettresTente = historiqueDao.compterMotsInvalidesDixLettresOuPlus(profilId) >= 1,
         egaliteDuelDejaObtenue = historiqueDao.compterEgalitesDuel(profilId) >= 1,
         scoreSoloRepete = historiqueDao.compterScoresSoloRepetes(profilId) >= 1,
+    )
+
+    private data class StatsEasterChiffres(
+        val compteExactCibleNombrePremier: Boolean,
+        val compteExactCalculMental: Boolean,
+        val compteExactCheminMinimal: Boolean,
+        val compteExactChirurgical: Boolean,
+        val compteExactSpeedrun: Boolean,
+        val compteExactVaTout: Boolean,
+        val ecartEnormeChiffres: Boolean,
+        val compteExactBoiteAOutils: Boolean,
+        val aucuneIdeeProposee: Boolean,
+    )
+
+    private suspend fun statsEasterChiffres(profilId: Long, comptesExactsChiffres: List<HistoriqueDao.DetailCompteExact>) = StatsEasterChiffres(
         compteExactCibleNombrePremier = comptesExactsChiffres.any { it.cible != null && estPremier(it.cible) },
         compteExactCalculMental = comptesExactsChiffres.any {
             (it.maxEtapeIntermediaire ?: 0) <= 99 && it.niveauCode in NIVEAUX_MONIQUE_OU_PLUS
@@ -241,9 +467,7 @@ class TropheeRepository(
         ecartEnormeChiffres = historiqueDao.compterEcartEnormeChiffres(profilId) >= 1,
         compteExactBoiteAOutils = comptesExactsChiffres.any { it.operateursUtilises == TOUS_OPERATEURS_MASK },
         aucuneIdeeProposee = historiqueDao.compterManchesSansRienPropose(profilId) >= 1,
-        secondesJoueesTotal = historiqueDao.sommeSecondesJouees(profilId),
-        )
-    }
+    )
 
     /**
      * Évalue et débloque les trophées d'un joueur, et retourne ceux qui viennent d'être

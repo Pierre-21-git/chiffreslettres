@@ -219,8 +219,9 @@ class DefiMotsMaxViewModel(
         if (enregistre || !enregistrerResultat) return
         enregistre = true
         val score = _uiState.value.motsTrouves.size
+        val dureeSecondes = DUREE_SECONDES_DEFI_MOTS_MAX - _uiState.value.tempsRestantSecondes
         viewModelScope.launch {
-            defiRepository.enregistrer(profilId, ModeJeu.LETTRES, niveauCode, TypeDefi.MOTS_MAX, score)
+            defiRepository.enregistrer(profilId, ModeJeu.LETTRES, niveauCode, TypeDefi.MOTS_MAX, score, dureeSecondes)
             _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
         }
     }

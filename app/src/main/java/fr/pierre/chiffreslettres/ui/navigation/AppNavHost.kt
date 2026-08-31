@@ -74,6 +74,7 @@ import fr.pierre.chiffreslettres.ui.defi.DefiObjectifsPointsScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiObjectifsPointsViewModel
 import fr.pierre.chiffreslettres.ui.defi.DefiQuotidienScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiViewModel
+import fr.pierre.chiffreslettres.ui.defi.DUREE_SECONDES_DEFI_MOTS_MAX
 import fr.pierre.chiffreslettres.ui.defi.RaisonFinDefiObjectifsPoints
 import fr.pierre.chiffreslettres.ui.defi.budgetSecondesDefiChrono
 import fr.pierre.chiffreslettres.data.alphabet.ConfigurationAlphabetLettres
@@ -405,15 +406,22 @@ fun AppNavHost(
             ) { backStackEntry ->
                 val niveau = Niveau.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
                 val entrainementVm = entrainementViewModel(navController, backStackEntry, historiqueRepository, profilId)
-                // Pas de limite de temps en entraînement libre (retour utilisateur) : dureeSecondes = null.
+                // Pas de limite de temps en entraînement libre (retour utilisateur) : dureeSecondes = null
+                // pour le round (chrono désactivé) ; la durée réelle de la manche est mesurée à part
+                // (horloge murale, retour utilisateur : trophée "100 heures de jeu"), un round par
+                // manche ici (nouvelle backStackEntry à chaque "Rejouer").
                 val roundVm: ChiffresRoundViewModel =
                     viewModel(backStackEntry) { ChiffresRoundViewModel(niveau) }
+                val debutManche = remember { System.currentTimeMillis() }
                 ChiffresRoundScreen(
                     viewModel = roundVm,
                     scoreCumule = null,
                     pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                     couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                    onMancheTerminee = { obtenu, _ -> entrainementVm.enregistrerMancheChiffres(niveau, obtenu) },
+                    onMancheTerminee = { obtenu, _ ->
+                        val dureeSecondes = ((System.currentTimeMillis() - debutManche) / 1000).toInt()
+                        entrainementVm.enregistrerMancheChiffres(niveau, obtenu, dureeSecondes)
+                    },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
                         Button(
@@ -434,15 +442,22 @@ fun AppNavHost(
             ) { backStackEntry ->
                 val niveau = NiveauLettres.valueOf(backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!)
                 val entrainementVm = entrainementViewModel(navController, backStackEntry, historiqueRepository, profilId)
-                // Pas de limite de temps en entraînement libre (retour utilisateur) : dureeSecondes = null.
+                // Pas de limite de temps en entraînement libre (retour utilisateur) : dureeSecondes = null
+                // pour le round (chrono désactivé) ; la durée réelle de la manche est mesurée à part
+                // (horloge murale, retour utilisateur : trophée "100 heures de jeu"), un round par
+                // manche ici (nouvelle backStackEntry à chaque "Rejouer").
                 val roundVm: LettresRoundViewModel =
                     viewModel(backStackEntry) { LettresRoundViewModel(niveau, dictionnaire, configurationAlphabet) }
+                val debutManche = remember { System.currentTimeMillis() }
                 LettresRoundScreen(
                     viewModel = roundVm,
                     scoreCumule = null,
                     pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                     couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                    onMancheTerminee = { obtenu, motValide, _, _, _, _ -> entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide) },
+                    onMancheTerminee = { obtenu, motValide, _, _, _, _ ->
+                        val dureeSecondes = ((System.currentTimeMillis() - debutManche) / 1000).toInt()
+                        entrainementVm.enregistrerMancheLettres(niveau, obtenu, motValide, dureeSecondes)
+                    },
                     onRetourEntrainement = { navController.popBackStack(Routes.CHOIX_NIVEAU_ENTRAINEMENT, inclusive = false) },
                     actionsFinManche = {
                         Button(
@@ -1549,7 +1564,7 @@ fun AppNavHost(
                     }
                     LaunchedEffect(etatRound.termine) {
                         if (etatRound.termine) {
-                            duelMotsVm.envoyerResultatDuo(etatRound.motsTrouves)
+                            duelMotsVm.envoyerResultatDuo(etatRound.motsTrouves, DUREE_SECONDES_DEFI_MOTS_MAX - etatRound.tempsRestantSecondes)
                             navController.navigate(Routes.RESULTATS_DUEL_MOTS_DUO) {
                                 popUpTo(Routes.JEU_DUEL_MOTS) { inclusive = true }
                             }
@@ -1859,10 +1874,11 @@ fun AppNavHost(
             val tropheesDebloques by defiVm.tropheesDebloques.collectAsState()
             TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { defiVm.effacerTropheesDebloques() })
 
-            // Alternance stricte (retour utilisateur), chiffres en premier : index pair = chiffres,
-            // impair = lettres. Clé sur essaiId (jamais réutilisé, y compris entre les deux modes) :
-            // cf. commentaire équivalent sur le défi série mono-mode.
-            if (index % 2 == 0) {
+            // Alternance stricte (retour utilisateur), lettres en premier — aligné sur les autres
+            // modes mixtes (solo, duo, confrontation, cf. `sequenceAlternee`) : index pair =
+            // lettres, impair = chiffres. Clé sur essaiId (jamais réutilisé, y compris entre les
+            // deux modes) : cf. commentaire équivalent sur le défi série mono-mode.
+            if (index % 2 == 1) {
                 val roundVm: ChiffresRoundViewModel =
                     viewModel(key = "defi-sansfaute-$essaiId") {
                         ChiffresRoundViewModel(niveauChiffres, niveauChiffres.dureeSecondesPartieStructuree, garantieSolution = true)

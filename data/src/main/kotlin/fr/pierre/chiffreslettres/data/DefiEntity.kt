@@ -33,4 +33,6 @@ data class DefiEntity(
      */
     val serie: Int,
     val date: Long,
+    /** Durée totale du défi (toutes manches confondues), en secondes — trophée "100 heures de jeu". */
+    val dureeSecondes: Int = 0,
 )

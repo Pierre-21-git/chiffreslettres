@@ -350,13 +350,19 @@ interface HistoriqueDao {
     )
     suspend fun compterManchesSansRienPropose(profilId: Long): Int
 
-    /** Temps de jeu cumulé, en secondes (easter egg "100 heures de jeu"), chiffres et lettres confondus. */
+    /**
+     * Temps de jeu cumulé en parties/entraînement/duels, en secondes (easter egg "100 heures de
+     * jeu") — tous types de partie confondus, y compris entraînement libre et duels de mots
+     * réseau (retour utilisateur 2026-08-31 : le trophée doit refléter tout le temps de jeu, pas
+     * seulement les parties solo/duo/confrontation). Les défis (table `DefiEntity`, aucune
+     * `MancheEntity` associée) sont sommés séparément par [DefiDao.sommeSecondesDefis].
+     */
     @Query(
         """
         SELECT COALESCE(SUM(m.dureeSecondesManche), 0)
         FROM MancheEntity m
         INNER JOIN SessionEntity s ON s.id = m.sessionId
-        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+        WHERE s.profilId = :profilId
         """,
     )
     suspend fun sommeSecondesJouees(profilId: Long): Int

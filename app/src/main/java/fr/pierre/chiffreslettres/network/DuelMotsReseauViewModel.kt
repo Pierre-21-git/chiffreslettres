@@ -186,6 +186,9 @@ class DuelMotsReseauViewModel(
     /** Duo uniquement : mon résultat final (5 min écoulées) déjà envoyé à l'adversaire ? */
     private var monResultatDuoEnvoye = false
 
+    /** Duo uniquement : durée écoulée du round local (retour utilisateur : trophée "100 heures de jeu"). */
+    private var dureeSecondesDuo = 0
+
     private var enregistre = false
 
     // --- Connexion (identique à PartieReseauViewModel) ---
@@ -498,9 +501,10 @@ class DuelMotsReseauViewModel(
     // --- Sous-mode Duo ---
 
     /** Appelé côté Compose une fois le round `DefiMotsMaxViewModel` local terminé (5 min écoulées ou arrêt volontaire). */
-    fun envoyerResultatDuo(motsTrouves: List<String>) {
+    fun envoyerResultatDuo(motsTrouves: List<String>, dureeSecondes: Int) {
         if (monResultatDuoEnvoye) return
         monResultatDuoEnvoye = true
+        dureeSecondesDuo = dureeSecondes
         _motsTrouvesMoi.value = motsTrouves
         viewModelScope.launch { connexionActive?.envoyer(MessageReseau.ResultatDuelMotsDuo(motsTrouves)) }
         finaliserDuoSiPret()
@@ -534,7 +538,11 @@ class DuelMotsReseauViewModel(
         // mainteneur, easter egg "Ex-aequo") : `_gagnant` est un simple booléen gagné/perdu.
         val egalite = if (sousMode == SousModeDuelMots.DUO) _motsTrouvesMoi.value.size == _motsTrouvesAdversaire.value.size else null
         val monScoreFinal = monTotal()
-        val manche = ResultatManche(ModeJeu.LETTRES, niveau.name, monScoreFinal)
+        val dureeSecondes = when (sousMode) {
+            SousModeDuelMots.DUO -> dureeSecondesDuo
+            SousModeDuelMots.CONFRONTATION, SousModeDuelMots.POINTS -> DUREE_SECONDES_DEFI_MOTS_MAX - _tempsRestantSecondes.value
+        }
+        val manche = ResultatManche(ModeJeu.LETTRES, niveau.name, monScoreFinal, dureeSecondesManche = dureeSecondes)
         // Duel points uniquement (retour utilisateur) : écart signé pour "Rouleau compresseur"/
         // "Déculottée", victoire exacte pour "Compte rond".
         val ecartDuel = if (sousMode == SousModeDuelMots.POINTS) monScoreFinal - totalAdversaire() else null

@@ -71,7 +71,8 @@ object StatistiquesExport {
                     .put("niveauCode", defi.niveauCode)
                     .put("type", defi.type.name)
                     .put("serie", defi.serie)
-                    .put("date", defi.date),
+                    .put("date", defi.date)
+                    .put("dureeSecondes", defi.dureeSecondes),
             )
         }
         racine.put("defis", defis)
@@ -167,6 +168,8 @@ object StatistiquesExport {
                     type = TypeDefi.valueOf(d.getString("type")),
                     serie = d.getInt("serie"),
                     date = d.getLong("date"),
+                    // Absent des exports antérieurs à son ajout : `optInt` avec sentinelle 0.
+                    dureeSecondes = d.optInt("dureeSecondes", 0),
                 )
             }
 

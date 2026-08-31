@@ -167,7 +167,7 @@
     <string name="trophee_titre_easter_multi_niveaux">Alle Schwierigkeitsstufen</string>
     <string name="trophee_desc_easter_multi_niveaux">Mindestens eine Partie auf jeder Schwierigkeitsstufe gespielt haben.</string>
     <string name="trophee_titre_easter_marathon">Marathon</string>
-    <string name="trophee_desc_easter_marathon">Mehr als 20 Partien am selben Tag spielen.</string>
+    <string name="trophee_desc_easter_marathon">20 oder mehr Partien am selben Tag spielen.</string>
     <string name="trophee_titre_easter_ca_ne_sarrete_jamais">Es hört nie auf</string>
     <string name="trophee_desc_easter_ca_ne_sarrete_jamais">5 Partien hintereinander in weniger als einer Stunde spielen.</string>
     <string name="trophee_titre_easter_constance">Beständigkeit</string>
@@ -177,7 +177,7 @@
     <string name="trophee_titre_easter_specialiste_complet">Vollständiger Spezialist</string>
     <string name="trophee_desc_easter_specialiste_complet">Alle Trophäen einer Kategorie bis zur letzten Stufe freischalten.</string>
     <string name="trophee_titre_easter_bonjour">Guten Morgen!</string>
-    <string name="trophee_desc_easter_bonjour">Die erste Partie zwischen 5 und 7 Uhr spielen.</string>
+    <string name="trophee_desc_easter_bonjour">Eine Partie zwischen 5 und 7 Uhr spielen.</string>
     <string name="trophee_titre_easter_oiseau_de_nuit">Nachtvogel</string>
     <string name="trophee_desc_easter_oiseau_de_nuit">Eine Partie zwischen Mitternacht und 5 Uhr spielen.</string>
     <string name="trophee_titre_easter_touche_a_tout">Alleskönner</string>

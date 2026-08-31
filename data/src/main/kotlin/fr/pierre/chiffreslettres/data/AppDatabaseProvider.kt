@@ -216,6 +216,18 @@ private val MIGRATION_15_16 = object : Migration(15, 16) {
     }
 }
 
+/**
+ * v16 → v17 : ajout de la colonne `dureeSecondes` sur `DefiEntity` (retour utilisateur : le
+ * trophée "100 heures de jeu" doit aussi compter le temps passé en défis, pas seulement en
+ * parties). Défis déjà enregistrés avant cette migration : `DEFAULT 0`, leur durée n'est pas
+ * connue rétroactivement et ne comptera simplement pas.
+ */
+private val MIGRATION_16_17 = object : Migration(16, 17) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `DefiEntity` ADD COLUMN `dureeSecondes` INTEGER NOT NULL DEFAULT 0")
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null
@@ -227,7 +239,7 @@ object AppDatabaseProvider {
                     MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5,
                     MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10,
                     MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15,
-                    MIGRATION_15_16,
+                    MIGRATION_15_16, MIGRATION_16_17,
                 )
                 .build()
                 .also { instance = it }

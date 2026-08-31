@@ -167,7 +167,7 @@
     <string name="trophee_titre_easter_multi_niveaux">Multi-level</string>
     <string name="trophee_desc_easter_multi_niveaux">Have played at least one game at every difficulty level.</string>
     <string name="trophee_titre_easter_marathon">Marathon</string>
-    <string name="trophee_desc_easter_marathon">Play more than 20 games in the same day.</string>
+    <string name="trophee_desc_easter_marathon">Play 20 games or more in the same day.</string>
     <string name="trophee_titre_easter_ca_ne_sarrete_jamais">It never stops</string>
     <string name="trophee_desc_easter_ca_ne_sarrete_jamais">Play 5 games in a row in under an hour.</string>
     <string name="trophee_titre_easter_constance">Consistency</string>
@@ -177,7 +177,7 @@
     <string name="trophee_titre_easter_specialiste_complet">Full specialist</string>
     <string name="trophee_desc_easter_specialiste_complet">Unlock every trophy in a single category, up to the last tier.</string>
     <string name="trophee_titre_easter_bonjour">Good morning!</string>
-    <string name="trophee_desc_easter_bonjour">Play your first game between 5am and 7am.</string>
+    <string name="trophee_desc_easter_bonjour">Play a game between 5am and 7am.</string>
     <string name="trophee_titre_easter_oiseau_de_nuit">Night owl</string>
     <string name="trophee_desc_easter_oiseau_de_nuit">Play a game between midnight and 5am.</string>
     <string name="trophee_titre_easter_touche_a_tout">Jack of all trades</string>

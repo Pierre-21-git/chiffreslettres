@@ -167,7 +167,7 @@
     <string name="trophee_titre_easter_multi_niveaux">Multi-niveaux</string>
     <string name="trophee_desc_easter_multi_niveaux">Avoir joué au moins une partie à chaque niveau de difficulté.</string>
     <string name="trophee_titre_easter_marathon">Marathon</string>
-    <string name="trophee_desc_easter_marathon">Jouer plus de 20 parties dans la même journée.</string>
+    <string name="trophee_desc_easter_marathon">Jouer 20 parties ou plus dans la même journée.</string>
     <string name="trophee_titre_easter_ca_ne_sarrete_jamais">Ça ne s\'arrête jamais</string>
     <string name="trophee_desc_easter_ca_ne_sarrete_jamais">Jouer 5 parties d\'affilée en moins d\'une heure.</string>
     <string name="trophee_titre_easter_constance">Constance</string>
@@ -177,7 +177,7 @@
     <string name="trophee_titre_easter_specialiste_complet">Spécialiste complet</string>
     <string name="trophee_desc_easter_specialiste_complet">Débloquer tous les trophées d\'une même catégorie jusqu\'au dernier palier.</string>
     <string name="trophee_titre_easter_bonjour">Bonjour !</string>
-    <string name="trophee_desc_easter_bonjour">Jouer sa première partie entre 5h et 7h.</string>
+    <string name="trophee_desc_easter_bonjour">Jouer une partie entre 5h et 7h.</string>
     <string name="trophee_titre_easter_oiseau_de_nuit">Oiseau de nuit</string>
     <string name="trophee_desc_easter_oiseau_de_nuit">Jouer une partie entre minuit et 5h du matin.</string>
     <string name="trophee_titre_easter_touche_a_tout">Touche-à-tout</string>

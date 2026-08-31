@@ -55,13 +55,14 @@ private fun statsVides() = TropheeStats(
     maxPartiesMemeJour = 0,
     cinqPartiesEnUneHeure = false,
     ecartDixDernieresPartiesFaible = false,
-    premierePartieEntre5et7h = false,
+    partieJoueeEntre5et7h = false,
     unePartieEntreMinuitEt5h = false,
     motRareJoue = false,
     palindromeJoue = false,
     motSymetriqueJoue = false,
-    alphabetComplet = false,
-    dimancheQuatreSemainesDeSuite = false,
+    nombreLettresAlphabetUtilisees = 0,
+    meilleureSerieDimanchesConsecutifs = 0,
+    serieEnCoursDimanches = 0,
     reglesDejaVues = false,
     nombreVisitesStats = 0,
     motInvalideDixLettresTente = false,
@@ -159,10 +160,13 @@ class CatalogueTropheesTest {
         assertTrue(trophee("easter_ancien_combattant").estDebloque(statsVides().copy(ancienneteJoursProfil = 400)))
         assertFalse(trophee("easter_ancien_combattant").estDebloque(statsVides().copy(ancienneteJoursProfil = 100)))
         assertTrue(trophee("easter_multi_niveaux").estDebloque(statsVides().copy(nombreNiveauxDistinctsJoues = 4)))
-        assertTrue(trophee("easter_marathon").estDebloque(statsVides().copy(maxPartiesMemeJour = 21)))
-        assertFalse(trophee("easter_marathon").estDebloque(statsVides().copy(maxPartiesMemeJour = 20)))
+        assertTrue(trophee("easter_marathon").estDebloque(statsVides().copy(maxPartiesMemeJour = 20)))
+        assertFalse(trophee("easter_marathon").estDebloque(statsVides().copy(maxPartiesMemeJour = 19)))
         assertTrue(trophee("easter_palindrome").estDebloque(statsVides().copy(palindromeJoue = true)))
-        assertTrue(trophee("easter_alphabet_complet").estDebloque(statsVides().copy(alphabetComplet = true)))
+        assertTrue(trophee("easter_alphabet_complet").estDebloque(statsVides().copy(nombreLettresAlphabetUtilisees = 26)))
+        assertFalse(trophee("easter_alphabet_complet").estDebloque(statsVides().copy(nombreLettresAlphabetUtilisees = 25)))
+        assertTrue(trophee("easter_rituel_dimanche").estDebloque(statsVides().copy(meilleureSerieDimanchesConsecutifs = 4)))
+        assertFalse(trophee("easter_rituel_dimanche").estDebloque(statsVides().copy(meilleureSerieDimanchesConsecutifs = 3)))
         // Méta-easter-eggs (sentinel, jamais déclenchés via les stats seules).
         assertFalse(trophee("easter_polyvalent").estDebloque(statsVides()))
         assertFalse(trophee("easter_specialiste_complet").estDebloque(statsVides()))

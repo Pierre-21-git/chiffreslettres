@@ -25,12 +25,12 @@ class EntrainementLibreViewModel(
     private val _manches = MutableStateFlow<List<ResultatManche>>(emptyList())
     val manches: StateFlow<List<ResultatManche>> = _manches.asStateFlow()
 
-    fun enregistrerMancheChiffres(niveau: Niveau, score: Int) {
-        enregistrer(ResultatManche(ModeJeu.CHIFFRES, niveau.name, score))
+    fun enregistrerMancheChiffres(niveau: Niveau, score: Int, dureeSecondes: Int? = null) {
+        enregistrer(ResultatManche(ModeJeu.CHIFFRES, niveau.name, score, dureeSecondesManche = dureeSecondes))
     }
 
-    fun enregistrerMancheLettres(niveau: NiveauLettres, score: Int, motJoue: String?) {
-        enregistrer(ResultatManche(ModeJeu.LETTRES, niveau.name, score, motJoue))
+    fun enregistrerMancheLettres(niveau: NiveauLettres, score: Int, motJoue: String?, dureeSecondes: Int? = null) {
+        enregistrer(ResultatManche(ModeJeu.LETTRES, niveau.name, score, motJoue, dureeSecondesManche = dureeSecondes))
     }
 
     private fun enregistrer(resultat: ResultatManche) {

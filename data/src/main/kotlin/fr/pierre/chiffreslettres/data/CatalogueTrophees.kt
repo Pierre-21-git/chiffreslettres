@@ -111,8 +111,8 @@ data class TropheeStats(
     val cinqPartiesEnUneHeure: Boolean,
     /** Écart de moins de 10 points entre la meilleure et la moins bonne des 10 dernières parties (trophée "Constance"). */
     val ecartDixDernieresPartiesFaible: Boolean,
-    /** La toute première partie du joueur a été jouée entre 5h et 7h (trophée "Bonjour !"). */
-    val premierePartieEntre5et7h: Boolean,
+    /** Au moins une partie jouée entre 5h et 7h (trophée "Bonjour !"). */
+    val partieJoueeEntre5et7h: Boolean,
     /** Au moins une partie jouée entre minuit et 5h (trophée "Oiseau de nuit"). */
     val unePartieEntreMinuitEt5h: Boolean,
     /** Au moins un mot d'au moins 8 lettres contenant Q/X/W/Y/Z déjà joué (trophée "Mot rare"). */
@@ -121,10 +121,12 @@ data class TropheeStats(
     val palindromeJoue: Boolean,
     /** Au moins un mot dont les lettres sont en ordre alphabétique déjà joué (trophée "Symétrique"). */
     val motSymetriqueJoue: Boolean,
-    /** Chaque lettre de l'alphabet utilisée au moins une fois, cumulé sur tous les mots joués (trophée "Alphabet complet"). */
-    val alphabetComplet: Boolean,
-    /** Au moins une partie jouée un dimanche, 4 semaines de suite (trophée "Rituel du dimanche"). */
-    val dimancheQuatreSemainesDeSuite: Boolean,
+    /** Nombre de lettres distinctes de l'alphabet (A-Z, 26 max) utilisées, cumulé sur tous les mots joués (trophée "Alphabet complet"). */
+    val nombreLettresAlphabetUtilisees: Int,
+    /** Plus longue série de dimanches consécutifs (avec au moins une partie) jamais réalisée — sert au déblocage (trophée "Rituel du dimanche"). */
+    val meilleureSerieDimanchesConsecutifs: Int,
+    /** Série de dimanches consécutifs en cours, en remontant depuis aujourd'hui — sert à l'affichage de la progression du trophée "Rituel du dimanche". */
+    val serieEnCoursDimanches: Int,
     /** La page des règles du jeu a déjà été consultée (trophée "Curieux"). */
     val reglesDejaVues: Boolean,
     /** Nombre de clics sur "Statistiques" au menu principal (trophée "Data-lover"). */
@@ -154,7 +156,11 @@ data class TropheeStats(
     val compteExactBoiteAOutils: Boolean,
     /** Une manche terminée sans aucune proposition (trophée "Aucune idée"). */
     val aucuneIdeeProposee: Boolean,
-    /** Temps de jeu cumulé, en secondes (trophée "100 heures de jeu"). */
+    /**
+     * Temps de jeu cumulé, en secondes, toutes sources confondues : parties (solo/duo/
+     * confrontation, local et réseau), entraînement libre, duels de mots réseau et défis
+     * (série/chrono/mots max/sans faute/points/quotidien) — trophée "100 heures de jeu".
+     */
     val secondesJoueesTotal: Int,
 ) {
     /**
@@ -1073,7 +1079,9 @@ object CatalogueTrophees {
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.SEMI_CACHE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_assiduite,
-            ) { it.maxPartiesMemeJour > 20 },
+                objectif = 20,
+                progression = { it.maxPartiesMemeJour },
+            ) { it.maxPartiesMemeJour >= 20 },
         )
         add(
             Trophee(
@@ -1130,7 +1138,7 @@ object CatalogueTrophees {
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.SEMI_CACHE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_heure,
-            ) { it.premierePartieEntre5et7h },
+            ) { it.partieJoueeEntre5et7h },
         )
         add(
             Trophee(
@@ -1190,7 +1198,9 @@ object CatalogueTrophees {
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.SEMI_CACHE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_assiduite,
-            ) { it.dimancheQuatreSemainesDeSuite },
+                objectif = 4,
+                progression = { it.serieEnCoursDimanches },
+            ) { it.meilleureSerieDimanchesConsecutifs >= 4 },
         )
         add(
             Trophee(
@@ -1312,7 +1322,9 @@ object CatalogueTrophees {
                 palier = null,
                 niveauVisibilite = NiveauVisibilite.SEMI_CACHE,
                 descriptionAvantDeblocageRes = R.string.easter_avant_vocabulaire,
-            ) { it.alphabetComplet },
+                objectif = 26,
+                progression = { it.nombreLettresAlphabetUtilisees },
+            ) { it.nombreLettresAlphabetUtilisees >= 26 },
         )
         add(
             Trophee(

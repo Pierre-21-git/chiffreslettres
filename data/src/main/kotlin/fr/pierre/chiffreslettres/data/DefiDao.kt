@@ -42,6 +42,10 @@ interface DefiDao {
     @Query("SELECT COUNT(*) FROM DefiEntity WHERE profilId = :profilId")
     suspend fun compterDefisTotal(profilId: Long): Int
 
+    /** Temps de jeu cumulé en défis, en secondes, tous types confondus (easter egg "100 heures de jeu"). */
+    @Query("SELECT COALESCE(SUM(dureeSecondes), 0) FROM DefiEntity WHERE profilId = :profilId")
+    suspend fun sommeSecondesDefis(profilId: Long): Int
+
     /** Meilleure série jamais réalisée en défi série, par mode, tous niveaux confondus. */
     @Query(
         """

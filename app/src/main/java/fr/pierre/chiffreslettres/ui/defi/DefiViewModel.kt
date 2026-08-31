@@ -78,11 +78,11 @@ class DefiViewModel(
         _tropheesDebloques.value = emptyList()
     }
 
+    /** Temps écoulé depuis le début du défi (ou depuis [recommencer]), en secondes — trophée "100 heures de jeu". */
+    private fun dureeEcouleeDepuisDebut(): Int = ((System.currentTimeMillis() - debutChrono) / 1000).toInt()
+
     /** Défi chrono uniquement : temps restant (s) à donner à la prochaine manche, 0 si le budget est épuisé. */
-    fun dureeProchaineManche(): Int {
-        val ecoulees = ((System.currentTimeMillis() - debutChrono) / 1000).toInt()
-        return (budgetSecondes - ecoulees).coerceAtLeast(0)
-    }
+    fun dureeProchaineManche(): Int = (budgetSecondes - dureeEcouleeDepuisDebut()).coerceAtLeast(0)
 
     /** Défi série : réussite confirmée par le joueur (bouton "Continuer") : manche suivante. */
     fun mancheSuivante() {
@@ -95,8 +95,9 @@ class DefiViewModel(
         if (_termine.value) return
         _termine.value = true
         val serieFinale = _index.value
+        val dureeSecondes = dureeEcouleeDepuisDebut()
         viewModelScope.launch {
-            defiRepository.enregistrer(profilId, mode, niveauCode, type, serieFinale)
+            defiRepository.enregistrer(profilId, mode, niveauCode, type, serieFinale, dureeSecondes)
             _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
         }
     }
@@ -113,8 +114,9 @@ class DefiViewModel(
         if (dureeProchaineManche() <= 0) {
             _termine.value = true
             val reussitesFinales = _reussites.value
+            val dureeSecondes = dureeEcouleeDepuisDebut()
             viewModelScope.launch {
-                defiRepository.enregistrer(profilId, mode, niveauCode, type, reussitesFinales)
+                defiRepository.enregistrer(profilId, mode, niveauCode, type, reussitesFinales, dureeSecondes)
                 _tropheesDebloques.value = tropheeRepository.reevaluer(profilId)
             }
         } else {
@@ -137,8 +139,9 @@ class DefiViewModel(
         if (type == TypeDefi.CHRONO) _reussites.value += 1 else _index.value += 1
         _termine.value = true
         val valeurFinale = if (type == TypeDefi.CHRONO) _reussites.value else _index.value
+        val dureeSecondes = dureeEcouleeDepuisDebut()
         viewModelScope.launch {
-            defiRepository.enregistrer(profilId, mode, niveauCode, type, valeurFinale)
+            defiRepository.enregistrer(profilId, mode, niveauCode, type, valeurFinale, dureeSecondes)
             // Dans la même coroutine liée au ViewModel (pas au composable) : un retour arrière
             // intempestif juste après ne peut plus interrompre l'enregistrement de la réussite du
             // jour ni la mise à jour du widget (retour utilisateur).

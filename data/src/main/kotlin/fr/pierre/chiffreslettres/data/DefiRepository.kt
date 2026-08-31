@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 class DefiRepository(private val dao: DefiDao) {
 
-    suspend fun enregistrer(profilId: Long, mode: ModeJeu, niveauCode: String, type: TypeDefi, serie: Int) {
+    suspend fun enregistrer(profilId: Long, mode: ModeJeu, niveauCode: String, type: TypeDefi, serie: Int, dureeSecondes: Int = 0) {
         dao.enregistrer(
             DefiEntity(
                 profilId = profilId,
@@ -13,6 +13,7 @@ class DefiRepository(private val dao: DefiDao) {
                 type = type,
                 serie = serie,
                 date = System.currentTimeMillis(),
+                dureeSecondes = dureeSecondes,
             ),
         )
     }

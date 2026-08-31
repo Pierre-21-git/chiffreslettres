@@ -233,8 +233,9 @@ class DefiObjectifsPointsViewModel(
         if (enregistre) return
         enregistre = true
         val score = _uiState.value.objectifs.count { it.atteint }
+        val dureeSecondes = budgetSecondesDefiChrono(niveau) - _uiState.value.tempsRestantSecondes
         viewModelScope.launch {
-            defiRepository.enregistrer(profilId, ModeJeu.LETTRES, niveauCode, TypeDefi.OBJECTIFS_POINTS, score)
+            defiRepository.enregistrer(profilId, ModeJeu.LETTRES, niveauCode, TypeDefi.OBJECTIFS_POINTS, score, dureeSecondes)
             // Réussite du jour uniquement sur un succès complet (retour utilisateur : pas de
             // défi quotidien "partiel"), même principe que DefiViewModel.objectifQuotidienAtteint().
             if (raison == RaisonFinDefiObjectifsPoints.TOUS_OBJECTIFS_ATTEINTS && defiQuotidienRepository != null && jourQuotidien != null) {

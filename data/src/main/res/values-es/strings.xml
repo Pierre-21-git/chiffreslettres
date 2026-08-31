@@ -167,7 +167,7 @@
     <string name="trophee_titre_easter_multi_niveaux">Multinivel</string>
     <string name="trophee_desc_easter_multi_niveaux">Haber jugado al menos una partida en cada nivel de dificultad.</string>
     <string name="trophee_titre_easter_marathon">Maratón</string>
-    <string name="trophee_desc_easter_marathon">Jugar más de 20 partidas el mismo día.</string>
+    <string name="trophee_desc_easter_marathon">Jugar 20 partidas o más el mismo día.</string>
     <string name="trophee_titre_easter_ca_ne_sarrete_jamais">Esto no para</string>
     <string name="trophee_desc_easter_ca_ne_sarrete_jamais">Jugar 5 partidas seguidas en menos de una hora.</string>
     <string name="trophee_titre_easter_constance">Constancia</string>
@@ -177,7 +177,7 @@
     <string name="trophee_titre_easter_specialiste_complet">Especialista completo</string>
     <string name="trophee_desc_easter_specialiste_complet">Desbloquear todos los trofeos de una misma categoría hasta el último nivel.</string>
     <string name="trophee_titre_easter_bonjour">¡Buenos días!</string>
-    <string name="trophee_desc_easter_bonjour">Jugar tu primera partida entre las 5 y las 7 de la mañana.</string>
+    <string name="trophee_desc_easter_bonjour">Jugar una partida entre las 5 y las 7 de la mañana.</string>
     <string name="trophee_titre_easter_oiseau_de_nuit">Ave nocturna</string>
     <string name="trophee_desc_easter_oiseau_de_nuit">Jugar una partida entre medianoche y las 5 de la mañana.</string>
     <string name="trophee_titre_easter_touche_a_tout">Todoterreno</string>
