@@ -51,10 +51,10 @@ const val DUREE_SECONDES_DEFI_MOTS_MAX = 300
 /** Nombre maximal de mots affichés dans "mots possibles" en fin de défi (retour utilisateur : au-delà, la grille devient illisible). Le calcul du score/de la fin du défi reste basé sur la liste complète, seul l'affichage est plafonné. */
 const val MAX_MOTS_POSSIBLES_AFFICHES = 100
 
-/** Nombre d'objectifs de points à atteindre en défi Points, selon le niveau (retour utilisateur). */
+/** Nombre d'objectifs de points à atteindre en défi Points, selon le niveau (retour utilisateur 2026-09-03). */
 fun nombreObjectifsDefiPoints(niveau: NiveauLettres): Int = when (niveau) {
     NiveauLettres.EMILE -> 3
-    NiveauLettres.NESTOR -> 4
-    NiveauLettres.MONIQUE -> 5
-    NiveauLettres.MATHIEU -> 6
+    NiveauLettres.NESTOR -> 5
+    NiveauLettres.MONIQUE -> 8
+    NiveauLettres.MATHIEU -> 15
 }

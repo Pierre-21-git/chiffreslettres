@@ -22,14 +22,6 @@ private val NIVEAUX_MATHIEU = listOf("MATHIEU")
  */
 private const val TOUS_OPERATEURS_MASK = 0b1111
 
-/**
- * Nombre d'objectifs du défi Points par niveau (retour utilisateur) — dupliqué depuis
- * `ui.defi.nombreObjectifsDefiPoints` (module `app`, inaccessible ici, `data` ne dépend jamais de
- * `app`), même valeurs (3/4/5/6). Sert uniquement à détecter si un défi Points enregistré a été
- * complété (tous ses objectifs atteints).
- */
-private val NOMBRE_OBJECTIFS_DEFI_POINTS_PAR_NIVEAU = mapOf("EMILE" to 3, "NESTOR" to 4, "MONIQUE" to 5, "MATHIEU" to 6)
-
 // --- Helpers pour les easter eggs (refonte 2026-08), en mémoire plutôt qu'en SQL : trop
 // spécifiques pour mériter chacun leur propre requête, et les volumes de données par joueur
 // restent modestes (un jeu familial, pas des millions de lignes).
@@ -188,9 +180,6 @@ class TropheeRepository(
         meilleurScoreDefiMotsMaxNiveauMonique = defis.meilleurScoreDefiMotsMaxNiveauMonique,
         meilleurScoreDefiMotsMaxNiveauMathieu = defis.meilleurScoreDefiMotsMaxNiveauMathieu,
         meilleurScoreDefiObjectifsPoints = defis.meilleurScoreDefiObjectifsPoints,
-        defiObjectifsPointsComplete = defis.defiObjectifsPointsComplete,
-        defiObjectifsPointsCompleteNiveauMonique = defis.defiObjectifsPointsCompleteNiveauMonique,
-        defiObjectifsPointsCompleteNiveauMathieu = defis.defiObjectifsPointsCompleteNiveauMathieu,
         meilleureSerieSansFaute = defis.meilleureSerieSansFaute,
         meilleureSerieSansFauteNiveauMonique = defis.meilleureSerieSansFauteNiveauMonique,
         meilleureSerieSansFauteNiveauMathieu = defis.meilleureSerieSansFauteNiveauMathieu,
@@ -310,9 +299,6 @@ class TropheeRepository(
         val meilleurScoreDefiMotsMaxNiveauMonique: Int,
         val meilleurScoreDefiMotsMaxNiveauMathieu: Int,
         val meilleurScoreDefiObjectifsPoints: Int,
-        val defiObjectifsPointsComplete: Boolean,
-        val defiObjectifsPointsCompleteNiveauMonique: Boolean,
-        val defiObjectifsPointsCompleteNiveauMathieu: Boolean,
         val meilleureSerieSansFaute: Int,
         val meilleureSerieSansFauteNiveauMonique: Int,
         val meilleureSerieSansFauteNiveauMathieu: Int,
@@ -340,15 +326,6 @@ class TropheeRepository(
             meilleurScoreDefiMotsMaxNiveauMonique = defiDao.meilleurScoreDefiMotsMaxNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS) ?: 0,
             meilleurScoreDefiMotsMaxNiveauMathieu = defiDao.meilleurScoreDefiMotsMaxNiveaux(profilId, NIVEAUX_MATHIEU) ?: 0,
             meilleurScoreDefiObjectifsPoints = objectifsPointsDetail.maxOfOrNull { it.serie } ?: 0,
-            defiObjectifsPointsComplete = objectifsPointsDetail.any {
-                it.serie >= (NOMBRE_OBJECTIFS_DEFI_POINTS_PAR_NIVEAU[it.niveauCode] ?: Int.MAX_VALUE)
-            },
-            defiObjectifsPointsCompleteNiveauMonique = objectifsPointsDetail.any {
-                it.niveauCode in NIVEAUX_MONIQUE_OU_PLUS && it.serie >= (NOMBRE_OBJECTIFS_DEFI_POINTS_PAR_NIVEAU[it.niveauCode] ?: Int.MAX_VALUE)
-            },
-            defiObjectifsPointsCompleteNiveauMathieu = objectifsPointsDetail.any {
-                it.niveauCode in NIVEAUX_MATHIEU && it.serie >= (NOMBRE_OBJECTIFS_DEFI_POINTS_PAR_NIVEAU[it.niveauCode] ?: Int.MAX_VALUE)
-            },
             meilleureSerieSansFaute = defiDao.meilleureSerieSansFaute(profilId) ?: 0,
             meilleureSerieSansFauteNiveauMonique = defiDao.meilleureSerieSansFauteNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS) ?: 0,
             meilleureSerieSansFauteNiveauMathieu = defiDao.meilleureSerieSansFauteNiveaux(profilId, NIVEAUX_MATHIEU) ?: 0,

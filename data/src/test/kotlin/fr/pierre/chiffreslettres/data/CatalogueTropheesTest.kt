@@ -36,9 +36,6 @@ private fun statsVides() = TropheeStats(
     meilleurScoreDefiMotsMaxNiveauMonique = 0,
     meilleurScoreDefiMotsMaxNiveauMathieu = 0,
     meilleurScoreDefiObjectifsPoints = 0,
-    defiObjectifsPointsComplete = false,
-    defiObjectifsPointsCompleteNiveauMonique = false,
-    defiObjectifsPointsCompleteNiveauMathieu = false,
     meilleureSerieSansFaute = 0,
     meilleureSerieSansFauteNiveauMonique = 0,
     meilleureSerieSansFauteNiveauMathieu = 0,
@@ -86,29 +83,26 @@ class CatalogueTropheesTest {
 
     @Test
     fun `167 trophees au total (155 + 7 duel points + 3 easter eggs duel points + 2 easter eggs chiffres)`() {
-        assertEquals(153, CatalogueTrophees.TOUS.size)
+        assertEquals(147, CatalogueTrophees.TOUS.size)
     }
 
     @Test
-    fun `defi Points a son propre bareme, adapte a un score maximal de 3 a 6`() {
+    fun `defi Points a son propre bareme, adapte a un score maximal de 3 a 15 selon le niveau`() {
         assertFalse(trophee("defi_points_1").estDebloque(statsVides()))
         assertTrue(trophee("defi_points_1").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 1)))
         assertFalse(trophee("defi_points_3").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 2)))
         assertTrue(trophee("defi_points_3").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 3)))
+        assertFalse(trophee("defi_points_5").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 4)))
+        assertTrue(trophee("defi_points_5").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 5)))
+        assertFalse(trophee("defi_points_15").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 14)))
+        assertTrue(trophee("defi_points_15").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 15)))
         assertEquals(Palier.BRONZE, trophee("defi_points_1").palier)
         assertEquals(Palier.ARGENT, trophee("defi_points_3").palier)
-
-        assertFalse(trophee("defi_points_complet").estDebloque(statsVides()))
-        assertTrue(trophee("defi_points_complet").estDebloque(statsVides().copy(defiObjectifsPointsComplete = true)))
-        assertEquals(Palier.OR, trophee("defi_points_complet").palier)
-
-        assertFalse(trophee("defi_points_complet_monique").estDebloque(statsVides()))
-        assertTrue(trophee("defi_points_complet_monique").estDebloque(statsVides().copy(defiObjectifsPointsCompleteNiveauMonique = true)))
-        assertEquals(Palier.PLATINE, trophee("defi_points_complet_monique").palier)
-
-        assertFalse(trophee("defi_points_complet_mathieu").estDebloque(statsVides()))
-        assertTrue(trophee("defi_points_complet_mathieu").estDebloque(statsVides().copy(defiObjectifsPointsCompleteNiveauMathieu = true)))
-        assertEquals(Palier.EMERAUDE, trophee("defi_points_complet_mathieu").palier)
+        assertEquals(Palier.OR, trophee("defi_points_5").palier)
+        assertEquals(Palier.EMERAUDE, trophee("defi_points_8").palier)
+        assertEquals(Palier.SAPHIR, trophee("defi_points_10").palier)
+        assertEquals(Palier.RUBIS, trophee("defi_points_12").palier)
+        assertEquals(Palier.DIAMANT, trophee("defi_points_15").palier)
     }
 
     @Test
@@ -223,8 +217,8 @@ class CatalogueTropheesTest {
         assertEquals(Palier.PLATINE, trophee("compte_exact_100").palier)
         assertEquals(Palier.EMERAUDE, trophee("compte_exact_200").palier)
         assertEquals(Palier.SAPHIR, trophee("compte_exact_500").palier)
-        assertEquals(Palier.RUBIS, trophee("compte_exact_1000").palier)
-        assertEquals(Palier.DIAMANT, trophee("compte_exact_2000").palier)
+        assertEquals(Palier.RUBIS, trophee("compte_exact_750").palier)
+        assertEquals(Palier.DIAMANT, trophee("compte_exact_1000").palier)
     }
 
     @Test
@@ -287,7 +281,7 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `serie de defi gagne platine a 10 reussites niveau Monique, puis emeraude-saphir-rubis-diamant niveau Mathieu`() {
+    fun `serie de defi gagne emeraude a 10 reussites niveau Monique, puis saphir-rubis niveau Mathieu`() {
         // Une série tous niveaux confondus ne suffit pas aux jalons niveau-gatés.
         val stats = statsVides().copy(
             meilleuresSeriesDefi = mapOf("CHIFFRES" to 12),
@@ -304,11 +298,9 @@ class CatalogueTropheesTest {
         val statsMathieu = statsMonique.copy(meilleuresSeriesDefiNiveauMathieu = mapOf("CHIFFRES" to 12))
         assertFalse(trophee("defi_serie_chiffres_12_mathieu").estDebloque(statsMathieu.copy(meilleuresSeriesDefiNiveauMathieu = mapOf("CHIFFRES" to 11))))
         assertTrue(trophee("defi_serie_chiffres_12_mathieu").estDebloque(statsMathieu))
-        assertEquals(Palier.PLATINE, trophee("defi_serie_chiffres_10_monique").palier)
-        assertEquals(Palier.EMERAUDE, trophee("defi_serie_chiffres_12_mathieu").palier)
-        assertEquals(Palier.SAPHIR, trophee("defi_serie_chiffres_15_mathieu").palier)
-        assertEquals(Palier.RUBIS, trophee("defi_serie_chiffres_20_mathieu").palier)
-        assertEquals(Palier.DIAMANT, trophee("defi_serie_chiffres_25_mathieu").palier)
+        assertEquals(Palier.EMERAUDE, trophee("defi_serie_chiffres_10_monique").palier)
+        assertEquals(Palier.SAPHIR, trophee("defi_serie_chiffres_12_mathieu").palier)
+        assertEquals(Palier.RUBIS, trophee("defi_serie_chiffres_15_mathieu").palier)
     }
 
     @Test
@@ -317,7 +309,7 @@ class CatalogueTropheesTest {
         assertTrue(trophee("mot_4_1").estDebloque(stats))
         assertFalse(trophee("mot_4_10").estDebloque(stats))
         assertTrue(trophee("mot_10_1").estDebloque(stats))
-        assertTrue(trophee("mot_10_10").estDebloque(stats))
+        assertEquals(Palier.DIAMANT, trophee("mot_10_1").palier)
         assertFalse(trophee("mot_5_1").estDebloque(stats))
     }
 
@@ -367,9 +359,9 @@ class CatalogueTropheesTest {
         assertEquals(Palier.BRONZE, trophee("defi_sans_faute_3").palier)
         assertEquals(Palier.ARGENT, trophee("defi_sans_faute_5").palier)
         assertEquals(Palier.OR, trophee("defi_sans_faute_8").palier)
-        assertEquals(Palier.PLATINE, trophee("defi_sans_faute_10_monique").palier)
-        assertEquals(Palier.EMERAUDE, trophee("defi_sans_faute_12_mathieu").palier)
-        assertEquals(Palier.DIAMANT, trophee("defi_sans_faute_25_mathieu").palier)
+        assertEquals(Palier.EMERAUDE, trophee("defi_sans_faute_10_monique").palier)
+        assertEquals(Palier.SAPHIR, trophee("defi_sans_faute_12_mathieu").palier)
+        assertEquals(Palier.RUBIS, trophee("defi_sans_faute_15_mathieu").palier)
         assertTrue(trophee("defi_sans_faute_12_mathieu").estDebloque(statsVides().copy(meilleureSerieSansFauteNiveauMathieu = 12)))
         assertFalse(trophee("defi_sans_faute_12_mathieu").estDebloque(statsVides().copy(meilleureSerieSansFauteNiveauMathieu = 11)))
     }
@@ -409,10 +401,10 @@ class CatalogueTropheesTest {
     @Test
     fun `trophees duo comptent aussi les parties confrontation`() {
         // Retour utilisateur : Duo et Confrontation partagent les mêmes trophées "duo_*".
-        val stats = statsVides().copy(partiesConfrontationJouees = 1, partiesConfrontationGagnees = 10)
+        val stats = statsVides().copy(partiesConfrontationJouees = 10)
         assertTrue(trophee("duo_1").estDebloque(stats))
-        assertTrue(trophee("duo_gagnee_1").estDebloque(stats))
-        assertTrue(trophee("duo_gagnee_10").estDebloque(stats))
+        assertTrue(trophee("duo_jouee_5").estDebloque(stats))
+        assertTrue(trophee("duo_jouee_10").estDebloque(stats))
     }
 
     @Test
@@ -426,18 +418,18 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `dixieme partie de duel gagnee cumule duo, confrontation, duel mots et duel points, palier platine`() {
+    fun `dixieme partie de duel jouee cumule duo, confrontation, duel mots et duel points, palier platine`() {
         val stats = statsVides().copy(
-            partiesDuoGagnees = 3,
-            partiesConfrontationGagnees = 2,
-            partiesDuelMotsGagnees = 2,
-            partiesDuelMotsConfrontationGagnees = 1,
-            partiesDuelPointsGagnees = 1,
+            partiesDuoJouees = 3,
+            partiesConfrontationJouees = 2,
+            partiesDuelMotsJouees = 2,
+            partiesDuelMotsConfrontationJouees = 1,
+            partiesDuelPointsJouees = 1,
         )
-        assertFalse(trophee("duo_gagnee_10").estDebloque(stats))
-        assertTrue(trophee("duo_gagnee_10").estDebloque(stats.copy(partiesDuelPointsGagnees = 2)))
-        assertEquals(Palier.PLATINE, trophee("duo_gagnee_10").palier)
-        assertEquals(Palier.DIAMANT, trophee("duo_gagnee_100").palier)
+        assertFalse(trophee("duo_jouee_10").estDebloque(stats))
+        assertTrue(trophee("duo_jouee_10").estDebloque(stats.copy(partiesDuelPointsJouees = 2)))
+        assertEquals(Palier.PLATINE, trophee("duo_jouee_10").palier)
+        assertEquals(Palier.DIAMANT, trophee("duo_jouee_100").palier)
     }
 
     @Test
