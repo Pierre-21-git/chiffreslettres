@@ -382,17 +382,17 @@ class CatalogueTropheesTest {
         // 28 jours tous niveaux confondus ne suffit pas aux jalons niveau-gatés.
         val stats = statsVides().copy(meilleureSerieJoursDefiQuotidien = 28)
         assertFalse(trophee("defi_quotidien_28_monique").estDebloque(stats))
-        assertFalse(trophee("defi_quotidien_28_mathieu").estDebloque(stats))
+        assertFalse(trophee("defi_quotidien_35_mathieu").estDebloque(stats))
 
         val statsMonique = stats.copy(meilleureSerieJoursDefiQuotidienNiveauMonique = 28)
         assertTrue(trophee("defi_quotidien_28_monique").estDebloque(statsMonique))
-        assertFalse(trophee("defi_quotidien_28_mathieu").estDebloque(statsMonique))
+        assertFalse(trophee("defi_quotidien_35_mathieu").estDebloque(statsMonique))
 
         val statsMathieu = statsMonique.copy(meilleureSerieJoursDefiQuotidienNiveauMathieu = 70)
-        assertTrue(trophee("defi_quotidien_28_mathieu").estDebloque(statsMathieu))
+        assertTrue(trophee("defi_quotidien_35_mathieu").estDebloque(statsMathieu))
         assertTrue(trophee("defi_quotidien_70_mathieu").estDebloque(statsMathieu))
         assertEquals(Palier.PLATINE, trophee("defi_quotidien_28_monique").palier)
-        assertEquals(Palier.EMERAUDE, trophee("defi_quotidien_28_mathieu").palier)
+        assertEquals(Palier.EMERAUDE, trophee("defi_quotidien_35_mathieu").palier)
         assertEquals(Palier.SAPHIR, trophee("defi_quotidien_42_mathieu").palier)
         assertEquals(Palier.RUBIS, trophee("defi_quotidien_56_mathieu").palier)
         assertEquals(Palier.DIAMANT, trophee("defi_quotidien_70_mathieu").palier)

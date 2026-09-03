@@ -324,13 +324,13 @@ private val PALIERS_DEFI_POINTS = mapOf(
 )
 
 private val LONGUEURS_MOTS_TROPHEE = 4..10
-// Défi quotidien : rythme hebdomadaire (refonte 2026-08) — 1/2/3 semaines tous niveaux, 4
-// semaines au niveau Monique+, puis 4/6/8/10 semaines au niveau Mathieu.
+// Défi quotidien : rythme hebdomadaire (refonte 2026-08, seuil Émeraude ajusté 2026-09-03) — 1/2/3
+// semaines tous niveaux, 4 semaines au niveau Monique+, puis 35/42/56/70 jours au niveau Mathieu.
 private val SEUILS_DEFI_QUOTIDIEN = listOf(7, 14, 21)
 private const val SEUIL_DEFI_QUOTIDIEN_NIVEAU_MONIQUE = 28
-private val SEUILS_DEFI_QUOTIDIEN_NIVEAU_MATHIEU = listOf(28, 42, 56, 70)
+private val SEUILS_DEFI_QUOTIDIEN_NIVEAU_MATHIEU = listOf(35, 42, 56, 70)
 private val PALIERS_DEFI_QUOTIDIEN_NIVEAU_MATHIEU = mapOf(
-    28 to Palier.EMERAUDE, 42 to Palier.SAPHIR, 56 to Palier.RUBIS, 70 to Palier.DIAMANT,
+    35 to Palier.EMERAUDE, 42 to Palier.SAPHIR, 56 to Palier.RUBIS, 70 to Palier.DIAMANT,
 )
 
 // Paliers (refonte 2026-08, cf. trophées_paliers2.xlsx).
