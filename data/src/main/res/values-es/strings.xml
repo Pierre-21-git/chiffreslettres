@@ -94,7 +94,9 @@
     <string name="trophee_titre_defi_quotidien_semaine">Una semana de desafío diario</string>
     <string name="trophee_titre_defi_quotidien_deux_semaines">Dos semanas de desafío diario</string>
     <string name="trophee_titre_defi_quotidien_trois_semaines">Tres semanas de desafío diario</string>
-    <string name="trophee_titre_defi_quotidien_niveau_monique">%1$d días de desafío diario, nivel Ça se complique, Monique o superior</string>
+    <string name="trophee_titre_defi_quotidien_quatre_semaines">Cuatro semanas de desafío diario</string>
+    <string name="trophee_titre_defi_quotidien_cinq_semaines">Cinco semanas de desafío diario</string>
+    <string name="trophee_titre_defi_quotidien_six_semaines">Seis semanas de desafío diario</string>
     <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d días de desafío diario, nivel C\'est du sérieux, Mathieu</string>
 
     <!-- Descripciones de trofeos -->
@@ -143,7 +145,6 @@
     <string name="trophee_desc_defi_sans_faute_niveau_monique">Encadenar %1$d victorias o más seguidas en el desafío sin fallos, números y letras alternados, en el nivel Ça se complique, Monique o C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Encadenar %1$d victorias o más seguidas en el desafío sin fallos, números y letras alternados, en el nivel C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_quotidien">Superar el desafío diario %1$d días seguidos.</string>
-    <string name="trophee_desc_defi_quotidien_niveau_monique">Superar el desafío diario %1$d días seguidos, en el nivel Ça se complique, Monique o C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_quotidien_niveau_mathieu">Superar el desafío diario %1$d días seguidos, en el nivel C\'est du sérieux, Mathieu.</string>
     <string name="trophee_titre_section_defi_complete">Maestro de los desafíos</string>
     <string name="trophee_desc_section_defi_complete">Desbloquear todos los trofeos de la sección Desafíos.</string>

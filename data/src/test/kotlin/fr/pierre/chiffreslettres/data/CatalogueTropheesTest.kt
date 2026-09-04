@@ -40,10 +40,8 @@ private fun statsVides() = TropheeStats(
     meilleureSerieSansFauteNiveauMonique = 0,
     meilleureSerieSansFauteNiveauMathieu = 0,
     meilleureSerieJoursDefiQuotidien = 0,
-    meilleureSerieJoursDefiQuotidienNiveauMonique = 0,
     meilleureSerieJoursDefiQuotidienNiveauMathieu = 0,
     serieEnCoursJoursDefiQuotidien = 0,
-    serieEnCoursJoursDefiQuotidienNiveauMonique = 0,
     serieEnCoursJoursDefiQuotidienNiveauMathieu = 0,
     partiesSoloStructureeJouees = 0,
     defisJouesTotal = 0,
@@ -378,18 +376,17 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `defi quotidien 28 jours niveau eleve gagne platine ou emeraude, puis jusqu'a diamant a 70 jours Mathieu`() {
-        // 28 jours tous niveaux confondus ne suffit pas aux jalons niveau-gatés.
-        val stats = statsVides().copy(meilleureSerieJoursDefiQuotidien = 28)
-        assertFalse(trophee("defi_quotidien_28_monique").estDebloque(stats))
-        assertFalse(trophee("defi_quotidien_35_mathieu").estDebloque(stats))
+    fun `defi quotidien 28-35-42 jours tous niveaux gagnent platine-emeraude-saphir, 56-70 jours reservent rubis-diamant au niveau Mathieu`() {
+        // Retour utilisateur 2026-09-04 : Platine/Émeraude/Saphir n'exigent plus le niveau Monique/Mathieu.
+        val stats = statsVides().copy(meilleureSerieJoursDefiQuotidien = 42)
+        assertTrue(trophee("defi_quotidien_28_monique").estDebloque(stats))
+        assertTrue(trophee("defi_quotidien_35_mathieu").estDebloque(stats))
+        assertTrue(trophee("defi_quotidien_42_mathieu").estDebloque(stats))
+        // Rubis/Diamant (56/70 jours) restent réservés au niveau Mathieu.
+        assertFalse(trophee("defi_quotidien_56_mathieu").estDebloque(stats))
 
-        val statsMonique = stats.copy(meilleureSerieJoursDefiQuotidienNiveauMonique = 28)
-        assertTrue(trophee("defi_quotidien_28_monique").estDebloque(statsMonique))
-        assertFalse(trophee("defi_quotidien_35_mathieu").estDebloque(statsMonique))
-
-        val statsMathieu = statsMonique.copy(meilleureSerieJoursDefiQuotidienNiveauMathieu = 70)
-        assertTrue(trophee("defi_quotidien_35_mathieu").estDebloque(statsMathieu))
+        val statsMathieu = stats.copy(meilleureSerieJoursDefiQuotidienNiveauMathieu = 70)
+        assertTrue(trophee("defi_quotidien_56_mathieu").estDebloque(statsMathieu))
         assertTrue(trophee("defi_quotidien_70_mathieu").estDebloque(statsMathieu))
         assertEquals(Palier.PLATINE, trophee("defi_quotidien_28_monique").palier)
         assertEquals(Palier.EMERAUDE, trophee("defi_quotidien_35_mathieu").palier)

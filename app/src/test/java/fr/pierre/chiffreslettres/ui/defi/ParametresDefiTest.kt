@@ -40,10 +40,18 @@ class ParametresDefiTest {
     }
 
     @Test
-    fun `le nombre d'objectifs du defi Points croit avec la difficulte du niveau`() {
+    fun `le nombre d'objectifs du defi Points croit avec la difficulte du niveau, en mode libre`() {
         assertEquals(3, nombreObjectifsDefiPoints(NiveauLettres.EMILE))
         assertEquals(5, nombreObjectifsDefiPoints(NiveauLettres.NESTOR))
         assertEquals(8, nombreObjectifsDefiPoints(NiveauLettres.MONIQUE))
         assertEquals(15, nombreObjectifsDefiPoints(NiveauLettres.MATHIEU))
+    }
+
+    @Test
+    fun `le defi quotidien reduit le nombre d'objectifs du defi Points de moitie environ`() {
+        assertEquals(2, nombreObjectifsDefiPoints(NiveauLettres.EMILE, estDefiQuotidien = true))
+        assertEquals(3, nombreObjectifsDefiPoints(NiveauLettres.NESTOR, estDefiQuotidien = true))
+        assertEquals(4, nombreObjectifsDefiPoints(NiveauLettres.MONIQUE, estDefiQuotidien = true))
+        assertEquals(8, nombreObjectifsDefiPoints(NiveauLettres.MATHIEU, estDefiQuotidien = true))
     }
 }

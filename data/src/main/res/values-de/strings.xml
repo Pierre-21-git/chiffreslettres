@@ -94,7 +94,9 @@
     <string name="trophee_titre_defi_quotidien_semaine">Eine Woche tägliche Herausforderung</string>
     <string name="trophee_titre_defi_quotidien_deux_semaines">Zwei Wochen tägliche Herausforderung</string>
     <string name="trophee_titre_defi_quotidien_trois_semaines">Drei Wochen tägliche Herausforderung</string>
-    <string name="trophee_titre_defi_quotidien_niveau_monique">%1$d Tage tägliche Herausforderung, Stufe Ça se complique, Monique oder höher</string>
+    <string name="trophee_titre_defi_quotidien_quatre_semaines">Vier Wochen tägliche Herausforderung</string>
+    <string name="trophee_titre_defi_quotidien_cinq_semaines">Fünf Wochen tägliche Herausforderung</string>
+    <string name="trophee_titre_defi_quotidien_six_semaines">Sechs Wochen tägliche Herausforderung</string>
     <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d Tage tägliche Herausforderung, Stufe C\'est du sérieux, Mathieu</string>
 
     <!-- Trophäenbeschreibungen -->
@@ -143,7 +145,6 @@
     <string name="trophee_desc_defi_sans_faute_niveau_monique">%1$d oder mehr Erfolge in Folge in der fehlerfreien Herausforderung erzielen, Zahlen und Wörter im Wechsel, auf Stufe Ça se complique, Monique oder C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">%1$d oder mehr Erfolge in Folge in der fehlerfreien Herausforderung erzielen, Zahlen und Wörter im Wechsel, auf Stufe C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_quotidien">Die tägliche Herausforderung %1$d Tage in Folge schaffen.</string>
-    <string name="trophee_desc_defi_quotidien_niveau_monique">Die tägliche Herausforderung %1$d Tage in Folge schaffen, auf Stufe Ça se complique, Monique oder C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_quotidien_niveau_mathieu">Die tägliche Herausforderung %1$d Tage in Folge schaffen, auf Stufe C\'est du sérieux, Mathieu.</string>
     <string name="trophee_titre_section_defi_complete">Meister der Herausforderungen</string>
     <string name="trophee_desc_section_defi_complete">Alle Trophäen im Bereich Herausforderungen freischalten.</string>

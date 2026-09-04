@@ -184,10 +184,8 @@ class TropheeRepository(
         meilleureSerieSansFauteNiveauMonique = defis.meilleureSerieSansFauteNiveauMonique,
         meilleureSerieSansFauteNiveauMathieu = defis.meilleureSerieSansFauteNiveauMathieu,
         meilleureSerieJoursDefiQuotidien = defiQuotidien.meilleureSerieJoursDefiQuotidien,
-        meilleureSerieJoursDefiQuotidienNiveauMonique = defiQuotidien.meilleureSerieJoursDefiQuotidienNiveauMonique,
         meilleureSerieJoursDefiQuotidienNiveauMathieu = defiQuotidien.meilleureSerieJoursDefiQuotidienNiveauMathieu,
         serieEnCoursJoursDefiQuotidien = defiQuotidien.serieEnCoursJoursDefiQuotidien,
-        serieEnCoursJoursDefiQuotidienNiveauMonique = defiQuotidien.serieEnCoursJoursDefiQuotidienNiveauMonique,
         serieEnCoursJoursDefiQuotidienNiveauMathieu = defiQuotidien.serieEnCoursJoursDefiQuotidienNiveauMathieu,
         partiesSoloStructureeJouees = easter.partiesSoloStructureeJouees,
         defisJouesTotal = defis.defisJouesTotal,
@@ -336,10 +334,8 @@ class TropheeRepository(
 
     private data class StatsDefiQuotidien(
         val meilleureSerieJoursDefiQuotidien: Int,
-        val meilleureSerieJoursDefiQuotidienNiveauMonique: Int,
         val meilleureSerieJoursDefiQuotidienNiveauMathieu: Int,
         val serieEnCoursJoursDefiQuotidien: Int,
-        val serieEnCoursJoursDefiQuotidienNiveauMonique: Int,
         val serieEnCoursJoursDefiQuotidienNiveauMathieu: Int,
     )
 
@@ -347,21 +343,12 @@ class TropheeRepository(
         meilleureSerieJoursDefiQuotidien = plusLongueSerieDeJours(
             defiQuotidienDao.joursReussis(profilId).mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
         ),
-        meilleureSerieJoursDefiQuotidienNiveauMonique = plusLongueSerieDeJours(
-            defiQuotidienDao.joursReussisNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)
-                .mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
-        ),
         meilleureSerieJoursDefiQuotidienNiveauMathieu = plusLongueSerieDeJours(
             defiQuotidienDao.joursReussisNiveaux(profilId, NIVEAUX_MATHIEU)
                 .mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.sorted(),
         ),
         serieEnCoursJoursDefiQuotidien = serieEnCoursDeJours(
             defiQuotidienDao.joursReussis(profilId).mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.toSet(),
-            aujourdHui,
-        ),
-        serieEnCoursJoursDefiQuotidienNiveauMonique = serieEnCoursDeJours(
-            defiQuotidienDao.joursReussisNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS)
-                .mapNotNull { runCatching { LocalDate.parse(it) }.getOrNull() }.toSet(),
             aujourdHui,
         ),
         serieEnCoursJoursDefiQuotidienNiveauMathieu = serieEnCoursDeJours(

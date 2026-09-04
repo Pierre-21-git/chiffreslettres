@@ -94,7 +94,9 @@
     <string name="trophee_titre_defi_quotidien_semaine">A week of daily challenges</string>
     <string name="trophee_titre_defi_quotidien_deux_semaines">Two weeks of daily challenges</string>
     <string name="trophee_titre_defi_quotidien_trois_semaines">Three weeks of daily challenge</string>
-    <string name="trophee_titre_defi_quotidien_niveau_monique">%1$d days of daily challenges, Ça se complique, Monique level or above</string>
+    <string name="trophee_titre_defi_quotidien_quatre_semaines">Four weeks of daily challenge</string>
+    <string name="trophee_titre_defi_quotidien_cinq_semaines">Five weeks of daily challenge</string>
+    <string name="trophee_titre_defi_quotidien_six_semaines">Six weeks of daily challenge</string>
     <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d days of daily challenges, C\'est du sérieux, Mathieu level</string>
 
     <!-- Trophy descriptions -->
@@ -143,7 +145,6 @@
     <string name="trophee_desc_defi_sans_faute_niveau_monique">Get %1$d or more wins in a row in the flawless challenge, numbers and letters alternating, at Ça se complique, Monique or C\'est du sérieux, Mathieu level.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Get %1$d or more wins in a row in the flawless challenge, numbers and letters alternating, at C\'est du sérieux, Mathieu level.</string>
     <string name="trophee_desc_defi_quotidien">Succeed at the daily challenge %1$d days in a row.</string>
-    <string name="trophee_desc_defi_quotidien_niveau_monique">Succeed at the daily challenge %1$d days in a row, at Ça se complique, Monique or C\'est du sérieux, Mathieu level.</string>
     <string name="trophee_desc_defi_quotidien_niveau_mathieu">Succeed at the daily challenge %1$d days in a row, at C\'est du sérieux, Mathieu level.</string>
     <string name="trophee_titre_section_defi_complete">Master of Challenges</string>
     <string name="trophee_desc_section_defi_complete">Unlock every trophy in the Challenges section.</string>

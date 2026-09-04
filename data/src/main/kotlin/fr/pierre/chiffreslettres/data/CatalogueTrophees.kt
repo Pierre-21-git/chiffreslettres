@@ -75,8 +75,6 @@ data class TropheeStats(
     val meilleureSerieSansFauteNiveauMathieu: Int,
     /** Plus longue série de jours consécutifs avec le défi quotidien réussi. */
     val meilleureSerieJoursDefiQuotidien: Int,
-    /** Comme [meilleureSerieJoursDefiQuotidien], restreint aux jours joués au niveau Monique ou Mathieu. */
-    val meilleureSerieJoursDefiQuotidienNiveauMonique: Int,
     /** Comme [meilleureSerieJoursDefiQuotidien], restreint aux jours joués au niveau Mathieu. */
     val meilleureSerieJoursDefiQuotidienNiveauMathieu: Int,
     /**
@@ -86,8 +84,6 @@ data class TropheeStats(
      * Le déblocage du trophée continue lui de se baser sur [meilleureSerieJoursDefiQuotidien].
      */
     val serieEnCoursJoursDefiQuotidien: Int,
-    /** Comme [serieEnCoursJoursDefiQuotidien], restreint aux jours joués au niveau Monique ou Mathieu. */
-    val serieEnCoursJoursDefiQuotidienNiveauMonique: Int,
     /** Comme [serieEnCoursJoursDefiQuotidien], restreint aux jours joués au niveau Mathieu. */
     val serieEnCoursJoursDefiQuotidienNiveauMathieu: Int,
 
@@ -324,13 +320,19 @@ private val PALIERS_DEFI_POINTS = mapOf(
 )
 
 private val LONGUEURS_MOTS_TROPHEE = 4..10
-// Défi quotidien : rythme hebdomadaire (refonte 2026-08, seuil Émeraude ajusté 2026-09-03) — 1/2/3
-// semaines tous niveaux, 4 semaines au niveau Monique+, puis 35/42/56/70 jours au niveau Mathieu.
+// Défi quotidien : rythme hebdomadaire (refonte 2026-08, seuil Émeraude ajusté 2026-09-03). 1/2/3
+// semaines tous niveaux (Bronze/Argent/Or), puis 4/5/6 semaines tous niveaux également (Platine/
+// Émeraude/Saphir, retour utilisateur 2026-09-04 : la contrainte de niveau Monique/Mathieu de ces
+// trois paliers a été retirée, seul le nombre de jours d'affilée compte désormais). Rubis et
+// Diamant (56/70 jours) restent réservés au niveau Mathieu.
 private val SEUILS_DEFI_QUOTIDIEN = listOf(7, 14, 21)
-private const val SEUIL_DEFI_QUOTIDIEN_NIVEAU_MONIQUE = 28
-private val SEUILS_DEFI_QUOTIDIEN_NIVEAU_MATHIEU = listOf(35, 42, 56, 70)
+private val SEUILS_DEFI_QUOTIDIEN_SANS_NIVEAU = listOf(28, 35, 42)
+private val PALIERS_DEFI_QUOTIDIEN_SANS_NIVEAU = mapOf(
+    28 to Palier.PLATINE, 35 to Palier.EMERAUDE, 42 to Palier.SAPHIR,
+)
+private val SEUILS_DEFI_QUOTIDIEN_NIVEAU_MATHIEU = listOf(56, 70)
 private val PALIERS_DEFI_QUOTIDIEN_NIVEAU_MATHIEU = mapOf(
-    35 to Palier.EMERAUDE, 42 to Palier.SAPHIR, 56 to Palier.RUBIS, 70 to Palier.DIAMANT,
+    56 to Palier.RUBIS, 70 to Palier.DIAMANT,
 )
 
 // Paliers (refonte 2026-08, cf. trophées_paliers2.xlsx).
@@ -897,6 +899,9 @@ object CatalogueTrophees {
         // objectifs selon le niveau (Émile/Nestor/Monique/Mathieu, cf. `ParametresDefi.kt`), ce qui
         // rend les seuils 8/10/12/15 atteignables en une seule partie à partir du niveau Monique
         // (8) ou Mathieu (15) — plus besoin de distinguer un palier "défi complet" par niveau.
+        // Depuis le 2026-09-04, la version jouée dans le défi quotidien utilise un barème réduit
+        // (2/3/4/8, `estDefiQuotidien = true`) — les seuils 10/12/15 ne restent atteignables qu'en
+        // jouant le Défi Points en mode libre (menu, hors tirage quotidien).
         for (seuil in SEUILS_DEFI_POINTS) {
             add(
                 Trophee(
@@ -961,6 +966,9 @@ object CatalogueTrophees {
             7 to R.string.trophee_titre_defi_quotidien_semaine,
             14 to R.string.trophee_titre_defi_quotidien_deux_semaines,
             21 to R.string.trophee_titre_defi_quotidien_trois_semaines,
+            28 to R.string.trophee_titre_defi_quotidien_quatre_semaines,
+            35 to R.string.trophee_titre_defi_quotidien_cinq_semaines,
+            42 to R.string.trophee_titre_defi_quotidien_six_semaines,
         )
         for (seuil in SEUILS_DEFI_QUOTIDIEN) {
             add(
@@ -976,19 +984,35 @@ object CatalogueTrophees {
                 ) { it.meilleureSerieJoursDefiQuotidien >= seuil },
             )
         }
+        // Platine/Émeraude/Saphir : les ids gardent le suffixe "_monique"/"_mathieu" historique
+        // (ne pas les renommer — ça invaliderait les trophées déjà débloqués par les joueurs) même
+        // si la contrainte de niveau a été retirée, cf. commentaire au-dessus de [SEUILS_DEFI_QUOTIDIEN_SANS_NIVEAU].
         add(
             Trophee(
                 "defi_quotidien_28_monique",
-                titreRes = R.string.trophee_titre_defi_quotidien_niveau_monique,
-                titreArgs = listOf(SEUIL_DEFI_QUOTIDIEN_NIVEAU_MONIQUE),
-                descriptionRes = R.string.trophee_desc_defi_quotidien_niveau_monique,
-                descriptionArgs = listOf(SEUIL_DEFI_QUOTIDIEN_NIVEAU_MONIQUE),
+                titreRes = titresPaliersQuotidien.getValue(28),
+                descriptionRes = R.string.trophee_desc_defi_quotidien,
+                descriptionArgs = listOf(28),
                 categorie = CategorieTrophee.DEFI_QUOTIDIEN,
-                palier = Palier.PLATINE,
-                objectif = SEUIL_DEFI_QUOTIDIEN_NIVEAU_MONIQUE,
-                progression = { it.serieEnCoursJoursDefiQuotidienNiveauMonique },
-            ) { it.meilleureSerieJoursDefiQuotidienNiveauMonique >= SEUIL_DEFI_QUOTIDIEN_NIVEAU_MONIQUE },
+                palier = PALIERS_DEFI_QUOTIDIEN_SANS_NIVEAU.getValue(28),
+                objectif = 28,
+                progression = { it.serieEnCoursJoursDefiQuotidien },
+            ) { it.meilleureSerieJoursDefiQuotidien >= 28 },
         )
+        for (seuil in listOf(35, 42)) {
+            add(
+                Trophee(
+                    "defi_quotidien_${seuil}_mathieu",
+                    titreRes = titresPaliersQuotidien.getValue(seuil),
+                    descriptionRes = R.string.trophee_desc_defi_quotidien,
+                    descriptionArgs = listOf(seuil),
+                    categorie = CategorieTrophee.DEFI_QUOTIDIEN,
+                    palier = PALIERS_DEFI_QUOTIDIEN_SANS_NIVEAU.getValue(seuil),
+                    objectif = seuil,
+                    progression = { it.serieEnCoursJoursDefiQuotidien },
+                ) { it.meilleureSerieJoursDefiQuotidien >= seuil },
+            )
+        }
         for (seuil in SEUILS_DEFI_QUOTIDIEN_NIVEAU_MATHIEU) {
             add(
                 Trophee(

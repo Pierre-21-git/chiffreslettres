@@ -94,7 +94,9 @@
     <string name="trophee_titre_defi_quotidien_semaine">Une semaine de défi quotidien</string>
     <string name="trophee_titre_defi_quotidien_deux_semaines">Deux semaines de défi quotidien</string>
     <string name="trophee_titre_defi_quotidien_trois_semaines">3 semaines de défi quotidien</string>
-    <string name="trophee_titre_defi_quotidien_niveau_monique">%1$d jours de défi quotidien, niveau Ça se complique, Monique ou plus</string>
+    <string name="trophee_titre_defi_quotidien_quatre_semaines">4 semaines de défi quotidien</string>
+    <string name="trophee_titre_defi_quotidien_cinq_semaines">5 semaines de défi quotidien</string>
+    <string name="trophee_titre_defi_quotidien_six_semaines">6 semaines de défi quotidien</string>
     <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d jours de défi quotidien, niveau C\'est du sérieux, Mathieu</string>
 
     <!-- Descriptions de trophées -->
@@ -143,7 +145,6 @@
     <string name="trophee_desc_defi_sans_faute_niveau_monique">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés, au niveau Ça se complique, Monique ou C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés, au niveau C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_quotidien">Réussir le défi quotidien %1$d jours d\'affilée.</string>
-    <string name="trophee_desc_defi_quotidien_niveau_monique">Réussir le défi quotidien %1$d jours d\'affilée, au niveau Ça se complique, Monique ou C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_quotidien_niveau_mathieu">Réussir le défi quotidien %1$d jours d\'affilée, au niveau C\'est du sérieux, Mathieu.</string>
     <string name="trophee_titre_section_defi_complete">Maître des défis</string>
     <string name="trophee_desc_section_defi_complete">Débloquer tous les trophées de la section Défis.</string>

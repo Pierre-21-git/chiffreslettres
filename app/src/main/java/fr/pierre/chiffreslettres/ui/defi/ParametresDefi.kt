@@ -51,10 +51,25 @@ const val DUREE_SECONDES_DEFI_MOTS_MAX = 300
 /** Nombre maximal de mots affichés dans "mots possibles" en fin de défi (retour utilisateur : au-delà, la grille devient illisible). Le calcul du score/de la fin du défi reste basé sur la liste complète, seul l'affichage est plafonné. */
 const val MAX_MOTS_POSSIBLES_AFFICHES = 100
 
-/** Nombre d'objectifs de points à atteindre en défi Points, selon le niveau (retour utilisateur 2026-09-03). */
-fun nombreObjectifsDefiPoints(niveau: NiveauLettres): Int = when (niveau) {
-    NiveauLettres.EMILE -> 3
-    NiveauLettres.NESTOR -> 5
-    NiveauLettres.MONIQUE -> 8
-    NiveauLettres.MATHIEU -> 15
-}
+/**
+ * Nombre d'objectifs de points à atteindre en défi Points, selon le niveau (retour utilisateur
+ * 2026-09-03). Réduit de moitié quand [estDefiQuotidien] (retour utilisateur 2026-09-04) : atteindre
+ * 15 objectifs dans le temps imparti du défi quotidien était jugé trop difficile ; le mode libre
+ * (Défi Points joué depuis le menu, hors tirage quotidien) garde le barème complet.
+ */
+fun nombreObjectifsDefiPoints(niveau: NiveauLettres, estDefiQuotidien: Boolean = false): Int =
+    if (estDefiQuotidien) {
+        when (niveau) {
+            NiveauLettres.EMILE -> 2
+            NiveauLettres.NESTOR -> 3
+            NiveauLettres.MONIQUE -> 4
+            NiveauLettres.MATHIEU -> 8
+        }
+    } else {
+        when (niveau) {
+            NiveauLettres.EMILE -> 3
+            NiveauLettres.NESTOR -> 5
+            NiveauLettres.MONIQUE -> 8
+            NiveauLettres.MATHIEU -> 15
+        }
+    }

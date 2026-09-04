@@ -91,7 +91,7 @@ class DefiObjectifsPointsViewModel(
 
     private var sac = sacNeuf()
     private val niveauCode = niveau.name
-    private val nombreObjectifsCible = nombreObjectifsDefiPoints(niveau)
+    private val nombreObjectifsCible = nombreObjectifsDefiPoints(niveau, estDefiQuotidien = jourQuotidien != null)
     private var timerJob: Job? = null
     private var enregistre = false
     /** Calculés une fois le tirage connu (retour utilisateur : révélés en fin de défi, comme en défi mots max). */
