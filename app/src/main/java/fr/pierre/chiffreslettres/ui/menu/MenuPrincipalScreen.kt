@@ -46,7 +46,6 @@ fun MenuPrincipalScreen(
     onDefiChrono: () -> Unit,
     onDefiMotsMax: () -> Unit,
     onDefiPoints: () -> Unit,
-    onDefiSansFaute: () -> Unit,
     onDefiQuotidien: () -> Unit,
     onStatistiques: () -> Unit,
     onChangerProfil: () -> Unit,
@@ -87,7 +86,6 @@ fun MenuPrincipalScreen(
         TuilePrincipale(stringResource(R.string.defi_type_chrono), onClick = onDefiChrono)
         TuilePrincipale(stringResource(R.string.defi_type_mots_max), onClick = onDefiMotsMax)
         TuilePrincipale(stringResource(R.string.defi_type_points), onClick = onDefiPoints)
-        TuilePrincipale(stringResource(R.string.defi_type_sans_faute), onClick = onDefiSansFaute)
         TuilePrincipale(stringResource(R.string.defi_quotidien_titre), onClick = onDefiQuotidien)
 
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), color = Ivory.copy(alpha = 0.15f))

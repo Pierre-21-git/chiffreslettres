@@ -11,7 +11,6 @@
     <string name="categorie_defi_chrono">Desafío cronometrado</string>
     <string name="categorie_defi_mots_max">Desafío de palabras</string>
     <string name="categorie_defi_points">Desafío de Puntos</string>
-    <string name="categorie_defi_sans_faute">Desafío sin fallos</string>
     <string name="categorie_defi_quotidien">Desafío diario</string>
     <string name="categorie_trophees_speciaux">Easter eggs</string>
 
@@ -87,17 +86,15 @@
     <string name="trophee_titre_defi_mots_max">%1$d palabras en un mismo sorteo</string>
     <string name="trophee_titre_defi_mots_max_niveau_monique">%1$d palabras en un mismo sorteo, nivel Ça se complique, Monique o superior</string>
     <string name="trophee_titre_defi_mots_max_niveau_mathieu">%1$d palabras en un mismo sorteo, nivel C\'est du sérieux, Mathieu</string>
-    <string name="trophee_titre_defi_points">%1$d objetivo(s) de puntos alcanzado(s) en una partida</string>
-    <string name="trophee_titre_defi_sans_faute">Una racha sin fallos de %1$d</string>
-    <string name="trophee_titre_defi_sans_faute_niveau_monique">Una racha sin fallos de %1$d, nivel Ça se complique, Monique o superior</string>
-    <string name="trophee_titre_defi_sans_faute_niveau_mathieu">Una racha sin fallos de %1$d, nivel C\'est du sérieux, Mathieu</string>
+    <string name="trophee_titre_defi_points_1">Primer desafío de Puntos con %1$d objetivo(s) alcanzado(s)</string>
+    <string name="trophee_titre_defi_points_10">Décimo desafío de Puntos con %1$d objetivos alcanzados</string>
     <string name="trophee_titre_defi_quotidien_semaine">Una semana de desafío diario</string>
     <string name="trophee_titre_defi_quotidien_deux_semaines">Dos semanas de desafío diario</string>
     <string name="trophee_titre_defi_quotidien_trois_semaines">Tres semanas de desafío diario</string>
     <string name="trophee_titre_defi_quotidien_quatre_semaines">Cuatro semanas de desafío diario</string>
     <string name="trophee_titre_defi_quotidien_cinq_semaines">Cinco semanas de desafío diario</string>
     <string name="trophee_titre_defi_quotidien_six_semaines">Seis semanas de desafío diario</string>
-    <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d días de desafío diario, nivel C\'est du sérieux, Mathieu</string>
+    <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d semanas de desafío diario, nivel C\'est du sérieux, Mathieu</string>
 
     <!-- Descripciones de trofeos -->
     <string name="trophee_desc_compte_exact_1">Obtener un resultado exacto en números, en una partida (individual, dúo o enfrentamiento).</string>
@@ -140,12 +137,10 @@
     <string name="trophee_desc_defi_mots_max">Encontrar %1$d palabras o más en el mismo sorteo de letras, en el desafío de palabras.</string>
     <string name="trophee_desc_defi_mots_max_niveau_monique">Encontrar %1$d palabras o más en el mismo sorteo de letras, en el desafío de palabras, en el nivel Ça se complique, Monique o C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_mots_max_niveau_mathieu">Encontrar %1$d palabras o más en el mismo sorteo de letras, en el desafío de palabras, en el nivel C\'est du sérieux, Mathieu.</string>
-    <string name="trophee_desc_defi_points">Alcanzar al menos %1$d objetivo(s) de puntos en una sola partida del desafío de Puntos.</string>
-    <string name="trophee_desc_defi_sans_faute">Encadenar %1$d victorias o más seguidas en el desafío sin fallos, números y letras alternados.</string>
-    <string name="trophee_desc_defi_sans_faute_niveau_monique">Encadenar %1$d victorias o más seguidas en el desafío sin fallos, números y letras alternados, en el nivel Ça se complique, Monique o C\'est du sérieux, Mathieu.</string>
-    <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Encadenar %1$d victorias o más seguidas en el desafío sin fallos, números y letras alternados, en el nivel C\'est du sérieux, Mathieu.</string>
+    <string name="trophee_desc_defi_points_1">Alcanzar al menos %1$d objetivo(s) de puntos en un desafío de Puntos.</string>
+    <string name="trophee_desc_defi_points_10">Alcanzar al menos %1$d objetivos de puntos en 10 desafíos de Puntos.</string>
     <string name="trophee_desc_defi_quotidien">Superar el desafío diario %1$d días seguidos.</string>
-    <string name="trophee_desc_defi_quotidien_niveau_mathieu">Superar el desafío diario %1$d días seguidos, en el nivel C\'est du sérieux, Mathieu.</string>
+    <string name="trophee_desc_defi_quotidien_niveau_mathieu">Superar el desafío diario %1$d semanas seguidas, en el nivel C\'est du sérieux, Mathieu.</string>
     <string name="trophee_titre_section_defi_complete">Maestro de los desafíos</string>
     <string name="trophee_desc_section_defi_complete">Desbloquear todos los trofeos de la sección Desafíos.</string>
     <string name="trophee_titre_section_partie_complete">Maestro de las partidas</string>
@@ -205,6 +200,8 @@
     <string name="trophee_desc_easter_symetrique">Jugar una palabra cuyas letras estén en orden alfabético (ej.: «chintz»).</string>
     <string name="trophee_titre_easter_alphabet_complet">Alfabeto completo</string>
     <string name="trophee_desc_easter_alphabet_complet">Usar, acumulado en todas tus partidas, cada letra del alfabeto al menos una vez.</string>
+    <string name="trophee_titre_easter_meilleur_mot_tirage">La palabra más larga posible</string>
+    <string name="trophee_desc_easter_meilleur_mot_tirage">Encontrar, en una partida (solo, dúo o cara a cara), una de las palabras más largas jugables con tu tirada de letras.</string>
     <string name="trophee_titre_easter_curieux">Curioso</string>
     <string name="trophee_desc_easter_curieux">Consultar la página de reglas del juego.</string>
     <string name="trophee_titre_easter_data_lover">Amante de los datos</string>

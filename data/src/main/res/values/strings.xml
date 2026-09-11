@@ -11,7 +11,6 @@
     <string name="categorie_defi_chrono">Défi chrono</string>
     <string name="categorie_defi_mots_max">Défi mots</string>
     <string name="categorie_defi_points">Défi Points</string>
-    <string name="categorie_defi_sans_faute">Défi sans faute</string>
     <string name="categorie_defi_quotidien">Défi quotidien</string>
     <string name="categorie_trophees_speciaux">Easter eggs</string>
 
@@ -87,17 +86,15 @@
     <string name="trophee_titre_defi_mots_max">%1$d mots sur un même tirage</string>
     <string name="trophee_titre_defi_mots_max_niveau_monique">%1$d mots sur un même tirage, niveau Ça se complique, Monique ou plus</string>
     <string name="trophee_titre_defi_mots_max_niveau_mathieu">%1$d mots sur un même tirage, niveau C\'est du sérieux, Mathieu</string>
-    <string name="trophee_titre_defi_points">%1$d objectif(s) de points atteint(s) en une partie</string>
-    <string name="trophee_titre_defi_sans_faute">Série de %1$d sans faute</string>
-    <string name="trophee_titre_defi_sans_faute_niveau_monique">Série de %1$d sans faute, niveau Ça se complique, Monique ou plus</string>
-    <string name="trophee_titre_defi_sans_faute_niveau_mathieu">Série de %1$d sans faute, niveau C\'est du sérieux, Mathieu</string>
+    <string name="trophee_titre_defi_points_1">Premier défi à %1$d objectif(s) de points atteints</string>
+    <string name="trophee_titre_defi_points_10">Dixième défi à %1$d objectifs de points atteints</string>
     <string name="trophee_titre_defi_quotidien_semaine">Une semaine de défi quotidien</string>
     <string name="trophee_titre_defi_quotidien_deux_semaines">Deux semaines de défi quotidien</string>
     <string name="trophee_titre_defi_quotidien_trois_semaines">3 semaines de défi quotidien</string>
     <string name="trophee_titre_defi_quotidien_quatre_semaines">4 semaines de défi quotidien</string>
     <string name="trophee_titre_defi_quotidien_cinq_semaines">5 semaines de défi quotidien</string>
     <string name="trophee_titre_defi_quotidien_six_semaines">6 semaines de défi quotidien</string>
-    <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d jours de défi quotidien, niveau C\'est du sérieux, Mathieu</string>
+    <string name="trophee_titre_defi_quotidien_niveau_mathieu">%1$d semaines de défi quotidien, niveau C\'est du sérieux, Mathieu</string>
 
     <!-- Descriptions de trophées -->
     <string name="trophee_desc_compte_exact_1">Obtenir un compte exact en chiffres, en partie (solo, duo ou confrontation).</string>
@@ -140,12 +137,10 @@
     <string name="trophee_desc_defi_mots_max">Trouver %1$d mots ou plus sur le même tirage de lettres, en défi mots.</string>
     <string name="trophee_desc_defi_mots_max_niveau_monique">Trouver %1$d mots ou plus sur le même tirage de lettres, en défi mots, au niveau Ça se complique, Monique ou C\'est du sérieux, Mathieu.</string>
     <string name="trophee_desc_defi_mots_max_niveau_mathieu">Trouver %1$d mots ou plus sur le même tirage de lettres, en défi mots, au niveau C\'est du sérieux, Mathieu.</string>
-    <string name="trophee_desc_defi_points">Atteindre au moins %1$d objectif(s) de points en une seule partie de défi Points.</string>
-    <string name="trophee_desc_defi_sans_faute">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés.</string>
-    <string name="trophee_desc_defi_sans_faute_niveau_monique">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés, au niveau Ça se complique, Monique ou C\'est du sérieux, Mathieu.</string>
-    <string name="trophee_desc_defi_sans_faute_niveau_mathieu">Aligner %1$d réussites ou plus d\'affilée en défi sans faute, chiffres et lettres alternés, au niveau C\'est du sérieux, Mathieu.</string>
+    <string name="trophee_desc_defi_points_1">Atteindre au moins %1$d objectif(s) de points en un défi Points.</string>
+    <string name="trophee_desc_defi_points_10">Atteindre au moins %1$d objectifs de points dans 10 défis Points.</string>
     <string name="trophee_desc_defi_quotidien">Réussir le défi quotidien %1$d jours d\'affilée.</string>
-    <string name="trophee_desc_defi_quotidien_niveau_mathieu">Réussir le défi quotidien %1$d jours d\'affilée, au niveau C\'est du sérieux, Mathieu.</string>
+    <string name="trophee_desc_defi_quotidien_niveau_mathieu">Réussir le défi quotidien %1$d semaines d\'affilée, au niveau C\'est du sérieux, Mathieu.</string>
     <string name="trophee_titre_section_defi_complete">Maître des défis</string>
     <string name="trophee_desc_section_defi_complete">Débloquer tous les trophées de la section Défis.</string>
     <string name="trophee_titre_section_partie_complete">Maître des parties</string>
@@ -205,6 +200,8 @@
     <string name="trophee_desc_easter_symetrique">Jouer un mot dont les lettres sont en ordre alphabétique (ex : \"chintz\").</string>
     <string name="trophee_titre_easter_alphabet_complet">Alphabet complet</string>
     <string name="trophee_desc_easter_alphabet_complet">Utiliser, cumulé sur toutes ses parties, chaque lettre de l\'alphabet au moins une fois.</string>
+    <string name="trophee_titre_easter_meilleur_mot_tirage">Le plus long mot possible</string>
+    <string name="trophee_desc_easter_meilleur_mot_tirage">Trouver, en partie (solo, duo ou confrontation), l\'un des mots les plus longs jouables sur son tirage de lettres.</string>
     <string name="trophee_titre_easter_curieux">Curieux</string>
     <string name="trophee_desc_easter_curieux">Consulter la page des règles du jeu.</string>
     <string name="trophee_titre_easter_data_lover">Data-lover</string>

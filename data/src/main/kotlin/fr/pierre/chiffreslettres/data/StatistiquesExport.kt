@@ -49,6 +49,7 @@ object StatistiquesExport {
                         .put("score", manche.score)
                         .put("motJoue", manche.motJoue ?: JSONObject.NULL)
                         .put("longueurMotInvalide", manche.longueurMotInvalide ?: JSONObject.NULL)
+                        .put("meilleurMotTirageJoue", manche.meilleurMotTirageJoue ?: JSONObject.NULL)
                         .put("cibleChiffres", manche.cibleChiffres ?: JSONObject.NULL)
                         .put("nombreOperationsChiffres", manche.nombreOperationsChiffres ?: JSONObject.NULL)
                         .put("maxEtapeIntermediaireChiffres", manche.maxEtapeIntermediaireChiffres ?: JSONObject.NULL)
@@ -133,6 +134,7 @@ object StatistiquesExport {
                         // sentinelle plutôt que `getInt`, pour rester compatible avec un ancien
                         // fichier exporté qui ne contient pas encore ces clés.
                         longueurMotInvalide = if (m.isNull("longueurMotInvalide")) null else m.optInt("longueurMotInvalide"),
+                        meilleurMotTirageJoue = if (m.isNull("meilleurMotTirageJoue")) null else m.optBoolean("meilleurMotTirageJoue"),
                         cibleChiffres = if (m.isNull("cibleChiffres")) null else m.optInt("cibleChiffres"),
                         nombreOperationsChiffres = if (m.isNull("nombreOperationsChiffres")) null else m.optInt("nombreOperationsChiffres"),
                         maxEtapeIntermediaireChiffres = if (m.isNull("maxEtapeIntermediaireChiffres")) null else m.optInt("maxEtapeIntermediaireChiffres"),

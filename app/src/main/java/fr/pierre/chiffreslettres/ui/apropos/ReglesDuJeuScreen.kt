@@ -51,7 +51,6 @@ fun ReglesDuJeuScreen(onRetour: (() -> Unit)? = null) {
         ReglesModeDefiChrono()
         ReglesModeDefiMots()
         ReglesModeDefiPoints()
-        ReglesModeDefiSansFaute()
         ReglesModeDefiQuotidien()
         ReglesModeDuelMots()
     }
@@ -183,6 +182,11 @@ fun ReglesModeDefiPoints() {
     }
 }
 
+/**
+ * Mode retiré du menu (retour utilisateur, 2026-09-10) : plus appelée depuis [ReglesDuJeuScreen],
+ * conservée uniquement parce que `DefiQuotidienScreen` garde une branche exhaustive sur
+ * `TypeDefi.SANS_FAUTE` (jamais tirée en pratique, cf. doc `TypeDefi`).
+ */
 @Composable
 fun ReglesModeDefiSansFaute() {
     SectionRegle(stringResource(R.string.regles_mode_defi_sans_faute_titre)) {

@@ -440,9 +440,8 @@ private fun typesPartieAffiches(): List<Pair<TypePartie, String>> = listOf(
 
 /**
  * Une combinaison (type de défi, mode) affichée comme une section distincte (retour utilisateur :
- * défi série et défi chrono existent en chiffres ET en lettres, mots max est lettres uniquement,
- * sans faute mélange les deux mais stocké sous `ModeJeu.CHIFFRES` par convention, cf. DefiEntity).
- * [formatValeurRes] : "X réussites" pour série/chrono/sans faute, "X mots" pour mots max.
+ * défi série et défi chrono existent en chiffres ET en lettres, mots max est lettres uniquement).
+ * [formatValeurRes] : "X réussites" pour série/chrono, "X mots" pour mots max.
  */
 private data class VarianteDefi(val type: TypeDefi, val mode: ModeJeu, val libelle: String, val formatValeurRes: Int)
 
@@ -453,7 +452,6 @@ private fun variantesDefi(): List<VarianteDefi> {
     val serie = stringResource(R.string.defi_type_serie)
     val chrono = stringResource(R.string.defi_type_chrono)
     val mots = stringResource(R.string.defi_type_mots_max)
-    val sansFaute = stringResource(R.string.defi_type_sans_faute)
     val formatReussites = R.string.statistiques_defi_valeur_reussites
     val formatMots = R.string.statistiques_defi_valeur_mots
     return listOf(
@@ -462,7 +460,6 @@ private fun variantesDefi(): List<VarianteDefi> {
         VarianteDefi(TypeDefi.CHRONO, ModeJeu.CHIFFRES, "$chrono — $chiffres", formatReussites),
         VarianteDefi(TypeDefi.CHRONO, ModeJeu.LETTRES, "$chrono — $lettres", formatReussites),
         VarianteDefi(TypeDefi.MOTS_MAX, ModeJeu.LETTRES, mots, formatMots),
-        VarianteDefi(TypeDefi.SANS_FAUTE, ModeJeu.CHIFFRES, sansFaute, formatReussites),
     )
 }
 

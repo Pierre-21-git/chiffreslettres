@@ -212,8 +212,6 @@
     <string name="grille_mots_titre_longueur">Mots de %1$d lettres</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
-    <string name="defi_sans_faute_libelle_progression">Série</string>
-    <string name="defi_sans_faute_recap">Série terminée : %1$d réussite(s)</string>
 
     <!-- ui/partiereseau/DeclencherMancheChiffresScreen -->
     <string name="declencher_manche_progression">Manche %1$s</string>

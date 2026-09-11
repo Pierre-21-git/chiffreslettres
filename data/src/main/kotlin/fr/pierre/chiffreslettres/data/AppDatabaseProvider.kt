@@ -228,6 +228,18 @@ private val MIGRATION_16_17 = object : Migration(16, 17) {
     }
 }
 
+/**
+ * v17 → v18 : ajout de la colonne `meilleurMotTirageJoue` sur `MancheEntity` (retour mainteneur :
+ * easter egg "Le plus long mot possible", trouver un mot de longueur maximale jouable sur le
+ * tirage). Nullable, sans défaut — les manches déjà enregistrées n'ont pas cette info et ne
+ * compteront simplement pas pour ce trophée.
+ */
+private val MIGRATION_17_18 = object : Migration(17, 18) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `MancheEntity` ADD COLUMN `meilleurMotTirageJoue` INTEGER")
+    }
+}
+
 /** Même pattern singleton que `DictionnaireProvider` côté :app. */
 object AppDatabaseProvider {
     @Volatile private var instance: AppDatabase? = null
@@ -239,7 +251,7 @@ object AppDatabaseProvider {
                     MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5,
                     MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10,
                     MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15,
-                    MIGRATION_15_16, MIGRATION_16_17,
+                    MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18,
                 )
                 .build()
                 .also { instance = it }

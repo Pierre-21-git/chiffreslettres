@@ -156,8 +156,6 @@
     <string name="grille_mots_titre_longueur">Wörter mit %1$d Buchstaben</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
-    <string name="defi_sans_faute_libelle_progression">Serie</string>
-    <string name="defi_sans_faute_recap">Serie beendet: %1$d Erfolg(e)</string>
 
     <string name="declencher_manche_progression">Runde %1$s</string>
     <string name="declencher_manche_commencer">Runde starten</string>

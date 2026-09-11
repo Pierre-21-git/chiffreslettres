@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.first
 private val SEUILS_MOTS = listOf(4, 5, 6, 7, 8)
 private val SEUILS_MOTS_NIVEAU_MATHIEU = listOf(7, 8)
 private val SEUILS_SCORE = listOf(20, 30, 40, 50, 60, 70, 80, 90)
+private val SEUILS_DEFI_POINTS = listOf(1, 3, 5, 8, 10, 12, 15)
 private val LONGUEURS_MOTS_TROPHEE = 4..10
 private val NIVEAUX_MONIQUE_OU_PLUS = listOf("MONIQUE", "MATHIEU")
 private val NIVEAUX_MATHIEU = listOf("MATHIEU")
@@ -179,10 +180,7 @@ class TropheeRepository(
         meilleurScoreDefiMotsMax = defis.meilleurScoreDefiMotsMax,
         meilleurScoreDefiMotsMaxNiveauMonique = defis.meilleurScoreDefiMotsMaxNiveauMonique,
         meilleurScoreDefiMotsMaxNiveauMathieu = defis.meilleurScoreDefiMotsMaxNiveauMathieu,
-        meilleurScoreDefiObjectifsPoints = defis.meilleurScoreDefiObjectifsPoints,
-        meilleureSerieSansFaute = defis.meilleureSerieSansFaute,
-        meilleureSerieSansFauteNiveauMonique = defis.meilleureSerieSansFauteNiveauMonique,
-        meilleureSerieSansFauteNiveauMathieu = defis.meilleureSerieSansFauteNiveauMathieu,
+        defisPointsParSeuilScore = defis.defisPointsParSeuilScore,
         meilleureSerieJoursDefiQuotidien = defiQuotidien.meilleureSerieJoursDefiQuotidien,
         meilleureSerieJoursDefiQuotidienNiveauMathieu = defiQuotidien.meilleureSerieJoursDefiQuotidienNiveauMathieu,
         serieEnCoursJoursDefiQuotidien = defiQuotidien.serieEnCoursJoursDefiQuotidien,
@@ -207,6 +205,7 @@ class TropheeRepository(
         motInvalideDixLettresTente = easter.motInvalideDixLettresTente,
         egaliteDuelDejaObtenue = easter.egaliteDuelDejaObtenue,
         scoreSoloRepete = easter.scoreSoloRepete,
+        meilleurMotTirageJoue = easter.meilleurMotTirageJoue,
         compteExactCibleNombrePremier = easterChiffres.compteExactCibleNombrePremier,
         compteExactCalculMental = easterChiffres.compteExactCalculMental,
         compteExactCheminMinimal = easterChiffres.compteExactCheminMinimal,
@@ -296,10 +295,7 @@ class TropheeRepository(
         val meilleurScoreDefiMotsMax: Int,
         val meilleurScoreDefiMotsMaxNiveauMonique: Int,
         val meilleurScoreDefiMotsMaxNiveauMathieu: Int,
-        val meilleurScoreDefiObjectifsPoints: Int,
-        val meilleureSerieSansFaute: Int,
-        val meilleureSerieSansFauteNiveauMonique: Int,
-        val meilleureSerieSansFauteNiveauMathieu: Int,
+        val defisPointsParSeuilScore: Map<Int, Int>,
         val defisJouesTotal: Int,
         val secondesJoueesDefis: Int,
     )
@@ -323,10 +319,7 @@ class TropheeRepository(
             meilleurScoreDefiMotsMax = defiDao.meilleurScoreDefiMotsMax(profilId) ?: 0,
             meilleurScoreDefiMotsMaxNiveauMonique = defiDao.meilleurScoreDefiMotsMaxNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS) ?: 0,
             meilleurScoreDefiMotsMaxNiveauMathieu = defiDao.meilleurScoreDefiMotsMaxNiveaux(profilId, NIVEAUX_MATHIEU) ?: 0,
-            meilleurScoreDefiObjectifsPoints = objectifsPointsDetail.maxOfOrNull { it.serie } ?: 0,
-            meilleureSerieSansFaute = defiDao.meilleureSerieSansFaute(profilId) ?: 0,
-            meilleureSerieSansFauteNiveauMonique = defiDao.meilleureSerieSansFauteNiveaux(profilId, NIVEAUX_MONIQUE_OU_PLUS) ?: 0,
-            meilleureSerieSansFauteNiveauMathieu = defiDao.meilleureSerieSansFauteNiveaux(profilId, NIVEAUX_MATHIEU) ?: 0,
+            defisPointsParSeuilScore = SEUILS_DEFI_POINTS.associateWith { seuil -> objectifsPointsDetail.count { it.serie >= seuil } },
             defisJouesTotal = defiDao.compterDefisTotal(profilId),
             secondesJoueesDefis = defiDao.sommeSecondesDefis(profilId),
         )
@@ -378,6 +371,7 @@ class TropheeRepository(
         val motInvalideDixLettresTente: Boolean,
         val egaliteDuelDejaObtenue: Boolean,
         val scoreSoloRepete: Boolean,
+        val meilleurMotTirageJoue: Boolean,
     )
 
     private suspend fun statsEasterGeneral(
@@ -405,6 +399,7 @@ class TropheeRepository(
         motInvalideDixLettresTente = historiqueDao.compterMotsInvalidesDixLettresOuPlus(profilId) >= 1,
         egaliteDuelDejaObtenue = historiqueDao.compterEgalitesDuel(profilId) >= 1,
         scoreSoloRepete = historiqueDao.compterScoresSoloRepetes(profilId) >= 1,
+        meilleurMotTirageJoue = historiqueDao.compterMeilleurMotTirageJoue(profilId) >= 1,
     )
 
     private data class StatsEasterChiffres(

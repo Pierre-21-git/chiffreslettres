@@ -59,14 +59,12 @@ import fr.pierre.chiffreslettres.ui.apropos.ReglesDuJeuScreen
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiChrono
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiMots
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiPoints
-import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSansFaute
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDefiSerie
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModeDuelMots
 import fr.pierre.chiffreslettres.ui.apropos.ReglesModePartieDuo
 import fr.pierre.chiffreslettres.ui.apropos.VersionsScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundScreen
 import fr.pierre.chiffreslettres.ui.chiffres.ChiffresRoundViewModel
-import fr.pierre.chiffreslettres.ui.defi.ChoixDefiSansFauteScreen
 import fr.pierre.chiffreslettres.ui.defi.ChoixDefiScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiMotsMaxScreen
 import fr.pierre.chiffreslettres.ui.defi.DefiMotsMaxViewModel
@@ -131,6 +129,15 @@ import fr.pierre.chiffreslettres.ui.trophees.StatutJoueurScreen
 import fr.pierre.chiffreslettres.ui.trophees.TropheesScreen
 import java.time.LocalDate
 import kotlin.random.Random
+
+/**
+ * Le mot joué est-il l'un des mots de longueur maximale jouables sur ce tirage (easter egg "Le
+ * plus long mot possible") ? Null si aucun mot valide n'a été soumis. Le tirage n'étant pas
+ * persisté, la comparaison de longueurs doit se faire ici, tant que `meilleurMot` (calculé par
+ * `LettresRoundViewModel` à partir du tirage encore en mémoire) est disponible.
+ */
+private fun estMeilleurMotTirage(motValide: String?, meilleurMot: String?): Boolean? =
+    if (motValide == null || meilleurMot == null) null else motValide.trim().length == meilleurMot.length
 
 @Composable
 private fun entrainementViewModel(
@@ -248,7 +255,6 @@ fun AppNavHost(
                 onDefiChrono = { navController.navigate(Routes.CHOIX_DEFI_CHRONO) },
                 onDefiMotsMax = { navController.navigate(Routes.CHOIX_DEFI_MOTS_MAX) },
                 onDefiPoints = { navController.navigate(Routes.CHOIX_DEFI_POINTS) },
-                onDefiSansFaute = { navController.navigate(Routes.CHOIX_DEFI_SANS_FAUTE) },
                 onDefiQuotidien = { navController.navigate(Routes.CHOIX_DEFI_QUOTIDIEN) },
                 onStatistiques = { navController.navigate(Routes.statistiquesJoueur(profilId)) },
                 onChangerProfil = { navController.navigate(Routes.CHANGER_PROFIL) },
@@ -551,10 +557,11 @@ fun AppNavHost(
                                 scoreCumule = scoreCumule,
                                 pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" },
                                 couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                                onMancheTerminee = { obtenu, motValide, _, _, longueurMotInvalide, _ ->
+                                onMancheTerminee = { obtenu, motValide, meilleurMot, _, longueurMotInvalide, _ ->
                                     partieVm.enregistrerResultat(
                                         ResultatManche(
                                             ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
+                                            meilleurMotTirageJoue = estMeilleurMotTirage(motValide, meilleurMot),
                                             dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
                                         ),
                                     )
@@ -785,11 +792,12 @@ fun AppNavHost(
                                 pseudo = joueurActif?.let { "${it.avatar} ${it.pseudo}" },
                                 couleurRang = joueurActif?.let { couleurRangJoueur(it.id, tropheeRepository) },
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots, longueurMotInvalide, motInvalide ->
+                                onMancheTerminee = { obtenu, motValide, meilleurMot, dixMeilleursMots, longueurMotInvalide, motInvalide ->
                                     duoVm.enregistrerResultat(
                                         ResultatDuoManche(
                                             ResultatManche(
                                             ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
+                                            meilleurMotTirageJoue = estMeilleurMotTirage(motValide, meilleurMot),
                                             dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
                                             motInvalide = motInvalide,
                                         ),
@@ -1207,11 +1215,12 @@ fun AppNavHost(
                                 scoreCumule = null,
                                 pseudo = null,
                                 afficherResultat = false,
-                                onMancheTerminee = { obtenu, motValide, _, dixMeilleursMots, longueurMotInvalide, motInvalide ->
+                                onMancheTerminee = { obtenu, motValide, meilleurMot, dixMeilleursMots, longueurMotInvalide, motInvalide ->
                                     reseauVm.enregistrerMonResultat(
                                         ResultatDuoManche(
                                             ResultatManche(
                                             ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
+                                            meilleurMotTirageJoue = estMeilleurMotTirage(motValide, meilleurMot),
                                             dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
                                             motInvalide = motInvalide,
                                         ),
@@ -1820,125 +1829,6 @@ fun AppNavHost(
             }
         }
 
-        // Un seul niveau pour les deux modes (retour utilisateur) : cf. doc de ChoixDefiSansFauteScreen.
-        composable(Routes.CHOIX_DEFI_SANS_FAUTE) {
-            ChoixDefiSansFauteScreen(
-                pseudoActif = profilActif?.let { "${it.avatar} ${it.pseudo}" } ?: "…",
-                couleurRang = couleurRangJoueur(profilId, tropheeRepository),
-                onNiveauChoisi = { niveau -> navController.navigate(Routes.jeuDefiSansFaute(niveau)) },
-                onRetour = { navController.popBackStack() },
-            )
-        }
-
-        composable(
-            route = Routes.JEU_DEFI_SANS_FAUTE_PATTERN,
-            arguments = listOf(navArgument(Routes.ARG_NIVEAU) { type = NavType.StringType }),
-        ) { backStackEntry ->
-            val niveauCode = backStackEntry.arguments!!.getString(Routes.ARG_NIVEAU)!!
-            val niveauChiffres = Niveau.valueOf(niveauCode)
-            val niveauLettres = NiveauLettres.valueOf(niveauCode)
-            // Mode field non signifiant pour SANS_FAUTE (défi mixte, cf. doc DefiEntity.mode) :
-            // toujours ModeJeu.CHIFFRES par convention.
-            val defiVm: DefiViewModel = viewModel(backStackEntry) {
-                DefiViewModel(defiRepository, tropheeRepository, profilId, ModeJeu.CHIFFRES, niveauCode, TypeDefi.SANS_FAUTE)
-            }
-            val index by defiVm.index.collectAsState()
-            val essaiId by defiVm.essaiId.collectAsState()
-            val termine by defiVm.termine.collectAsState()
-            val seuilLettres = seuilLongueurDefiLettres(niveauLettres)
-            val libelleProgression = stringResource(R.string.defi_sans_faute_libelle_progression)
-            val pseudo = profilActif?.let { "${it.avatar} ${it.pseudo}" }
-            val couleurRang = couleurRangJoueur(profilId, tropheeRepository)
-            var demanderConfirmationRetour by remember { mutableStateOf(false) }
-            val onRetourAvecConfirmation: () -> Unit = {
-                if (termine) {
-                    navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false)
-                } else {
-                    demanderConfirmationRetour = true
-                }
-            }
-
-            val actionsFinManche: @Composable () -> Unit = {
-                if (termine) {
-                    ActionsFinDefi(
-                        message = stringResource(R.string.defi_sans_faute_recap, index),
-                        onRecommencer = { defiVm.recommencer() },
-                        onChangerNiveau = { navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false) },
-                    )
-                } else {
-                    Button(onClick = { defiVm.mancheSuivante() }, modifier = Modifier.fillMaxWidth()) {
-                        Text(stringResource(R.string.action_continuer))
-                    }
-                }
-            }
-            val tropheesDebloques by defiVm.tropheesDebloques.collectAsState()
-            TropheesDebloquesDialog(tropheesDebloques, nomJoueur = profilActif?.pseudo, onDismiss = { defiVm.effacerTropheesDebloques() })
-
-            // Alternance stricte (retour utilisateur), lettres en premier — aligné sur les autres
-            // modes mixtes (solo, duo, confrontation, cf. `sequenceAlternee`) : index pair =
-            // lettres, impair = chiffres. Clé sur essaiId (jamais réutilisé, y compris entre les
-            // deux modes) : cf. commentaire équivalent sur le défi série mono-mode.
-            if (index % 2 == 1) {
-                val roundVm: ChiffresRoundViewModel =
-                    viewModel(key = "defi-sansfaute-$essaiId") {
-                        ChiffresRoundViewModel(niveauChiffres, niveauChiffres.dureeSecondesPartieStructuree, garantieSolution = true)
-                    }
-                ChiffresRoundScreen(
-                    viewModel = roundVm,
-                    scoreCumule = null,
-                    pseudo = pseudo,
-                    couleurRang = couleurRang,
-                    progressionManche = "$index",
-                    libelleProgression = libelleProgression,
-                    onMancheTerminee = { obtenu, _ -> if (obtenu != 10) defiVm.echec() },
-                    onRetourEntrainement = onRetourAvecConfirmation,
-                    actionsFinManche = actionsFinManche,
-                )
-            } else {
-                val roundVm: LettresRoundViewModel =
-                    viewModel(key = "defi-sansfaute-$essaiId") {
-                        LettresRoundViewModel(
-                            niveauLettres,
-                            dictionnaire,
-                            configurationAlphabet,
-                            niveauLettres.dureeSecondesPartieStructuree,
-                            garantieMotSeuil = niveauLettres == NiveauLettres.MONIQUE || niveauLettres == NiveauLettres.MATHIEU,
-                        )
-                    }
-                LettresRoundScreen(
-                    viewModel = roundVm,
-                    scoreCumule = null,
-                    pseudo = pseudo,
-                    couleurRang = couleurRang,
-                    progressionManche = "$index",
-                    libelleProgression = libelleProgression,
-                    onMancheTerminee = { _, motValide, meilleurMot, _, _, _ ->
-                        val reussi = motValide != null && motEstReussiDefiLettres(niveauLettres, motValide, seuilLettres, meilleurMot)
-                        if (!reussi) defiVm.echec()
-                    },
-                    onRetourEntrainement = onRetourAvecConfirmation,
-                    actionsFinManche = actionsFinManche,
-                    seuilRequis = seuilLettres,
-                )
-            }
-
-            if (demanderConfirmationRetour) {
-                AlertDialog(
-                    onDismissRequest = { demanderConfirmationRetour = false },
-                    title = { Text(stringResource(R.string.quitter_defi_titre)) },
-                    text = { Text(stringResource(R.string.quitter_partie_message)) },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            demanderConfirmationRetour = false
-                            navController.popBackStack(Routes.CHOIX_DEFI_SANS_FAUTE, inclusive = false)
-                        }) { Text(stringResource(R.string.action_quitter)) }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { demanderConfirmationRetour = false }) { Text(stringResource(R.string.action_annuler)) }
-                    },
-                )
-            }
-        }
 
         composable(Routes.CHOIX_DEFI_QUOTIDIEN) {
             val jour = remember { LocalDate.now().toString() }

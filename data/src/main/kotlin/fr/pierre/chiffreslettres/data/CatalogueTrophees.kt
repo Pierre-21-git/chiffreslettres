@@ -65,14 +65,8 @@ data class TropheeStats(
     val meilleurScoreDefiMotsMaxNiveauMonique: Int,
     /** Comme [meilleurScoreDefiMotsMax], restreint au niveau Mathieu. */
     val meilleurScoreDefiMotsMaxNiveauMathieu: Int,
-    /** Meilleur nombre d'objectifs de points atteints en une partie de défi Points, tous niveaux confondus. */
-    val meilleurScoreDefiObjectifsPoints: Int,
-    /** Meilleure série en défi sans faute (mixte chiffres+lettres), tous niveaux confondus. */
-    val meilleureSerieSansFaute: Int,
-    /** Comme [meilleureSerieSansFaute], restreint au niveau Monique ou Mathieu. */
-    val meilleureSerieSansFauteNiveauMonique: Int,
-    /** Comme [meilleureSerieSansFaute], restreint au niveau Mathieu. */
-    val meilleureSerieSansFauteNiveauMathieu: Int,
+    /** Clé = seuil d'objectifs de points (1 à 15), valeur = nombre de défis Points atteignant au moins ce seuil, tous niveaux confondus. */
+    val defisPointsParSeuilScore: Map<Int, Int>,
     /** Plus longue série de jours consécutifs avec le défi quotidien réussi. */
     val meilleureSerieJoursDefiQuotidien: Int,
     /** Comme [meilleureSerieJoursDefiQuotidien], restreint aux jours joués au niveau Mathieu. */
@@ -127,6 +121,8 @@ data class TropheeStats(
     val egaliteDuelDejaObtenue: Boolean,
     /** Un même score obtenu au moins deux fois en partie solo (trophée "Symétrie"). */
     val scoreSoloRepete: Boolean,
+    /** Un mot de longueur maximale jouable sur son tirage a déjà été trouvé (trophée "Le plus long mot possible"). */
+    val meilleurMotTirageJoue: Boolean,
     // --- Easter eggs "Chiffres" (refonte 2026-08) ---
     /** Un compte exact dont la cible est un nombre premier (trophée "Nombre premier"). */
     val compteExactCibleNombrePremier: Boolean,
@@ -149,7 +145,7 @@ data class TropheeStats(
     /**
      * Temps de jeu cumulé, en secondes, toutes sources confondues : parties (solo/duo/
      * confrontation, local et réseau), entraînement libre, duels de mots réseau et défis
-     * (série/chrono/mots max/sans faute/points/quotidien) — trophée "100 heures de jeu".
+     * (série/chrono/mots max/points/quotidien) — trophée "100 heures de jeu".
      */
     val secondesJoueesTotal: Int,
 ) {
@@ -216,7 +212,6 @@ enum class CategorieTrophee(val titreRes: Int) {
     DEFI_CHRONO(R.string.categorie_defi_chrono),
     DEFI_MOTS_MAX(R.string.categorie_defi_mots_max),
     DEFI_OBJECTIFS_POINTS(R.string.categorie_defi_points),
-    DEFI_SANS_FAUTE(R.string.categorie_defi_sans_faute),
     DEFI_QUOTIDIEN(R.string.categorie_defi_quotidien),
     TROPHEES_SPECIAUX(R.string.categorie_trophees_speciaux),
     EASTER_CHIFFRES(R.string.categorie_easter_chiffres),
@@ -302,21 +297,31 @@ private val PALIERS_DEFI_NIVEAU_MATHIEU = mapOf(
     12 to Palier.EMERAUDE, 15 to Palier.SAPHIR, 20 to Palier.RUBIS, 25 to Palier.DIAMANT,
 )
 
-// Échelle courte (retour utilisateur 2026-09-03), partagée par Série/Sans-faute/Chrono : 3/5/8
+// Échelle courte (retour utilisateur 2026-09-03), partagée par Série/Chrono : 3/5/8
 // tous niveaux (Bronze/Argent/Or), 10 au niveau Monique+ (Émeraude), puis 12/15 au niveau Mathieu
 // (Saphir/Rubis) — pas de Platine ni au-delà de Rubis.
 private val SEUILS_DEFI_SERIE = listOf(3, 5, 8)
-private val SEUILS_DEFI_SANS_FAUTE = listOf(3, 5, 8)
 private val SEUILS_DEFI_CHRONO = listOf(3, 5, 8)
 private const val SEUIL_DEFI_NIVEAU_MONIQUE_COURT = 10
 private val SEUILS_DEFI_NIVEAU_MATHIEU_COURT = listOf(12, 15)
 private val PALIERS_DEFI_NIVEAU_MATHIEU_COURT = mapOf(12 to Palier.SAPHIR, 15 to Palier.RUBIS)
 
-/** Barème dédié au défi Points (retour utilisateur 2026-09-03) : 1/3/5 tous niveaux (Bronze/Argent/Or), puis 8/10/12/15 (Émeraude/Saphir/Rubis/Diamant), sans distinction de niveau. */
+/**
+ * Barème dédié au défi Points (retour utilisateur 2026-09-10), sans distinction de niveau, sur le
+ * même principe que la catégorie Score de partie (1er/10ème défi à ce seuil, palier du 10ème à un
+ * seuil = palier du 1er au seuil suivant) : pas de palier "10ème défi" au seuil 1 (atteindre 1
+ * objectif est trivial), le 1er défi à 15 objectifs (Rubis) est le dernier de la série "1er défi",
+ * le 10ème défi à 15 objectifs (Diamant) le plus haut de la catégorie. Distribution voulue :
+ * Bronze x1, Argent x1, Or x2, Platine x2, Émeraude x2, Saphir x2, Rubis x2, Diamant x1.
+ */
 private val SEUILS_DEFI_POINTS = listOf(1, 3, 5, 8, 10, 12, 15)
-private val PALIERS_DEFI_POINTS = mapOf(
-    1 to Palier.BRONZE, 3 to Palier.ARGENT, 5 to Palier.OR,
-    8 to Palier.EMERAUDE, 10 to Palier.SAPHIR, 12 to Palier.RUBIS, 15 to Palier.DIAMANT,
+private val PALIERS_DEFI_POINTS_1 = mapOf(
+    1 to Palier.BRONZE, 3 to Palier.ARGENT, 5 to Palier.OR, 8 to Palier.PLATINE,
+    10 to Palier.EMERAUDE, 12 to Palier.SAPHIR, 15 to Palier.RUBIS,
+)
+private val PALIERS_DEFI_POINTS_10 = mapOf(
+    3 to Palier.OR, 5 to Palier.PLATINE, 8 to Palier.EMERAUDE,
+    10 to Palier.SAPHIR, 12 to Palier.RUBIS, 15 to Palier.DIAMANT,
 )
 
 private val LONGUEURS_MOTS_TROPHEE = 4..10
@@ -336,16 +341,16 @@ private val PALIERS_DEFI_QUOTIDIEN_NIVEAU_MATHIEU = mapOf(
 )
 
 // Paliers (refonte 2026-08, cf. trophées_paliers2.xlsx).
-private val PALIERS_PARTIE_MOTS_MIN = mapOf(4 to Palier.ARGENT, 5 to Palier.OR, 6 to Palier.PLATINE, 7 to Palier.SAPHIR, 8 to Palier.RUBIS)
-// 2026-09-03 : le 10ème mot de 10 lettres (Diamant) est supprimé, le 1er mot de 10 lettres
-// passe de Rubis à Diamant (dernier palier de la catégorie Mots).
+private val PALIERS_PARTIE_MOTS_MIN = mapOf(4 to Palier.ARGENT, 5 to Palier.OR, 6 to Palier.PLATINE, 7 to Palier.SAPHIR, 8 to Palier.DIAMANT)
+// 2026-09-10 : le 10ème mot de 10 lettres (Diamant) est réintroduit, le 1er mot de 10 lettres
+// repasse de Diamant à Rubis (palier juste en dessous, comme avant le 2026-09-03).
 private val PALIERS_MOTS_1 = mapOf(
     4 to Palier.BRONZE, 5 to Palier.ARGENT, 6 to Palier.OR, 7 to Palier.PLATINE,
-    8 to Palier.EMERAUDE, 9 to Palier.SAPHIR, 10 to Palier.DIAMANT,
+    8 to Palier.EMERAUDE, 9 to Palier.SAPHIR, 10 to Palier.RUBIS,
 )
 private val PALIERS_MOTS_10 = mapOf(
     4 to Palier.ARGENT, 5 to Palier.OR, 6 to Palier.PLATINE, 7 to Palier.EMERAUDE,
-    8 to Palier.SAPHIR, 9 to Palier.RUBIS,
+    8 to Palier.SAPHIR, 9 to Palier.RUBIS, 10 to Palier.DIAMANT,
 )
 // 2026-09-03 : la 10ème partie à au moins 90 points (Diamant) est supprimée, la 1ère partie à au
 // moins 90 points passe de Rubis à Diamant (dernier palier de la catégorie Score de partie).
@@ -357,7 +362,7 @@ private val PALIERS_SCORE_10 = mapOf(
     20 to Palier.BRONZE, 30 to Palier.ARGENT, 40 to Palier.OR, 50 to Palier.PLATINE,
     60 to Palier.EMERAUDE, 70 to Palier.SAPHIR, 80 to Palier.RUBIS,
 )
-// Barème (retour utilisateur) de série/chrono/sans-faute/mots max : 3=Bronze, 5=Argent, 8=Or.
+// Barème (retour utilisateur) de série/chrono/mots max : 3=Bronze, 5=Argent, 8=Or.
 private val PALIERS_DEFI_UNIFIE = mapOf(3 to Palier.BRONZE, 5 to Palier.ARGENT, 8 to Palier.OR)
 private val PALIERS_DEFI_QUOTIDIEN = mapOf(7 to Palier.BRONZE, 14 to Palier.ARGENT, 21 to Palier.OR)
 
@@ -469,23 +474,19 @@ object CatalogueTrophees {
                     progression = { (it.motsParLongueur[longueur] ?: 0) },
                 ) { (it.motsParLongueur[longueur] ?: 0) >= 1 },
             )
-            // Pas de palier "10 mots" à la longueur maximale (10 lettres) : le 1er mot de cette
-            // longueur (ci-dessus) est déjà le palier Diamant, le plus haut de la catégorie.
-            if (longueur != 10) {
-                add(
-                    Trophee(
-                        "mot_${longueur}_10",
-                        titreRes = R.string.trophee_titre_mot_10,
-                        titreArgs = listOf(longueur),
-                        descriptionRes = R.string.trophee_desc_mot_10,
-                        descriptionArgs = listOf(longueur),
-                        categorie = CategorieTrophee.MOTS,
-                        palier = PALIERS_MOTS_10.getValue(longueur),
-                        objectif = 10,
-                        progression = { (it.motsParLongueur[longueur] ?: 0) },
-                    ) { (it.motsParLongueur[longueur] ?: 0) >= 10 },
-                )
-            }
+            add(
+                Trophee(
+                    "mot_${longueur}_10",
+                    titreRes = R.string.trophee_titre_mot_10,
+                    titreArgs = listOf(longueur),
+                    descriptionRes = R.string.trophee_desc_mot_10,
+                    descriptionArgs = listOf(longueur),
+                    categorie = CategorieTrophee.MOTS,
+                    palier = PALIERS_MOTS_10.getValue(longueur),
+                    objectif = 10,
+                    progression = { (it.motsParLongueur[longueur] ?: 0) },
+                ) { (it.motsParLongueur[longueur] ?: 0) >= 10 },
+            )
         }
 
         add(
@@ -905,61 +906,34 @@ object CatalogueTrophees {
         for (seuil in SEUILS_DEFI_POINTS) {
             add(
                 Trophee(
-                    "defi_points_$seuil",
-                    titreRes = R.string.trophee_titre_defi_points,
+                    "defi_points_${seuil}_1",
+                    titreRes = R.string.trophee_titre_defi_points_1,
                     titreArgs = listOf(seuil),
-                    descriptionRes = R.string.trophee_desc_defi_points,
+                    descriptionRes = R.string.trophee_desc_defi_points_1,
                     descriptionArgs = listOf(seuil),
                     categorie = CategorieTrophee.DEFI_OBJECTIFS_POINTS,
-                    palier = PALIERS_DEFI_POINTS.getValue(seuil),
-                    objectif = seuil,
-                    progression = { it.meilleurScoreDefiObjectifsPoints },
-                ) { it.meilleurScoreDefiObjectifsPoints >= seuil },
+                    palier = PALIERS_DEFI_POINTS_1.getValue(seuil),
+                    objectif = 1,
+                    progression = { (it.defisPointsParSeuilScore[seuil] ?: 0) },
+                ) { (it.defisPointsParSeuilScore[seuil] ?: 0) >= 1 },
             )
-        }
-
-        for (seuil in SEUILS_DEFI_SANS_FAUTE) {
-            add(
-                Trophee(
-                    "defi_sans_faute_$seuil",
-                    titreRes = R.string.trophee_titre_defi_sans_faute,
-                    titreArgs = listOf(seuil),
-                    descriptionRes = R.string.trophee_desc_defi_sans_faute,
-                    descriptionArgs = listOf(seuil),
-                    categorie = CategorieTrophee.DEFI_SANS_FAUTE,
-                    palier = PALIERS_DEFI_UNIFIE.getValue(seuil),
-                    objectif = seuil,
-                    progression = { it.meilleureSerieSansFaute },
-                ) { it.meilleureSerieSansFaute >= seuil },
-            )
-        }
-        add(
-            Trophee(
-                "defi_sans_faute_10_monique",
-                titreRes = R.string.trophee_titre_defi_sans_faute_niveau_monique,
-                titreArgs = listOf(SEUIL_DEFI_NIVEAU_MONIQUE_COURT),
-                descriptionRes = R.string.trophee_desc_defi_sans_faute_niveau_monique,
-                descriptionArgs = listOf(SEUIL_DEFI_NIVEAU_MONIQUE_COURT),
-                categorie = CategorieTrophee.DEFI_SANS_FAUTE,
-                palier = Palier.EMERAUDE,
-                objectif = SEUIL_DEFI_NIVEAU_MONIQUE_COURT,
-                progression = { it.meilleureSerieSansFauteNiveauMonique },
-            ) { it.meilleureSerieSansFauteNiveauMonique >= SEUIL_DEFI_NIVEAU_MONIQUE_COURT },
-        )
-        for (seuil in SEUILS_DEFI_NIVEAU_MATHIEU_COURT) {
-            add(
-                Trophee(
-                    "defi_sans_faute_${seuil}_mathieu",
-                    titreRes = R.string.trophee_titre_defi_sans_faute_niveau_mathieu,
-                    titreArgs = listOf(seuil),
-                    descriptionRes = R.string.trophee_desc_defi_sans_faute_niveau_mathieu,
-                    descriptionArgs = listOf(seuil),
-                    categorie = CategorieTrophee.DEFI_SANS_FAUTE,
-                    palier = PALIERS_DEFI_NIVEAU_MATHIEU_COURT.getValue(seuil),
-                    objectif = seuil,
-                    progression = { it.meilleureSerieSansFauteNiveauMathieu },
-                ) { it.meilleureSerieSansFauteNiveauMathieu >= seuil },
-            )
+            // Pas de palier "10ème défi" au seuil 1 (retour utilisateur) : atteindre 1 objectif est
+            // trivial, un 10ème n'apporterait pas de vrai jalon supplémentaire.
+            if (seuil != 1) {
+                add(
+                    Trophee(
+                        "defi_points_${seuil}_10",
+                        titreRes = R.string.trophee_titre_defi_points_10,
+                        titreArgs = listOf(seuil),
+                        descriptionRes = R.string.trophee_desc_defi_points_10,
+                        descriptionArgs = listOf(seuil),
+                        categorie = CategorieTrophee.DEFI_OBJECTIFS_POINTS,
+                        palier = PALIERS_DEFI_POINTS_10.getValue(seuil),
+                        objectif = 10,
+                        progression = { (it.defisPointsParSeuilScore[seuil] ?: 0) },
+                    ) { (it.defisPointsParSeuilScore[seuil] ?: 0) >= 10 },
+                )
+            }
         }
 
         val titresPaliersQuotidien = mapOf(
@@ -1018,9 +992,9 @@ object CatalogueTrophees {
                 Trophee(
                     "defi_quotidien_${seuil}_mathieu",
                     titreRes = R.string.trophee_titre_defi_quotidien_niveau_mathieu,
-                    titreArgs = listOf(seuil),
+                    titreArgs = listOf(seuil / 7),
                     descriptionRes = R.string.trophee_desc_defi_quotidien_niveau_mathieu,
-                    descriptionArgs = listOf(seuil),
+                    descriptionArgs = listOf(seuil / 7),
                     categorie = CategorieTrophee.DEFI_QUOTIDIEN,
                     palier = PALIERS_DEFI_QUOTIDIEN_NIVEAU_MATHIEU.getValue(seuil),
                     objectif = seuil,
@@ -1340,6 +1314,17 @@ object CatalogueTrophees {
         )
         add(
             Trophee(
+                "easter_meilleur_mot_tirage",
+                titreRes = R.string.trophee_titre_easter_meilleur_mot_tirage,
+                descriptionRes = R.string.trophee_desc_easter_meilleur_mot_tirage,
+                categorie = CategorieTrophee.EASTER_LETTRES,
+                palier = null,
+                niveauVisibilite = NiveauVisibilite.SEMI_CACHE,
+                descriptionAvantDeblocageRes = R.string.easter_avant_vocabulaire,
+            ) { it.meilleurMotTirageJoue },
+        )
+        add(
+            Trophee(
                 "easter_nombre_premier",
                 titreRes = R.string.trophee_titre_easter_nombre_premier,
                 descriptionRes = R.string.trophee_desc_easter_nombre_premier,
@@ -1468,7 +1453,7 @@ object CatalogueTrophees {
     /** Rendu par `TropheesScreen.kt` sous le grand titre "Trophées des défis". */
     val CATEGORIES_SECTION_DEFI = setOf(
         CategorieTrophee.DEFI, CategorieTrophee.DEFI_CHRONO, CategorieTrophee.DEFI_MOTS_MAX,
-        CategorieTrophee.DEFI_OBJECTIFS_POINTS, CategorieTrophee.DEFI_SANS_FAUTE, CategorieTrophee.DEFI_QUOTIDIEN,
+        CategorieTrophee.DEFI_OBJECTIFS_POINTS, CategorieTrophee.DEFI_QUOTIDIEN,
     )
 
     /** Rendu par `TropheesScreen.kt` sous le grand titre "Trophées des parties et duels". */
@@ -1491,6 +1476,7 @@ object CatalogueTrophees {
         "easter_va_tout" to "🎰",
         "easter_symetrique" to "🔠",
         "easter_alphabet_complet" to "🔤",
+        "easter_meilleur_mot_tirage" to "👑",
         "easter_mot_invalide_dix_lettres" to "📏",
         "easter_mot_rare" to "🦕",
         "easter_palindrome" to "🪞",

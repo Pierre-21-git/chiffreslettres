@@ -16,6 +16,7 @@ class StatistiquesExportTest {
             score = 10,
             motJoue = null,
             longueurMotInvalide = null,
+            meilleurMotTirageJoue = true,
             cibleChiffres = 537,
             nombreOperationsChiffres = 1,
             maxEtapeIntermediaireChiffres = 42,
@@ -56,6 +57,7 @@ class StatistiquesExportTest {
         assertEquals(25, sessionRelue.session.ecartDuel)
         assertEquals(true, sessionRelue.session.objectifExactAtteint)
         val mancheRelue = sessionRelue.manches.single()
+        assertEquals(true, mancheRelue.meilleurMotTirageJoue)
         assertEquals(537, mancheRelue.cibleChiffres)
         assertEquals(1, mancheRelue.nombreOperationsChiffres)
         assertEquals(42, mancheRelue.maxEtapeIntermediaireChiffres)

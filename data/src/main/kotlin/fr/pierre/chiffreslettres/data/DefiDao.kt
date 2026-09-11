@@ -98,14 +98,6 @@ interface DefiDao {
     @Query("SELECT MAX(serie) FROM DefiEntity WHERE profilId = :profilId AND type = 'MOTS_MAX' AND niveauCode IN (:niveauCodes)")
     suspend fun meilleurScoreDefiMotsMaxNiveaux(profilId: Long, niveauCodes: List<String>): Int?
 
-    /** Meilleure série jamais réalisée en défi sans faute (mixte chiffres+lettres), tous niveaux confondus. */
-    @Query("SELECT MAX(serie) FROM DefiEntity WHERE profilId = :profilId AND type = 'SANS_FAUTE'")
-    suspend fun meilleureSerieSansFaute(profilId: Long): Int?
-
-    /** Meilleure série en défi sans faute, restreinte aux niveaux de [niveauCodes]. */
-    @Query("SELECT MAX(serie) FROM DefiEntity WHERE profilId = :profilId AND type = 'SANS_FAUTE' AND niveauCode IN (:niveauCodes)")
-    suspend fun meilleureSerieSansFauteNiveaux(profilId: Long, niveauCodes: List<String>): Int?
-
     // --- Statistiques étendues (retour utilisateur : podium + progression, comme pour les parties) ---
 
     /** Podium (top 3) des meilleures réussites d'un joueur pour un type de défi, un mode et un niveau donnés. */

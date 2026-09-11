@@ -156,8 +156,6 @@
     <string name="grille_mots_titre_longueur">Palabras de %1$d letras</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
-    <string name="defi_sans_faute_libelle_progression">Racha</string>
-    <string name="defi_sans_faute_recap">Racha terminada: %1$d victoria(s)</string>
 
     <string name="declencher_manche_progression">Ronda %1$s</string>
     <string name="declencher_manche_commencer">Iniciar la ronda</string>

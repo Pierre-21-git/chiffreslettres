@@ -19,6 +19,19 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.122",
+        date = "2026-09-11",
+        changements = listOf(
+            "Retrait du mode \"Défi sans faute\" (menu, statistiques, règles du jeu) — les " +
+                "anciennes parties enregistrées restent lisibles dans les statistiques.",
+            "Nouveau trophée caché \"Le plus long mot possible\" : trouver, en partie solo ou " +
+                "duo, l'un des mots les plus longs jouables sur son tirage de lettres.",
+            "Défi Points : nouveau barème de trophées (1er et 10ème défi à chaque seuil " +
+                "d'objectifs atteints, comme pour le Score de partie).",
+            "Trophées \"Mots\" : le 10ème mot de 10 lettres redevient un palier à part entière.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.116",
         date = "2026-08-30",
         changements = listOf(

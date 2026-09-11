@@ -9,6 +9,8 @@ data class ResultatManche(
     val motJoue: String? = null,
     /** Longueur du mot soumis quand il était invalide (mode Lettres, parties duo/confrontation uniquement), pour le bonus de score de l'adversaire. */
     val longueurMotInvalide: Int? = null,
+    /** Le mot joué est-il l'un des mots de longueur maximale jouables sur ce tirage (mode Lettres), pour l'easter egg "Le plus long mot possible". */
+    val meilleurMotTirageJoue: Boolean? = null,
     /** Le mot lui-même quand il était invalide (mode Lettres, parties duo/confrontation/réseau), pour l'affichage sur l'écran de révélation — transitoire, jamais persisté en base (pas de colonne MancheEntity correspondante). */
     val motInvalide: String? = null,
     val cibleChiffres: Int? = null,
@@ -52,6 +54,7 @@ class HistoriqueRepository(private val dao: HistoriqueDao) {
                 score = resultat.score,
                 motJoue = resultat.motJoue,
                 longueurMotInvalide = resultat.longueurMotInvalide,
+                meilleurMotTirageJoue = resultat.meilleurMotTirageJoue,
                 cibleChiffres = resultat.cibleChiffres,
                 nombreOperationsChiffres = resultat.nombreOperationsChiffres,
                 maxEtapeIntermediaireChiffres = resultat.maxEtapeIntermediaireChiffres,

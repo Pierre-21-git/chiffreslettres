@@ -40,7 +40,9 @@ class DefiQuotidienTirageTest {
 
     @Test
     fun `le defi sans faute n'est jamais tire pour le defi quotidien`() {
-        // Retour utilisateur : reste jouable en défi libre depuis le menu, mais plus dans le tirage quotidien.
+        // Retour utilisateur : mode retiré du menu (2026-09-10), TypeDefi.SANS_FAUTE ne sert plus
+        // qu'à désérialiser les vieilles lignes DefiEntity — ce type n'a jamais fait partie du
+        // tirage quotidien, avant comme après le retrait.
         for (profilId in 1L..50L) {
             for (jour in 1..28) {
                 val tirage = DefiQuotidienTirage.pour(profilId, jour = "2026-0${1 + jour % 9}-${"%02d".format(jour)}")

@@ -35,10 +35,7 @@ private fun statsVides() = TropheeStats(
     meilleurScoreDefiMotsMax = 0,
     meilleurScoreDefiMotsMaxNiveauMonique = 0,
     meilleurScoreDefiMotsMaxNiveauMathieu = 0,
-    meilleurScoreDefiObjectifsPoints = 0,
-    meilleureSerieSansFaute = 0,
-    meilleureSerieSansFauteNiveauMonique = 0,
-    meilleureSerieSansFauteNiveauMathieu = 0,
+    defisPointsParSeuilScore = emptyMap(),
     meilleureSerieJoursDefiQuotidien = 0,
     meilleureSerieJoursDefiQuotidienNiveauMathieu = 0,
     serieEnCoursJoursDefiQuotidien = 0,
@@ -63,6 +60,7 @@ private fun statsVides() = TropheeStats(
     motInvalideDixLettresTente = false,
     egaliteDuelDejaObtenue = false,
     scoreSoloRepete = false,
+    meilleurMotTirageJoue = false,
     compteExactCibleNombrePremier = false,
     compteExactCalculMental = false,
     compteExactCheminMinimal = false,
@@ -81,26 +79,34 @@ class CatalogueTropheesTest {
 
     @Test
     fun `167 trophees au total (155 + 7 duel points + 3 easter eggs duel points + 2 easter eggs chiffres)`() {
-        assertEquals(147, CatalogueTrophees.TOUS.size)
+        assertEquals(149, CatalogueTrophees.TOUS.size)
     }
 
     @Test
-    fun `defi Points a son propre bareme, adapte a un score maximal de 3 a 15 selon le niveau`() {
-        assertFalse(trophee("defi_points_1").estDebloque(statsVides()))
-        assertTrue(trophee("defi_points_1").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 1)))
-        assertFalse(trophee("defi_points_3").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 2)))
-        assertTrue(trophee("defi_points_3").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 3)))
-        assertFalse(trophee("defi_points_5").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 4)))
-        assertTrue(trophee("defi_points_5").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 5)))
-        assertFalse(trophee("defi_points_15").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 14)))
-        assertTrue(trophee("defi_points_15").estDebloque(statsVides().copy(meilleurScoreDefiObjectifsPoints = 15)))
-        assertEquals(Palier.BRONZE, trophee("defi_points_1").palier)
-        assertEquals(Palier.ARGENT, trophee("defi_points_3").palier)
-        assertEquals(Palier.OR, trophee("defi_points_5").palier)
-        assertEquals(Palier.EMERAUDE, trophee("defi_points_8").palier)
-        assertEquals(Palier.SAPHIR, trophee("defi_points_10").palier)
-        assertEquals(Palier.RUBIS, trophee("defi_points_12").palier)
-        assertEquals(Palier.DIAMANT, trophee("defi_points_15").palier)
+    fun `defi Points a un palier 1er defi et un palier 10eme defi par seuil, sauf au seuil 1`() {
+        assertFalse(trophee("defi_points_1_1").estDebloque(statsVides()))
+        assertTrue(trophee("defi_points_1_1").estDebloque(statsVides().copy(defisPointsParSeuilScore = mapOf(1 to 1))))
+        assertFalse(trophee("defi_points_3_1").estDebloque(statsVides().copy(defisPointsParSeuilScore = mapOf(3 to 0))))
+        assertTrue(trophee("defi_points_3_1").estDebloque(statsVides().copy(defisPointsParSeuilScore = mapOf(3 to 1))))
+        assertFalse(trophee("defi_points_3_10").estDebloque(statsVides().copy(defisPointsParSeuilScore = mapOf(3 to 9))))
+        assertTrue(trophee("defi_points_3_10").estDebloque(statsVides().copy(defisPointsParSeuilScore = mapOf(3 to 10))))
+        assertFalse(trophee("defi_points_15_1").estDebloque(statsVides().copy(defisPointsParSeuilScore = mapOf(15 to 0))))
+        assertTrue(trophee("defi_points_15_1").estDebloque(statsVides().copy(defisPointsParSeuilScore = mapOf(15 to 1))))
+        assertTrue(trophee("defi_points_15_10").estDebloque(statsVides().copy(defisPointsParSeuilScore = mapOf(15 to 10))))
+        assertTrue(CatalogueTrophees.TOUS.none { it.id == "defi_points_1_10" })
+        assertEquals(Palier.BRONZE, trophee("defi_points_1_1").palier)
+        assertEquals(Palier.ARGENT, trophee("defi_points_3_1").palier)
+        assertEquals(Palier.OR, trophee("defi_points_3_10").palier)
+        assertEquals(Palier.OR, trophee("defi_points_5_1").palier)
+        assertEquals(Palier.PLATINE, trophee("defi_points_5_10").palier)
+        assertEquals(Palier.PLATINE, trophee("defi_points_8_1").palier)
+        assertEquals(Palier.EMERAUDE, trophee("defi_points_8_10").palier)
+        assertEquals(Palier.EMERAUDE, trophee("defi_points_10_1").palier)
+        assertEquals(Palier.SAPHIR, trophee("defi_points_10_10").palier)
+        assertEquals(Palier.SAPHIR, trophee("defi_points_12_1").palier)
+        assertEquals(Palier.RUBIS, trophee("defi_points_12_10").palier)
+        assertEquals(Palier.RUBIS, trophee("defi_points_15_1").palier)
+        assertEquals(Palier.DIAMANT, trophee("defi_points_15_10").palier)
     }
 
     @Test
@@ -121,7 +127,7 @@ class CatalogueTropheesTest {
     @Test
     fun `aucun trophee n'a de palier sauf le catalogue principal (les easter eggs sont hors echelle)`() {
         val easterEggs = CatalogueTrophees.TOUS.filter { it.id.startsWith("easter_") }
-        assertEquals(35, easterEggs.size)
+        assertEquals(36, easterEggs.size)
         assertTrue(easterEggs.all { it.palier == null })
     }
 
@@ -157,6 +163,8 @@ class CatalogueTropheesTest {
         assertTrue(trophee("easter_palindrome").estDebloque(statsVides().copy(palindromeJoue = true)))
         assertTrue(trophee("easter_alphabet_complet").estDebloque(statsVides().copy(nombreLettresAlphabetUtilisees = 26)))
         assertFalse(trophee("easter_alphabet_complet").estDebloque(statsVides().copy(nombreLettresAlphabetUtilisees = 25)))
+        assertTrue(trophee("easter_meilleur_mot_tirage").estDebloque(statsVides().copy(meilleurMotTirageJoue = true)))
+        assertFalse(trophee("easter_meilleur_mot_tirage").estDebloque(statsVides()))
         assertTrue(trophee("easter_rituel_dimanche").estDebloque(statsVides().copy(meilleureSerieDimanchesConsecutifs = 4)))
         assertFalse(trophee("easter_rituel_dimanche").estDebloque(statsVides().copy(meilleureSerieDimanchesConsecutifs = 3)))
         // Méta-easter-eggs (sentinel, jamais déclenchés via les stats seules).
@@ -307,7 +315,9 @@ class CatalogueTropheesTest {
         assertTrue(trophee("mot_4_1").estDebloque(stats))
         assertFalse(trophee("mot_4_10").estDebloque(stats))
         assertTrue(trophee("mot_10_1").estDebloque(stats))
-        assertEquals(Palier.DIAMANT, trophee("mot_10_1").palier)
+        assertTrue(trophee("mot_10_10").estDebloque(stats))
+        assertEquals(Palier.RUBIS, trophee("mot_10_1").palier)
+        assertEquals(Palier.DIAMANT, trophee("mot_10_10").palier)
         assertFalse(trophee("mot_5_1").estDebloque(stats))
     }
 
@@ -348,20 +358,6 @@ class CatalogueTropheesTest {
         assertTrue(trophee("defi_mots_max_10_monique").estDebloque(statsVides().copy(meilleurScoreDefiMotsMaxNiveauMonique = 10)))
         assertFalse(trophee("defi_mots_max_25_mathieu").estDebloque(statsVides().copy(meilleurScoreDefiMotsMaxNiveauMathieu = 24)))
         assertTrue(trophee("defi_mots_max_25_mathieu").estDebloque(statsVides().copy(meilleurScoreDefiMotsMaxNiveauMathieu = 25)))
-    }
-
-    @Test
-    fun `defi sans faute a le bareme 3 bronze, 5 argent, 8 or, plus jalons niveau Monique et Mathieu`() {
-        assertTrue(trophee("defi_sans_faute_3").estDebloque(statsVides().copy(meilleureSerieSansFaute = 3)))
-        assertFalse(trophee("defi_sans_faute_5").estDebloque(statsVides().copy(meilleureSerieSansFaute = 3)))
-        assertEquals(Palier.BRONZE, trophee("defi_sans_faute_3").palier)
-        assertEquals(Palier.ARGENT, trophee("defi_sans_faute_5").palier)
-        assertEquals(Palier.OR, trophee("defi_sans_faute_8").palier)
-        assertEquals(Palier.EMERAUDE, trophee("defi_sans_faute_10_monique").palier)
-        assertEquals(Palier.SAPHIR, trophee("defi_sans_faute_12_mathieu").palier)
-        assertEquals(Palier.RUBIS, trophee("defi_sans_faute_15_mathieu").palier)
-        assertTrue(trophee("defi_sans_faute_12_mathieu").estDebloque(statsVides().copy(meilleureSerieSansFauteNiveauMathieu = 12)))
-        assertFalse(trophee("defi_sans_faute_12_mathieu").estDebloque(statsVides().copy(meilleureSerieSansFauteNiveauMathieu = 11)))
     }
 
     @Test

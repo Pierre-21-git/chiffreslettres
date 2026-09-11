@@ -28,6 +28,13 @@ data class MancheEntity(
     val motJoue: String? = null,
     /** Longueur du mot soumis quand il était invalide (mode Lettres), pour l'easter egg "Le mot le plus long jamais tenté". */
     val longueurMotInvalide: Int? = null,
+    /**
+     * Le mot joué est-il l'un des mots de longueur maximale jouables sur ce tirage (mode Lettres
+     * uniquement), pour l'easter egg "Le plus long mot possible". Capturé au moment de la manche
+     * (le tirage lui-même n'est pas persisté) — null si non applicable (mode Chiffres) ou si aucun
+     * mot valide n'a été soumis.
+     */
+    val meilleurMotTirageJoue: Boolean? = null,
     // --- Easter eggs "Chiffres" + temps de jeu (refonte 2026-08) ---
     /** Cible du tirage (mode Chiffres uniquement), pour l'easter egg "Nombre premier". */
     val cibleChiffres: Int? = null,

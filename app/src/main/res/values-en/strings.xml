@@ -193,8 +193,6 @@
     <string name="grille_mots_titre_longueur">%1$d-letter words</string>
 
     <!-- Défi sans faute (alternance chiffres/lettres, AppNavHost) -->
-    <string name="defi_sans_faute_libelle_progression">Streak</string>
-    <string name="defi_sans_faute_recap">Streak over: %1$d win(s)</string>
 
     <string name="declencher_manche_progression">Round %1$s</string>
     <string name="declencher_manche_commencer">Start the round</string>
