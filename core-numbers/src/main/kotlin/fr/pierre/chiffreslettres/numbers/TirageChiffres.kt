@@ -29,7 +29,7 @@ object TirageChiffres {
     ): Resultat {
         repeat(maxTentativesTirage) {
             val nombres = ReservoirChiffres.tirerNombres(nombreJetons, random)
-            val atteignables = Solveur.valeursAtteignables(nombres, niveau.operations)
+            val atteignables = Solveur.valeursAtteignables(nombres, niveau.operations, niveau.tableMultiplicationMax)
 
             if (!garantieSolution) {
                 val cible = random.nextInt(niveau.cibleMin, niveau.cibleMax + 1)

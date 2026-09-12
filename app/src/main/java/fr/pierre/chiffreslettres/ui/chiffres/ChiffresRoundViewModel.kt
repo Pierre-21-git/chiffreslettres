@@ -126,7 +126,7 @@ class ChiffresRoundViewModel(
     }
 
     private fun combiner(etat: ChiffresRoundUiState, gauche: Jeton, operation: Operation, droite: Jeton) {
-        val resultat = Solveur.combiner(gauche.expression, operation, droite.expression) ?: return
+        val resultat = Solveur.combiner(gauche.expression, operation, droite.expression, niveau.tableMultiplicationMax) ?: return
         historique.add(Etape(etat.jetons, etat.operationsEffectuees))
         val nouveauxJetons = etat.jetons.filter { it.id != gauche.id && it.id != droite.id } + Jeton(prochainId++, resultat)
         val ligne = "${gauche.expression.resultat} ${operation.symbole} ${droite.expression.resultat} = ${resultat.resultat}"

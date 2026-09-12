@@ -20,6 +20,12 @@ enum class Niveau(
     val garantieSolution: Boolean,
     val manchesParMode: Int,
     val dureeSecondesPartieStructuree: Int,
+    /**
+     * Restreint la multiplication aux tables de 1 à cette valeur (retour utilisateur : un des
+     * deux facteurs doit être dans `1..tableMultiplicationMax`, l'autre dans `1..10`, comme une
+     * table de multiplication apprise à l'école). `null` = multiplication libre (défaut).
+     */
+    val tableMultiplicationMax: Int? = null,
 ) {
     EMILE(
         cibleMin = 10,
@@ -29,7 +35,10 @@ enum class Niveau(
         manchesParMode = 2,
         dureeSecondesPartieStructuree = 120,
     ),
-    /** Comme [EMILE], avec la multiplication en plus (retour utilisateur : niveau intermédiaire avant Nestor, qui a les 4 opérations). */
+    /**
+     * Comme [EMILE], avec la multiplication en plus (retour utilisateur : niveau intermédiaire
+     * avant Nestor, qui a les 4 opérations), limitée aux tables de 1 à 5.
+     */
     ODILE(
         cibleMin = 10,
         cibleMax = 100,
@@ -37,6 +46,7 @@ enum class Niveau(
         garantieSolution = true,
         manchesParMode = 2,
         dureeSecondesPartieStructuree = 120,
+        tableMultiplicationMax = 5,
     ),
     NESTOR(
         cibleMin = 10,
