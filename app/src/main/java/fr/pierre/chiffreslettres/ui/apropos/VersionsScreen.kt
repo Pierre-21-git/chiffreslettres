@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.125",
+        date = "2026-09-12",
+        changements = listOf(
+            "Niveau Odile : la limitation aux tables de 1 à 5 ne s'applique qu'au tirage " +
+                "(le compte garanti trouvable) — en jeu, la multiplication reste libre comme " +
+                "sur les autres niveaux.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.124",
         date = "2026-09-12",
         changements = listOf(

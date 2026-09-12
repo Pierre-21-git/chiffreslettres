@@ -70,7 +70,9 @@ object Solveur {
      * positif (résultat interdit, cf. §3.2) ou si la multiplication ne respecte pas
      * [tableMultiplicationMax] (retour utilisateur : niveau Odile, cf. `Niveau.tableMultiplicationMax`).
      * Public : c'est aussi ce que l'écran de jeu utilise pour exécuter un pas de calcul du
-     * joueur, afin de garantir exactement les mêmes règles que le solveur.
+     * joueur — mais sans passer [tableMultiplicationMax] (retour utilisateur : cette
+     * restriction ne s'applique qu'à la recherche du tirage garanti, pas aux calculs du
+     * joueur, qui reste libre de multiplier comme il veut en partie).
      */
     fun combiner(
         gauche: Expression,
