@@ -29,7 +29,7 @@ internal fun serieEnCoursDeJours(jours: Set<LocalDate>, aujourdHui: LocalDate): 
 }
 
 /** Ordre de difficulté croissant des niveaux, chiffres et lettres confondus (mêmes noms d'enum des deux côtés). */
-private val ORDRE_NIVEAUX = listOf("EMILE", "NESTOR", "MONIQUE", "MATHIEU")
+private val ORDRE_NIVEAUX = listOf("EMILE", "ODILE", "NESTOR", "MONIQUE", "MATHIEU")
 
 internal fun rangNiveau(code: String?): Int = code?.let { ORDRE_NIVEAUX.indexOf(it) } ?: -1
 

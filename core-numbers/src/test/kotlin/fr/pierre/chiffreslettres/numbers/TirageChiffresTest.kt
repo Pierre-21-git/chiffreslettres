@@ -35,6 +35,18 @@ class TirageChiffresTest {
     }
 
     @Test
+    fun `Odile est comme Emile avec la multiplication en plus, sans division`() {
+        assertEquals(Niveau.EMILE.cibleMin, Niveau.ODILE.cibleMin)
+        assertEquals(Niveau.EMILE.cibleMax, Niveau.ODILE.cibleMax)
+        assertEquals(Niveau.EMILE.garantieSolution, Niveau.ODILE.garantieSolution)
+        assertEquals(Niveau.EMILE.manchesParMode, Niveau.ODILE.manchesParMode)
+        assertEquals(Niveau.EMILE.dureeSecondesPartieStructuree, Niveau.ODILE.dureeSecondesPartieStructuree)
+        assertEquals(Niveau.EMILE.operations + Operation.FOIS, Niveau.ODILE.operations)
+        assertTrue(Operation.FOIS in Niveau.ODILE.operations)
+        assertTrue(Operation.DIVISE !in Niveau.ODILE.operations)
+    }
+
+    @Test
     fun `garantieSolution force une solution exacte meme sur Monique et Mathieu (mode Defi)`() {
         val random = Random(789)
         for (niveau in listOf(Niveau.MONIQUE, Niveau.MATHIEU)) {

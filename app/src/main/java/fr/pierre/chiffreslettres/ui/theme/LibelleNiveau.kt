@@ -13,6 +13,7 @@ import fr.pierre.chiffreslettres.numbers.Niveau
  */
 private fun libelleRes(niveau: Niveau): Int = when (niveau) {
     Niveau.EMILE -> R.string.niveau_emile
+    Niveau.ODILE -> R.string.niveau_odile
     Niveau.NESTOR -> R.string.niveau_nestor
     Niveau.MONIQUE -> R.string.niveau_monique
     Niveau.MATHIEU -> R.string.niveau_mathieu
@@ -20,6 +21,7 @@ private fun libelleRes(niveau: Niveau): Int = when (niveau) {
 
 private fun libelleRes(niveau: NiveauLettres): Int = when (niveau) {
     NiveauLettres.EMILE -> R.string.niveau_emile
+    NiveauLettres.ODILE -> R.string.niveau_odile
     NiveauLettres.NESTOR -> R.string.niveau_nestor
     NiveauLettres.MONIQUE -> R.string.niveau_monique
     NiveauLettres.MATHIEU -> R.string.niveau_mathieu

@@ -3,6 +3,7 @@
 
     <!-- Level labels (French wordplay kept as-is for now, cf. memory: pun names not translated yet). -->
     <string name="niveau_emile">Assez facile, Émile</string>
+    <string name="niveau_odile">Ça reste tranquille, Odile</string>
     <string name="niveau_nestor">Ça va encore, Nestor</string>
     <string name="niveau_monique">Ça se complique, Monique</string>
     <string name="niveau_mathieu">C\'est du sérieux, Mathieu</string>
@@ -40,6 +41,7 @@
     </integer-array>
 
     <string name="lettres_exclues_emile"></string>
+    <string name="lettres_exclues_odile"></string>
     <string name="lettres_exclues_nestor"></string>
     <string name="lettres_exclues_monique"></string>
     <string name="lettres_exclues_mathieu"></string>

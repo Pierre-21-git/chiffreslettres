@@ -5,6 +5,7 @@
          mots en français (l'adjectif rime avec le prénom) : à adapter par langue, pas à
          traduire mot à mot. -->
     <string name="niveau_emile">Assez facile, Émile</string>
+    <string name="niveau_odile">Ça reste tranquille, Odile</string>
     <string name="niveau_nestor">Ça va encore, Nestor</string>
     <string name="niveau_monique">Ça se complique, Monique</string>
     <string name="niveau_mathieu">C\'est du sérieux, Mathieu</string>
@@ -45,6 +46,7 @@
     <!-- Lettres exclues du sac par niveau, du plus facile (le plus de lettres rares
          exclues) au plus difficile (aucune exclusion). -->
     <string name="lettres_exclues_emile">XYZWKQHJ</string>
+    <string name="lettres_exclues_odile">XYZWKQHJ</string>
     <string name="lettres_exclues_nestor">XYZWKQ</string>
     <string name="lettres_exclues_monique">XYZW</string>
     <string name="lettres_exclues_mathieu"></string>

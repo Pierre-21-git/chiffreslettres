@@ -19,6 +19,15 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.123",
+        date = "2026-09-12",
+        changements = listOf(
+            "Nouveau niveau \"Ça reste tranquille, Odile\", entre Émile et Nestor (chiffres et " +
+                "lettres) : identique à Émile, avec en plus la multiplication dans les tirages de " +
+                "chiffres.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.122",
         date = "2026-09-11",
         changements = listOf(

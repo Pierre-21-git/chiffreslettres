@@ -31,8 +31,9 @@ class BaremeTest {
     }
 
     @Test
-    fun `niveaux Emile et Nestor rapportent 5 points pour toute proposition non exacte`() {
+    fun `niveaux Emile, Odile et Nestor rapportent 5 points pour toute proposition non exacte`() {
         assertEquals(5, Bareme.score(Niveau.EMILE, cible = 42, propose = 45))
+        assertEquals(5, Bareme.score(Niveau.ODILE, cible = 42, propose = 45))
         assertEquals(5, Bareme.score(Niveau.NESTOR, cible = 42, propose = 100))
     }
 
@@ -64,8 +65,9 @@ class BaremeTest {
     }
 
     @Test
-    fun `le palier meilleure approche ne s'applique pas sur Emile et Nestor`() {
+    fun `le palier meilleure approche ne s'applique pas sur Emile, Odile et Nestor`() {
         assertEquals(5, Bareme.score(Niveau.EMILE, cible = 42, propose = 54, meilleurEcartAtteignable = 12))
+        assertEquals(5, Bareme.score(Niveau.ODILE, cible = 42, propose = 54, meilleurEcartAtteignable = 12))
         assertEquals(5, Bareme.score(Niveau.NESTOR, cible = 42, propose = 54, meilleurEcartAtteignable = 12))
     }
 }

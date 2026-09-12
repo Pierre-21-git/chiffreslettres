@@ -2,6 +2,7 @@ package fr.pierre.chiffreslettres.numbers
 
 val TOUTES_OPERATIONS = setOf(Operation.PLUS, Operation.MOINS, Operation.FOIS, Operation.DIVISE)
 val OPERATIONS_PLUS_MOINS = setOf(Operation.PLUS, Operation.MOINS)
+val OPERATIONS_PLUS_MOINS_FOIS = setOf(Operation.PLUS, Operation.MOINS, Operation.FOIS)
 
 /**
  * Encode les 4 niveaux de difficulté du mode Chiffres (spec §3.2). Le libellé affiché
@@ -24,6 +25,15 @@ enum class Niveau(
         cibleMin = 10,
         cibleMax = 100,
         operations = OPERATIONS_PLUS_MOINS,
+        garantieSolution = true,
+        manchesParMode = 2,
+        dureeSecondesPartieStructuree = 120,
+    ),
+    /** Comme [EMILE], avec la multiplication en plus (retour utilisateur : niveau intermédiaire avant Nestor, qui a les 4 opérations). */
+    ODILE(
+        cibleMin = 10,
+        cibleMax = 100,
+        operations = OPERATIONS_PLUS_MOINS_FOIS,
         garantieSolution = true,
         manchesParMode = 2,
         dureeSecondesPartieStructuree = 120,

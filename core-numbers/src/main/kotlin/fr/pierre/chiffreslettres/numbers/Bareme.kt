@@ -24,7 +24,7 @@ object Bareme {
         if (propose == null) return 0
         val ecart = abs(cible - propose)
         return when (niveau) {
-            Niveau.EMILE, Niveau.NESTOR -> if (ecart == 0) 10 else 5
+            Niveau.EMILE, Niveau.ODILE, Niveau.NESTOR -> if (ecart == 0) 10 else 5
             Niveau.MONIQUE, Niveau.MATHIEU -> when {
                 ecart == 0 -> 10
                 meilleurEcartAtteignable > 0 && ecart == meilleurEcartAtteignable -> 10

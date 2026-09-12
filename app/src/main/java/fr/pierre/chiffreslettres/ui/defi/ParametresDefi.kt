@@ -10,6 +10,7 @@ import fr.pierre.chiffreslettres.numbers.Niveau
  */
 fun seuilLongueurDefiLettres(niveau: NiveauLettres): Int = when (niveau) {
     NiveauLettres.EMILE -> 4
+    NiveauLettres.ODILE -> 4
     NiveauLettres.NESTOR -> 5
     NiveauLettres.MONIQUE -> 6
     NiveauLettres.MATHIEU -> 7
@@ -32,6 +33,7 @@ fun motEstReussiDefiLettres(niveau: NiveauLettres, motPropose: String, seuil: In
 /** Budget de temps global (en secondes) d'un défi chrono chiffres, selon le niveau (retour utilisateur : 2/3/4/5 min). */
 fun budgetSecondesDefiChrono(niveau: Niveau): Int = when (niveau) {
     Niveau.EMILE -> 120
+    Niveau.ODILE -> 120
     Niveau.NESTOR -> 180
     Niveau.MONIQUE -> 240
     Niveau.MATHIEU -> 300
@@ -40,6 +42,7 @@ fun budgetSecondesDefiChrono(niveau: Niveau): Int = when (niveau) {
 /** Budget de temps global (en secondes) d'un défi chrono lettres, selon le niveau (retour utilisateur : 2/3/4/5 min). */
 fun budgetSecondesDefiChrono(niveau: NiveauLettres): Int = when (niveau) {
     NiveauLettres.EMILE -> 120
+    NiveauLettres.ODILE -> 120
     NiveauLettres.NESTOR -> 180
     NiveauLettres.MONIQUE -> 240
     NiveauLettres.MATHIEU -> 300
@@ -61,6 +64,7 @@ fun nombreObjectifsDefiPoints(niveau: NiveauLettres, estDefiQuotidien: Boolean =
     if (estDefiQuotidien) {
         when (niveau) {
             NiveauLettres.EMILE -> 2
+            NiveauLettres.ODILE -> 2
             NiveauLettres.NESTOR -> 3
             NiveauLettres.MONIQUE -> 4
             NiveauLettres.MATHIEU -> 8
@@ -68,6 +72,7 @@ fun nombreObjectifsDefiPoints(niveau: NiveauLettres, estDefiQuotidien: Boolean =
     } else {
         when (niveau) {
             NiveauLettres.EMILE -> 3
+            NiveauLettres.ODILE -> 3
             NiveauLettres.NESTOR -> 5
             NiveauLettres.MONIQUE -> 8
             NiveauLettres.MATHIEU -> 15

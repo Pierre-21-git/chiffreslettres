@@ -28,6 +28,7 @@ object ConfigurationAlphabetProvider {
         val voyelles = resources.getString(R.string.alphabet_voyelles).toSet()
         val lettresExcluesParNiveau = mapOf(
             NiveauLettres.EMILE to resources.getString(R.string.lettres_exclues_emile).toSet(),
+            NiveauLettres.ODILE to resources.getString(R.string.lettres_exclues_odile).toSet(),
             NiveauLettres.NESTOR to resources.getString(R.string.lettres_exclues_nestor).toSet(),
             NiveauLettres.MONIQUE to resources.getString(R.string.lettres_exclues_monique).toSet(),
             NiveauLettres.MATHIEU to resources.getString(R.string.lettres_exclues_mathieu).toSet(),

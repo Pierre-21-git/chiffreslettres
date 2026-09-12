@@ -52,11 +52,14 @@ class DefiQuotidienStreakTest {
         // Retour utilisateur : rejouer un niveau supérieur le même jour doit remplacer le niveau
         // enregistré (voir DefiQuotidienRepository.enregistrerReussite), jamais le contraire.
         assertEquals(0, rangNiveau("EMILE"))
-        assertEquals(1, rangNiveau("NESTOR"))
-        assertEquals(2, rangNiveau("MONIQUE"))
-        assertEquals(3, rangNiveau("MATHIEU"))
+        assertEquals(1, rangNiveau("ODILE"))
+        assertEquals(2, rangNiveau("NESTOR"))
+        assertEquals(3, rangNiveau("MONIQUE"))
+        assertEquals(4, rangNiveau("MATHIEU"))
         assertEquals(true, rangNiveau("MATHIEU") > rangNiveau("MONIQUE"))
         assertEquals(true, rangNiveau("MONIQUE") > rangNiveau("NESTOR"))
+        assertEquals(true, rangNiveau("NESTOR") > rangNiveau("ODILE"))
+        assertEquals(true, rangNiveau("ODILE") > rangNiveau("EMILE"))
     }
 
     @Test

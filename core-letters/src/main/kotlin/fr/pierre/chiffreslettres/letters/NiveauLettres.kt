@@ -15,6 +15,8 @@ enum class NiveauLettres(
     val dureeSecondesPartieStructuree: Int,
 ) {
     EMILE(manchesParMode = 2, dureeSecondesPartieStructuree = 110),
+    /** Strictement identique à [EMILE] (retour utilisateur : seule la version chiffres du niveau ajoute la multiplication). */
+    ODILE(manchesParMode = 2, dureeSecondesPartieStructuree = 110),
     NESTOR(manchesParMode = 3, dureeSecondesPartieStructuree = 90),
     MONIQUE(manchesParMode = 4, dureeSecondesPartieStructuree = 50),
     MATHIEU(manchesParMode = 5, dureeSecondesPartieStructuree = 40),
