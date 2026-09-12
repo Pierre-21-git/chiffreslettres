@@ -44,25 +44,6 @@ class TirageChiffresTest {
         assertEquals(Niveau.EMILE.operations + Operation.FOIS, Niveau.ODILE.operations)
         assertTrue(Operation.FOIS in Niveau.ODILE.operations)
         assertTrue(Operation.DIVISE !in Niveau.ODILE.operations)
-        assertEquals(5, Niveau.ODILE.tableMultiplicationMax)
-    }
-
-    @Test
-    fun `les solutions Odile ne multiplient jamais en dehors des tables de 1 a 5`() {
-        fun multiplicationsUtilisees(e: Expression): List<Pair<Int, Int>> = when (e) {
-            is Expression.Valeur -> emptyList()
-            is Expression.Calcul -> {
-                val sousMultiplications = multiplicationsUtilisees(e.gauche) + multiplicationsUtilisees(e.droite)
-                if (e.operation == Operation.FOIS) sousMultiplications + (e.gauche.resultat to e.droite.resultat) else sousMultiplications
-            }
-        }
-        val random = Random(321)
-        repeat(50) {
-            val resultat = TirageChiffres.tirer(Niveau.ODILE, random)
-            for ((x, y) in multiplicationsUtilisees(resultat.solution!!)) {
-                assertTrue("$x x $y hors des tables de 1 à 5", (x in 1..5 && y in 1..10) || (y in 1..5 && x in 1..10))
-            }
-        }
     }
 
     @Test

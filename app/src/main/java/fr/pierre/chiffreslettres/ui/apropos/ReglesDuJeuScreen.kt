@@ -100,6 +100,7 @@ fun ReglesModePartieSolo() {
         Text(stringResource(R.string.regles_partie_solo_intro), style = MaterialTheme.typography.bodyMedium)
         ListeAPuces(
             stringResource(R.string.regles_partie_solo_emile),
+            stringResource(R.string.regles_partie_solo_odile),
             stringResource(R.string.regles_partie_solo_nestor),
             stringResource(R.string.regles_partie_solo_monique),
             stringResource(R.string.regles_partie_solo_mathieu),
@@ -125,6 +126,7 @@ fun ReglesModeDefiSerie() {
         Text(stringResource(R.string.regles_defi_serie_intro), style = MaterialTheme.typography.bodyMedium)
         ListeAPuces(
             stringResource(R.string.regles_seuil_emile),
+            stringResource(R.string.regles_seuil_odile),
             stringResource(R.string.regles_seuil_nestor),
             stringResource(R.string.regles_seuil_monique),
             stringResource(R.string.regles_seuil_mathieu),
@@ -139,6 +141,7 @@ fun ReglesModeDefiChrono() {
         Text(stringResource(R.string.regles_defi_chrono_intro), style = MaterialTheme.typography.bodyMedium)
         ListeAPuces(
             stringResource(R.string.regles_defi_chrono_budget_emile),
+            stringResource(R.string.regles_defi_chrono_budget_odile),
             stringResource(R.string.regles_defi_chrono_budget_nestor),
             stringResource(R.string.regles_defi_chrono_budget_monique),
             stringResource(R.string.regles_defi_chrono_budget_mathieu),
@@ -146,6 +149,7 @@ fun ReglesModeDefiChrono() {
         Text(stringResource(R.string.regles_defi_chrono_seuil_intro), style = MaterialTheme.typography.bodyMedium)
         ListeAPuces(
             stringResource(R.string.regles_seuil_emile),
+            stringResource(R.string.regles_seuil_odile),
             stringResource(R.string.regles_seuil_nestor),
             stringResource(R.string.regles_seuil_monique),
             stringResource(R.string.regles_seuil_mathieu),
@@ -160,6 +164,7 @@ fun ReglesModeDefiMots() {
         Text(stringResource(R.string.regles_defi_mots_intro), style = MaterialTheme.typography.bodyMedium)
         ListeAPuces(
             stringResource(R.string.regles_seuil_emile),
+            stringResource(R.string.regles_seuil_odile),
             stringResource(R.string.regles_seuil_nestor),
             stringResource(R.string.regles_seuil_monique),
             stringResource(R.string.regles_seuil_mathieu),
@@ -174,6 +179,7 @@ fun ReglesModeDefiPoints() {
         Text(stringResource(R.string.regles_defi_points_intro), style = MaterialTheme.typography.bodyMedium)
         ListeAPuces(
             stringResource(R.string.regles_defi_points_objectifs_emile),
+            stringResource(R.string.regles_defi_points_objectifs_odile),
             stringResource(R.string.regles_defi_points_objectifs_nestor),
             stringResource(R.string.regles_defi_points_objectifs_monique),
             stringResource(R.string.regles_defi_points_objectifs_mathieu),
@@ -193,6 +199,7 @@ fun ReglesModeDefiSansFaute() {
         Text(stringResource(R.string.regles_defi_sans_faute_intro), style = MaterialTheme.typography.bodyMedium)
         ListeAPuces(
             stringResource(R.string.regles_seuil_emile),
+            stringResource(R.string.regles_seuil_odile),
             stringResource(R.string.regles_seuil_nestor),
             stringResource(R.string.regles_seuil_monique),
             stringResource(R.string.regles_seuil_mathieu),

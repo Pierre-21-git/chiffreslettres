@@ -308,16 +308,16 @@
     <string name="regles_intro_titre">Numbers &amp; Letters</string>
     <string name="regles_intro_texte_1">Numbers &amp; Letters is a mental arithmetic and vocabulary game, in the spirit of the well-known French TV game show of the same principle, with no affiliation to it.</string>
     <string name="regles_intro_texte_2">Two challenges: Numbers, where you reach a target by combining six randomly drawn numbers, and Letters, where you find the longest possible word from ten randomly drawn letters.</string>
-    <string name="regles_intro_texte_3">Play solo across four difficulty levels, two-player on the same phone, or over the network (Wi-Fi/Bluetooth) with Word duel or a duo game. Take on the daily challenge, progress with the streak, timed, word and flawless challenges, or train freely.</string>
+    <string name="regles_intro_texte_3">Play solo across five difficulty levels, two-player on the same phone, or over the network (Wi-Fi/Bluetooth) with Word duel or a duo game. Take on the daily challenge, progress with the streak, timed, word and flawless challenges, or train freely.</string>
     <string name="regles_intro_texte_4">The app keeps track of your statistics, rewards your progress with trophies, and works entirely offline: no ads, no trackers, no network connection required (except to play a network game).</string>
     <string name="regles_mode_chiffres_titre">Numbers mode</string>
     <string name="regles_mode_chiffres_texte">6 numbers are drawn (from 1 to 10 in double copies, and 25/50/75/100 in single copies), along with a target to reach. Build your calculation step by step, calculator-style: touch a first number, an operator, then a second number — the result replaces the two numbers used and can be reused. The \"Undo\" and \"Clear\" buttons let you go back. The last result obtained is your proposal: submit as soon as you\'re ready, or let the clock run out if there is one.</string>
     <string name="regles_comptage_points_titre">Scoring</string>
-    <string name="regles_chiffres_points_emile_nestor">Assez facile, Émile and Ça va encore, Nestor: 10 points if the count is exact, 5 points for any non-exact proposal.</string>
+    <string name="regles_chiffres_points_emile_nestor">Assez facile, Émile, Ça reste tranquille, Odile, and Ça va encore, Nestor: 10 points if the count is exact, 5 points for any non-exact proposal.</string>
     <string name="regles_chiffres_points_monique_mathieu">Ça se complique, Monique and C\'est du sérieux, Mathieu: 10 points if the count is exact, 7 points for a close count (gap of at most 100 from the target), 0 points beyond that.</string>
     <string name="regles_mode_lettres_titre">Letters mode</string>
     <string name="regles_mode_lettres_texte">Choose the number of vowels you want (2, 3, 4 or 5), then all 10 letters are drawn at once. Build your word by touching the letters in the order you want (each drawn letter can only be used once); the \"Undo\" and \"Clear\" buttons let you go back. Find the longest word possible with these letters, before the clock runs out if there is one.</string>
-    <string name="regles_lettres_points_emile_nestor">Assez facile, Émile and Ça va encore, Nestor: 5 points for a word of 2 to 4 letters, 10 points from 5 letters up.</string>
+    <string name="regles_lettres_points_emile_nestor">Assez facile, Émile, Ça reste tranquille, Odile, and Ça va encore, Nestor: 5 points for a word of 2 to 4 letters, 10 points from 5 letters up.</string>
     <string name="regles_lettres_points_monique_mathieu">Ça se complique, Monique and C\'est du sérieux, Mathieu: the score equals the number of letters in the validated word.</string>
     <string name="regles_mots_acceptes_titre">Accepted words</string>
     <string name="regles_mots_acceptes_texte">The built-in dictionary excludes proper nouns, acronyms/abbreviations, and purely conjugated verb forms: only the infinitive and present/past participles remain accepted.</string>
@@ -326,6 +326,7 @@
     <string name="regles_mode_partie_solo_titre">Solo game mode</string>
     <string name="regles_partie_solo_intro">Only one choice to make: the level, applied to numbers and letters rounds, played alternately. The clock duration and number of rounds are fixed per level:</string>
     <string name="regles_partie_solo_emile">Assez facile, Émile (2 rounds per mode) — Numbers: target ≤ 100, addition and subtraction only, solution guaranteed, 120s. Letters: no letters excluded, 110s.</string>
+    <string name="regles_partie_solo_odile">Ça reste tranquille, Odile (2 rounds per mode) — Numbers: target ≤ 100, addition, subtraction and multiplication, solution guaranteed, 120s. Letters: no letters excluded, 110s.</string>
     <string name="regles_partie_solo_nestor">Ça va encore, Nestor (3 rounds per mode) — Numbers: target ≤ 100, all 4 operations, solution guaranteed, 100s. Letters: no letters excluded, 90s.</string>
     <string name="regles_partie_solo_monique">Ça se complique, Monique (4 rounds per mode) — Numbers: target ≤ 500, all 4 operations, no solution guarantee, 60s. Letters: no letters excluded, 50s.</string>
     <string name="regles_partie_solo_mathieu">C\'est du sérieux, Mathieu (5 rounds per mode) — Numbers: target between 100 and 999, no solution guarantee, 45s. Letters: no letters excluded, 40s.</string>
@@ -337,6 +338,7 @@
     <string name="regles_mode_defi_serie_titre">Streak challenge mode</string>
     <string name="regles_defi_serie_intro">Choose a mode (numbers or letters) and a level, then chain rounds to line up as many successes in a row as possible, with the same clock as in a solo game for that level. A success is an exact count in numbers, or a valid word of at least a minimum length in letters:</string>
     <string name="regles_seuil_emile">Émile: 4 letters</string>
+    <string name="regles_seuil_odile">Odile: 4 letters</string>
     <string name="regles_seuil_nestor">Nestor: 5 letters</string>
     <string name="regles_seuil_monique">Monique: 6 letters</string>
     <string name="regles_seuil_mathieu">Mathieu: 7 letters</string>
@@ -344,6 +346,7 @@
     <string name="regles_mode_defi_chrono_titre">Timed challenge mode</string>
     <string name="regles_defi_chrono_intro">Same principle as the streak challenge, but against the clock: an overall time budget is set per level:</string>
     <string name="regles_defi_chrono_budget_emile">Émile: 2 minutes</string>
+    <string name="regles_defi_chrono_budget_odile">Odile: 2 minutes</string>
     <string name="regles_defi_chrono_budget_nestor">Nestor: 3 minutes</string>
     <string name="regles_defi_chrono_budget_monique">Monique: 4 minutes</string>
     <string name="regles_defi_chrono_budget_mathieu">Mathieu: 5 minutes</string>
@@ -356,6 +359,7 @@
     <string name="regles_mode_defi_points_titre">Points Challenge mode</string>
     <string name="regles_defi_points_intro">A single letter draw, timed. Point objectives are set depending on the level, computed from a classic letter-value chart that awards more points to rarer letters. Find a word whose score exactly matches each objective before time runs out:</string>
     <string name="regles_defi_points_objectifs_emile">Emile: 3 objectives, 2 minutes</string>
+    <string name="regles_defi_points_objectifs_odile">Odile: 3 objectives, 2 minutes</string>
     <string name="regles_defi_points_objectifs_nestor">Nestor: 4 objectives, 3 minutes</string>
     <string name="regles_defi_points_objectifs_monique">Monique: 5 objectives, 4 minutes</string>
     <string name="regles_defi_points_objectifs_mathieu">Mathieu: 6 objectives, 5 minutes</string>

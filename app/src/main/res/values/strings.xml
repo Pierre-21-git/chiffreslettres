@@ -343,16 +343,16 @@
     <string name="regles_intro_titre">Chiffres &amp; Lettres</string>
     <string name="regles_intro_texte_1">Chiffres &amp; Lettres est un jeu de calcul mental et de vocabulaire, dans l\'esprit du célèbre jeu télévisé français du même principe, sans aucune affiliation avec celui-ci.</string>
     <string name="regles_intro_texte_2">Deux épreuves : les Chiffres, où il faut atteindre une cible en combinant six nombres tirés au sort, et les Lettres, où il faut trouver le mot le plus long avec dix lettres tirées au sort.</string>
-    <string name="regles_intro_texte_3">Jouez seul sur quatre niveaux de difficulté, à deux sur le même téléphone, ou en réseau (Wifi/Bluetooth) avec le Duel mots ou une partie duo. Relevez le défi quotidien, progressez avec les défis série, chrono, mots et sans faute, ou entraînez-vous librement.</string>
+    <string name="regles_intro_texte_3">Jouez seul sur cinq niveaux de difficulté, à deux sur le même téléphone, ou en réseau (Wifi/Bluetooth) avec le Duel mots ou une partie duo. Relevez le défi quotidien, progressez avec les défis série, chrono, mots et sans faute, ou entraînez-vous librement.</string>
     <string name="regles_intro_texte_4">L\'application garde vos statistiques, récompense votre progression par des trophées, et fonctionne entièrement hors ligne : aucune publicité, aucun traqueur, aucune connexion réseau requise (sauf pour jouer en réseau).</string>
     <string name="regles_mode_chiffres_titre">Mode Chiffres</string>
     <string name="regles_mode_chiffres_texte">6 nombres sont tirés (parmi 1 à 10 en double exemplaire, et 25/50/75/100 en simple exemplaire), ainsi qu\'une cible à atteindre. Construisez votre calcul pas à pas façon calculatrice : touchez un premier nombre, un opérateur, puis un second nombre — le résultat remplace les deux nombres utilisés et peut resservir. Les boutons \"Annuler\" et \"Effacer\" permettent de revenir en arrière. Le dernier résultat obtenu est votre proposition : validez dès que vous êtes prêt, ou laissez le chrono s\'écouler s\'il y en a un.</string>
     <string name="regles_comptage_points_titre">Comptage des points</string>
-    <string name="regles_chiffres_points_emile_nestor">Assez facile (Émile) et Ça va encore (Nestor) : 10 points si le compte est exact, 5 points pour toute proposition non exacte.</string>
+    <string name="regles_chiffres_points_emile_nestor">Assez facile (Émile), Ça reste tranquille (Odile) et Ça va encore (Nestor) : 10 points si le compte est exact, 5 points pour toute proposition non exacte.</string>
     <string name="regles_chiffres_points_monique_mathieu">Ça se complique (Monique) et C\'est du sérieux (Mathieu) : 10 points si le compte est exact, 7 points pour un compte approchant (écart d\'au plus 100 avec la cible), 0 point au-delà.</string>
     <string name="regles_mode_lettres_titre">Mode Lettres</string>
     <string name="regles_mode_lettres_texte">Choisissez le nombre de voyelles souhaité (2, 3, 4 ou 5 ; le Y compte comme une voyelle), puis les 10 lettres sont tirées d\'un coup. Construisez ensuite votre mot en touchant les lettres dans l\'ordre voulu (chaque lettre tirée ne peut être utilisée qu\'une fois) ; les boutons \"Annuler\" et \"Effacer\" permettent de revenir en arrière. Trouvez le mot le plus long possible avec ces lettres, avant la fin du chrono s\'il y en a un.</string>
-    <string name="regles_lettres_points_emile_nestor">Assez facile (Émile) et Ça va encore (Nestor) : 5 points pour un mot de 2 à 4 lettres, 10 points à partir de 5 lettres.</string>
+    <string name="regles_lettres_points_emile_nestor">Assez facile (Émile), Ça reste tranquille (Odile) et Ça va encore (Nestor) : 5 points pour un mot de 2 à 4 lettres, 10 points à partir de 5 lettres.</string>
     <string name="regles_lettres_points_monique_mathieu">Ça se complique (Monique) et C\'est du sérieux (Mathieu) : le score correspond au nombre de lettres du mot validé.</string>
     <string name="regles_mots_acceptes_titre">Mots acceptés</string>
     <string name="regles_mots_acceptes_texte">Le dictionnaire embarqué exclut les noms propres, les sigles/abréviations, et les formes de verbes purement conjuguées : seuls l\'infinitif et les participes présent/passé restent acceptés (\"aimer\", \"aimant\", \"aimé\" sont valides, pas \"aimerait\" ni \"aimons\").</string>
@@ -361,6 +361,7 @@
     <string name="regles_mode_partie_solo_titre">Mode Partie solo</string>
     <string name="regles_partie_solo_intro">Un seul choix à faire : le niveau, appliqué aux manches chiffres et lettres, jouées en alternance. La durée du chrono et le nombre de manches sont fixés par niveau :</string>
     <string name="regles_partie_solo_emile">Assez facile, Émile (2 manches par mode) — Chiffres : cible ≤ 100, addition et soustraction seulement, solution garantie, 120s. Lettres : X, Y, Z, W, K, Q, H, J exclues, 110s.</string>
+    <string name="regles_partie_solo_odile">Ça reste tranquille, Odile (2 manches par mode) — Chiffres : cible ≤ 100, addition, soustraction et multiplication, solution garantie, 120s. Lettres : X, Y, Z, W, K, Q, H, J exclues, 110s.</string>
     <string name="regles_partie_solo_nestor">Ça va encore, Nestor (3 manches par mode) — Chiffres : cible ≤ 100, les 4 opérations, solution garantie, 100s. Lettres : X, Y, Z, W, K, Q exclues, 90s.</string>
     <string name="regles_partie_solo_monique">Ça se complique, Monique (4 manches par mode) — Chiffres : cible ≤ 500, les 4 opérations, pas de garantie de solution, 60s. Lettres : X, Y, Z, W exclues, 50s.</string>
     <string name="regles_partie_solo_mathieu">C\'est du sérieux, Mathieu (5 manches par mode) — Chiffres : cible entre 100 et 999, pas de garantie de solution, 45s. Lettres : aucune lettre exclue, 40s.</string>
@@ -372,6 +373,7 @@
     <string name="regles_mode_defi_serie_titre">Mode Défi série</string>
     <string name="regles_defi_serie_intro">Choisissez un mode (chiffres ou lettres) et un niveau, puis enchaînez les manches pour aligner le plus de réussites possible d\'affilée, avec le même chrono qu\'en partie solo pour ce niveau. Une réussite, c\'est un compte exact en chiffres, ou un mot valide d\'au moins une longueur minimale en lettres :</string>
     <string name="regles_seuil_emile">Émile : 4 lettres</string>
+    <string name="regles_seuil_odile">Odile : 4 lettres</string>
     <string name="regles_seuil_nestor">Nestor : 5 lettres</string>
     <string name="regles_seuil_monique">Monique : 6 lettres</string>
     <string name="regles_seuil_mathieu">Mathieu : 7 lettres</string>
@@ -379,6 +381,7 @@
     <string name="regles_mode_defi_chrono_titre">Mode Défi chrono</string>
     <string name="regles_defi_chrono_intro">Même principe que le défi série, mais contre la montre : un budget de temps global est fixé par niveau :</string>
     <string name="regles_defi_chrono_budget_emile">Émile : 2 minutes</string>
+    <string name="regles_defi_chrono_budget_odile">Odile : 2 minutes</string>
     <string name="regles_defi_chrono_budget_nestor">Nestor : 3 minutes</string>
     <string name="regles_defi_chrono_budget_monique">Monique : 4 minutes</string>
     <string name="regles_defi_chrono_budget_mathieu">Mathieu : 5 minutes</string>
@@ -391,6 +394,7 @@
     <string name="regles_mode_defi_points_titre">Mode Défi Points</string>
     <string name="regles_defi_points_intro">Un seul tirage de lettres, chronométré. Des objectifs de points sont fixés selon le niveau, calculés à partir d\'un barème classique qui attribue plus de points aux lettres rares. Trouve un mot dont le score correspond exactement à chaque objectif, avant la fin du temps imparti :</string>
     <string name="regles_defi_points_objectifs_emile">Émile : 3 objectifs, 2 minutes</string>
+    <string name="regles_defi_points_objectifs_odile">Odile : 3 objectifs, 2 minutes</string>
     <string name="regles_defi_points_objectifs_nestor">Nestor : 4 objectifs, 3 minutes</string>
     <string name="regles_defi_points_objectifs_monique">Monique : 5 objectifs, 4 minutes</string>
     <string name="regles_defi_points_objectifs_mathieu">Mathieu : 6 objectifs, 5 minutes</string>

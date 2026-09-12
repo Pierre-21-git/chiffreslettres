@@ -270,16 +270,16 @@
     <string name="regles_intro_titre">Zahlen &amp; Buchstaben</string>
     <string name="regles_intro_texte_1">Zahlen &amp; Buchstaben ist ein Kopfrechen- und Wortschatzspiel, im Geiste der bekannten französischen Fernsehshow mit demselben Prinzip, ohne jegliche Verbindung zu dieser.</string>
     <string name="regles_intro_texte_2">Zwei Disziplinen: Zahlen, bei denen du eine Zielzahl erreichst, indem du sechs zufällig gezogene Zahlen kombinierst, und Buchstaben, bei denen du mit zehn zufällig gezogenen Buchstaben das längste Wort findest.</string>
-    <string name="regles_intro_texte_3">Spiele allein auf vier Schwierigkeitsstufen, zu zweit auf demselben Telefon oder im Netzwerk (WLAN/Bluetooth) im Wortduell oder in einem Duo-Spiel. Nimm die tägliche Herausforderung an, verbessere dich mit der Serien-, Zeit-, Wörter- und Fehlerfreien Herausforderung, oder trainiere frei.</string>
+    <string name="regles_intro_texte_3">Spiele allein auf fünf Schwierigkeitsstufen, zu zweit auf demselben Telefon oder im Netzwerk (WLAN/Bluetooth) im Wortduell oder in einem Duo-Spiel. Nimm die tägliche Herausforderung an, verbessere dich mit der Serien-, Zeit-, Wörter- und Fehlerfreien Herausforderung, oder trainiere frei.</string>
     <string name="regles_intro_texte_4">Die App speichert deine Statistiken, belohnt deinen Fortschritt mit Trophäen und funktioniert vollständig offline: keine Werbung, keine Tracker, keine Netzwerkverbindung erforderlich (außer für das Netzwerkspiel).</string>
     <string name="regles_mode_chiffres_titre">Zahlen-Modus</string>
     <string name="regles_mode_chiffres_texte">Es werden 6 Zahlen gezogen (1 bis 10 jeweils doppelt, sowie 25/50/75/100 einfach), zusammen mit einer zu erreichenden Zielzahl. Baue deine Rechnung Schritt für Schritt wie mit einem Taschenrechner auf: berühre eine erste Zahl, einen Operator, dann eine zweite Zahl — das Ergebnis ersetzt die beiden verwendeten Zahlen und kann weiterverwendet werden. Die Schaltflächen \"Rückgängig\" und \"Löschen\" erlauben es, einen Schritt zurückzugehen. Das zuletzt erhaltene Ergebnis ist dein Vorschlag: bestätige, sobald du bereit bist, oder lass die Zeit ablaufen, falls es eine gibt.</string>
     <string name="regles_comptage_points_titre">Punktezählung</string>
-    <string name="regles_chiffres_points_emile_nestor">Assez facile, Émile und Ça va encore, Nestor: 10 Punkte bei exaktem Ergebnis, 5 Punkte für jeden nicht exakten Vorschlag.</string>
+    <string name="regles_chiffres_points_emile_nestor">Assez facile, Émile, Ça reste tranquille, Odile und Ça va encore, Nestor: 10 Punkte bei exaktem Ergebnis, 5 Punkte für jeden nicht exakten Vorschlag.</string>
     <string name="regles_chiffres_points_monique_mathieu">Ça se complique, Monique und C\'est du sérieux, Mathieu: 10 Punkte bei exaktem Ergebnis, 7 Punkte bei einem angenäherten Ergebnis (Abweichung von höchstens 100 zur Zielzahl), 0 Punkte darüber hinaus.</string>
     <string name="regles_mode_lettres_titre">Buchstaben-Modus</string>
     <string name="regles_mode_lettres_texte">Wähle die gewünschte Anzahl Vokale (2, 3, 4 oder 5), danach werden alle 10 Buchstaben auf einmal gezogen. Bilde dein Wort, indem du die Buchstaben in der gewünschten Reihenfolge berührst (jeder gezogene Buchstabe kann nur einmal verwendet werden); die Schaltflächen \"Rückgängig\" und \"Löschen\" erlauben es, einen Schritt zurückzugehen. Finde das längstmögliche Wort mit diesen Buchstaben, bevor die Zeit abläuft, falls es eine gibt.</string>
-    <string name="regles_lettres_points_emile_nestor">Assez facile, Émile und Ça va encore, Nestor: 5 Punkte für ein Wort von 2 bis 4 Buchstaben, 10 Punkte ab 5 Buchstaben.</string>
+    <string name="regles_lettres_points_emile_nestor">Assez facile, Émile, Ça reste tranquille, Odile und Ça va encore, Nestor: 5 Punkte für ein Wort von 2 bis 4 Buchstaben, 10 Punkte ab 5 Buchstaben.</string>
     <string name="regles_lettres_points_monique_mathieu">Ça se complique, Monique und C\'est du sérieux, Mathieu: die Punktzahl entspricht der Anzahl der Buchstaben des gültigen Worts.</string>
     <string name="regles_mots_acceptes_titre">Akzeptierte Wörter</string>
     <string name="regles_mots_acceptes_texte">Das integrierte Wörterbuch schließt Eigennamen, Abkürzungen und rein konjugierte Verbformen aus: nur der Infinitiv und die Partizipien Präsens/Perfekt bleiben zulässig.</string>
@@ -288,6 +288,7 @@
     <string name="regles_mode_partie_solo_titre">Solospiel-Modus</string>
     <string name="regles_partie_solo_intro">Nur eine Wahl zu treffen: das Level, angewendet auf abwechselnd gespielte Zahlen- und Buchstaben-Runden. Die Zeitdauer und die Rundenzahl sind pro Level festgelegt:</string>
     <string name="regles_partie_solo_emile">Assez facile, Émile (2 Runden pro Modus) — Zahlen: Zielzahl ≤ 100, nur Addition und Subtraktion, Lösung garantiert, 120s. Buchstaben: X, Y, Z, W, K, Q, H, J ausgeschlossen, 110s.</string>
+    <string name="regles_partie_solo_odile">Ça reste tranquille, Odile (2 Runden pro Modus) — Zahlen: Zielzahl ≤ 100, Addition, Subtraktion und Multiplikation, Lösung garantiert, 120s. Buchstaben: X, Y, Z, W, K, Q, H, J ausgeschlossen, 110s.</string>
     <string name="regles_partie_solo_nestor">Ça va encore, Nestor (3 Runden pro Modus) — Zahlen: Zielzahl ≤ 100, alle 4 Operationen, Lösung garantiert, 100s. Buchstaben: X, Y, Z, W, K, Q ausgeschlossen, 90s.</string>
     <string name="regles_partie_solo_monique">Ça se complique, Monique (4 Runden pro Modus) — Zahlen: Zielzahl ≤ 500, alle 4 Operationen, keine Lösungsgarantie, 60s. Buchstaben: X, Y, Z, W ausgeschlossen, 50s.</string>
     <string name="regles_partie_solo_mathieu">C\'est du sérieux, Mathieu (5 Runden pro Modus) — Zahlen: Zielzahl zwischen 100 und 999, keine Lösungsgarantie, 45s. Buchstaben: keine Buchstaben ausgeschlossen, 40s.</string>
@@ -299,6 +300,7 @@
     <string name="regles_mode_defi_serie_titre">Serien-Herausforderungsmodus</string>
     <string name="regles_defi_serie_intro">Wähle einen Modus (Zahlen oder Buchstaben) und ein Level, und reihe dann Runden aneinander, um möglichst viele Erfolge in Folge zu erzielen, mit derselben Zeit wie in einem Solospiel dieses Levels. Ein Erfolg ist ein exaktes Ergebnis bei Zahlen oder ein gültiges Wort mit mindestens einer Mindestlänge bei Buchstaben:</string>
     <string name="regles_seuil_emile">Émile: 4 Buchstaben</string>
+    <string name="regles_seuil_odile">Odile: 4 Buchstaben</string>
     <string name="regles_seuil_nestor">Nestor: 5 Buchstaben</string>
     <string name="regles_seuil_monique">Monique: 6 Buchstaben</string>
     <string name="regles_seuil_mathieu">Mathieu: 7 Buchstaben</string>
@@ -306,6 +308,7 @@
     <string name="regles_mode_defi_chrono_titre">Zeit-Herausforderungsmodus</string>
     <string name="regles_defi_chrono_intro">Gleiches Prinzip wie die Serien-Herausforderung, aber gegen die Uhr: ein Gesamtzeitbudget wird pro Level festgelegt:</string>
     <string name="regles_defi_chrono_budget_emile">Émile: 2 Minuten</string>
+    <string name="regles_defi_chrono_budget_odile">Odile: 2 Minuten</string>
     <string name="regles_defi_chrono_budget_nestor">Nestor: 3 Minuten</string>
     <string name="regles_defi_chrono_budget_monique">Monique: 4 Minuten</string>
     <string name="regles_defi_chrono_budget_mathieu">Mathieu: 5 Minuten</string>
@@ -318,6 +321,7 @@
     <string name="regles_mode_defi_points_titre">Modus Punkte-Herausforderung</string>
     <string name="regles_defi_points_intro">Ein einziger Buchstabenzug, mit Zeitlimit. Je nach Stufe werden Punktziele festgelegt, berechnet nach einer klassischen Punktetabelle, die selteneren Buchstaben mehr Punkte zuweist. Finde ein Wort, dessen Punktzahl genau einem Ziel entspricht, bevor die Zeit abläuft:</string>
     <string name="regles_defi_points_objectifs_emile">Émile: 3 Ziele, 2 Minuten</string>
+    <string name="regles_defi_points_objectifs_odile">Odile: 3 Ziele, 2 Minuten</string>
     <string name="regles_defi_points_objectifs_nestor">Nestor: 4 Ziele, 3 Minuten</string>
     <string name="regles_defi_points_objectifs_monique">Monique: 5 Ziele, 4 Minuten</string>
     <string name="regles_defi_points_objectifs_mathieu">Mathieu: 6 Ziele, 5 Minuten</string>

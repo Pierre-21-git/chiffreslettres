@@ -78,25 +78,6 @@ class SolveurTest {
     }
 
     @Test
-    fun `tableMultiplicationMax limite la multiplication a un facteur dans 1 point max, l'autre dans 1 point 10`() {
-        val ops = setOf(Operation.PLUS, Operation.FOIS)
-        // 4 x 5 = 20 : autorisé (4 dans 1..5, 5 dans 1..10).
-        assertEquals(20, Solveur.combiner(Expression.Valeur(4), Operation.FOIS, Expression.Valeur(5), tableMultiplicationMax = 5)?.resultat)
-        // 5 x 9 = 45 : autorisé (5 dans 1..5, 9 dans 1..10), peu importe l'ordre des opérandes.
-        assertEquals(45, Solveur.combiner(Expression.Valeur(9), Operation.FOIS, Expression.Valeur(5), tableMultiplicationMax = 5)?.resultat)
-        // 7 x 9 : aucun des deux facteurs n'est <= 5, donc refusé.
-        assertEquals(null, Solveur.combiner(Expression.Valeur(7), Operation.FOIS, Expression.Valeur(9), tableMultiplicationMax = 5))
-        // 3 x 15 : le second facteur dépasse 10, donc refusé même si 3 <= 5.
-        assertEquals(null, Solveur.combiner(Expression.Valeur(3), Operation.FOIS, Expression.Valeur(15), tableMultiplicationMax = 5))
-        // Sans restriction (null), tout est permis.
-        assertEquals(105, Solveur.combiner(Expression.Valeur(7), Operation.FOIS, Expression.Valeur(15))?.resultat)
-
-        val atteignables = Solveur.valeursAtteignables(listOf(7, 9), ops, tableMultiplicationMax = 5)
-        assertFalse(63 in atteignables) // 7 x 9, hors table de 1 à 5
-        assertTrue(16 in atteignables) // 7 + 9 reste permis
-    }
-
-    @Test
     fun `exemple classique du compte est bon`() {
         // 25, 50, 75, 100, 3, 6 -> cible 952 : (100 x (6 + 3)) + (75 / 25) x ... on vérifie juste
         // une cible plus simple et sûre à la main : 100 - 75 + 50 - 25 + 6 - 3 = 53.

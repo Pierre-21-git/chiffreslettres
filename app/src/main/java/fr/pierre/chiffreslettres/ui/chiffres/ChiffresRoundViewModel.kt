@@ -126,9 +126,6 @@ class ChiffresRoundViewModel(
     }
 
     private fun combiner(etat: ChiffresRoundUiState, gauche: Jeton, operation: Operation, droite: Jeton) {
-        // Pas de tableMultiplicationMax ici (retour utilisateur) : la restriction ne s'applique
-        // qu'à la génération du tirage garanti (TirageChiffres), le joueur reste libre de
-        // multiplier comme il veut pendant la manche.
         val resultat = Solveur.combiner(gauche.expression, operation, droite.expression) ?: return
         historique.add(Etape(etat.jetons, etat.operationsEffectuees))
         val nouveauxJetons = etat.jetons.filter { it.id != gauche.id && it.id != droite.id } + Jeton(prochainId++, resultat)
