@@ -152,8 +152,6 @@
     <string name="categorie_easter_general">Easter eggs — General</string>
     <string name="categorie_easter_secrets">Secretos</string>
 
-    <string name="trophee_titre_easter_ancien_combattant">Veterano</string>
-    <string name="trophee_desc_easter_ancien_combattant">Tener una cuenta activa desde hace más de un año.</string>
     <string name="trophee_titre_easter_multi_niveaux">Multinivel</string>
     <string name="trophee_desc_easter_multi_niveaux">Haber jugado al menos una partida en cada nivel de dificultad.</string>
     <string name="trophee_titre_easter_marathon">Maratón</string>

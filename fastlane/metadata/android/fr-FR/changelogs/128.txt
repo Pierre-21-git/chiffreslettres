@@ -1,0 +1,1 @@
+Correction : le trophée « Rituel du dimanche » ne restait plus bloqué à 1 semaine quand un dimanche était joué en Duel mots ou Duel points réseau. Trophée « Ancien combattant » retiré.

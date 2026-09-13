@@ -84,7 +84,7 @@ private fun ContenuApplication(modifier: Modifier = Modifier) {
     val defiRepository = remember { DefiRepository(db.defiDao()) }
     val visitesEcranStore = remember { VisitesEcranStore(context.applicationContext) }
     val tropheeRepository = remember {
-        TropheeRepository(db.tropheeDao(), db.historiqueDao(), db.defiDao(), db.defiQuotidienDao(), db.profilDao(), visitesEcranStore)
+        TropheeRepository(db.tropheeDao(), db.historiqueDao(), db.defiDao(), db.defiQuotidienDao(), visitesEcranStore)
     }
     val defiQuotidienRepository = remember { DefiQuotidienRepository(db.defiQuotidienDao()) }
     val profilActifStore = remember { ProfilActifStore(context.applicationContext) }

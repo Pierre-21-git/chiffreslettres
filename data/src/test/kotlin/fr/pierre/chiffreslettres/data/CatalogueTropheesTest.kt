@@ -42,7 +42,6 @@ private fun statsVides() = TropheeStats(
     serieEnCoursJoursDefiQuotidienNiveauMathieu = 0,
     partiesSoloStructureeJouees = 0,
     defisJouesTotal = 0,
-    ancienneteJoursProfil = 0,
     nombreNiveauxDistinctsJoues = 0,
     maxPartiesMemeJour = 0,
     cinqPartiesEnUneHeure = false,
@@ -79,7 +78,7 @@ class CatalogueTropheesTest {
 
     @Test
     fun `167 trophees au total (155 + 7 duel points + 3 easter eggs duel points + 2 easter eggs chiffres)`() {
-        assertEquals(149, CatalogueTrophees.TOUS.size)
+        assertEquals(148, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -127,7 +126,7 @@ class CatalogueTropheesTest {
     @Test
     fun `aucun trophee n'a de palier sauf le catalogue principal (les easter eggs sont hors echelle)`() {
         val easterEggs = CatalogueTrophees.TOUS.filter { it.id.startsWith("easter_") }
-        assertEquals(36, easterEggs.size)
+        assertEquals(35, easterEggs.size)
         assertTrue(easterEggs.all { it.palier == null })
     }
 
@@ -155,8 +154,6 @@ class CatalogueTropheesTest {
 
     @Test
     fun `easter eggs groupe 1 se declenchent sur leurs conditions`() {
-        assertTrue(trophee("easter_ancien_combattant").estDebloque(statsVides().copy(ancienneteJoursProfil = 400)))
-        assertFalse(trophee("easter_ancien_combattant").estDebloque(statsVides().copy(ancienneteJoursProfil = 100)))
         assertTrue(trophee("easter_multi_niveaux").estDebloque(statsVides().copy(nombreNiveauxDistinctsJoues = 4)))
         assertTrue(trophee("easter_marathon").estDebloque(statsVides().copy(maxPartiesMemeJour = 20)))
         assertFalse(trophee("easter_marathon").estDebloque(statsVides().copy(maxPartiesMemeJour = 19)))

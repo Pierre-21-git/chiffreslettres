@@ -1,0 +1,1 @@
+Korrektur: Die Trophäe „Sonntagsritual“ blieb nicht mehr fälschlich bei 1 Woche stehen, wenn ein Sonntag im Netzwerk-Wortduell oder Netzwerk-Punkteduell gespielt wurde. Trophäe „Veteran“ entfernt.

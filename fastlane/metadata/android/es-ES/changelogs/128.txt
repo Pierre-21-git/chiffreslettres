@@ -1,0 +1,1 @@
+Corrección: el trofeo «Ritual del domingo» ya no se quedaba bloqueado en 1 semana cuando un domingo se jugaba en Duelo de palabras o Duelo de puntos en red. Trofeo «Veterano» eliminado.

@@ -239,13 +239,18 @@ interface HistoriqueDao {
     /**
      * Date et score de chaque partie, triés du plus ancien au plus récent — base commune pour
      * plusieurs easter eggs calculés en mémoire (Marathon, Ça ne s'arrête jamais, Constance,
-     * Bonjour !/Oiseau de nuit), trop spécifiques pour mériter chacun leur propre requête SQL.
+     * Bonjour !/Oiseau de nuit, Rituel du dimanche), trop spécifiques pour mériter chacun leur
+     * propre requête SQL. Exclut uniquement `LIBRE` (entraînement libre, non comptabilisé dans
+     * les stats — retour utilisateur) ; tout type ajouté par la suite (ex. Duel mots/points
+     * réseau) est donc pris en compte automatiquement, pour éviter qu'un type oublié dans une
+     * liste positive ne fausse silencieusement ces trophées (bug constaté sur Rituel du
+     * dimanche : un dimanche joué en Duel mots/points réseau ne comptait pas).
      */
     @Query(
         """
         SELECT date, scoreTotal AS score
         FROM SessionEntity
-        WHERE profilId = :profilId AND type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+        WHERE profilId = :profilId AND type != 'LIBRE'
         ORDER BY date ASC
         """,
     )

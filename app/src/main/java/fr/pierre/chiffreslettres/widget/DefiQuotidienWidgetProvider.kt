@@ -87,7 +87,7 @@ private suspend fun construireVues(context: Context): RemoteViews {
     val profilRepository = ProfilRepository(db.profilDao())
     val defiQuotidienRepository = DefiQuotidienRepository(db.defiQuotidienDao())
     val tropheeRepository = TropheeRepository(
-        db.tropheeDao(), db.historiqueDao(), db.defiDao(), db.defiQuotidienDao(), db.profilDao(),
+        db.tropheeDao(), db.historiqueDao(), db.defiDao(), db.defiQuotidienDao(),
         VisitesEcranStore(context.applicationContext),
     )
     val profils = profilRepository.tousLesProfils().first()

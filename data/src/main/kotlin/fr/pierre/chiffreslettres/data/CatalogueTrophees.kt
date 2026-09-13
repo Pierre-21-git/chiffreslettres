@@ -85,8 +85,6 @@ data class TropheeStats(
     /** Parties solo (`TypePartie.STRUCTUREE`) exclusivement — pour distinguer "solo" des autres types dans le trophée "Touche-à-tout" (les autres champs `partiesXxxJouees` regroupent parfois plusieurs types). */
     val partiesSoloStructureeJouees: Int,
     val defisJouesTotal: Int,
-    /** Ancienneté du profil (retour mainteneur : trophée "Ancien combattant"). */
-    val ancienneteJoursProfil: Long,
     /** Nombre de niveaux de difficulté distincts déjà joués (trophée "Multi-niveaux"). */
     val nombreNiveauxDistinctsJoues: Int,
     /** Nombre maximum de parties jouées le même jour (trophée "Marathon"). */
@@ -1036,17 +1034,6 @@ object CatalogueTrophees {
         // `TropheeRepository.reevaluer`.
         add(
             Trophee(
-                "easter_ancien_combattant",
-                titreRes = R.string.trophee_titre_easter_ancien_combattant,
-                descriptionRes = R.string.trophee_desc_easter_ancien_combattant,
-                categorie = CategorieTrophee.EASTER_GENERAL,
-                palier = null,
-                niveauVisibilite = NiveauVisibilite.SEMI_CACHE,
-                descriptionAvantDeblocageRes = R.string.easter_avant_longue_haleine,
-            ) { it.ancienneteJoursProfil >= 365 },
-        )
-        add(
-            Trophee(
                 "easter_multi_niveaux",
                 titreRes = R.string.trophee_titre_easter_multi_niveaux,
                 descriptionRes = R.string.trophee_desc_easter_multi_niveaux,
@@ -1485,7 +1472,6 @@ object CatalogueTrophees {
         "easter_symetrie" to "⚖️",
         "easter_curieux" to "📖",
         "easter_data_lover" to "📊",
-        "easter_ancien_combattant" to "🏅",
         "easter_marathon" to "🎪",
         "easter_multi_niveaux" to "🌍",
         "easter_rituel_dimanche" to "📆",

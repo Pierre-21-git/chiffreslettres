@@ -124,7 +124,6 @@ class TropheeRepository(
     private val historiqueDao: HistoriqueDao,
     private val defiDao: DefiDao,
     private val defiQuotidienDao: DefiQuotidienDao,
-    private val profilDao: ProfilDao,
     private val visitesEcranStore: VisitesEcranStore,
 ) {
     fun tropheesDebloques(profilId: Long): Flow<List<TropheeEntity>> = tropheeDao.tropheesDebloques(profilId)
@@ -187,7 +186,6 @@ class TropheeRepository(
         serieEnCoursJoursDefiQuotidienNiveauMathieu = defiQuotidien.serieEnCoursJoursDefiQuotidienNiveauMathieu,
         partiesSoloStructureeJouees = easter.partiesSoloStructureeJouees,
         defisJouesTotal = defis.defisJouesTotal,
-        ancienneteJoursProfil = easter.ancienneteJoursProfil,
         nombreNiveauxDistinctsJoues = easter.nombreNiveauxDistinctsJoues,
         maxPartiesMemeJour = easter.maxPartiesMemeJour,
         cinqPartiesEnUneHeure = easter.cinqPartiesEnUneHeure,
@@ -353,7 +351,6 @@ class TropheeRepository(
 
     private data class StatsEasterGeneral(
         val partiesSoloStructureeJouees: Int,
-        val ancienneteJoursProfil: Long,
         val nombreNiveauxDistinctsJoues: Int,
         val maxPartiesMemeJour: Int,
         val cinqPartiesEnUneHeure: Boolean,
@@ -381,7 +378,6 @@ class TropheeRepository(
         aujourdHui: LocalDate,
     ) = StatsEasterGeneral(
         partiesSoloStructureeJouees = historiqueDao.compterPartiesParType(profilId, "STRUCTUREE"),
-        ancienneteJoursProfil = profilDao.parId(profilId)?.let { (System.currentTimeMillis() - it.dateCreation) / 86_400_000L } ?: 0L,
         nombreNiveauxDistinctsJoues = historiqueDao.compterNiveauxDistinctsJoues(profilId),
         maxPartiesMemeJour = maxPartiesMemeJour(datesEtScores.map { it.date }),
         cinqPartiesEnUneHeure = cinqPartiesEnUneHeure(datesEtScores.map { it.date }),

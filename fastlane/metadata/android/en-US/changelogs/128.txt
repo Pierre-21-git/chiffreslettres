@@ -1,0 +1,1 @@
+Fix: the "Sunday ritual" trophy no longer got stuck at 1 week when a Sunday was played via network Word Duel or network Points Duel. Removed the "Veteran" trophy.
