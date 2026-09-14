@@ -41,10 +41,6 @@ data class TropheeStats(
     /** Parties Duel points (100 % réseau, premier à atteindre un total de points). Voir [partiesDuoJouees]. */
     val partiesDuelPointsJouees: Int,
     val partiesDuelPointsGagnees: Int,
-    /** Plus grand écart de points en victoire, en Duel points (easter egg "Rouleau compresseur"). */
-    val duelPointsEcartVictoireMax: Int,
-    /** Plus grand écart de points en défaite, en Duel points (easter egg "Déculottée"). */
-    val duelPointsEcartDefaiteMax: Int,
     /** Une victoire en Duel points a-t-elle déjà été obtenue avec l'option "atteindre exactement l'objectif" (easter egg "Compte rond"). */
     val duelPointsCompteRondObtenu: Boolean,
     /** Clé = nom du [ModeJeu] (ex. "CHIFFRES"), valeur = meilleure série en défi série, tous niveaux confondus. */
@@ -1199,28 +1195,6 @@ object CatalogueTrophees {
         )
         add(
             Trophee(
-                "easter_rouleau_compresseur",
-                titreRes = R.string.trophee_titre_easter_rouleau_compresseur,
-                descriptionRes = R.string.trophee_desc_easter_rouleau_compresseur,
-                categorie = CategorieTrophee.EASTER_SECRETS,
-                palier = null,
-                niveauVisibilite = NiveauVisibilite.INVISIBLE,
-                descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
-            ) { it.duelPointsEcartVictoireMax >= 20 },
-        )
-        add(
-            Trophee(
-                "easter_deculottee",
-                titreRes = R.string.trophee_titre_easter_deculottee,
-                descriptionRes = R.string.trophee_desc_easter_deculottee,
-                categorie = CategorieTrophee.EASTER_SECRETS,
-                palier = null,
-                niveauVisibilite = NiveauVisibilite.INVISIBLE,
-                descriptionAvantDeblocageRes = R.string.easter_avant_invisible,
-            ) { it.duelPointsEcartDefaiteMax >= 20 },
-        )
-        add(
-            Trophee(
                 "easter_symetrie",
                 titreRes = R.string.trophee_titre_easter_symetrie,
                 descriptionRes = R.string.trophee_desc_easter_symetrie,
@@ -1486,8 +1460,6 @@ object CatalogueTrophees {
         "easter_aucune_idee" to "🙈",
         "easter_toit_du_monde" to "🏔️",
         "easter_compte_rond" to "🎯",
-        "easter_rouleau_compresseur" to "🚜",
-        "easter_deculottee" to "🩲",
         "easter_a_cote_de_la_plaque" to "🛰️",
         "easter_boite_a_outils" to "🧰",
     )

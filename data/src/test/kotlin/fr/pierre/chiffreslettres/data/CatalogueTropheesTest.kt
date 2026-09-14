@@ -23,8 +23,6 @@ private fun statsVides() = TropheeStats(
     partiesDuelMotsConfrontationGagnees = 0,
     partiesDuelPointsJouees = 0,
     partiesDuelPointsGagnees = 0,
-    duelPointsEcartVictoireMax = 0,
-    duelPointsEcartDefaiteMax = 0,
     duelPointsCompteRondObtenu = false,
     meilleuresSeriesDefi = emptyMap(),
     meilleuresSeriesDefiNiveauMonique = emptyMap(),
@@ -77,8 +75,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `167 trophees au total (155 + 7 duel points + 3 easter eggs duel points + 2 easter eggs chiffres)`() {
-        assertEquals(148, CatalogueTrophees.TOUS.size)
+    fun `165 trophees au total (155 + 7 duel points + 1 easter egg duel points + 2 easter eggs chiffres)`() {
+        assertEquals(146, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -126,7 +124,7 @@ class CatalogueTropheesTest {
     @Test
     fun `aucun trophee n'a de palier sauf le catalogue principal (les easter eggs sont hors echelle)`() {
         val easterEggs = CatalogueTrophees.TOUS.filter { it.id.startsWith("easter_") }
-        assertEquals(35, easterEggs.size)
+        assertEquals(33, easterEggs.size)
         assertTrue(easterEggs.all { it.palier == null })
     }
 
@@ -423,12 +421,8 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `easter eggs duel points, compte rond rouleau compresseur et deculottee`() {
+    fun `easter egg duel points, compte rond`() {
         assertTrue(trophee("easter_compte_rond").estDebloque(statsVides().copy(duelPointsCompteRondObtenu = true)))
-        assertFalse(trophee("easter_rouleau_compresseur").estDebloque(statsVides().copy(duelPointsEcartVictoireMax = 19)))
-        assertTrue(trophee("easter_rouleau_compresseur").estDebloque(statsVides().copy(duelPointsEcartVictoireMax = 20)))
-        assertFalse(trophee("easter_deculottee").estDebloque(statsVides().copy(duelPointsEcartDefaiteMax = 19)))
-        assertTrue(trophee("easter_deculottee").estDebloque(statsVides().copy(duelPointsEcartDefaiteMax = 20)))
     }
 
     @Test
@@ -471,9 +465,9 @@ class CatalogueTropheesTest {
     }
 
     @Test
-    fun `exactement 8 trophees sont INVISIBLE, masques tant qu'ils ne sont pas debloques`() {
+    fun `exactement 6 trophees sont INVISIBLE, masques tant qu'ils ne sont pas debloques`() {
         val invisibles = CatalogueTrophees.TOUS.filter { it.niveauVisibilite == NiveauVisibilite.INVISIBLE }
-        assertEquals(8, invisibles.size)
+        assertEquals(6, invisibles.size)
     }
 
     @Test

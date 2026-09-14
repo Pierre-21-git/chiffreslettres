@@ -176,10 +176,6 @@
     <string name="trophee_desc_easter_ex_aequo">Finish a game with exactly the same score as an opponent.</string>
     <string name="trophee_titre_easter_compte_rond">Round number</string>
     <string name="trophee_desc_easter_compte_rond">Win a Points duel game with the \"reach the target exactly\" option turned on.</string>
-    <string name="trophee_titre_easter_rouleau_compresseur">Steamroller</string>
-    <string name="trophee_desc_easter_rouleau_compresseur">Win a Points duel game by at least 20 points.</string>
-    <string name="trophee_titre_easter_deculottee">Thrashing</string>
-    <string name="trophee_desc_easter_deculottee">Lose a Points duel game by at least 20 points.</string>
     <string name="trophee_titre_easter_a_cote_de_la_plaque">Miles off</string>
     <string name="trophee_desc_easter_a_cote_de_la_plaque">Submit a numbers calculation off by at least 200 from the target.</string>
     <string name="trophee_titre_easter_boite_a_outils">Toolbox</string>

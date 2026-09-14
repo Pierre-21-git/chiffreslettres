@@ -176,10 +176,6 @@
     <string name="trophee_desc_easter_ex_aequo">Eine Partie mit genau demselben Ergebnis wie ein Gegner beenden.</string>
     <string name="trophee_titre_easter_compte_rond">Runde Zahl</string>
     <string name="trophee_desc_easter_compte_rond">Eine Punkteduell-Partie mit aktivierter Option \"Ziel genau erreichen\" gewinnen.</string>
-    <string name="trophee_titre_easter_rouleau_compresseur">Dampfwalze</string>
-    <string name="trophee_desc_easter_rouleau_compresseur">Eine Punkteduell-Partie mit mindestens 20 Punkten Vorsprung gewinnen.</string>
-    <string name="trophee_titre_easter_deculottee">Klatsche</string>
-    <string name="trophee_desc_easter_deculottee">Eine Punkteduell-Partie mit mindestens 20 Punkten Rückstand verlieren.</string>
     <string name="trophee_titre_easter_a_cote_de_la_plaque">Weit daneben</string>
     <string name="trophee_desc_easter_a_cote_de_la_plaque">Eine Zahlenrechnung mit mindestens 200 Abstand zum Ziel abgeben.</string>
     <string name="trophee_titre_easter_boite_a_outils">Werkzeugkasten</string>

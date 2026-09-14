@@ -176,10 +176,6 @@
     <string name="trophee_desc_easter_ex_aequo">Terminar una partida con exactamente el mismo puntaje que un adversario.</string>
     <string name="trophee_titre_easter_compte_rond">Número redondo</string>
     <string name="trophee_desc_easter_compte_rond">Ganar una partida de Duelo de puntos con la opción \"alcanzar el objetivo exacto\" activada.</string>
-    <string name="trophee_titre_easter_rouleau_compresseur">Aplanadora</string>
-    <string name="trophee_desc_easter_rouleau_compresseur">Ganar una partida de Duelo de puntos con al menos 20 puntos de diferencia.</string>
-    <string name="trophee_titre_easter_deculottee">Paliza</string>
-    <string name="trophee_desc_easter_deculottee">Perder una partida de Duelo de puntos con al menos 20 puntos de diferencia.</string>
     <string name="trophee_titre_easter_a_cote_de_la_plaque">Fuera de lugar</string>
     <string name="trophee_desc_easter_a_cote_de_la_plaque">Proponer un cálculo de cifras con una diferencia de al menos 200 respecto al objetivo.</string>
     <string name="trophee_titre_easter_boite_a_outils">Caja de herramientas</string>

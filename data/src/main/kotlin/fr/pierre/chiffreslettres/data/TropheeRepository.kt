@@ -167,8 +167,6 @@ class TropheeRepository(
         partiesDuelMotsConfrontationGagnees = duo.partiesDuelMotsConfrontationGagnees,
         partiesDuelPointsJouees = duo.partiesDuelPointsJouees,
         partiesDuelPointsGagnees = duo.partiesDuelPointsGagnees,
-        duelPointsEcartVictoireMax = duo.duelPointsEcartVictoireMax,
-        duelPointsEcartDefaiteMax = duo.duelPointsEcartDefaiteMax,
         duelPointsCompteRondObtenu = duo.duelPointsCompteRondObtenu,
         meilleuresSeriesDefi = defis.meilleuresSeriesDefi,
         meilleuresSeriesDefiNiveauMonique = defis.meilleuresSeriesDefiNiveauMonique,
@@ -250,8 +248,6 @@ class TropheeRepository(
         val partiesDuelMotsConfrontationGagnees: Int,
         val partiesDuelPointsJouees: Int,
         val partiesDuelPointsGagnees: Int,
-        val duelPointsEcartVictoireMax: Int,
-        val duelPointsEcartDefaiteMax: Int,
         val duelPointsCompteRondObtenu: Boolean,
     )
 
@@ -278,8 +274,6 @@ class TropheeRepository(
         ),
         partiesDuelPointsJouees = historiqueDao.compterPartiesParTypes(profilId, listOf(TypePartie.DUEL_MOTS_POINTS_RESEAU.name)),
         partiesDuelPointsGagnees = historiqueDao.compterPartiesGagneesParTypes(profilId, listOf(TypePartie.DUEL_MOTS_POINTS_RESEAU.name)),
-        duelPointsEcartVictoireMax = historiqueDao.maxEcartVictoireDuelPoints(profilId),
-        duelPointsEcartDefaiteMax = historiqueDao.maxEcartDefaiteDuelPoints(profilId),
         duelPointsCompteRondObtenu = historiqueDao.compterCompteRondDuelPoints(profilId) >= 1,
     )
 
