@@ -15,7 +15,9 @@ import fr.pierre.chiffreslettres.letters.BaremeLettres
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
+import fr.pierre.chiffreslettres.letters.meilleurMot
 import fr.pierre.chiffreslettres.ui.defi.DUREE_SECONDES_DEFI_MOTS_MAX
+import fr.pierre.chiffreslettres.ui.defi.seuilEffectifDefiLettres
 import fr.pierre.chiffreslettres.ui.defi.seuilLongueurDefiLettres
 import kotlin.random.Random
 import kotlinx.coroutines.Job
@@ -160,6 +162,17 @@ class DuelMotsReseauViewModel(
     private val _raisonFinConfrontation = MutableStateFlow<RaisonFinConfrontation?>(null)
     val raisonFinConfrontation: StateFlow<RaisonFinConfrontation?> = _raisonFinConfrontation.asStateFlow()
     private var timerJobConfrontation: Job? = null
+
+    /**
+     * Sous-mode Points : pas de longueur minimale (retour utilisateur), donc toujours 1. Sous-mode
+     * Confrontation : seuil du niveau, sauf (retour utilisateur, Monique/Mathieu, bug remonté
+     * 2026-09-16) si ce tirage ne permet pas de l'atteindre, où il retombe sur la longueur du mot
+     * le plus long réellement trouvable ([seuilEffectifDefiLettres]) — recalculé à chaque tirage
+     * dans [demarrerTirage], à partir du même tirage et du même dictionnaire des deux côtés, donc
+     * identique sans échange réseau.
+     */
+    var seuilRequisMot: Int = 1
+        private set
 
     // --- Résultats (les deux sous-modes) ---
     private val _motsTrouvesMoi = MutableStateFlow<List<String>>(emptyList())
@@ -323,7 +336,12 @@ class DuelMotsReseauViewModel(
                 configurationAlphabet.lettresExcluesParNiveau.getValue(niveau),
             )
             _lettresTirees.value = TirageLettres.tirer(sac, NOMBRE_VOYELLES_DUEL_MOTS, TirageLettres.NOMBRE_LETTRES, Random(graine))
-            _motsPossiblesConfrontation.value = dictionnaire.rechercherAuMoins(_lettresTirees.value, seuilRequisMot())
+            seuilRequisMot = if (sousMode == SousModeDuelMots.POINTS) {
+                1
+            } else {
+                seuilEffectifDefiLettres(niveau, seuilLongueurDefiLettres(niveau), meilleurMot(_lettresTirees.value, dictionnaire))
+            }
+            _motsPossiblesConfrontation.value = dictionnaire.rechercherAuMoins(_lettresTirees.value, seuilRequisMot)
                 .distinct()
                 .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
             _indicesUtilises.value = emptyList()
@@ -353,9 +371,6 @@ class DuelMotsReseauViewModel(
     }
 
     // --- Sous-mode Confrontation / Points ---
-
-    /** Sous-mode Points : pas de longueur minimale (retour utilisateur) ; sinon, seuil du niveau. */
-    private fun seuilRequisMot(): Int = if (sousMode == SousModeDuelMots.POINTS) 1 else seuilLongueurDefiLettres(niveau)
 
     private fun scoreTotal(mots: List<String>): Int = mots.sumOf { BaremeLettres.scoreMot(it, configurationAlphabet.baremeLettres) }
 
@@ -399,10 +414,9 @@ class DuelMotsReseauViewModel(
         if (_gagnant.value != null) return
         val mot = _motSaisi.value
         if (mot.isBlank()) return
-        val seuil = seuilRequisMot()
         val raison = when {
             !dictionnaire.estJouable(mot) -> RaisonRejetMotDuelMots.INVALIDE
-            mot.length < seuil -> RaisonRejetMotDuelMots.TROP_COURT
+            mot.length < seuilRequisMot -> RaisonRejetMotDuelMots.TROP_COURT
             mot in _motsTrouvesMoi.value -> RaisonRejetMotDuelMots.DEJA_PRIS_MOI
             mot in _motsTrouvesAdversaire.value -> RaisonRejetMotDuelMots.DEJA_PRIS_ADVERSAIRE
             else -> null

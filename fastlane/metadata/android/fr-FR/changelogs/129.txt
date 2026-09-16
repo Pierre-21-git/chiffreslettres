@@ -1,0 +1,1 @@
+Correction : en Défi mots max et en Duel mots (Confrontation/Points), un mot pouvait être refusé « trop court » en niveau Monique ou Mathieu alors qu'il était déjà le mot le plus long trouvable sur ce tirage.

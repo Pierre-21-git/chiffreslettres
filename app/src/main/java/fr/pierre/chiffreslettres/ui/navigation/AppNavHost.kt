@@ -1542,7 +1542,7 @@ fun AppNavHost(
                         motSaisi = motSaisi,
                         motRejete = motRejete,
                         raisonRejet = raisonRejet,
-                        seuilRequis = seuilLongueurDefiLettres(duelMotsVm.niveau),
+                        seuilRequis = duelMotsVm.seuilRequisMot,
                         objectifMots = duelMotsVm.objectifMots,
                         motsTrouvesMoi = motsTrouvesMoi,
                         motsTrouvesAdversaire = motsTrouvesAdversaire,

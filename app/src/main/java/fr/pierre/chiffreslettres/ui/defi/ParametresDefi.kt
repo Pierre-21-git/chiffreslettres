@@ -17,18 +17,21 @@ fun seuilLongueurDefiLettres(niveau: NiveauLettres): Int = when (niveau) {
 }
 
 /**
- * Une manche de défi lettres est réussie si le mot proposé atteint le seuil du niveau, ou
- * (retour utilisateur, Monique/Mathieu uniquement) si aucun mot du tirage n'atteint ce seuil et
- * que le joueur a trouvé le mot le plus long possible pour ce tirage — comme le palier "au plus
- * près" du défi chiffres, appliqué au seul cas où le tirage ne permet objectivement pas d'atteindre
- * le seuil.
+ * Seuil réellement exigé sur ce tirage : le seuil du niveau, sauf (retour utilisateur,
+ * Monique/Mathieu uniquement) si le tirage ne permet objectivement pas de l'atteindre — dans ce
+ * cas le seuil retombe sur la longueur du meilleur mot réellement trouvable, comme le palier "au
+ * plus près" du défi chiffres. Un mot ne peut jamais dépasser ce meilleur mot, donc exiger cette
+ * longueur revient à exiger le mot le plus long possible sur ce tirage précis.
  */
-fun motEstReussiDefiLettres(niveau: NiveauLettres, motPropose: String, seuil: Int, meilleurMot: String?): Boolean {
-    if (motPropose.length >= seuil) return true
+fun seuilEffectifDefiLettres(niveau: NiveauLettres, seuil: Int, meilleurMot: String?): Int {
     val toleranceMeilleureApproche = niveau == NiveauLettres.MONIQUE || niveau == NiveauLettres.MATHIEU
     val meilleurLongueur = meilleurMot?.length ?: 0
-    return toleranceMeilleureApproche && meilleurLongueur < seuil && motPropose.length == meilleurLongueur
+    return if (toleranceMeilleureApproche && meilleurLongueur < seuil) meilleurLongueur else seuil
 }
+
+/** Une manche de défi lettres est réussie si le mot proposé atteint [seuilEffectifDefiLettres] pour ce tirage. */
+fun motEstReussiDefiLettres(niveau: NiveauLettres, motPropose: String, seuil: Int, meilleurMot: String?): Boolean =
+    motPropose.length >= seuilEffectifDefiLettres(niveau, seuil, meilleurMot)
 
 /** Budget de temps global (en secondes) d'un défi chrono chiffres, selon le niveau (retour utilisateur : 2/3/4/5 min). */
 fun budgetSecondesDefiChrono(niveau: Niveau): Int = when (niveau) {

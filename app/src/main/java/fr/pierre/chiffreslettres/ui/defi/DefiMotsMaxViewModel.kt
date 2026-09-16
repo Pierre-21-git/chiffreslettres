@@ -12,6 +12,7 @@ import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import fr.pierre.chiffreslettres.letters.NiveauLettres
 import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
+import fr.pierre.chiffreslettres.letters.meilleurMot
 import kotlin.random.Random
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -49,6 +50,14 @@ data class DefiMotsMaxUiState(
     val raisonFin: RaisonFinDefiMotsMax? = null,
     /** Mots d'au moins [seuilLongueurDefiLettres] lettres jouables sur ce tirage (retour utilisateur : révélés en fin de défi), triés du plus long au plus court, limités à [MAX_MOTS_POSSIBLES_AFFICHES] (la détection "tous les mots trouvés" reste basée sur la liste complète, non plafonnée). */
     val motsPossibles: List<String> = emptyList(),
+    /**
+     * Seuil "trop court" réellement appliqué à ce tirage (retour utilisateur, bug remonté 2026-09-16) :
+     * [seuilLongueurDefiLettres] par défaut, sauf en Monique/Mathieu si ce tirage ne permet pas de
+     * l'atteindre, où il retombe sur la longueur du mot le plus long réellement trouvable
+     * ([seuilEffectifDefiLettres]) — sinon un mot qui est déjà le meilleur possible sur ce tirage
+     * pouvait être rejeté "trop court".
+     */
+    val seuilEffectif: Int = seuilLongueurDefiLettres(niveau),
 )
 
 /**
@@ -114,8 +123,11 @@ class DefiMotsMaxViewModel(
         val etat = _uiState.value
         if (etat.tirageTermine || etat.termine) return
         val lettres = if (garantieDixMots) tirerAvecGarantie(nombreVoyelles) else TirageLettres.tirer(sac, nombreVoyelles, nombreLettres, random)
-        _uiState.update { it.copy(lettresTirees = lettres, tirageTermine = true, nombreVoyellesChoisi = nombreVoyelles) }
-        motsPossiblesCalcules = dictionnaire.rechercherAuMoins(lettres, seuilLongueur)
+        val seuilEffectif = seuilEffectifDefiLettres(niveau, seuilLongueur, meilleurMot(lettres, dictionnaire))
+        _uiState.update {
+            it.copy(lettresTirees = lettres, tirageTermine = true, nombreVoyellesChoisi = nombreVoyelles, seuilEffectif = seuilEffectif)
+        }
+        motsPossiblesCalcules = dictionnaire.rechercherAuMoins(lettres, seuilEffectif)
             .distinct()
             .sortedWith(compareByDescending<String> { it.length }.then(DictionnaireIndex.comparateurAlphabetiqueFrancais()))
         demarrerChrono()
@@ -190,7 +202,7 @@ class DefiMotsMaxViewModel(
             rejeterMot(mot, RaisonRejetMotDefiMotsMax.INVALIDE)
             return
         }
-        if (mot.length < seuilLongueur) {
+        if (mot.length < etat.seuilEffectif) {
             rejeterMot(mot, RaisonRejetMotDefiMotsMax.TROP_COURT)
             return
         }

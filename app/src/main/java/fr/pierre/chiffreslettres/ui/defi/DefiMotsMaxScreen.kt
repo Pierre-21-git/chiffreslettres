@@ -119,7 +119,7 @@ fun DefiMotsMaxScreen(
                 RaisonRejetMotDefiMotsMax.INVALIDE ->
                     stringResource(R.string.defi_mots_max_fin_mot_invalide, motRejete)
                 RaisonRejetMotDefiMotsMax.TROP_COURT ->
-                    stringResource(R.string.defi_mots_max_fin_mot_trop_court, motRejete, seuilLongueurDefiLettres(etat.niveau))
+                    stringResource(R.string.defi_mots_max_fin_mot_trop_court, motRejete, etat.seuilEffectif)
                 null -> null
             }
             if (message != null) {
