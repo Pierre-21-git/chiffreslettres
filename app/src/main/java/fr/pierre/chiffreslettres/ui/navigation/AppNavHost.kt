@@ -2145,7 +2145,7 @@ fun AppNavHost(
                             onChangerNiveau = { navController.popBackStack(cibleRetour, inclusive = false) },
                         )
                     } else {
-                        Button(onClick = { defiVm.mancheChronoTerminee(derniereMancheReussie == true) }, modifier = Modifier.fillMaxWidth()) {
+                        Button(onClick = { defiVm.mancheChronoTerminee(derniereMancheReussie == true, roundVm.uiState.value.tempsRestantSecondes ?: 0) }, modifier = Modifier.fillMaxWidth()) {
                             Text(stringResource(R.string.action_continuer))
                         }
                     }
@@ -2246,7 +2246,7 @@ fun AppNavHost(
                             onChangerNiveau = { navController.popBackStack(cibleRetour, inclusive = false) },
                         )
                     } else {
-                        Button(onClick = { defiVm.mancheChronoTerminee(derniereMancheReussie == true) }, modifier = Modifier.fillMaxWidth()) {
+                        Button(onClick = { defiVm.mancheChronoTerminee(derniereMancheReussie == true, roundVm.uiState.value.tempsRestantSecondes ?: 0) }, modifier = Modifier.fillMaxWidth()) {
                             Text(stringResource(R.string.action_continuer))
                         }
                     }

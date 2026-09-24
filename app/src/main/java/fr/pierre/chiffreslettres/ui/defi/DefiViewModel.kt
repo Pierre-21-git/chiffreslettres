@@ -25,7 +25,9 @@ import kotlinx.coroutines.launch
  * - [TypeDefi.CHRONO] : budget de temps global ([budgetSecondes]), enchaîne les manches tant
  *   qu'il reste du temps (chaque manche démarre avec le temps restant, cf.
  *   [dureeProchaineManche]) ; un échec ne met pas fin au défi, seul l'épuisement du budget le
- *   fait, en enregistrant le nombre de réussites ([mancheChronoTerminee]).
+ *   fait, en enregistrant le nombre de réussites ([mancheChronoTerminee]). Seul le temps de
+ *   jeu des manches est décompté : le budget est en pause entre deux manches (retour
+ *   utilisateur).
  *
  * [essaiId] sert de clé pour recréer une nouvelle instance de `ChiffresRoundViewModel`/
  * `LettresRoundViewModel` à chaque manche (voir sa doc : contrairement à [index], il ne revient
@@ -70,6 +72,14 @@ class DefiViewModel(
 
     private var debutChrono = System.currentTimeMillis()
 
+    /**
+     * Défi chrono : budget restant (s), mis à jour à la fin de chaque manche avec le temps
+     * restant affiché par celle-ci — le temps passé sur le panneau de résultat avant
+     * "Continuer" n'est donc pas décompté (retour utilisateur : l'ancien calcul sur l'horloge
+     * murale depuis le début du défi continuait de tourner entre deux manches).
+     */
+    private var budgetRestantSecondes = budgetSecondes
+
     private val _tropheesDebloques = MutableStateFlow<List<Trophee>>(emptyList())
     /** Trophées fraîchement débloqués à la fin de ce défi (retour utilisateur : écran dédié). */
     val tropheesDebloques: StateFlow<List<Trophee>> = _tropheesDebloques.asStateFlow()
@@ -82,7 +92,7 @@ class DefiViewModel(
     private fun dureeEcouleeDepuisDebut(): Int = ((System.currentTimeMillis() - debutChrono) / 1000).toInt()
 
     /** Défi chrono uniquement : temps restant (s) à donner à la prochaine manche, 0 si le budget est épuisé. */
-    fun dureeProchaineManche(): Int = (budgetSecondes - dureeEcouleeDepuisDebut()).coerceAtLeast(0)
+    fun dureeProchaineManche(): Int = budgetRestantSecondes.coerceAtLeast(0)
 
     /** Défi série : réussite confirmée par le joueur (bouton "Continuer") : manche suivante. */
     fun mancheSuivante() {
@@ -103,12 +113,14 @@ class DefiViewModel(
     }
 
     /**
-     * Défi chrono : une manche vient de se terminer (réussie ou non). Comptabilise la réussite
+     * Défi chrono : une manche vient de se terminer (réussie ou non), avec
+     * [tempsRestantMancheSecondes] au chrono de la manche. Comptabilise la réussite
      * éventuelle, puis enchaîne sur une nouvelle manche s'il reste du budget, ou termine le défi
      * et enregistre le nombre total de réussites sinon.
      */
-    fun mancheChronoTerminee(reussie: Boolean) {
+    fun mancheChronoTerminee(reussie: Boolean, tempsRestantMancheSecondes: Int) {
         if (_termine.value) return
+        budgetRestantSecondes = tempsRestantMancheSecondes.coerceIn(0, budgetRestantSecondes)
         if (reussie) _reussites.value += 1
         _index.value += 1
         if (dureeProchaineManche() <= 0) {
@@ -162,5 +174,6 @@ class DefiViewModel(
         _termine.value = false
         _essaiId.value += 1
         debutChrono = System.currentTimeMillis()
+        budgetRestantSecondes = budgetSecondes
     }
 }

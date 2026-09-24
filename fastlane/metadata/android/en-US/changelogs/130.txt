@@ -1,0 +1,1 @@
+Timed Challenge: the clock is now paused between rounds, while the result is shown; only playing time counts against the budget.
