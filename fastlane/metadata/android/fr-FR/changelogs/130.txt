@@ -1,1 +1,1 @@
-Défi chrono : le temps est désormais en pause entre deux manches, pendant l'affichage du résultat ; seul le temps de jeu est décompté du budget.
+Correction : en Défi mots max et en Duel mots (Confrontation/Points), un mot pouvait être refusé « trop court » en niveau Monique ou Mathieu alors qu'il était déjà le mot le plus long trouvable sur ce tirage.

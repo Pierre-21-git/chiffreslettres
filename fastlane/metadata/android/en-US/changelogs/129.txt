@@ -1,1 +1,0 @@
-Fix: in Max Words Challenge and Word Duel (Confrontation/Points), a word could be rejected as "too short" at Monique or Mathieu level even though it was already the longest word findable on that draw.

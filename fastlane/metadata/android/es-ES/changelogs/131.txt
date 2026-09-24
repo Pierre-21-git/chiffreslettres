@@ -1,0 +1,1 @@
+Desafío contrarreloj: el tiempo ahora se detiene entre dos rondas, mientras se muestra el resultado; solo el tiempo de juego se descuenta del total.

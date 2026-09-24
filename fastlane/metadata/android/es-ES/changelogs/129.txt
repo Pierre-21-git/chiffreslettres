@@ -1,1 +1,0 @@
-Corrección: en el Desafío de palabras máximas y en el Duelo de palabras (Confrontación/Puntos), una palabra podía rechazarse como «demasiado corta» en el nivel Monique o Mathieu aunque ya fuera la palabra más larga posible con ese sorteo.

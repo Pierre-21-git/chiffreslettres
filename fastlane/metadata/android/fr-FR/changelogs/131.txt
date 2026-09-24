@@ -1,0 +1,1 @@
+Défi chrono : le temps est désormais en pause entre deux manches, pendant l'affichage du résultat ; seul le temps de jeu est décompté du budget.

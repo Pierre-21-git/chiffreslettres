@@ -1,1 +1,1 @@
-Zeit-Herausforderung: Die Zeit ist jetzt zwischen zwei Runden angehalten, während das Ergebnis angezeigt wird; nur die Spielzeit wird vom Budget abgezogen.
+Korrektur: Bei „Maximale Wörter“-Herausforderung und Wortduell (Konfrontation/Punkte) konnte ein Wort auf Stufe Monique oder Mathieu als „zu kurz“ abgelehnt werden, obwohl es bereits das längste mit diesem Buchstabensatz bildbare Wort war.
