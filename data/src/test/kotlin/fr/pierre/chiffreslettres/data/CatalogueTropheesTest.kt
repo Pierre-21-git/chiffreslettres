@@ -58,6 +58,7 @@ private fun statsVides() = TropheeStats(
     egaliteDuelDejaObtenue = false,
     scoreSoloRepete = false,
     meilleurMotTirageJoue = false,
+    motUniqueTirageJoue = false,
     compteExactCibleNombrePremier = false,
     compteExactCalculMental = false,
     compteExactCheminMinimal = false,
@@ -75,8 +76,8 @@ class CatalogueTropheesTest {
     private fun trophee(id: String) = CatalogueTrophees.TOUS.first { it.id == id }
 
     @Test
-    fun `165 trophees au total (155 + 7 duel points + 1 easter egg duel points + 2 easter eggs chiffres)`() {
-        assertEquals(146, CatalogueTrophees.TOUS.size)
+    fun `147 trophees au total`() {
+        assertEquals(147, CatalogueTrophees.TOUS.size)
     }
 
     @Test
@@ -124,7 +125,7 @@ class CatalogueTropheesTest {
     @Test
     fun `aucun trophee n'a de palier sauf le catalogue principal (les easter eggs sont hors echelle)`() {
         val easterEggs = CatalogueTrophees.TOUS.filter { it.id.startsWith("easter_") }
-        assertEquals(33, easterEggs.size)
+        assertEquals(34, easterEggs.size)
         assertTrue(easterEggs.all { it.palier == null })
     }
 
@@ -160,6 +161,8 @@ class CatalogueTropheesTest {
         assertFalse(trophee("easter_alphabet_complet").estDebloque(statsVides().copy(nombreLettresAlphabetUtilisees = 25)))
         assertTrue(trophee("easter_meilleur_mot_tirage").estDebloque(statsVides().copy(meilleurMotTirageJoue = true)))
         assertFalse(trophee("easter_meilleur_mot_tirage").estDebloque(statsVides()))
+        assertTrue(trophee("easter_mot_unique_tirage").estDebloque(statsVides().copy(motUniqueTirageJoue = true)))
+        assertFalse(trophee("easter_mot_unique_tirage").estDebloque(statsVides().copy(meilleurMotTirageJoue = true)))
         assertTrue(trophee("easter_rituel_dimanche").estDebloque(statsVides().copy(meilleureSerieDimanchesConsecutifs = 4)))
         assertFalse(trophee("easter_rituel_dimanche").estDebloque(statsVides().copy(meilleureSerieDimanchesConsecutifs = 3)))
         // Méta-easter-eggs (sentinel, jamais déclenchés via les stats seules).

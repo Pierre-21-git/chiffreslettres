@@ -35,6 +35,12 @@ data class MancheEntity(
      * mot valide n'a été soumis.
      */
     val meilleurMotTirageJoue: Boolean? = null,
+    /**
+     * Le mot joué est-il le seul mot de longueur maximale jouable sur ce tirage (mode Lettres
+     * uniquement), pour l'easter egg "Seul au monde". Même logique de capture que
+     * [meilleurMotTirageJoue] — null si non applicable ou aucun mot valide soumis.
+     */
+    val motUniqueTirageJoue: Boolean? = null,
     // --- Easter eggs "Chiffres" + temps de jeu (refonte 2026-08) ---
     /** Cible du tirage (mode Chiffres uniquement), pour l'easter egg "Nombre premier". */
     val cibleChiffres: Int? = null,

@@ -196,6 +196,8 @@
     <string name="trophee_desc_easter_alphabet_complet">Utiliser, cumulé sur toutes ses parties, chaque lettre de l\'alphabet au moins une fois.</string>
     <string name="trophee_titre_easter_meilleur_mot_tirage">Le plus long mot possible</string>
     <string name="trophee_desc_easter_meilleur_mot_tirage">Trouver, en partie (solo, duo ou confrontation), l\'un des mots les plus longs jouables sur son tirage de lettres.</string>
+    <string name="trophee_titre_easter_mot_unique_tirage">Seul au monde</string>
+    <string name="trophee_desc_easter_mot_unique_tirage">Trouver, en partie (solo, duo ou confrontation), le seul et unique mot le plus long jouable sur son tirage de lettres.</string>
     <string name="trophee_titre_easter_curieux">Curieux</string>
     <string name="trophee_desc_easter_curieux">Consulter la page des règles du jeu.</string>
     <string name="trophee_titre_easter_data_lover">Data-lover</string>

@@ -196,6 +196,8 @@
     <string name="trophee_desc_easter_alphabet_complet">Use, across all your games combined, every letter of the alphabet at least once.</string>
     <string name="trophee_titre_easter_meilleur_mot_tirage">The longest word possible</string>
     <string name="trophee_desc_easter_meilleur_mot_tirage">Find, in a game (solo, duo or head-to-head), one of the longest words playable with your letter draw.</string>
+    <string name="trophee_titre_easter_mot_unique_tirage">One of a kind</string>
+    <string name="trophee_desc_easter_mot_unique_tirage">Find, in a game (solo, duo or head-to-head), the one and only longest word playable with your letter draw.</string>
     <string name="trophee_titre_easter_curieux">Curious</string>
     <string name="trophee_desc_easter_curieux">Check out the rules of the game page.</string>
     <string name="trophee_titre_easter_data_lover">Data lover</string>

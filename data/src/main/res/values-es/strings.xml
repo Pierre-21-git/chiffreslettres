@@ -196,6 +196,8 @@
     <string name="trophee_desc_easter_alphabet_complet">Usar, acumulado en todas tus partidas, cada letra del alfabeto al menos una vez.</string>
     <string name="trophee_titre_easter_meilleur_mot_tirage">La palabra más larga posible</string>
     <string name="trophee_desc_easter_meilleur_mot_tirage">Encontrar, en una partida (solo, dúo o cara a cara), una de las palabras más largas jugables con tu tirada de letras.</string>
+    <string name="trophee_titre_easter_mot_unique_tirage">Único en su especie</string>
+    <string name="trophee_desc_easter_mot_unique_tirage">Encontrar, en una partida (solo, dúo o cara a cara), la única palabra más larga jugable con tu tirada de letras.</string>
     <string name="trophee_titre_easter_curieux">Curioso</string>
     <string name="trophee_desc_easter_curieux">Consultar la página de reglas del juego.</string>
     <string name="trophee_titre_easter_data_lover">Amante de los datos</string>

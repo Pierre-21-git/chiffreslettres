@@ -296,6 +296,18 @@ interface HistoriqueDao {
     )
     suspend fun compterMeilleurMotTirageJoue(profilId: Long): Int
 
+    /** Le seul mot de longueur maximale jouable sur son tirage a-t-il déjà été trouvé (easter egg "Seul au monde") ? */
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM MancheEntity m
+        INNER JOIN SessionEntity s ON s.id = m.sessionId
+        WHERE s.profilId = :profilId AND s.type IN ('STRUCTUREE', 'DUO', 'DUO_CONFRONTATION', 'DUO_RESEAU', 'DUO_CONFRONTATION_RESEAU')
+            AND m.motUniqueTirageJoue = 1
+        """,
+    )
+    suspend fun compterMotUniqueTirageJoue(profilId: Long): Int
+
     /** Une partie duo/confrontation terminée exactement à égalité avec l'adversaire (easter egg "Ex-aequo") ? */
     @Query("SELECT COUNT(*) FROM SessionEntity WHERE profilId = :profilId AND egaliteDuel = 1")
     suspend fun compterEgalitesDuel(profilId: Long): Int

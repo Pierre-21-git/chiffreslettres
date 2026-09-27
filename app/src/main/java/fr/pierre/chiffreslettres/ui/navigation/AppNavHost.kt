@@ -139,6 +139,13 @@ import kotlin.random.Random
 private fun estMeilleurMotTirage(motValide: String?, meilleurMot: String?): Boolean? =
     if (motValide == null || meilleurMot == null) null else motValide.trim().length == meilleurMot.length
 
+/**
+ * Le mot joué est-il le seul mot de longueur maximale jouable sur ce tirage (easter egg "Seul au
+ * monde") ? Même contrainte de capture que [estMeilleurMotTirage].
+ */
+private fun estMotUniqueTirage(motValide: String?, meilleurMot: String?, meilleurMotUnique: Boolean): Boolean? =
+    estMeilleurMotTirage(motValide, meilleurMot)?.let { it && meilleurMotUnique }
+
 @Composable
 private fun entrainementViewModel(
     navController: NavHostController,
@@ -562,6 +569,7 @@ fun AppNavHost(
                                         ResultatManche(
                                             ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
                                             meilleurMotTirageJoue = estMeilleurMotTirage(motValide, meilleurMot),
+                                            motUniqueTirageJoue = estMotUniqueTirage(motValide, meilleurMot, roundVm.uiState.value.meilleurMotUnique),
                                             dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
                                         ),
                                     )
@@ -798,6 +806,7 @@ fun AppNavHost(
                                             ResultatManche(
                                             ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
                                             meilleurMotTirageJoue = estMeilleurMotTirage(motValide, meilleurMot),
+                                            motUniqueTirageJoue = estMotUniqueTirage(motValide, meilleurMot, roundVm.uiState.value.meilleurMotUnique),
                                             dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
                                             motInvalide = motInvalide,
                                         ),
@@ -1221,6 +1230,7 @@ fun AppNavHost(
                                             ResultatManche(
                                             ModeJeu.LETTRES, manche.niveau.name, obtenu, motValide, longueurMotInvalide,
                                             meilleurMotTirageJoue = estMeilleurMotTirage(motValide, meilleurMot),
+                                            motUniqueTirageJoue = estMotUniqueTirage(motValide, meilleurMot, roundVm.uiState.value.meilleurMotUnique),
                                             dureeSecondesManche = roundVm.uiState.value.dureeSecondesEcoulees,
                                             motInvalide = motInvalide,
                                         ),

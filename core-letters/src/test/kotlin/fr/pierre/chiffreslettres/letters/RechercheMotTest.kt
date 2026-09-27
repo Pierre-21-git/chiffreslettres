@@ -2,7 +2,9 @@ package fr.pierre.chiffreslettres.letters
 
 import fr.pierre.chiffreslettres.dictionary.DictionnaireIndex
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class RechercheMotTest {
@@ -19,6 +21,24 @@ class RechercheMotTest {
     @Test
     fun `meilleurMot renvoie null si rien n'est jouable`() {
         assertNull(meilleurMot("BXYQWK".toList(), dictionnaire))
+    }
+
+    @Test
+    fun `meilleurMotEstUnique vrai si un seul mot de longueur maximale`() {
+        assertTrue(meilleurMotEstUnique("CHATTEXYZ".toList(), dictionnaire))
+    }
+
+    @Test
+    fun `meilleurMotEstUnique faux si plusieurs mots de longueur maximale`() {
+        // "rat" et "art" : deux mots de 3 lettres
+        assertFalse(meilleurMotEstUnique("RATXYZ".toList(), dictionnaire))
+    }
+
+    @Test
+    fun `meilleurMotEstUnique ignore les variantes d'un meme mot et les tirages sans mot`() {
+        val dico = DictionnaireIndex(sequenceOf("Pasteur", "pasteur", "rat"))
+        assertTrue(meilleurMotEstUnique("PASTEURXY".toList(), dico))
+        assertFalse(meilleurMotEstUnique("BXYQWK".toList(), dico))
     }
 
     @Test

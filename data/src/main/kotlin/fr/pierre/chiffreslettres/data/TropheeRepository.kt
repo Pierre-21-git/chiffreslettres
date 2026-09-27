@@ -202,6 +202,7 @@ class TropheeRepository(
         egaliteDuelDejaObtenue = easter.egaliteDuelDejaObtenue,
         scoreSoloRepete = easter.scoreSoloRepete,
         meilleurMotTirageJoue = easter.meilleurMotTirageJoue,
+        motUniqueTirageJoue = easter.motUniqueTirageJoue,
         compteExactCibleNombrePremier = easterChiffres.compteExactCibleNombrePremier,
         compteExactCalculMental = easterChiffres.compteExactCalculMental,
         compteExactCheminMinimal = easterChiffres.compteExactCheminMinimal,
@@ -363,6 +364,7 @@ class TropheeRepository(
         val egaliteDuelDejaObtenue: Boolean,
         val scoreSoloRepete: Boolean,
         val meilleurMotTirageJoue: Boolean,
+        val motUniqueTirageJoue: Boolean,
     )
 
     private suspend fun statsEasterGeneral(
@@ -390,6 +392,7 @@ class TropheeRepository(
         egaliteDuelDejaObtenue = historiqueDao.compterEgalitesDuel(profilId) >= 1,
         scoreSoloRepete = historiqueDao.compterScoresSoloRepetes(profilId) >= 1,
         meilleurMotTirageJoue = historiqueDao.compterMeilleurMotTirageJoue(profilId) >= 1,
+        motUniqueTirageJoue = historiqueDao.compterMotUniqueTirageJoue(profilId) >= 1,
     )
 
     private data class StatsEasterChiffres(

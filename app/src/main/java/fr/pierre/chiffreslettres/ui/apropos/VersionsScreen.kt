@@ -19,6 +19,48 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.131",
+        date = "2026-09-27",
+        changements = listOf(
+            "Nouveau trophée caché \"Seul au monde\" : trouver, en partie solo ou duo, le seul " +
+                "et unique mot le plus long jouable sur son tirage de lettres.",
+        ),
+    ),
+    EntreeVersion(
+        version = "1.130",
+        date = "2026-09-24",
+        changements = listOf(
+            "Défi chrono : le temps est désormais en pause entre deux manches, pendant " +
+                "l'affichage du résultat ; seul le temps de jeu est décompté du budget.",
+        ),
+    ),
+    EntreeVersion(
+        version = "1.129",
+        date = "2026-09-16",
+        changements = listOf(
+            "Correction : en Défi mots max et en Duel mots (Confrontation/Points), un mot " +
+                "pouvait être refusé \"trop court\" en niveau Monique ou Mathieu alors qu'il " +
+                "était déjà le mot le plus long trouvable sur ce tirage.",
+        ),
+    ),
+    EntreeVersion(
+        version = "1.128",
+        date = "2026-09-14",
+        changements = listOf(
+            "Trophées \"Rouleau compresseur\" et \"Déculottée\" (Duel points, 20 points " +
+                "d'écart) retirés.",
+        ),
+    ),
+    EntreeVersion(
+        version = "1.127",
+        date = "2026-09-13",
+        changements = listOf(
+            "Correction : le trophée \"Rituel du dimanche\" ne restait plus bloqué à 1 semaine " +
+                "quand un dimanche était joué en Duel mots ou Duel points réseau.",
+            "Trophée \"Ancien combattant\" retiré.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.126",
         date = "2026-09-12",
         changements = listOf(

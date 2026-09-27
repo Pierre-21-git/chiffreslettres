@@ -196,6 +196,8 @@
     <string name="trophee_desc_easter_alphabet_complet">Über alle Partien hinweg jeden Buchstaben des Alphabets mindestens einmal verwenden.</string>
     <string name="trophee_titre_easter_meilleur_mot_tirage">Das längstmögliche Wort</string>
     <string name="trophee_desc_easter_meilleur_mot_tirage">In einer Partie (Solo, Duo oder Duell) eines der längstmöglichen Wörter mit den gezogenen Buchstaben finden.</string>
+    <string name="trophee_titre_easter_mot_unique_tirage">Einzigartig</string>
+    <string name="trophee_desc_easter_mot_unique_tirage">In einer Partie (Solo, Duo oder Duell) das einzige längstmögliche Wort mit den gezogenen Buchstaben finden.</string>
     <string name="trophee_titre_easter_curieux">Neugierig</string>
     <string name="trophee_desc_easter_curieux">Die Seite mit den Spielregeln aufrufen.</string>
     <string name="trophee_titre_easter_data_lover">Datenfreund</string>

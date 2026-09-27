@@ -16,6 +16,14 @@ fun meilleurMot(tirage: List<Char>, dictionnaire: DictionnaireIndex): String? =
     meilleursMots(tirage, dictionnaire).firstOrNull()
 
 /**
+ * Le tirage n'admet-il qu'un seul mot de longueur maximale (easter egg "Seul au monde") ? Les
+ * variantes d'un même mot (accents, majuscule d'un nom propre homographe) comptent pour un seul,
+ * puisque le joueur ne peut de toute façon saisir que la forme normalisée.
+ */
+fun meilleurMotEstUnique(tirage: List<Char>, dictionnaire: DictionnaireIndex): Boolean =
+    meilleursMots(tirage, dictionnaire).mapNotNull { DictionnaireIndex.normaliser(it) }.distinct().size == 1
+
+/**
  * Tous les mots jouables sur ce tirage, par tranches de longueur décroissante, jusqu'à atteindre
  * [NOMBRE_MINIMAL_MOTS] (retour utilisateur : affichés à la fin d'une manche de lettres, à la
  * place du seul meilleur mot) — par exemple tous les mots de 9 lettres, puis tous ceux de 8

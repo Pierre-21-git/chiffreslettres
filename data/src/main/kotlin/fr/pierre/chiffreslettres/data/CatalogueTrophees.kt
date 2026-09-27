@@ -117,6 +117,8 @@ data class TropheeStats(
     val scoreSoloRepete: Boolean,
     /** Un mot de longueur maximale jouable sur son tirage a déjà été trouvé (trophée "Le plus long mot possible"). */
     val meilleurMotTirageJoue: Boolean,
+    /** Le seul mot de longueur maximale jouable sur son tirage a déjà été trouvé (trophée "Seul au monde"). */
+    val motUniqueTirageJoue: Boolean,
     // --- Easter eggs "Chiffres" (refonte 2026-08) ---
     /** Un compte exact dont la cible est un nombre premier (trophée "Nombre premier"). */
     val compteExactCibleNombrePremier: Boolean,
@@ -1286,6 +1288,17 @@ object CatalogueTrophees {
         )
         add(
             Trophee(
+                "easter_mot_unique_tirage",
+                titreRes = R.string.trophee_titre_easter_mot_unique_tirage,
+                descriptionRes = R.string.trophee_desc_easter_mot_unique_tirage,
+                categorie = CategorieTrophee.EASTER_LETTRES,
+                palier = null,
+                niveauVisibilite = NiveauVisibilite.SEMI_CACHE,
+                descriptionAvantDeblocageRes = R.string.easter_avant_vocabulaire,
+            ) { it.motUniqueTirageJoue },
+        )
+        add(
+            Trophee(
                 "easter_nombre_premier",
                 titreRes = R.string.trophee_titre_easter_nombre_premier,
                 descriptionRes = R.string.trophee_desc_easter_nombre_premier,
@@ -1438,6 +1451,7 @@ object CatalogueTrophees {
         "easter_symetrique" to "🔠",
         "easter_alphabet_complet" to "🔤",
         "easter_meilleur_mot_tirage" to "👑",
+        "easter_mot_unique_tirage" to "💎",
         "easter_mot_invalide_dix_lettres" to "📏",
         "easter_mot_rare" to "🦕",
         "easter_palindrome" to "🪞",

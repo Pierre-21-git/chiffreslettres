@@ -9,6 +9,7 @@ import fr.pierre.chiffreslettres.letters.SacLettres
 import fr.pierre.chiffreslettres.letters.TirageLettres
 import fr.pierre.chiffreslettres.letters.dixMeilleursMots
 import fr.pierre.chiffreslettres.letters.meilleurMot
+import fr.pierre.chiffreslettres.letters.meilleurMotEstUnique
 import fr.pierre.chiffreslettres.ui.defi.seuilLongueurDefiLettres
 import kotlin.random.Random
 import kotlinx.coroutines.Job
@@ -31,6 +32,8 @@ data class LettresRoundUiState(
     val tempsRestantSecondes: Int?,
     val termine: Boolean = false,
     val meilleurMot: String? = null,
+    /** [meilleurMot] est-il le seul mot de longueur maximale jouable sur ce tirage (easter egg "Seul au monde") ? */
+    val meilleurMotUnique: Boolean = false,
     /** Les 10 meilleurs mots jouables sur ce tirage, affichés en fin de manche (retour utilisateur). */
     val dixMeilleursMots: List<String> = emptyList(),
     val motJoueurValide: Boolean? = null,
@@ -153,6 +156,7 @@ class LettresRoundViewModel(
             it.copy(
                 termine = true,
                 meilleurMot = meilleur,
+                meilleurMotUnique = meilleur != null && meilleurMotEstUnique(etat.lettresTirees, dictionnaire),
                 dixMeilleursMots = dixMeilleurs,
                 motJoueurValide = motValide,
                 scoreObtenu = score,
