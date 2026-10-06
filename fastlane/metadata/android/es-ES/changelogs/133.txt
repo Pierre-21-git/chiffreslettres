@@ -1,0 +1,1 @@
+La aplicación usa ahora el inglés en lugar del francés cuando el idioma del sistema no está disponible.

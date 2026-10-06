@@ -19,6 +19,16 @@ private data class EntreeVersion(val version: String, val date: String, val chan
 
 private val HISTORIQUE_VERSIONS = listOf(
     EntreeVersion(
+        version = "1.132",
+        date = "2026-10-06",
+        changements = listOf(
+            "Langue de repli : l'anglais remplace le français pour les langues de téléphone " +
+                "non prises en charge (ex. italien), y compris avant la création du premier " +
+                "profil (retour MR F-Droid). Aucun changement pour le français, l'allemand et " +
+                "l'espagnol.",
+        ),
+    ),
+    EntreeVersion(
         version = "1.131",
         date = "2026-09-27",
         changements = listOf(

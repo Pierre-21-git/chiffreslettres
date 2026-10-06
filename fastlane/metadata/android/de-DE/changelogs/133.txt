@@ -1,0 +1,1 @@
+Die App verwendet jetzt Englisch statt Französisch, wenn die Systemsprache nicht unterstützt wird.

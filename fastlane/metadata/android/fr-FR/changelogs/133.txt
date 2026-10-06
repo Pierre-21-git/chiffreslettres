@@ -1,0 +1,1 @@
+L'application passe désormais à l'anglais au lieu du français quand la langue du téléphone n'est pas prise en charge.
